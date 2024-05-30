@@ -1,91 +1,83 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Scorecard API",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/images/logo_flat.png",
+    "light": "/images/logo_flat.png"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/images/favicon.png",
   "colors": {
     "primary": "#0D9373",
     "light": "#07C983",
-    "dark": "#0D9373",
-    "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
-    }
+    "dark": "#0D9373"
   },
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "mailto:support@getscorecard.ai"
     }
   ],
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "name": "Login",
+    "url": "https://app.getscorecard.ai"
   },
   "tabs": [
     {
       "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
-    },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "url": "api"
     }
   ],
   "navigation": [
     {
-      "group": "Get Started",
+      "group": "Prompts",
       "pages": [
-        "introduction",
-        "quickstart",
-        "development"
+        "create-prompt",
+        "get-prompt-by-id",
+        "get-prompt-by-name",
+        "get-prompt-graph",
+        "get-root-prompts",
+        "update-prompt"
       ]
     },
     {
-      "group": "Essentials",
+      "group": "Runs",
       "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
+        "create-run",
+        "read-run",
+        "read-run-metrics",
+        "update-run-status"
       ]
     },
     {
-      "group": "API Documentation",
+      "group": "Test Management",
       "pages": [
-        "api-reference/introduction"
+        "create-testcase",
+        "read-testcase",
+        "read-testcases",
+        "delete-testcase",
+        "create-testrecord",
+        "read-testrecord",
+        "create-testset",
+        "read-testset",
+        "read-testset-schema",
+        "update-score"
       ]
     },
     {
-      "group": "Endpoint Examples",
+      "group": "Traces",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "get-traces",
+        "get-trace-spans"
+      ]
+    },
+    {
+      "group": "Root",
+      "pages": [
+        "root"
       ]
     }
   ],
   "footerSocials": {
-    "x": "https://x.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+    "github": "https://github.com/scorecard-ai"
   }
 }
