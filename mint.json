@@ -7,9 +7,9 @@
   },
   "favicon": "/images/favicon.png",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373"
+    "primary": "#b9acf9",
+    "light": "#b9acf9",
+    "dark": "#b9acf9"
   },
   "topbarLinks": [
     {
@@ -23,6 +23,10 @@
   },
   "tabs": [
     {
+      "name": "Documentation",
+      "url": "introduction"
+    },
+    {
       "name": "API Reference",
       "url": "api"
     }
@@ -31,49 +35,49 @@
     {
       "group": "Prompts",
       "pages": [
-        "create-prompt",
-        "get-prompt-by-id",
-        "get-prompt-by-name",
-        "get-prompt-graph",
-        "get-root-prompts",
-        "update-prompt"
+        "api/v1/create-prompt",
+        "api/v1/get-prompt-by-id",
+        "api/v1/get-prompt-by-name",
+        "api/v1/update-prompt"
       ]
     },
     {
       "group": "Runs",
       "pages": [
-        "create-run",
-        "read-run",
-        "read-run-metrics",
-        "update-run-status"
+        "api/v1/create-run",
+        "api/v1/read-run",
+        "api/v1/read-run-metrics",
+        "api/v1/update-run-status"
       ]
     },
     {
-      "group": "Test Management",
+      "group": "Test Cases",
       "pages": [
-        "create-testcase",
-        "read-testcase",
-        "read-testcases",
-        "delete-testcase",
-        "create-testrecord",
-        "read-testrecord",
-        "create-testset",
-        "read-testset",
-        "read-testset-schema",
-        "update-score"
+        "api/v1/create-testcase",
+        "api/v1/read-testcase",
+        "api/v1/read-testcases",
+        "api/v1/delete-testcase"
       ]
     },
     {
-      "group": "Traces",
+      "group": "Test Records",
       "pages": [
-        "get-traces",
-        "get-trace-spans"
+        "api/v1/create-testrecord",
+        "api/v1/read-testrecord"
       ]
     },
     {
-      "group": "Root",
+      "group": "Test Sets",
       "pages": [
-        "root"
+        "api/v1/create-testset",
+        "api/v1/read-testset",
+        "api/v1/read-testset-schema"
+      ]
+    },
+    {
+      "group": "Scoring",
+      "pages": [
+        "api/v1/update-score"
       ]
     }
   ],
