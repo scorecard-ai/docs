@@ -1,72 +1,277 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "title": "ScoreCard AI API",
+    "description": "Provides an API for logging testcases and running testsets against a model.",
+    "contact": {
+      "name": "Scorecard Team",
+      "email": "team@getscorecard.ai",
+      "url": "getscorecard.ai"
+    },
     "license": {
-      "name": "MIT"
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
     },
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
   "paths": {
-    "/plants": {
+    "/v1/": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "tags": [
+          "v1"
+        ],
+        "summary": "Root",
+        "description": "Root endpoint that returns a welcome message.",
+        "operationId": "root_v1__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const v1RetrieveResponse = await scorecard.v1.retrieve();\n\n  console.log(v1RetrieveResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nv1 = client.v1.retrieve()\nprint(v1)"
+          }
+        ]
+      }
+    },
+    "/v1/testset/{testset_id}": {
+      "get": {
+        "tags": [
+          "v1",
+          "testset"
+        ],
+        "summary": "Read Testset",
+        "description": "Retrieve Testset metadata without Testcase data",
+        "operationId": "read_testset_v1_testset__testset_id__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
         "parameters": [
           {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
+            "name": "testset_id",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "title": "Testset Id"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
+                  "$ref": "#/components/schemas/Testset"
                 }
               }
             }
           },
-          "400": {
-            "description": "Unexpected error",
+          "401": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
           }
-        }
+        },
+        "x-fern-sdk-group-name": "testset",
+        "x-fern-sdk-method-name": "get",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testset = await scorecard.v1.testset.retrieve(0);\n\n  console.log(testset.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestset = client.v1.testset.retrieve(\n    0,\n)\nprint(testset.id)"
+          }
+        ]
       },
+      "delete": {
+        "tags": [
+          "v1",
+          "testset"
+        ],
+        "summary": "Delete",
+        "description": "Delete a Testset",
+        "operationId": "delete_v1_testset__testset_id__delete",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "testset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Testset"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testset = await scorecard.v1.testset.delete(0);\n\n  console.log(testset.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestset = client.v1.testset.delete(\n    0,\n)\nprint(testset.id)"
+          }
+        ]
+      }
+    },
+    "/v1/testset": {
       "post": {
-        "description": "Creates a new plant in the store",
+        "tags": [
+          "v1",
+          "testset"
+        ],
+        "summary": "Create Testset",
+        "description": "Create a new Testset",
+        "operationId": "create_testset_v1_testset_post",
         "requestBody": {
-          "description": "Plant to add to the store",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/TestsetCreateParams"
               }
             }
           },
@@ -74,122 +279,5134 @@
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/Testset"
                 }
               }
             }
           },
-          "400": {
-            "description": "unexpected error",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-fern-sdk-group-name": "testset",
+        "x-fern-sdk-method-name": "create",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testset = await scorecard.v1.testset.create({ name: 'string' });\n\n  console.log(testset.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestset = client.v1.testset.create(\n    name=\"string\",\n)\nprint(testset.id)"
+          }
+        ]
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/v1/testset/{testset_id}/schema": {
+      "get": {
+        "tags": [
+          "v1",
+          "testset"
+        ],
+        "summary": "Read Testset Schema",
+        "description": "Read the schema of a Testset",
+        "operationId": "read_testset_schema_v1_testset__testset_id__schema_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
         "parameters": [
           {
-            "name": "id",
+            "name": "testset_id",
             "in": "path",
-            "description": "ID of plant to delete",
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "title": "Testset Id"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
+          "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/CustomSchema-Output"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
           }
-        }
+        },
+        "x-fern-sdk-group-name": "testset",
+        "x-fern-sdk-method-name": "read_schema",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const customSchemaOutput = await scorecard.v1.testset.schema.retrieve(0);\n\n  console.log(customSchemaOutput.variables);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nschema = client.v1.testset.schema.retrieve(\n    0,\n)\nprint(schema.variables)"
+          }
+        ]
+      }
+    },
+    "/v1/testset/{testset_id}/testcase": {
+      "get": {
+        "tags": [
+          "v1",
+          "testcase"
+        ],
+        "summary": "Read Testcases",
+        "description": "Retrieve all Testcases from a Testset",
+        "operationId": "read_testcases_v1_testset__testset_id__testcase_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "testset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testset Id"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedTestcaseResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "testset",
+        "x-fern-sdk-method-name": "get_testcases",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const paginatedTestcaseResponse = await scorecard.v1.testset.testcase.list(0);\n\n  console.log(paginatedTestcaseResponse.count);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestcase = client.v1.testset.testcase.list(\n    0,\n)\nprint(testcase.count)"
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "v1",
+          "testcase"
+        ],
+        "summary": "Create Testcase",
+        "description": "Create a new Testcase",
+        "operationId": "create_testcase_v1_testset__testset_id__testcase_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "testset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testset Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestcaseCreateParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestCase"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "testcase",
+        "x-fern-sdk-method-name": "create",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testCase = await scorecard.v1.testset.testcase.create(0, { user_query: 'string' });\n\n  console.log(testCase.testset_id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestcase = client.v1.testset.testcase.create(\n    0,\n    user_query=\"string\",\n)\nprint(testcase.testset_id)"
+          }
+        ]
+      }
+    },
+    "/v1/testset/{testset_id}/testcase/{testcase_id}": {
+      "get": {
+        "tags": [
+          "v1",
+          "testcase"
+        ],
+        "summary": "Read Testcase",
+        "description": "Retrieve Testcase data",
+        "operationId": "read_testcase_v1_testset__testset_id__testcase__testcase_id__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "testcase_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testcase Id"
+            }
+          },
+          {
+            "name": "testset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestCase"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "testcase",
+        "x-fern-sdk-method-name": "get",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testCase = await scorecard.v1.testset.testcase.retrieve(0, 0);\n\n  console.log(testCase.testset_id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestcase = client.v1.testset.testcase.retrieve(\n    0,\n    testset_id=0,\n)\nprint(testcase.testset_id)"
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "v1",
+          "testcase"
+        ],
+        "summary": "Delete Testcase",
+        "description": "Delete a Testcase",
+        "operationId": "delete_testcase_v1_testset__testset_id__testcase__testcase_id__delete",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "testcase_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testcase Id"
+            }
+          },
+          {
+            "name": "testset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testcaseDeleteResponse = await scorecard.v1.testset.testcase.delete(0, 0);\n\n  console.log(testcaseDeleteResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestcase = client.v1.testset.testcase.delete(\n    0,\n    testset_id=0,\n)\nprint(testcase)"
+          }
+        ]
+      }
+    },
+    "/v1/run/{run_id}/testrecord/{testrecord_id}": {
+      "get": {
+        "tags": [
+          "v1",
+          "testrecord"
+        ],
+        "summary": "Read Testrecord",
+        "description": "Retrieve Testrecord metadata",
+        "operationId": "read_testrecord_v1_run__run_id__testrecord__testrecord_id__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "testrecord_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testrecord Id"
+            }
+          },
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Testrecord"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "testrecord",
+        "x-fern-sdk-method-name": "get",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testrecord = await scorecard.v1.run.testrecord.retrieve(0, 0);\n\n  console.log(testrecord.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestrecord = client.v1.run.testrecord.retrieve(\n    0,\n    run_id=0,\n)\nprint(testrecord.id)"
+          }
+        ]
+      }
+    },
+    "/v1/run/{run_id}/testrecord": {
+      "post": {
+        "tags": [
+          "v1",
+          "testrecord"
+        ],
+        "summary": "Create Testrecord",
+        "description": "Create a new Testrecord",
+        "operationId": "create_testrecord_v1_run__run_id__testrecord_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestrecordCreateParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Testrecord"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "testrecord",
+        "x-fern-sdk-method-name": "create",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testrecord = await scorecard.v1.run.testrecord.create(0);\n\n  console.log(testrecord.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestrecord = client.v1.run.testrecord.create(\n    0,\n)\nprint(testrecord.id)"
+          }
+        ]
+      }
+    },
+    "/v1/run": {
+      "post": {
+        "tags": [
+          "v1",
+          "run"
+        ],
+        "summary": "Create Run",
+        "description": "Create a new Run",
+        "operationId": "create_run_v1_run_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RunCreateParams"
+                  }
+                ],
+                "title": "Run Params",
+                "description": "The parameters to create a new run."
+              },
+              "examples": {
+                "example1": {
+                  "summary": "Example RunCreateParams",
+                  "value": {
+                    "testset_id": 1,
+                    "status": "RUNNING_EXECUTION",
+                    "model_params": {
+                      "param1": "value1",
+                      "param2": "value2"
+                    },
+                    "metrics": [
+                      1,
+                      2
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-fern-sdk-group-name": "run",
+        "x-fern-sdk-method-name": "create",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const run = await scorecard.v1.run.create();\n\n  console.log(run.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nrun = client.v1.run.create()\nprint(run.id)"
+          }
+        ]
+      }
+    },
+    "/v1/run/{run_id}": {
+      "get": {
+        "tags": [
+          "v1",
+          "run"
+        ],
+        "summary": "Read Run",
+        "description": "Retrieve a Run metadata",
+        "operationId": "read_run_v1_run__run_id__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "The id of the run to retrieve.",
+              "examples": [
+                310
+              ],
+              "title": "Run Id"
+            },
+            "description": "The id of the run to retrieve.",
+            "examples": {
+              "run_id": {
+                "value": 310,
+                "summary": "Example run id."
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "run",
+        "x-fern-sdk-method-name": "get",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const run = await scorecard.v1.run.retrieve(310);\n\n  console.log(run.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nrun = client.v1.run.retrieve(\n    310,\n)\nprint(run.id)"
+          }
+        ]
+      }
+    },
+    "/v1/run/{run_id}/status": {
+      "patch": {
+        "tags": [
+          "v1",
+          "run"
+        ],
+        "summary": "Update Run Status",
+        "description": "Update the status of a run.",
+        "operationId": "update_run_status_v1_run__run_id__status_patch",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "The id of the run to update.",
+              "examples": [
+                310
+              ],
+              "title": "Run Id"
+            },
+            "description": "The id of the run to update.",
+            "examples": {
+              "run_id": {
+                "value": 310,
+                "summary": "Example run id."
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStatusParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "run",
+        "x-fern-sdk-method-name": "update_status",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const run = await scorecard.v1.run.status.update(310, { status: 'pending' });\n\n  console.log(run.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nstatus = client.v1.run.status.update(\n    310,\n    status=\"pending\",\n)\nprint(status.id)"
+          }
+        ]
+      }
+    },
+    "/v1/run/{run_id}/testrecord/{testrecord_id}/score": {
+      "post": {
+        "tags": [
+          "v1",
+          "score"
+        ],
+        "summary": "Create Score",
+        "description": "Create a score",
+        "operationId": "create_score_v1_run__run_id__testrecord__testrecord_id__score_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "testrecord_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testrecord Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScoreCreateParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Grade"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "score",
+        "x-fern-sdk-method-name": "create",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const grade = await scorecard.v1.run.testrecord.score.create(0, 0, {\n    binary_score: true,\n    int_score: 0,\n    metric_id: 0,\n    reasoning: 'string',\n  });\n\n  console.log(grade.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nscore = client.v1.run.testrecord.score.create(\n    0,\n    run_id=0,\n    binary_score=True,\n    int_score=0,\n    metric_id=0,\n    reasoning=\"string\",\n)\nprint(score.id)"
+          }
+        ]
+      }
+    },
+    "/v1/run/{run_id}/testrecord/{testrecord_id}/score/{score_id}": {
+      "patch": {
+        "tags": [
+          "v1",
+          "score"
+        ],
+        "summary": "Update Score",
+        "description": "Update a score",
+        "operationId": "update_score_v1_run__run_id__testrecord__testrecord_id__score__score_id__patch",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "testrecord_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testrecord Id"
+            }
+          },
+          {
+            "name": "score_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Score Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScoreUpdateParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Grade"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "score",
+        "x-fern-sdk-method-name": "update",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const grade = await scorecard.v1.run.testrecord.score.update(0, 0, 0, {\n    binary_score: true,\n    int_score: 0,\n    reasoning: 'string',\n  });\n\n  console.log(grade.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nscore = client.v1.run.testrecord.score.update(\n    0,\n    run_id=0,\n    testrecord_id=0,\n    binary_score=True,\n    int_score=0,\n    reasoning=\"string\",\n)\nprint(score.id)"
+          }
+        ]
+      }
+    },
+    "/v1/run_metric/{run_id}": {
+      "get": {
+        "tags": [
+          "v1",
+          "run_metric"
+        ],
+        "summary": "Read Run Metrics",
+        "description": "Retrieve metrics associated with a run",
+        "operationId": "read_run_metrics_v1_run_metric__run_id__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "The id of the run to retrieve.",
+              "examples": [
+                310
+              ],
+              "title": "Run Id"
+            },
+            "description": "The id of the run to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RunMetric"
+                  },
+                  "title": "Response Read Run Metrics V1 Run Metric  Run Id  Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "run_metric",
+        "x-fern-sdk-method-name": "get",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const runMetricRetrieveResponse = await scorecard.v1.runMetric.retrieve(310);\n\n  console.log(runMetricRetrieveResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nrun_metric = client.v1.run_metric.retrieve(\n    310,\n)\nprint(run_metric)"
+          }
+        ]
+      }
+    },
+    "/v1/traces": {
+      "get": {
+        "tags": [
+          "v1",
+          "traces"
+        ],
+        "summary": "Get Traces",
+        "description": "Retrieve traces",
+        "operationId": "get_traces_v1_traces_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Trace"
+                  },
+                  "type": "array",
+                  "title": "Response Get Traces V1 Traces Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-fern-sdk-group-name": "traces",
+        "x-fern-sdk-method-name": "get"
+      }
+    },
+    "/v1/traces/{trace_id}/spans": {
+      "get": {
+        "tags": [
+          "v1",
+          "traces"
+        ],
+        "summary": "Get Trace Spans",
+        "description": "Retrieve trace spans",
+        "operationId": "get_trace_spans_v1_traces__trace_id__spans_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "trace_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The ID of the trace to retrieve spans from.",
+              "examples": [
+                "8e45b6060adab3fb460c3a0ca65f5046"
+              ],
+              "title": "Trace Id"
+            },
+            "description": "The ID of the trace to retrieve spans from.",
+            "examples": {
+              "trace_id": {
+                "value": "8e45b6060adab3fb460c3a0ca65f5046",
+                "summary": "The ID of the trace to retrieve spans from."
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Span"
+                  },
+                  "title": "Response Get Trace Spans V1 Traces  Trace Id  Spans Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "traces",
+        "x-fern-sdk-method-name": "get"
+      }
+    },
+    "/v1/prompt": {
+      "post": {
+        "tags": [
+          "v1",
+          "prompt"
+        ],
+        "summary": "Create Prompt",
+        "description": "Create a new prompt",
+        "operationId": "create_prompt_v1_prompt_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/PromptCreateParams"
+                  }
+                ],
+                "title": "Prompt Params",
+                "description": "The parameters to create a new prompt."
+              },
+              "examples": {
+                "example_root": {
+                  "summary": "Example PromptCreateParams for creating a new root prompt",
+                  "value": {
+                    "name": "Prompt Name",
+                    "description": "Description of the prompt",
+                    "prompt_template": "You are a virtual assistant",
+                    "model_params": {
+                      "param1": "value1",
+                      "param2": 0.1,
+                      "param3": 100,
+                      "param4": true
+                    }
+                  }
+                },
+                "example_child": {
+                  "summary": "Example PromptCreateParams for creating a child of an existing prompt",
+                  "value": {
+                    "parent_id": "7ac3cbd5-3b99-4e72-97f3-9cd2e749cace",
+                    "description": "Description of the prompt",
+                    "prompt_template": "You are a virtual assistant",
+                    "model_params": {
+                      "param1": "value1",
+                      "param2": 0.1,
+                      "param3": 100,
+                      "param4": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Prompt"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-fern-sdk-group-name": "prompt",
+        "x-fern-sdk-method-name": "create",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const prompt = await scorecard.v1.prompt.create({ prompt_template: 'You are a virtual assistant' });\n\n  console.log(prompt.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nprompt = client.v1.prompt.create(\n    prompt_template=\"You are a virtual assistant\",\n)\nprint(prompt.id)"
+          }
+        ]
+      }
+    },
+    "/v1/prompt/roots": {
+      "get": {
+        "tags": [
+          "v1",
+          "prompt"
+        ],
+        "summary": "Get Root Prompts",
+        "description": "Retrieve active root prompts for the org",
+        "operationId": "get_root_prompts_v1_prompt_roots_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Prompt"
+                  },
+                  "type": "array",
+                  "title": "Response Get Root Prompts V1 Prompt Roots Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-fern-sdk-group-name": "prompt",
+        "x-fern-sdk-method-name": "get_roots",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const promptListResponse = await scorecard.v1.prompts.list();\n\n  console.log(promptListResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nprompt = client.v1.prompts.list()\nprint(prompt)"
+          }
+        ]
+      }
+    },
+    "/v1/prompt/{id}": {
+      "get": {
+        "tags": [
+          "v1",
+          "prompt"
+        ],
+        "summary": "Get Prompt By Id",
+        "description": "Retrieve a prompt by id",
+        "operationId": "get_prompt_by_id_v1_prompt__id__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The id of the prompt to get.",
+              "examples": "7ac3cbd5-3b99-4e72-97f3-9cd2e749cace",
+              "title": "Id"
+            },
+            "description": "The id of the prompt to get.",
+            "examples": {
+              "id": {
+                "value": "7ac3cbd5-3b99-4e72-97f3-9cd2e749cace",
+                "summary": "Example prompt id."
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Prompt"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "prompt",
+        "x-fern-sdk-method-name": "get",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const prompt = await scorecard.v1.prompts.retrieve('string');\n\n  console.log(prompt.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nprompt = client.v1.prompts.retrieve(\n    \"string\",\n)\nprint(prompt.id)"
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "v1",
+          "prompt"
+        ],
+        "summary": "Update Prompt",
+        "description": "Update a prompt",
+        "operationId": "update_prompt_v1_prompt__id__patch",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The id of the prompt to update.",
+              "examples": "7ac3cbd5-3b99-4e72-97f3-9cd2e749cace",
+              "title": "Id"
+            },
+            "description": "The id of the prompt to update.",
+            "examples": {
+              "id": {
+                "value": "7ac3cbd5-3b99-4e72-97f3-9cd2e749cace",
+                "summary": "Example prompt id."
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/PromptUpdateParams"
+                  }
+                ],
+                "description": "The parameters to update a prompt.",
+                "title": "Update Params"
+              },
+              "examples": {
+                "example_update": {
+                  "value": {
+                    "name": "new_prompt_name",
+                    "is_archived": true
+                  },
+                  "summary": "Example PromptUpdateParams for modifying the name and archive status of a prompt."
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Prompt"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "prompt",
+        "x-fern-sdk-method-name": "update",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const prompt = await scorecard.v1.prompts.update('string');\n\n  console.log(prompt.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nprompt = client.v1.prompts.update(\n    \"string\",\n)\nprint(prompt.id)"
+          }
+        ]
+      }
+    },
+    "/v1/prompt/name/{name}": {
+      "get": {
+        "tags": [
+          "v1",
+          "prompt"
+        ],
+        "summary": "Get Prompt By Name",
+        "description": "Retrieve a prod prompt by name",
+        "operationId": "get_prompt_by_name_v1_prompt_name__name__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Name of the prompt.",
+              "title": "Name"
+            },
+            "description": "Name of the prompt.",
+            "examples": {
+              "example_get": {
+                "value": {
+                  "name": "promt_name"
+                },
+                "summary": "For reading a production prompt by name."
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Prompt"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "prompt",
+        "x-fern-sdk-method-name": "get_by_name",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const prompt = await scorecard.v1.prompts.retrieveByName('string');\n\n  console.log(prompt.id);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nprompt = client.v1.prompts.retrieve_by_name(\n    \"string\",\n)\nprint(prompt.id)"
+          }
+        ]
+      }
+    },
+    "/v1/prompt/{id}/graph": {
+      "get": {
+        "tags": [
+          "v1",
+          "prompt"
+        ],
+        "summary": "Get Prompt Graph",
+        "description": "Retrieve all nodes within the same graph as the prompt, sorted by created_at desc",
+        "operationId": "get_prompt_graph_v1_prompt__id__graph_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The id of the prompt.",
+              "examples": "7ac3cbd5-3b99-4e72-97f3-9cd2e749cace",
+              "title": "Id"
+            },
+            "description": "The id of the prompt.",
+            "examples": {
+              "id": {
+                "value": "7ac3cbd5-3b99-4e72-97f3-9cd2e749cace",
+                "summary": "Example prompt id."
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Prompt"
+                  },
+                  "title": "Response Get Prompt Graph V1 Prompt  Id  Graph Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthenticatedError"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "prompt",
+        "x-fern-sdk-method-name": "get_graph",
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const graphListResponse = await scorecard.v1.prompts.graph.list('string');\n\n  console.log(graphListResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ngraph = client.v1.prompts.graph.list(\n    \"string\",\n)\nprint(graph)"
+          }
+        ]
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Root",
+        "description": "Root endpoint that returns a welcome message.",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "x-speakeasy-ignore": true,
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const topLevelWelcomeMessageResponse = await scorecard.topLevel.welcomeMessage();\n\n  console.log(topLevelWelcomeMessageResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntop_level = client.top_level.welcome_message()\nprint(top_level)"
+          }
+        ]
+      }
+    },
+    "/create-run": {
+      "post": {
+        "summary": "Create Run",
+        "description": "Create a new run.",
+        "operationId": "create_run_create_run_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRunParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const runCreateResponse = await scorecard.runs.create({ scoring_config_id: 0, testset_id: 0 });\n\n  console.log(runCreateResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nrun = client.runs.create(\n    scoring_config_id=0,\n    testset_id=0,\n)\nprint(run)"
+          }
+        ]
+      }
+    },
+    "/testset/{testset_id}": {
+      "get": {
+        "summary": "Get Testset",
+        "operationId": "get_testset_testset__testset_id__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "testset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Testset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testsetRetrieveResponse = await scorecard.testsets.retrieve(0);\n\n  console.log(testsetRetrieveResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestset = client.testsets.retrieve(\n    0,\n)\nprint(testset)"
+          }
+        ]
+      }
+    },
+    "/create-testset": {
+      "post": {
+        "summary": "Create Testset",
+        "description": "Create a new test set.",
+        "operationId": "create_testset_create_testset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestSetCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testsetCreateResponse = await scorecard.testsets.create({ name: 'string', using_retrieval: true });\n\n  console.log(testsetCreateResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestset = client.testsets.create(\n    name=\"string\",\n    using_retrieval=True,\n)\nprint(testset)"
+          }
+        ]
+      }
+    },
+    "/add-testcase": {
+      "post": {
+        "summary": "Add Testcase",
+        "description": "Add a new test case to an existing test set.",
+        "operationId": "add_testcase_add_testcase_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestCaseCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testcaseCreateResponse = await scorecard.testcases.create({\n    context: 'string',\n    ideal: 'string',\n    response: 'string',\n    testset_id: 0,\n    user_query: 'string',\n  });\n\n  console.log(testcaseCreateResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestcase = client.testcases.create(\n    context=\"string\",\n    ideal=\"string\",\n    response=\"string\",\n    testset_id=0,\n    user_query=\"string\",\n)\nprint(testcase)"
+          }
+        ]
+      }
+    },
+    "/create-testrecord": {
+      "post": {
+        "summary": "Create Testrecord",
+        "description": "Create a new test record.",
+        "operationId": "create_testrecord_create_testrecord_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "auto_score",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Auto Score"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestRecordCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const testrecordCreateResponse = await scorecard.testrecord.create({\n    model_response: 'string',\n    run_id: 0,\n    testcase_id: 0,\n  });\n\n  console.log(testrecordCreateResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\ntestrecord = client.testrecord.create(\n    model_response=\"string\",\n    run_id=0,\n    testcase_id=0,\n)\nprint(testrecord)"
+          }
+        ]
+      }
+    },
+    "/update-run/{run_id}": {
+      "patch": {
+        "summary": "Update Run Status",
+        "description": "Update the status of a run.",
+        "operationId": "update_run_status_update_run__run_id__patch",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "JavaScript",
+            "source": "import Scorecard from 'scorecard';\n\nconst scorecard = new Scorecard();\n\nasync function main() {\n  const runUpdateResponse = await scorecard.runs.update(0, { status: 'string' });\n\n  console.log(runUpdateResponse);\n}\n\nmain();"
+          },
+          {
+            "lang": "Python",
+            "source": "from scorecard import Scorecard\n\nclient = Scorecard()\nrun = client.runs.update(\n    0,\n    status=\"string\",\n)\nprint(run)"
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
-      "Plant": {
+      "CreateRunParams": {
+        "properties": {
+          "testset_id": {
+            "type": "integer",
+            "title": "Testset Id"
+          },
+          "scoring_config_id": {
+            "type": "integer",
+            "title": "Scoring Config Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "awaiting_execution"
+          },
+          "model_params": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Params"
+          }
+        },
+        "type": "object",
+        "required": [
+          "testset_id",
+          "scoring_config_id"
+        ],
+        "title": "CreateRunParams"
+      },
+      "CustomSchema-Input": {
+        "properties": {
+          "variables": {
+            "items": {
+              "$ref": "#/components/schemas/CustomVariable"
+            },
+            "type": "array",
+            "title": "Variables",
+            "description": "Ordered list of custom variables"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "CustomSchema",
+        "description": "Custom schema model with an ordered list of custom variables."
+      },
+      "CustomSchema-Output": {
+        "properties": {
+          "variables": {
+            "items": {
+              "$ref": "#/components/schemas/CustomVariable"
+            },
+            "type": "array",
+            "title": "Variables",
+            "description": "Ordered list of custom variables"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "CustomSchema",
+        "description": "Custom schema model with an ordered list of custom variables."
+      },
+      "CustomVariable": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "role": {
+            "$ref": "#/components/schemas/RoleEnum"
+          },
+          "data_type": {
+            "$ref": "#/components/schemas/DataTypeEnum"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "role",
+          "data_type"
+        ],
+        "title": "CustomVariable",
+        "description": "Custom variable model with name, description, role and data type."
+      },
+      "DataTypeEnum": {
+        "type": "string",
+        "enum": [
+          "text",
+          "file_url",
+          "json_object"
+        ],
+        "title": "DataTypeEnum",
+        "description": "Enum for data types."
+      },
+      "FileUrl": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "format": "uri",
+            "title": "Url"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "FileUrl",
+        "description": "File model with url and name."
+      },
+      "Grade": {
+        "properties": {
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "testcase_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testcase Id"
+          },
+          "testrecord_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testrecord Id"
+          },
+          "metric_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metric Id"
+          },
+          "binary_score": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Binary Score"
+          },
+          "int_score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Int Score"
+          },
+          "reasoning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reasoning"
+          },
+          "human_eval": {
+            "type": "boolean",
+            "title": "Human Eval",
+            "default": true
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScoreStatus"
+              }
+            ],
+            "default": "pending"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "title": "Grade"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "JSONObject-Input": {
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/JSONObject-Input"
+                },
+                "type": "object"
+              },
+              {
+                "items": {
+                  "$ref": "#/components/schemas/JSONObject-Input"
+                },
+                "type": "array"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "JSON Object Value",
+            "description": "The value of the JSON object, which can be a dictionary, list, string, integer, float, boolean, or None.",
+            "examples": [
+              {
+                "booleanExample": true,
+                "dictExample": {
+                  "nestedBooleanExample": true,
+                  "nestedFloatExample": 12.34,
+                  "nestedIntegerExample": 123,
+                  "nestedListExample": [
+                    "This is a string inside a nested list",
+                    123,
+                    12.34,
+                    true,
+                    null
+                  ],
+                  "nestedStringExample": "This is a string inside a nested dictionary"
+                },
+                "floatExample": 12.34,
+                "integerExample": 123,
+                "listExample": [
+                  "This is a string inside a list",
+                  123,
+                  12.34,
+                  true,
+                  null,
+                  {
+                    "nestedDictExample": "This is a nested dictionary inside a list"
+                  }
+                ],
+                "stringExample": "This is a string"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "title": "JSONObject"
+      },
+      "JSONObject-Output": {
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/JSONObject-Output"
+                },
+                "type": "object"
+              },
+              {
+                "items": {
+                  "$ref": "#/components/schemas/JSONObject-Output"
+                },
+                "type": "array"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "JSON Object Value",
+            "description": "The value of the JSON object, which can be a dictionary, list, string, integer, float, boolean, or None.",
+            "examples": [
+              {
+                "booleanExample": true,
+                "dictExample": {
+                  "nestedBooleanExample": true,
+                  "nestedFloatExample": 12.34,
+                  "nestedIntegerExample": 123,
+                  "nestedListExample": [
+                    "This is a string inside a nested list",
+                    123,
+                    12.34,
+                    true,
+                    null
+                  ],
+                  "nestedStringExample": "This is a string inside a nested dictionary"
+                },
+                "floatExample": 12.34,
+                "integerExample": 123,
+                "listExample": [
+                  "This is a string inside a list",
+                  123,
+                  12.34,
+                  true,
+                  null,
+                  {
+                    "nestedDictExample": "This is a nested dictionary inside a list"
+                  }
+                ],
+                "stringExample": "This is a string"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "title": "JSONObject"
+      },
+      "NotFoundError": {
+        "properties": {
+          "error": {
+            "type": "string",
+            "title": "Error",
+            "default": "not found"
+          },
+          "error_description": {
+            "type": "string",
+            "title": "Error Description",
+            "default": "The requested resource was not found"
+          },
+          "status_code": {
+            "type": "integer",
+            "title": "Status Code",
+            "default": 400
+          }
+        },
+        "type": "object",
+        "title": "NotFoundError"
+      },
+      "PaginatedTestcaseResponse": {
+        "properties": {
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "next": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2083,
+                "minLength": 1,
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next"
+          },
+          "previous": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2083,
+                "minLength": 1,
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previous"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/TestCase"
+            },
+            "type": "array",
+            "title": "Results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ],
+        "title": "PaginatedTestcaseResponse"
+      },
+      "Prompt": {
+        "properties": {
+          "org_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Org Id"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "is_archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Archived",
+            "default": false
+          },
+          "prompt_template": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Template"
+          },
+          "model_params": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Params"
+          },
+          "root_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Root Id"
+          },
+          "parent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Id"
+          },
+          "merge_parent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Merge Parent Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "title": "Prompt"
+      },
+      "PromptCreateParams": {
+        "properties": {
+          "prompt_template": {
+            "type": "string",
+            "title": "Prompt Template"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "parent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Id"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "model_params": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "boolean"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Params"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "prompt_template"
+        ],
+        "title": "PromptCreateParams"
+      },
+      "PromptUpdateParams": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "is_archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Archived",
+            "default": false
+          },
+          "is_prod": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Prod",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "PromptUpdateParams"
+      },
+      "RoleEnum": {
+        "type": "string",
+        "enum": [
+          "input",
+          "output",
+          "label",
+          "metadata"
+        ],
+        "title": "RoleEnum",
+        "description": "Enum for role types."
+      },
+      "Run": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "execution_start_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Start Time"
+          },
+          "execution_end_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution End Time"
+          },
+          "testset_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testset Id"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "limit_testcases": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Limit Testcases"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "model_params": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Params"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "scoring_config_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scoring Config Id"
+          },
+          "prompt_template": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Template"
+          },
+          "scoring_start_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scoring Start Time"
+          },
+          "scoring_end_time": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scoring End Time"
+          }
+        },
+        "type": "object",
+        "title": "Run"
+      },
+      "RunCreateParams": {
+        "properties": {
+          "testset_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testset Id"
+          },
+          "scoring_config_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scoring Config Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "awaiting_execution"
+          },
+          "model_params": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Params"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "api"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "prompt_template": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Template"
+          },
+          "metrics": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metrics"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RunCreateParams"
+      },
+      "RunMetric": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "metric_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metric Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "title": "RunMetric"
+      },
+      "RunStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "awaiting_execution",
+          "running_execution",
+          "awaiting_scoring",
+          "running_scoring",
+          "awaiting_human_scoring",
+          "completed"
+        ],
+        "title": "RunStatus"
+      },
+      "ScoreCreateParams": {
+        "properties": {
+          "metric_id": {
+            "type": "integer",
+            "title": "Metric Id"
+          },
+          "int_score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Int Score"
+          },
+          "binary_score": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Binary Score"
+          },
+          "reasoning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reasoning"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "metric_id",
+          "int_score",
+          "binary_score",
+          "reasoning"
+        ],
+        "title": "ScoreCreateParams"
+      },
+      "ScoreStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "error",
+          "completed"
+        ],
+        "title": "ScoreStatus"
+      },
+      "ScoreUpdateParams": {
+        "properties": {
+          "int_score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Int Score"
+          },
+          "binary_score": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Binary Score"
+          },
+          "reasoning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reasoning"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "int_score",
+          "binary_score",
+          "reasoning"
+        ],
+        "title": "ScoreUpdateParams"
+      },
+      "Span": {
+        "properties": {
+          "Children": {
+            "items": {
+              "$ref": "#/components/schemas/Span"
+            },
+            "type": "array",
+            "title": "Children"
+          },
+          "Timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "TraceId": {
+            "type": "string",
+            "title": "Traceid"
+          },
+          "SpanId": {
+            "type": "string",
+            "title": "Spanid"
+          },
+          "ParentSpanId": {
+            "type": "string",
+            "title": "Parentspanid"
+          },
+          "TraceState": {
+            "type": "string",
+            "title": "Tracestate"
+          },
+          "SpanName": {
+            "type": "string",
+            "title": "Spanname"
+          },
+          "SpanKind": {
+            "type": "string",
+            "title": "Spankind"
+          },
+          "ServiceName": {
+            "type": "string",
+            "title": "Servicename"
+          },
+          "ResourceAttributes": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Resourceattributes"
+          },
+          "ScopeName": {
+            "type": "string",
+            "title": "Scopename"
+          },
+          "ScopeVersion": {
+            "type": "string",
+            "title": "Scopeversion"
+          },
+          "SpanAttributes": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Spanattributes"
+          },
+          "Duration": {
+            "type": "integer",
+            "title": "Duration"
+          },
+          "StatusCode": {
+            "type": "string",
+            "title": "Statuscode"
+          },
+          "StatusMessage": {
+            "type": "string",
+            "title": "Statusmessage"
+          },
+          "Events.Timestamp": {
+            "items": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "type": "array",
+            "title": "Events.Timestamp"
+          },
+          "Events.Name": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Events.Name"
+          },
+          "Events.Attributes": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Events.Attributes"
+          },
+          "Links.TraceId": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Links.Traceid"
+          },
+          "Links.SpanId": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Links.Spanid"
+          },
+          "Links.TraceState": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Links.Tracestate"
+          },
+          "Links.Attributes": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Links.Attributes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "Children",
+          "Timestamp",
+          "TraceId",
+          "SpanId",
+          "ParentSpanId",
+          "TraceState",
+          "SpanName",
+          "SpanKind",
+          "ServiceName",
+          "ResourceAttributes",
+          "ScopeName",
+          "ScopeVersion",
+          "SpanAttributes",
+          "Duration",
+          "StatusCode",
+          "StatusMessage",
+          "Events.Timestamp",
+          "Events.Name",
+          "Events.Attributes",
+          "Links.TraceId",
+          "Links.SpanId",
+          "Links.TraceState",
+          "Links.Attributes"
+        ],
+        "title": "Span"
+      },
+      "TestCase": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "testset_id": {
+            "type": "integer",
+            "title": "Testset Id"
+          },
+          "user_query": {
+            "type": "string",
+            "title": "User Query"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "ideal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ideal"
+          },
+          "custom_inputs": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Output"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Inputs"
+          },
+          "custom_labels": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Output"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Labels"
+          }
+        },
+        "type": "object",
+        "required": [
+          "testset_id",
+          "user_query"
+        ],
+        "title": "TestCase"
+      },
+      "TestCaseCreate": {
+        "properties": {
+          "testset_id": {
+            "type": "integer",
+            "title": "Testset Id"
+          },
+          "user_query": {
+            "type": "string",
+            "title": "User Query"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "response": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response"
+          },
+          "ideal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ideal"
+          }
+        },
+        "type": "object",
+        "required": [
+          "testset_id",
+          "user_query",
+          "context",
+          "response",
+          "ideal"
+        ],
+        "title": "TestCaseCreate"
+      },
+      "TestRecordCreate": {
+        "properties": {
+          "run_id": {
+            "type": "integer",
+            "title": "Run Id"
+          },
+          "testcase_id": {
+            "type": "integer",
+            "title": "Testcase Id"
+          },
+          "model_response": {
+            "type": "string",
+            "title": "Model Response"
+          },
+          "user_query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Query"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          },
+          "ideal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ideal"
+          },
+          "debug_output": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Debug Output"
+          },
+          "model_params": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Params"
+          },
+          "testset_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testset Id"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "testcase_id",
+          "model_response"
+        ],
+        "title": "TestRecordCreate"
+      },
+      "TestSetCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "using_retrieval": {
+            "type": "boolean",
+            "title": "Using Retrieval"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "using_retrieval"
+        ],
+        "title": "TestSetCreate"
+      },
+      "TestcaseCreateParams": {
+        "properties": {
+          "user_query": {
+            "type": "string",
+            "title": "User Query"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "ideal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ideal"
+          },
+          "custom_inputs": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Input"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Inputs"
+          },
+          "custom_labels": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Input"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Labels"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "user_query"
+        ],
+        "title": "TestcaseCreateParams"
+      },
+      "Testrecord": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "testset_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testset Id"
+          },
+          "testcase_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testcase Id"
+          },
+          "user_query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Query"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "model_response": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Response"
+          },
+          "ideal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ideal"
+          },
+          "full_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Prompt"
+          },
+          "custom_inputs": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Output"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Inputs"
+          },
+          "custom_labels": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Output"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Labels"
+          },
+          "custom_outputs": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Output"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Outputs"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          },
+          "model_params": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Params"
+          },
+          "model_debug_info": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Debug Info"
+          }
+        },
+        "type": "object",
+        "title": "Testrecord"
+      },
+      "TestrecordCreateParams": {
+        "properties": {
+          "testset_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testset Id"
+          },
+          "testcase_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testcase Id"
+          },
+          "user_query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Query"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "response": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response"
+          },
+          "ideal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ideal"
+          },
+          "custom_inputs": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Input"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Inputs"
+          },
+          "custom_outputs": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Input"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Outputs"
+          },
+          "custom_labels": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileUrl"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JSONObject-Input"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Labels"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          },
+          "model_params": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Params"
+          },
+          "model_debug_info": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Debug Info"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "TestrecordCreateParams"
+      },
+      "Testset": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "using_retrieval": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Using Retrieval"
+          },
+          "ingestion_method": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ingestion Method"
+          },
+          "num_testcases": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Num Testcases",
+            "default": 0
+          },
+          "published": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "is_archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Archived",
+            "default": false
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "custom_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CustomSchema-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "Testset"
+      },
+      "TestsetCreateParams": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "using_retrieval": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Using Retrieval"
+          },
+          "custom_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CustomSchema-Input"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "name"
         ],
-        "type": "object",
+        "title": "TestsetCreateParams"
+      },
+      "Trace": {
         "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
+          "TraceId": {
+            "type": "string",
+            "title": "Traceid"
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+          "Start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start"
           },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
+          "End": {
+            "type": "string",
+            "format": "date-time",
+            "title": "End"
           }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+        },
         "type": "object",
+        "required": [
+          "TraceId",
+          "Start",
+          "End"
+        ],
+        "title": "Trace"
+      },
+      "UnauthenticatedError": {
         "properties": {
           "error": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "title": "Error",
+            "default": "unauthenticated"
           },
-          "message": {
-            "type": "string"
+          "error_description": {
+            "type": "string",
+            "title": "Error Description",
+            "default": "The request is not authenticated"
+          },
+          "status_code": {
+            "type": "integer",
+            "title": "Status Code",
+            "default": 400
           }
-        }
+        },
+        "type": "object",
+        "title": "UnauthenticatedError"
+      },
+      "UnauthorizedError": {
+        "properties": {
+          "error": {
+            "type": "string",
+            "title": "Error",
+            "default": "unauthorized"
+          },
+          "error_description": {
+            "type": "string",
+            "title": "Error Description",
+            "default": "The user is not authorized to view the requsted resource"
+          },
+          "status_code": {
+            "type": "integer",
+            "title": "Status Code",
+            "default": 400
+          }
+        },
+        "type": "object",
+        "title": "UnauthorizedError"
+      },
+      "UpdateStatusParams": {
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/RunStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "UpdateStatusParams"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "https://api.getscorecard.ai",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "Local development server"
+    }
+  ]
 }
