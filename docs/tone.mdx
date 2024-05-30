@@ -1,0 +1,42 @@
+## Metrics and Scoring
+
+At the core of Scorecard is the principle of metrics and scoring. At Scorecard we've found the process of defining what 'good' performance looks like and selecting a set of metrics to codify that behavior is crucial in understanding and improving the performance of your LLM app. Metrics serve as the benchmarks for assessing the quality of LLM responses, while scoring is the process of applying these metrics to generate actionable insights about your LLM app.
+
+## Selecting metrics
+
+Though Eyeball Eval works for getting a general sense of your product quality, it doesn't provide enough signal to be confident in a change. In order to work your way up from Eyeball Eval to a full-fledged automated evaluation, we'll start with by defining our metric.
+
+## Metric libraries
+
+There are diverse types of metrics available in the Scorecard ecosystem:
+
+1. **Scorecard Core Metrics:** These are best-in-class, industry-standard metrics validated by Scorecard. 
+
+2. **Second-party Metrics:** These encompass metrics from ecosystem partners such as RAGAS and MLflow.
+
+3. **Custom Metrics:** Scorecard also offers the flexibility to define any customized metrics unique to specific needs.
+
+From this set, we can validate custom metrics, and eventually expand into a Large-Scale Testset. Using a Large-Scale Testset and Metrics, Scorecard can automatically evaluate the quality of your LLM application's responses and provide you with actionable feedback.
+
+## Scoring config
+
+Once a set of metrics that best evaluates your LLM application is finalized, these metrics can be grouped together into a Scoring Configuration. This configuration can be run on a regular basis against your LLM application to yield a consistent measure of the performance and quality of its responses.
+
+## Scoring config
+
+Though Eyeball Eval works for getting a general sense of your product quality, it doesn't provide enough signal to be confident in a change. In order to work your way up from Eyeball Eval to a full-fledged automated evaluation, we'll start with by defining our metric.
+
+In order to build a Golden Testset, we will need to identify a set of ~100 high-quality prompts or queries that are representative of your LLM application's use case. We can then use these prompts to build a small set of test data that we know the correct responses to.
+
+From this set, we can validate custom metrics, and eventually expand into a Large-Scale Testset. Using a Large-Scale Testset and Metrics, Scorecard can automatically evaluate the quality of your LLM application's responses and provide you with actionable feedback.
+
+## Metrics Meta-Evaluation
+
+Note: Please reach out to the Scorecard team and we're happy to support you in this process or 
+To import a Golden Testset, go to the Testset Builder and click on the "Import" button. From there, you can upload a CSV file containing your test data.
+
+Alternatively, you can use the Scorecard SDK. Visit the API Reference for further details.
+
+## Metrics Iteration
+
+Once you have your Golden Testset, you can start executing it on your LLM application in production. This will allow you to collect data on the quality of your application's responses. You can do this via GitHub Actions on the next page.

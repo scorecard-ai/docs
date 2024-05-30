@@ -23,15 +23,17 @@
   },
   "tabs": [
     {
-      "name": "Documentation",
-      "url": "introduction"
-    },
-    {
       "name": "API Reference",
       "url": "api"
     }
   ],
   "navigation": [
+    {
+      "group": "Documentation",
+      "pages": [
+        "homepage"
+      ]
+    },
     {
       "group": "Prompts",
       "pages": [
@@ -83,5 +85,11 @@
   ],
   "footerSocials": {
     "github": "https://github.com/scorecard-ai"
-  }
+  },
+  "redirects": [
+    {
+      "source": "/get-started/api-quickstart/python",
+      "destination": "docs/python-quickstart"
+    }
+  ]
 }

@@ -1,0 +1,137 @@
+Retrieval-augment generation, or RAG is the use of retrieval (i.e. search and vector stores) to provide generative models with additional context, or *grounding*. Grounding makes sure that your LLM has access to information past the knowledge cutoff, or specific to your organization. Some companies also refer to RAG as “finetuning”, since it allows you to customize the LLM to your data (i.e. ”chat with your data”).
+
+A production RAG system might look something like this:
+
+<br />
+
+<figure class="dark:hidden" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-system.png" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<figure class="hidden dark:block" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-system.png" style={{ filter: "invert(100%)", display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<br />
+
+In this diagram, we start by loading our data into the retrieval system -- this process usually consists of chunking documents into chunks that can fit in the context window. The retrieval system can consist of only a vector store, or a compilation of several components, such as a traditional reverse index and/or a reranking model. During inference time, we send the user query to the retrieval system, which sends the retrieved chunks to the generation model (i.e. LLM) that uses the chunks as context in generating a response.
+
+For our purposes, we'll simplify the diagram into the basic components:
+
+<br />
+
+<figure class="dark:hidden" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-simplified.png" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<figure class="hidden dark:block" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-simplified.png" style={{ filter: "invert(100%)", display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<br />
+
+## Retrieval-only tests
+
+For retrieval-only tests, we can measure the accuracy of the retrieval model in terms of recall and precision. Recall measures the proportion of relevant documents that are retrieved out of all relevant documents, while precision measures the proportion of retrieved documents that are relevant.
+
+<br />
+
+<figure class="dark:hidden" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-retrieval-only.png" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<figure class="hidden dark:block" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-retrieval-only.png" style={{ filter: "invert(100%)", display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<br />
+
+### Creating a Ground Truth Dataset
+
+To create a dataset for retrieval-only testing, first define the queries that you want to test the retrieval model on. Then, gather a set of relevant documents or chunks for each query and annotate them accordingly.
+
+Dataset types:
+
+- Label-based
+    - Retrieve 10 documents
+    - Label relevance by a human for top 10
+    - (Evemtially) model grade GPT-4
+- Label-free
+
+### Retrieval-only Metrics
+
+In retrieval-only tests, precision and recall are commonly used metrics to evaluate the performance of a retrieval model. Precision measures how many of the retrieved items are actually relevant to the query, while recall measures how many of the relevant items in the dataset were returned by the retrieval model. Both metrics can be combined into an F1 score, which is the harmonic mean of precision and recall.
+
+Another commonly used metric for retrieval models is **Mean Reciprocal Rank (MRR)**, which measures the rank of the first relevant item in the retrieved list. The reciprocal of this rank is averaged over all queries in the test set.
+
+**Normalized Discounted Cumulative Gain (NDCG**) is another metric that takes into account the relevance of the retrieved items. It measures the quality of the ranked list of retrieved items, by comparing it to an ideal ranking of the relevant items.
+
+Overall, the choice of metrics used to evaluate a retrieval model depends on the specific application and the goals of the model.
+
+### Running the Tests
+
+Now that we have a dataset and metrics, we can now test the performance of your retrieval system.
+
+<Callout Intent="warn">
+🚧 Under construction...
+</Callout>
+
+## Generation-only tests & End-to-end tests
+
+In addition to retrieval-only metrics, we can test the quality of the generation step only:
+
+<br />
+
+<figure class="dark:hidden" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-retrieval-only.png" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<figure class="hidden dark:block" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-retrieval-only.png" style={{ filter: "invert(100%)", display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<br />
+
+And we can also test the quality of the end-to-end pipeline:
+
+<br />
+
+<figure class="dark:hidden" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-end-to-end.png" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<figure class="hidden dark:block" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-end-to-end.png" style={{ filter: "invert(100%)", display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<br />
+
+Finally, let's see what it looks like altogether:
+
+<br />
+
+<figure class="dark:hidden" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-ensemble.png" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>
+
+<figure class="hidden dark:block" style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-rag-ensemble.png" style={{ filter: "invert(100%)", display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<br />
+
+We can implement all of these using Scorecard!
+
+## Using Scorecard
+
+Scorecard helps in 3 ways:
+
+1. Scorecard Specialists are available to provide ground truth labels for both retrieval and generation. These can either be used as a continuous process, or used to bootstrap an automated evaluation process. If you would like to have your results labeled by a Scorecard Specialist, please contact us at support@getscorecard.ai
+
+2. Scorecard provides a customizable dashboard to monitor and track the performance of your RAG models, including retrieval-only, generation-only, and end-to-end tests.
+
+3. Scorecard allows you to easily compare different RAG models and configurations in a production setting, so you can identify the best performing models and make informed decisions about which ones to deploy. Scorecard also provides insights into the specific areas where your RAG models may need improvement, so you can fine-tune your models and optimize their performance.
+
+## Recommended Solutions
+
+Scorecard works alongside RAG solutions such as [LlamaIndex](https://www.llamaindex.ai/) and [Langchain](https://www.langchain.com/).

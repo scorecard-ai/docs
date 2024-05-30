@@ -1,0 +1,20 @@
+Scorecard provides support for running RAGAS metrics directly within the platform and  provides complementary additional capabilities such as aggregation, A/B comparison, iteration and more.
+
+RAGAS has several metrics which are available in the Scorecard metrics library. These metrics include:
+
+### Component-Wise Evaluation
+To assess the performance of individual components within the RAG pipeline you can leverage metrics such as:
+
+- **Faithfulness**: Measures the factual consistency of the generated answer against the provided context.
+- **Answer Relevancy**: Assesses how pertinent the generated answer is to the given prompt.
+- **Context Recall**: Evaluates the extent to which the retrieved context aligns with the annotated answer.
+- **Context Precision**: Determines whether all ground-truth relevant items present in the contexts are ranked higher.
+- **Context Relevancy**: Gauges the relevancy of the retrieved context in addressing the provided query.
+
+### End-to-End Evaluation
+To assess the end-to-end performance of a RAG pipeline you can leverage metrics such as:
+
+- **Answer Semantic Similarity**: Assesses the semantic resemblance between the generated answer and the ground truth.
+- **Answer Correctness**: Gauges the accuracy of the generated answer when compared to the ground truth.
+
+You can view the full prompts and code for these metrics in the [RAGAS Github](https://github.com/explodinggradients/ragas/tree/main/src/ragas/metrics).

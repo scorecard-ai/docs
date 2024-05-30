@@ -1,0 +1,27 @@
+Scorecard provides support for running MLflow metrics directly within the platform and  provides complementary additional capabilities such as aggregation, A/B comparison, iteration and more.
+
+MLFlow has several pre-canned metrics in the `genai` package which are available in the Scorecard metrics library. These metrics include:
+
+### 1. **Relevance**
+- **Description**: Evaluates the appropriateness, significance, and applicability of an LLM's output in relation to the input and context.
+- **Purpose**: Assesses how well the model's response aligns with the expected context or intent of the input.
+
+### 2. **Answer Relevance**
+- **Description**: Assesses the relevance of an answer provided by an LLM, considering the accuracy and applicability of the response to the given query.
+- **Purpose**: Focuses specifically on the relevance of answers in the context of queries posed to the LLM.
+
+### 3. **Faithfulness**
+- **Description**: Measures the factual consistency of an LLM's output with the provided context.
+- **Purpose**: Ensures that the model's responses are not only relevant but also accurate and trustworthy, based on the information available in the context.
+
+### 4. **Answer Correctness**
+- **Description**: Evaluates the accuracy of the provided output based on a given "ground truth" or expected answer.
+- **Purpose**: Crucial for understanding how well an LLM can generate correct and reliable answers to specific queries.
+
+### 5. **Answer Similarity**
+- **Description**: Assesses the semantic similarity between the model's output and the provided targets or "ground truth".
+- **Purpose**: Used to evaluate how closely the generated response matches the expected answer in terms of meaning and content.
+
+You can view the full prompts for these metrics in the Scorecard Scoring lab or in the [MLflow Github source code](https://github.com/mlflow/mlflow/blob/master/mlflow/metrics/genai/prompts/v1.py).
+
+---
