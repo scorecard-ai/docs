@@ -1,0 +1,92 @@
+This page walks through how to create a [Testset](/features/testset-management) using the Scorecard SDK.
+
+## Example
+<Card
+    title="Create a Testset with Custom Schema"
+    icon="fa-brands fa-python"
+    href="https://colab.research.google.com/github/scorecard-ai/scorecard-cookbook/blob/main/Testset_w_Custom_Schema_Example.ipynb"
+/>
+
+## 🧙‍♂️ Instructions
+
+1. Create an account and [login to Scorecard](https://app.getscorecard.ai/). Copy your [API key](https://app.getscorecard.ai/settings).
+1. Add your Scorecard API Key below.
+1. (If running as notebook) Go to `Runtime` -> `Run all`. Enjoy!
+
+
+```python
+#@title 👉 API Keys
+
+SCORECARD_API_KEY = "" #@param { type: "string" }
+```
+
+## Colab Sections
+
+### Setup
+
+```python
+#@title Install dependencies
+#@markdown In order to keep the notebook working for all future users, we pin the dependency versions.
+
+!pip install scorecard-ai==0.1.12
+!pip install openai==1.11.1
+```
+
+
+```python
+#@title Imports
+
+from openai import OpenAI
+from scorecard.client import Scorecard
+```
+
+### Create a Testset in Scorecard
+
+
+```python
+#@title 1. Create a basic Testset with Custom Schema
+#@markdown Here we'll create a basic Testset that gets stored in Scorecard.
+
+from scorecard.types import CustomSchema, CustomVariable
+import json
+
+client = Scorecard(
+    api_key=SCORECARD_API_KEY,
+)
+
+# Create a Testset
+testset = client.testset.create(
+    name="Story Opening Lines",
+    description="Demo of a testset created via Scorecard Python SDK",
+    using_retrieval=False,
+    custom_schema=CustomSchema(
+        variables=[
+            CustomVariable(
+                name="inputs",
+                description="Custom Parameters for this Testset.",
+                role="input",
+                data_type="json_object",
+            ),
+        ]
+    ),
+)
+
+# Add three testcases
+client.testcase.create(
+    testset_id=testset.id,
+    user_query="query",
+    custom_inputs={
+        "inputs": json.dumps(
+            {
+                "key": "value",
+                "link": "https://www.google.com",
+                "number": 1,
+                "nested": {"key": "value"},
+            }
+        ),
+    },
+)
+
+print("Visit the Scorecard app to view your Testset:")
+print(f"https://app.getscorecard.ai/view-dataset/{testset.id}")
+```

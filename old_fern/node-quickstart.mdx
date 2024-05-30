@@ -1,0 +1,159 @@
+Scorecard AI helps you evaluate the performance of your LLM app to ship faster with more confidence. In this quickstart we will:
+* Get an API key and create a Testset
+* Create an example LLM app
+* Execute a script with the Scorecard SDK within our production application
+* Review results in the Scorecard UI
+
+<br />
+
+<Steps>
+### Setup
+
+First let’s create a [Scorecard account](https://app.getscorecard.ai/dashboard) and find your [Scorecard API Key](https://app.getscorecard.ai/settings). Then we'll get a [OpenAI API Key](https://platform.openai.com/api-keys), and set these as environment variables and also install the Scorecard and OpenAI Node Libraries:
+
+<CodeBlocks>
+<CodeBlock title = "Node Install">
+```bash
+export SCORECARD_API_KEY="SCORECARD_API_KEY"
+export OPENAI_API_KEY="OPENAI_API_KEY"
+npm install scorecard-ai
+npm install --save openai
+```
+</CodeBlock>
+</CodeBlocks>
+
+### Create Test Cases
+
+Now let’s create and run a create_testset.js script to create a testset and add some test cases using the SDK. Test cases are a way to collect examples that you can run evaluations against and improve over time. After we create a testset we’ll grab that testset ID to use later:
+
+
+<CodeBlocks>
+<CodeBlock title = "Create_testset.js">
+```typescript
+const { Scorecard } = require('scorecard-ai');
+require('dotenv').config(); 
+
+const client = new Scorecard(process.env.SCORECARD_API_KEY);
+
+async function createTestSet() {
+  const testset = await client.testset.create({
+    name: "MMLU Demo",
+    description: "Demo of a MMLU testset created via Scorecard Node SDK",
+  });
+
+  // Add three testcases
+  await client.testcase.create(testset.id, {
+    userQuery: "The amount of access cabinet secretaries have to the president is most likely to be controlled by thew",
+  });
+  await client.testcase.create(testset.id, {
+    userQuery: "The exclusionary rule was established to",
+  });
+  await client.testcase.create(testset.id, {
+    userQuery: "Ruled unconstitutional in 1983, the legislative veto had allowed",
+  });
+
+  console.log("Visit the Scorecard app to view your Testset:");
+  console.log(`https://app.getscorecard.ai/view-dataset/${testset.id}`);
+}
+
+```
+</CodeBlock>
+</CodeBlocks>
+
+### Create Test System
+Next let’s create a function which will represent our system under test. Here we’ve created a system that will be a helpful assistant in response to our input user query. 
+
+<CodeBlock title = "Mock system">
+```typescript
+async function answer_query(userTopic: string): Promise<string> {
+  const chatCompletion = await openai.chat.completions.create({
+    model: 'gpt-3.5-turbo',
+    messages: [
+      { role: 'system', content: 'You are a helpful assistant.' },
+      { role: 'user', content: userTopic },
+    ],
+  });
+
+  return chatCompletion.data.choices[0].message.content;
+}
+```
+</CodeBlock>
+
+### Create Metrics
+Now that we have a system that answers questions from the MMLU dataset, let’s build a metric to understand how relevent the system responses are to our user query. Let’s go to the [Scoring Lab](https://app.getscorecard.ai/scoring-lab) and select “New Metric”
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://lh7-us.googleusercontent.com/Eud_iAQl3HkaRYSXDHj00-rE4ePJ541YujXM7-vpE8z_jp1-JLv9Eb0qBfezfDMGNtmEzkVvcHhjP3GKjVGl--ir6ZhadbonxAp74weS0uNaER-9j33gqOUFY6zAU4Eww2ZL-d5GnR-2C3h8f_5fXN4" alt="Scorecard AI"  style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="700"/>
+    <span style={{ color: "gray" }}>New metric</span>
+</figure>
+
+From here let’s create a metric for answer relevency:
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://lh7-us.googleusercontent.com/0HXDzUx6ojF0o7v_xJcif_MhvwY6I5U6lwMOrWN7rdqRSK4ev5GLtfWIvhwg-8pNN0swCmCZ-M3bWtFPF0ZDhEp-UxlPV_2fytvjGEmoqizKn5lwpCmm0gJJkY77axoV9Lpqqor5Jura8YGBjEF7eAg" alt="Scorecard AI"  style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="700"/>
+    <span style={{ color: "gray" }}>Metric definition</span>
+</figure>
+
+Let’s now go to create a new scoring configuration and add the metric ID we just created to the config definition JSON. Once we create the scoring metric let’s grab that scoring config ID for later:
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://lh7-us.googleusercontent.com/6g0pGEPLUaASQcXwzwm1x8XCE-AypAHxY8WIT_6jimHf5M2plZ148gRYMKJM9MxvwMKgFqnegOG0obti1QfkXAMy1JKTqeZ25kt0IDGC-WreKmY8jFVgwQI-2RfuQQlml9bLAefIpNOtouzU0nUCvjc" alt="Scorecard AI"  style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="400"/>
+    <span style={{ color: "gray" }}>Metric ID</span>
+</figure>
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://lh7-us.googleusercontent.com/kIpRKmFH0bsWsAhmNQKFQh-Yw3owkuNX771ZKiHDK9JUwA-5WDYOLFFxN7dW9lG90lN44yrze7HhZarWkOihKfHkBnpe9c5N9lG1EaILJPQ_lvh8pkFD1-91ztYpLf_a-FhinoNMYPhGVJu7zdy2O5Y" alt="Scorecard AI"  style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="400"/>
+    <span style={{ color: "gray" }}>Scoring config</span>
+</figure>
+
+### Create Test System
+Now let’s use our mock system and run our testset against it replacing the testset id below with the testset from before and the scoring config ID above:
+
+<CodeBlock title = "Run_tests.js">
+```typescript 
+const { Scorecard } = require('scorecard-ai');
+require('dotenv').config(); 
+
+const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY,});
+const client = new Scorecard(process.env.SCORECARD_API_KEY);
+
+async function answer_query(userTopic: string): Promise<string> {
+  const chatCompletion = await openai.chat.completions.create({
+    model: 'gpt-3.5-turbo',
+    messages: [
+      { role: 'system', content: 'You are a helpful assistant.' },
+      { role: 'user', content: userTopic },
+    ],
+  });
+
+  return chatCompletion.data.choices[0].message.content;
+}
+async function runTests() {
+  const run = await client.run_tests({
+    input_testset_id: 123, // Use the actual testset ID
+    scoring_config_id: 456, // Use the actual scoring config ID
+    model_invocation: prompt => answer_query(prompt), // Replace with your system
+  });
+
+  console.log("Visit the Scorecard app to view your Run:");
+  console.log(`https://app.getscorecard.ai/view-records/${run.id}`);
+}
+```
+</CodeBlock>
+
+### Run Scoring
+Now let’s review the outputs of our execution in Scorecard and run scoring by clicking on the “Run Scoring button’.
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://lh7-us.googleusercontent.com/0KnG3QStINSf0o7ESuUeC8lDxiYI8w2Spufiipi6KcZiG6YgPFQAHF4llWyOSbgujqGrhNG4URCRxgbE56Y-Cj4pIRwnQKUMA3iJVzx3bavhTU1HSkQ28JdxPVeZk3dWRrHNWYibhKbWfFgaBZOMEMQ" alt="Scorecard AI"  style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="700"/>
+    <span style={{ color: "gray" }}>Run Scoring</span>
+</figure>
+
+### View Results
+Finally let’s review the results in the Scorecard UI. Here you can view and understand the performance of your LLM system:
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://lh7-us.googleusercontent.com/B6afnzvucf8F14uNThWLrlgsWNeiXyTbS89WKvBkujGMjLIDmwLUPKgOTv9Hr6CdMVRqbd3QWD7UpthRSj_wBJ97MgzRpGyKb5jbwJmGl6EzJijgvJvaH_bv3MAk2gExyjWWFsN9UlYmvg0BUFEwQN0" alt="Scorecard AI"  style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="700"/>
+    <span style={{ color: "gray" }}>Viewing results</span>
+</figure>
+</Steps>

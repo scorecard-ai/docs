@@ -1,0 +1,51 @@
+---
+title: Create and Manage Testsets Easily 
+---
+
+A Testset in Scorecard is a collection of test cases designed to evaluate the performance of your LLM application across a variety of inputs and scenarios. These test sets allow teams to systematically assess the functionality, accuracy, and reliability of their LLM applications before deployment. By grouping related test cases into test sets, Scorecard enables a structured approach to testing and improving your LLM App.
+
+### Types of Testsets
+Hillclimbing Testsets: 
+- Description: We recommend this as the first testset you create. 
+- Purpose: Hillclimbing testsets are powerful for making incremental improvements, focusing on a targeted examples of the kinds of prompts you're seeing in production and can be used to iteratively improve your LLM app.
+- Size: Small set (5-20 testcases)
+
+Regression Testsets: 
+- Description: Regression testsets capture test cases of 'good' performance that are regularly run (typically nightly).
+- Purpose: Regression testsets are crucial to ensure new changes/features to your LLM App do not degrade existing functionalities.
+- Size: Moderately sized (50-100 testcases)
+
+Launch Eval Testsets: 
+- Description: Utilized for comprehensive evaluation across multiple sets or projects before a significant launch or update. 
+- Purpose: Launch evaluation testsets are valuable for ensuring broad coverage and confidence in model performance.
+- Size: Large set (100+ testcases)
+
+### Test Cases
+A Test Case in Scorecard represents the inputs your LLP App including any relevant labels (such as ideal answers) that can be used for scoring performance. Test cases are the building blocks of test sets and are used to define expected behaviors or outputs for given inputs. A test case is comprised of:
+- User_query: These are the user queries or provided provided to the LLM application. Inputs can range from simple text prompts to complex structured data  the application might encounter.
+- Context (optional): For applications that require operate on a document or have context information or dialogue history can be included here.
+- Ideal (optional): This defines what the ideal correct response from the LLM application should be for the given inputs. Ideal outputs can be specific text, structured data, or criteria that the output needs to meet.
+
+#### Customizing your schema
+- In addition to the above you can add additional fields to your test set when you create creating the testset via the custom_schema object: https://docs.getscorecard.ai/api-reference/testset/create
+
+### Creating a Test Set
+1. Navigate to the `Testsets` section in your project dashboard.
+1. Click on "New Testset".
+1. Provide a name and optional description for the Testset.
+1. Select the `Upload CSV or JSON` option.
+1. In the next page, upload your Testset file.
+
+For more details see the creating a testset guide: https://docs.getscorecard.ai/guides/creating-a-testset
+
+### Using Test Sets and Test Cases
+Once you have created test sets and test cases, you can use them to validate the performance of your LLM app. Scorecard allows you to:
+
+- **Run Test Sets:** Execute all test cases within a test set against your LLM application to evaluate its performance comprehensively via the playground or scorecard SDK https://docs.getscorecard.ai/guides/run-an-evaluation/using-the-scorecard-sdk
+- **Review Results:** Analyze the outcomes of the eval runs to identify successes, failures, and areas for improvement in the results UI
+- **Iterate and Optimize:** Use insights gained from testing to refine your LLM application, improving accuracy and reliability before deployment.
+
+### Best Practices
+- **Regularly Update Test Cases:** As your LLM application evolves, so too should your test cases. Regularly review and update them to ensure they remain relevant and cover new functionalities.
+- **Use Diverse Inputs:** Ensure your test cases cover a wide range of inputs, including edge cases, to thoroughly test your LLM application's capabilities.
+- **Collaborate and Share:** Encourage collaboration among team members when creating and reviewing testsets and results to ensure coverage and common agreement on where it's important to improve your LLM app's performance.

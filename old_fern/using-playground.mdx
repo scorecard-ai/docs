@@ -1,0 +1,100 @@
+One way of kicking off evaluations is via the Scorecard Playground. This is a fast way of iterating on prompts or testing out different models on Testsets or arbitrary inputs.
+
+<Callout intent = "warn">
+The Scorecard playground is just like other playgrounds like OpenAI. It does not execute your production LLM system -- treat the playground as a mock system.
+</Callout>
+
+<br />
+
+You can navigate to the playground using the top navigation bar:
+
+<br />
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-playground-nav.png" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+</figure>   
+
+<br />
+
+
+Using the playground, we can either (a) run a single, ad hoc testcase, or (b) run an entire Testset.
+
+## Running a single testcase
+
+### Ad hoc
+
+You can edit the available fields to enter your ad hoc testcase. The following fields are available for use as input to the model:
+
+- **Prompt Template**: the prompt template is a string that will be interpolated alongside the provided context and user query. The `{context}` variable is where the context will be placed, if provided. The User Query will then be appended to the end of the resulting string.
+- **Context**: if desired, you can provide context to simulate a RAG application. This context can be additional metadata, documents or text that is provided to the LLM.
+- **User Query**: this simulates the user's input to your system.
+
+After filling out these fields, click on the "Run Once" button to run the LLM.
+
+<br />
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-ad-hoc-testcase.png" alt="Running a single ad hoc testcase" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+    <span style={{ color: "gray" }}>Running a single ad hoc testcase</span>
+</figure>   
+
+<br />
+
+### From an existing Testset
+
+Alternatively, if you have an existing Testset, you can select it from the dropdown at the top of the page. Then, the playground's input fields will be populated with the first Testcase from that Testset. As before, click on "Run Once" to run that Testcase through the LLM.
+
+<br />
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-existing-testset.png" alt="Selecting an existing testset" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+    <span style={{ color: "gray" }}>Selecting an existing testset</span>
+</figure>   
+
+<br />
+
+<br />
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-existing-testcase.png" alt="Running the first testcase from the selected testset" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+    <span style={{ color: "gray" }}>Running the first testcase from the selected testset</span>
+</figure>   
+
+<br />
+
+## Running a Testset
+
+If you have an existing Testset and a scoring config that you'd like to execute within the mock environment, take the following steps:
+
+1. Select the testset from the dropdown at the top of the playground.
+2. Select the appropriate scoring config from the dropdown at the top of the playground.
+3. Configure the Prompt Template and model parameters as desired.
+4. Click on "Run Once" to make sure that the configuration works as intended.
+5. Click on "Run Testset" at the bottom of the playground, once you are ready to execute the testset.
+
+<br />
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-existing-testset.png" alt="Selecting an existing testset" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+    <span style={{ color: "gray" }}>Selecting an existing testset</span>
+</figure>   
+
+<br />
+
+<br />
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-existing-scoring-config.png" alt="Selecting an existing scoring config" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+    <span style={{ color: "gray" }}>Selecting an existing scoring config</span>
+</figure>   
+
+<br />
+
+<br />
+
+<figure style={{ textAlign: "center" }}>
+    <img src="https://fern-image-hosting.s3.amazonaws.com/scorecard-docs/scorecard-running-entire-testset.png" alt="Running the entire testset using the playground configuration" style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="1000"/>
+    <span style={{ color: "gray" }}>Running the entire testset using the playground configuration</span>
+</figure>   
+
+<br />

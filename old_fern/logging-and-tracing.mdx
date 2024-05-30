@@ -1,0 +1,38 @@
+---
+title: Boost Your LLM Observability with Traces and Spans
+---
+
+Imagine these scenarios: The performance of your LLM application drops suddenly, you lose track of which LLM calls you have made, or you do not notice potential security leaks. We know: dealing with LLMs can become challenging. That is why we offer logging and tracing with Scorecard!
+
+## Log and Trace Your LLM application With Scorecard
+
+<figure style={{ textAlign: "center" }}>
+    <img src="../assets/scorecard-platform-traces-view.png" alt="Traces View in the Scorecard Platform"  style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="700"/>
+    <span style={{ color: "gray" }}>Traces View in the Scorecard Platform</span>
+</figure>
+
+LLM observability refers to the ability to gain insight into the behavior and performance of Large Language Models (LLMs) across their entire lifecycle. This is essential for ensuring the reliability, performance, and security of LLM applications, especially given their complexity and the challenges associated with debugging and troubleshooting. To properly monitor an LLM aplications, logging and tracing various aspects is important. But what is Logging and Tracing?
+
+- Logging: Recording of relevant events, errors, and activities within an LLM applications. Logs provide a detailed record of what happened during the execution of the application, aiding in debugging, troubleshooting, and auditing.
+- Tracing: Tracing the flow of requests or transactions across the different components of an LLM systems. Traces provide insights into where potential delays occur and how services interact with each other.
+
+A single trace consists of a series of time intervals known as spans. Spans represent a specific operation or activity in completing a user request, such as sending a prompt to a LLM. Each span contains metadata such as timestamps, duration, and contextual information. 
+
+
+### Inspect a LLM trace and its individual spans
+
+Inspect metadata of a trace, such as its duration and overall token count. This can help in quickly identifying anomalies and very long durations or very low/high token counts, which could be indicators that something went wrong. Additionally, get an overview of each individual span that belongs to a trace and dive into further details!
+
+<figure style={{ textAlign: "center" }}>
+    <img src="../assets/scorecard-platform-traces-single-view.png" alt="Trace Details with Individual Spans"  style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="700"/>
+    <span style={{ color: "gray" }}>Trace Details with Individual Spans</span>
+</figure>
+
+### Access span details on a granular level 
+
+Besides metadata, spans can provide details about requests sent to the LLM, such as a request to the `ChatCompletion` endpoint of OpenAI. In this case, it shows the individual prompt messages that were sent as input, the LLM's response as output, and further details that can help in debugging and inspecting your LLM application. 
+
+<figure style={{ textAlign: "center" }}>
+    <img src="../assets/scorecard-platform-span-details.png" alt="Span Details in a Trace"  style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginBottom: "10px" }} width="700"/>
+    <span style={{ color: "gray" }}>Span Details in a Trace</span>
+</figure>
