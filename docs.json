@@ -82,6 +82,12 @@
         "tab": "API Reference",
         "groups": [
           {
+            "group": "Overview",
+            "pages": [
+              "docs/api-reference/overview"
+            ]
+          },
+          {
             "group": "Testset",
             "pages": [
               "api-reference/v1/list-testsets",
@@ -167,6 +173,17 @@
             "group": "Glossary",
             "pages": [
               "docs/glossary/glossary"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Changelog",
+        "groups": [
+          {
+            "group": "Updates",
+            "pages": [
+              "docs/product-updates"
             ]
           }
         ]
