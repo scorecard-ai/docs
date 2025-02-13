@@ -183,7 +183,7 @@
           {
             "group": "Updates",
             "pages": [
-              "docs/product-updates"
+              "product-updates"
             ]
           }
         ]
