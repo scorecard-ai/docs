@@ -178,16 +178,14 @@
         ]
       },
       {
-        "tab": "Changelog",
-        "groups": [
-          {
-            "group": "Updates",
-            "pages": [
-              "product-updates"
-            ]
-          }
-        ]
-      }
+  "tab": "Changelog",
+  "groups": [
+    {
+      "group": "Updates",
+      "pages": ["docs/product-updates"]
+    }
+  ]
+}
     ],
     "global": {
       "anchors": [
