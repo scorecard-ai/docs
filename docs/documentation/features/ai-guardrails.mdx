@@ -9,11 +9,17 @@ Both tools make it possible to program guardrails that safeguard conversations w
 
 Key benefits of adding programmable guardrails include:
 
-* *Trustworthiness and Reliability:* Guardrails can be used to guide and safeguard conversations between your users and your LLM system. You can choose to define the behavior of your LLM system on specific topics and prevent it from engaging in discussions on unwanted topics.
+* *Trustworthiness and Reliability:*
 
-* *Controllable Dialog:* Use guardrails to steer the LLM to follow pre-defined conversational flows, making sure the LLM follows best practices in conversation design and enforces standard procedures, such as authentication.
+  Guardrails can be used to guide and safeguard conversations between your users and your LLM system. You can choose to define the behavior of your LLM system on specific topics and prevent it from engaging in discussions on unwanted topics.
 
-* *Protection against Vulnerabilities:* Guardrails can be specified in a way that they can help increase the security of your LLM application by checking for LLM vulnerabilities, such as checking for secrets in user inputs or LLM responses or detecting prompt injections.
+* *Controllable Dialog:*
+
+  Use guardrails to steer the LLM to follow pre-defined conversational flows, making sure the LLM follows best practices in conversation design and enforces standard procedures, such as authentication.
+
+* *Protection against Vulnerabilities:*
+
+  Guardrails can be specified in a way that they can help increase the security of your LLM application by checking for LLM vulnerabilities, such as checking for secrets in user inputs or LLM responses or detecting prompt injections.
 
 ## Types of Guardrails
 
@@ -21,29 +27,50 @@ In the following, we give a brief overview of the types of guardrails that can b
 
 ### NeMo Guardrails
 
-* Technical Documentation: [https://docs.nvidia.com/nemo/guardrails](https://docs.nvidia.com/nemo/guardrails)
-* GitHub Repository: [https://github.com/NVIDIA/NeMo-Guardrails](https://github.com/NVIDIA/NeMo-Guardrails)
+* Technical Documentation:
+
+  [https://docs.nvidia.com/nemo/guardrails](https://docs.nvidia.com/nemo/guardrails)
+
+* GitHub Repository:
+
+  [https://github.com/NVIDIA/NeMo-Guardrails](https://github.com/NVIDIA/NeMo-Guardrails)
 
 NeMo Guardrails supports five main types of guardrails (short: rails):
+
 <Frame caption="Type of AI Guardrails with NeMo Guardrails">
-![Type of AI Guardrails with NeMo Guardrails](/images/guardrails/1.webp)
+  ![Type of AI Guardrails with NeMo Guardrails](/images/guardrails/1.webp)
 </Frame>
-* *Input Rails:* Checking the user input, an input rail can reject, change (e.g., to rephrase or mask sensitive data), or stop processing the input.
 
-* *Dialog Rails:* Dialog rails influence how the LLM is prompted and determine if an action should be executed, if the LLM should be invoked to generate the next step or a response, if a predefined response should be used instead, etc.
+* *Input Rails:*
 
-* *Retrieval Rails:* When using a RAG (Retrieval Augmented Generation) LLM system, retrieval rails check the retrieved documents and can reject, change (e.g., to rephrase or mask sensitive data), or stop processing specific chunks.
+  Checking the user input, an input rail can reject, change (e.g., to rephrase or mask sensitive data), or stop processing the input.
 
-* *Execution Rails:* Execution rails use mechanisms to check and verify the inputs and/or outputs of custom actions that are being evoked by the LLM (e.g., the LLM triggering actions in other tools).
+* *Dialog Rails:*
 
-* *Output Rails:* Checking the response of a LLM, an output rail can reject, change (e.g., remove sensitive data), or remove a LLM’s response.
+  Dialog rails influence how the LLM is prompted and determine if an action should be executed, if the LLM should be invoked to generate the next step or a response, if a predefined response should be used instead, etc.
+
+* *Retrieval Rails:*
+
+  When using a RAG (Retrieval Augmented Generation) LLM system, retrieval rails check the retrieved documents and can reject, change (e.g., to rephrase or mask sensitive data), or stop processing specific chunks.
+
+* *Execution Rails:*
+
+  Execution rails use mechanisms to check and verify the inputs and/or outputs of custom actions that are being evoked by the LLM (e.g., the LLM triggering actions in other tools).
+
+* *Output Rails:*
+
+  Checking the response of a LLM, an output rail can reject, change (e.g., remove sensitive data), or remove a LLM’s response.
 
 ### Guardrails AI
 
-* Technical Documentation: [https://www.guardrailsai.com/docs](https://www.guardrailsai.com/docs)
-* GitHub Repository: [https://github.com/guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails)
+* Technical Documentation:
+
+  [https://www.guardrailsai.com/docs](https://www.guardrailsai.com/docs)
+
+* GitHub Repository:
+
+  [https://github.com/guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails)
 
 Guardrails AI offers Guardrails Hub, a collection of pre-built checks for specific types of LLM risks (called “validators”). Multiple validators can be combined together into Guardrail AI’s Input and Output Guards (guardrail object) that intercept the inputs and outputs of LLMs. Visit [Guardrails Hub](https://hub.guardrailsai.com/) to see the full list of validators and their documentation.
-<Frame caption="Examples of AI Guardrails with Guardrails AI (Guardrails AI, 2024)">
-![Examples of AI Guardrails with Guardrails AI (Guardrails AI, 2024)](https://files.buildwithfern.com/https://scorecard.docs.buildwithfern.com/2024-12-10T21:27:50.697Z/docs/assets/guardrails_ai_hub.gif)
-</Frame>
+
+![Examples of AI Guardrails with Guardrails AI (Guardrails AI, 2024)](/guardrails_ai_hub.gif "Examples of AI Guardrails with Guardrails AI (Guardrails AI, 2024)")
