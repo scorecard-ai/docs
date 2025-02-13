@@ -170,6 +170,17 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Changelog",
+        "groups": [
+          {
+            "group": "Updates",
+            "pages": [
+              "docs/product-updates"
+            ]
+          }
+        ]
       }
     ],
     "global": {
