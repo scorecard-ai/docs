@@ -22,7 +22,10 @@
               "docs/documentation/introduction/overview",
               "docs/documentation/introduction/what-is-scorecard",
               "docs/documentation/introduction/the-llm-developer-s-journey",
-              "docs/documentation/introduction/technical-system-overview"
+              "docs/documentation/introduction/technical-system-overview",
+              "docs/documentation/introduction/what-is-scorecard",
+              "docs/documentation/introduction/technical-system-overview",
+              "docs/documentation/introduction/overview"
             ]
           },
           {
@@ -39,7 +42,9 @@
               "docs/documentation/features/a-b-comparison",
               "docs/documentation/features/ai-guardrails",
               "docs/documentation/features/run-inspection",
-              "docs/documentation/features/ai-proxy"
+              "docs/documentation/features/ai-proxy",
+              "docs/documentation/features/prompt-management",
+              "docs/documentation/features/testset-management"
             ]
           },
           {

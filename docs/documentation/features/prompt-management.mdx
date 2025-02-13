@@ -6,58 +6,124 @@ title: "Prompt Management"
 When it comes to large language models (LLMs), a prompt refers to the specific instructions a user provides to produce an expected output.
 </Note>
 
-## The Challenge of Many Prompts
+## Key Concepts
 
-It’s crucial to recognize that some prompts will be more effective than others. In fact, it may take experimenting with dozens or even hundreds of prompts before finding the optimal prompt that generates satisfying results and scores well based on your defined metrics. As you can imagine, managing a large number of prompts, or numerous variations of the same prompt, can become quite complex.
+Before diving in, let's understand the basic concepts of prompt management:
 
-## Easy Prompt Management With Scorecard
+- **Prompt**: The input text that tells an LLM what you want it to do
+- **Prompt Version**: Different variations of the same prompt as you refine it
+- **Prompt ID**: A unique identifier that helps track specific prompts
+- **System Message**: Instructions that set the context for the LLM
+- **User Message**: The actual input or question for the LLM
+- **Assistant Message**: Previous responses that provide context
 
-Scorecard makes the process easy to create and manage multiple prompts and versions of the same prompt without getting lost. Check out the features that Scorecard offers in terms of Prompt Management!
+## Why Prompt Management Matters
 
-### Get an All-in-One Overview of Your Prompts in the Prompts View
+Managing prompts effectively is crucial because:
 
-The Prompts view is where you can find all your generated prompts in one place. Use the search bar to find prompts, or sort prompts by date or name. For each individual prompt, you have the option to get more details of important prompts or archive the ones you do not need anymore.
+- You'll likely test many variations to find the best prompt
+- Different use cases need different prompts
+- Teams need to track which prompts work best
+- Successful prompts should be easy to reuse
+- Version control helps track improvements
+
+## Managing Prompts with Scorecard
+
+Scorecard makes it easy to organize and improve your prompts. Here's how:
+
+### 1. View All Your Prompts in One Place
+
+The Prompts view gives you a central dashboard where you can:
+- Search for specific prompts
+- Sort prompts by date or name
+- Get detailed information about important prompts
+- Archive prompts you no longer need
+
 <Frame caption="Prompts View in the Scorecard UI">
 ![Prompts View in the Scorecard UI](/images/prompt-management/1.webp)
 </Frame>
-### Create Prompts Easily
 
-To create a prompt from the Prompts view, simply click on the `New Prompt +` button. The Scorecard UI assists you in the process of prompt creation and asks you for the necessary information, such as prompt metadata, model with model parameters, and the prompt messages.
+### 2. Create New Prompts Easily
+
+Creating a prompt is simple:
+
+1. Click the `New Prompt +` button
+2. Fill in basic information like name and description
+3. Choose your LLM model (with helpful info boxes for guidance)
+4. Add your prompt messages
+
 <Frame caption="Assisted Prompt Creation in Scorecard">
 ![Assisted Prompt Creation in Scorecard](/images/prompt-management/2.webp)
 </Frame>
-You are not sure which model to choose from? Scorecard is there to help and provides background information about each model in interactive info boxes.
+
+#### Model Selection Made Simple
+
+Not sure which model to use? Scorecard helps you choose:
+- Interactive info boxes explain each model
+- Clear descriptions of model capabilities
+- Easy-to-understand performance comparisons
+
 <Frame caption="Interactive Model Background Information in Prompts Creation">
 ![Interactive Model Background Information in Prompts Creation](/images/prompt-management/3.webp)
 </Frame>
-Easily break up the different prompt messages by specifying the type of prompt message (you can choose between `System`, `User`, and `Assistant`).
+
+#### Structure Your Prompts
+
+Break down your prompts into clear components:
+- **System Messages**: Set the context and rules
+- **User Messages**: Your actual questions or inputs
+- **Assistant Messages**: Previous responses for context
+
 <Frame caption="Split up Prompt Messages in Prompts Creation">
 ![Split up Prompt Messages in Prompts Creation](/images/prompt-management/4.webp)
 </Frame>
-#### Prompt Creation and Selection in the Playground
 
-In case you are in the Playground, you can either:
+### 3. Quick Prompt Creation in the Playground
 
-* Directly create a new prompt by filling out the user fields
+Two easy ways to work with prompts in the Playground:
+
+1. Create a new prompt directly:
+   - Fill in the message fields
+   - Test immediately
+   - Save if it works well
+
 <Frame caption="Scorecard Playground: Creating a New Prompt">
 ![Scorecard Playground: Creating a New Prompt](/images/prompt-management/5.webp)
 </Frame>
-* Select a saved prompt with the interactive drop-down
+
+2. Use existing prompts:
+   - Search from the dropdown menu
+   - Select and modify as needed
+   - Save new versions
+
 <Frame caption="Scorecard Playground: Searching a Saved Prompt">
 ![Scorecard Playground: Searching a Saved Prompt](/images/prompt-management/6.webp)
 </Frame>
-### Uniquely Identify Your Prompts To Quickly Find Them
 
-Each prompt in Scorecard receives a unique `Prompt ID`. This unique identification might be useful in the following cases:
+### 4. Track Prompts with Unique IDs
 
-* Identify top-performing prompts by analyzing the results of runs using the same `Prompt ID`
-* Quickly find prompts with the `Prompt ID` in the Prompts view or the Playground
+Every prompt gets a unique ID that helps you:
+- Find specific prompts quickly
+- Track performance across different runs
+- Reference prompts in documentation
+- Share prompts with team members
+
 <Frame caption="Unique IDs of Prompts">
 ![Unique IDs of Prompts](/images/prompt-management/7.webp)
 </Frame>
-### Version Your Prompts and Follow Changes You Have Made to the Same Prompt
 
-As mentioned, each prompt receives a unique `Prompt ID`. However, you might have the situation where you iteratively optimized the same prompt by making changes in each round. Scorecard makes it easy to organize these differentiating versions into the same prompt. With Scorecard’s Prompt Versioning, you can see the different versions of the same prompt and easily identify which version was published to the Production system.
+### 5. Version Control for Prompts
+
+Keep track of how your prompts evolve:
+- See all versions of a prompt in one place
+- Know which version is in production
+- Compare changes between versions
+- Rollback to previous versions if needed
+
 <Frame caption="Prompt Versioning in Scorecard">
 ![Prompt Versioning in Scorecard](/images/prompt-management/8.webp)
 </Frame>
+
+<Tip>
+Start with a simple prompt and iterate gradually. Save each significant improvement as a new version to track your progress.
+</Tip>

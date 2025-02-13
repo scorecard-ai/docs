@@ -1,32 +1,87 @@
 ---
 title: "Technical System Overview"
+description: "Learn how Scorecard works and how to get started with evaluating your LLM applications."
 ---
 
-## Scorecard Workflow
+## Quick Start Summary 🚀
 
-The process of using the Scorecard platform consists of three general steps:
+Scorecard helps you evaluate your LLM applications in three simple steps:
 
-1. Ingest your data and add Testcases into Scorecard
-2. Execute your Testcases on your LLM application
-3. Score the responses of your LLM application
+1. **Add your test data** - Upload examples that represent your use case
+2. **Run your tests** - Execute your LLM application against these examples
+3. **Get results** - Review automated or manual scoring of your LLM's performance
+
+## The Scorecard Workflow Explained
+
+Let's break down each step of using Scorecard to evaluate your LLM application.
+
 <Frame caption="The Overall Scorecard Workflow">
 ![Scorecard Workflow](/images/technical-system/1.png)
 </Frame>
-## Step 1: Ingestion
 
-As first step, you add the data and interesting Testcases that are representative of your LLM use case in the Scorecard platform.
+### Step 1: Adding Your Test Data 📥
+
+<Note>
+This is where you prepare the foundation for testing your LLM application.
+</Note>
+
+In this first step, you:
+- Create a collection of test cases that represent real-world usage
+- Upload your examples through our UI or API
+- Organize your test data into meaningful sets
+
 <Frame caption="Ingesting Testcases into Scorecard">
 ![Ingesting Testcases into Scorecard](/images/technical-system/2.png)
 </Frame>
-## Step 2: Execution
 
-As second step, you run the defined Testcases against your LLM application.
+### Step 2: Running Your Tests ⚡
+
+<Note>
+This is where your LLM application processes the test cases you've added.
+</Note>
+
+During this step:
+- Your LLM application processes each test case
+- Scorecard captures all inputs and outputs
+- Results are stored for analysis
+
 <Frame caption="Executing Your LLM App With Scorecard">
 ![Executing Your LLM App With Scorecard](/images/technical-system/3.png)
 </Frame>
-## Step 3: Scoring
 
-As third and final step, the inputs and LLM-produced outputs for each Testcase will be scored - either automatically via Scorecard AI models or manually via your subject-matter experts.
+### Step 3: Getting Your Results 📊
+
+<Note>
+This is where you see how well your LLM application performs.
+</Note>
+
+In the final step:
+- Each test case result is evaluated
+- Scoring can be:
+  - Automatic (using Scorecard's AI models)
+  - Manual (reviewed by your team's experts)
+- You get detailed insights about your LLM's performance
+
 <Frame caption="Scoring Your LLM App With Scorecard">
 ![Scoring Your LLM App With Scorecard](/images/technical-system/4.png)
 </Frame>
+
+## What's Next? 🎯
+
+Now that you understand how Scorecard works, you can:
+
+<CardGroup cols={2}>
+  <Card title="Try the Quickstart" icon="rocket" href="/docs/documentation/how-to-use-scorecard/quickstart/python">
+    Get hands-on experience with a simple example
+  </Card>
+  <Card title="Explore Guides" icon="book-open" href="/docs/documentation/how-to-use-scorecard/guides/create-a-testset/using-the-testset-ui">
+    Learn step-by-step how to use each feature
+  </Card>
+</CardGroup>
+
+## Need Help? 💬
+
+If you have questions about any part of the process:
+- Email us at [team@getscorecard.ai](mailto:team@getscorecard.ai)
+- Check our [API documentation](/api-reference)
+- Browse our [Cookbooks](/docs/documentation/how-to-use-scorecard/cookbooks) for examples

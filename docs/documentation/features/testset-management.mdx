@@ -3,54 +3,121 @@ title: "Testset Management"
 description: "A Scorecard Testset is a collection of Testcases used to evaluate the performance of an LLM application across a variety of inputs and scenarios."
 ---
 
-A Testset usually belongs to a central theme, e.g. “Core Functionality”, “Edge Cases”, or “Adversarial Tests”. Testsets allow developer teams to systematically assess the functionality, accuracy, and reliability of their LLM applications before deployment. By grouping related Testcases into Testsets, Scorecard enables a structured approach to testing and improving LLM applications. But what are Testcases exactly?
+## Quick Reference
+- **Testset**: A collection of test cases focused on a specific theme or functionality
+- **Testcase**: An individual test consisting of a user query and optional components
+- **Creation Methods**: Create via UI (basic) or SDK (advanced/custom schemas)
+- **Best Practice**: Start small with 5-20 test cases and gradually expand
 
-A Scorecard Testcase is an individual input to an LLM that is used for scoring. It consists of:
+## What is a Testset?
 
-* User Query: The user query to the LLM. Inputs can range from simple text prompts to complex structured data.
-* Context (optional): To include a document or context information (e.g. dialogue history) additionally to the user query.
-* Ideal Response (optional): Also referred to as ground-truth response, this defines what the ideal correct response from the LLM application should be for the given user query. Ideal outputs can be specific text, structured data, or criteria that the output needs to meet.
-* Further Custom Fields (see the [API reference](/api-reference) for more information)
+A Testset is a group of related test cases that help you evaluate how well your LLM application performs. Think of it like a quiz for your AI - each question (test case) checks a specific aspect of your application's capabilities.
 
-In addition to the above, you can add additional fields to each individual Testcase by defining a `custom_schema` object (check out the [API call](/api-reference)).
+Common Testset themes include:
+- Core Functionality Tests
+- Edge Case Scenarios
+- Adversarial Tests (challenging cases)
+- User Experience Validation
 
-### Easy Testset Creation and Modification via Scorecard
+## Anatomy of a Testcase
 
-Follow our step-by-step guide in creating and modifying a Testset! Head over to the Scorecard Guides and find the guide for a Testset creation [via the Scorecard UI](/docs/documentation/how-to-use-scorecard/guides/create-a-testset/using-the-testset-ui) or [via the Scorecard SDK](/docs/documentation/how-to-use-scorecard/guides/create-a-testset/using-the-scorecard-sdk).
+Each Testcase in your Testset contains these components:
+
+<Card title="Essential Components" icon="puzzle-piece">
+- **User Query**: The input text or prompt sent to your LLM
+- **Context** (optional): Additional information like document snippets or conversation history
+- **Ideal Response** (optional): The expected "correct" answer from your LLM
+- **Custom Fields**: Additional fields you can add for special testing needs
+</Card>
+
+### Creating and Modifying Testsets
+
+We offer two ways to work with Testsets:
+
+<CardGroup cols={2}>
+  <Card title="UI Method" icon="desktop">
+    Perfect for beginners and basic test cases
+    - User-friendly interface
+    - Quick to get started
+    - [Step-by-step guide](/docs/documentation/how-to-use-scorecard/guides/create-a-testset/using-the-testset-ui)
+  </Card>
+  <Card title="SDK Method" icon="code">
+    Ideal for advanced users and custom schemas
+    - More flexibility
+    - Automation capabilities
+    - [SDK documentation](/docs/documentation/how-to-use-scorecard/guides/create-a-testset/using-the-scorecard-sdk)
+  </Card>
+</CardGroup>
+
 <Frame caption="Testsets View in the Scorecard UI">
 ![Testsets View in the Scorecard UI](/images/testset/1.webp)
 </Frame>
-### Apply Testset Best Practices Recommended by Scorecard
 
-The Scorecard team consists of experts in LLM evaluation that have experiences in evaluation and deploying large-scale AI applications at some of the world’s leading companies. Based on their experience, the Scorecard team recommends the following best practices for your Testsets:
+## Best Practices from the Scorecard Team
 
-* **Regularly Review Testcases:** As your LLM application evolves, so too should your Testcases. Regularly review your Testcases and update them to ensure they remain relevant and cover new functionalities. Currently, modifying an existing Testcase is only possible via the Scorecard UI by clicking on the Testcase and either uploading a new or modifying the existing text.
-* **Use Diverse Inputs:** Ensure your Testcases cover a wide range of inputs, including edge cases, to thoroughly test your LLM application’s capabilities.
-* **Collaborate and Share:** Encourage collaboration among team members when creating and reviewing Testsets and results to ensure coverage and common agreement on where it’s important to improve your LLM app’s performance.
+Our team of LLM evaluation experts recommends these key practices:
 
-### From Small to Big: Iterate Your Testsets
+<AccordionGroup>
+  <Accordion title="Regular Review and Updates" icon="rotate">
+    - Review test cases periodically
+    - Update as your application evolves
+    - Remove outdated test cases
+    - Add tests for new features
+  </Accordion>
 
-With Scorecard, we can start to operationalize the testing process, so that you don’t have to remember your favorite queries or copy-and-paste responses into a spreadsheet. Depending on the maturity of your LLM application, whether it is still a demo application or deployed in production, or depending on the urgency of the Testset, you want to use different types of Testsets. Here is an overview:
+  <Accordion title="Diverse Test Coverage" icon="layer-group">
+    - Include various input types
+    - Test edge cases
+    - Cover different user scenarios
+    - Test error handling
+  </Accordion>
 
-#### Hillclimbing Testsets
+  <Accordion title="Team Collaboration" icon="users">
+    - Share test cases with team members
+    - Get feedback on test coverage
+    - Agree on performance priorities
+    - Document test case rationale
+  </Accordion>
+</AccordionGroup>
 
-* Description: We recommend this as the first Testset you create by including your favorite prompts. Purpose: Hillclimbing Testsets are powerful for making incremental improvements. That type of Testset focuses on targeted examples of prompts seen in production, and it can be used to iteratively improve your LLM app.
-* Size: Small set (5-20 Testcases)
+## Types of Testsets: From Small to Big
 
-#### Regression Testsets
+Choose the right type of Testset based on your needs:
 
-* Description: Regression Testsets capture Testcases of ‘good’ performance that are regularly run (typically nightly).
-* Purpose: Regression Testsets are crucial to ensure new changes/features to your LLM App do not degrade existing functionalities. This type of Testset includes prompts or queries that are representative of your LLM application’s use case.
-* Size: Moderately sized (50-100 Testcases)
+<CardGroup cols={2}>
+  <Card title="Hillclimbing Testsets" icon="mountain">
+    **Size**: 5-20 test cases
+    - Your first Testset type
+    - Focuses on favorite prompts
+    - Great for quick improvements
+    - Based on real usage examples
+  </Card>
 
-#### Launch Evaluation Testsets
+  <Card title="Regression Testsets" icon="chart-line">
+    **Size**: 50-100 test cases
+    - Regular testing (often nightly)
+    - Prevents feature regression
+    - Representative use cases
+    - Monitors core functionality
+  </Card>
 
-* Description: Utilized for comprehensive evaluation before a significant launch or update.
-* Purpose: Launch Evaluation Testsets are valuable for ensuring broad coverage and confidence in LLM performance.
-* Size: Large set (100+ Testcases)
+  <Card title="Launch Evaluation Testsets" icon="rocket">
+    **Size**: 100+ test cases
+    - Pre-launch comprehensive testing
+    - Broad coverage
+    - High confidence validation
+    - Critical for major updates
+  </Card>
 
-#### Must-Pass Testsets
+  <Card title="Must-Pass Testsets" icon="shield-check">
+    **Size**: Varies by need
+    - High-precision test cases
+    - Critical functionality checks
+    - Required for deployments
+    - Early warning system
+  </Card>
+</CardGroup>
 
-* Description: Testsets that are intentionally focused on only high-precision Testcases.
-* Purpose: Must-Pass Testsets are powerful to catch major bugs or regressions. Each deployment or PR should pass this set as an early check, before running more comprehensive or specialized Testsets.
-* Size: N/A
+<Tip>
+Start small with a Hillclimbing Testset and gradually expand your test coverage as your application matures. This approach helps you build a robust testing foundation without getting overwhelmed.
+</Tip>
