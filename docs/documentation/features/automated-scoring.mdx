@@ -1,0 +1,39 @@
+---
+title: "Automated Scoring"
+---
+
+## Increasing Complexity When Manually Evaluating Large Testsets
+
+When introducing a framework to evaluate a Large Language Model (LLM), the process typically begins on a small scale by manually evaluating a few Testcases. These initial Testcases form the basis of the first Testset, and subject-matter experts (SMEs) evaluate the LLM outputs of these Testcases. As the evaluation process iterates, the number of Testcases grows, allowing testing across more dimensions using different metrics. However, as the number of Testcases increases, the time required to evaluate the metrics increases proportionally. Since SMEs have limited resources, the evaluation of large Testsets can quickly become a bottleneck, hindering the progress of the LLM evaluation process.
+
+## AI-Supported Scoring With Scorecard
+
+Scorecard offers a solution to this problem by outsourcing the evaluation part to an AI model. With Scorecard’s AI-powered scoring, valuable time can be saved and SMEs can focus on complex edge cases instead of well-defined and easy-to-score metrics. This streamlines the LLM evaluation process, enabling teams to iterate and deliver faster.
+
+### Define Metrics to Score With AI
+
+When defining a new metric to be used for your LLM evaluation, you can specify the evaluation type. Choose the evaluation type “AI” to have a metric automatically scored by an AI model.
+<Frame caption="New Metric With AI-Scoring">
+![New Metric With AI-Scoring](/images/automated-scoring/1.webp)
+</Frame>
+In the metric guidelines, make sure to accurately describe how the AI model should score the metric.
+
+<Warning>
+When specifying the metric guidelines for an AI-scored metric, you must be very specific, as this is the only instruction the AI model receives for scoring the metric.
+</Warning>
+### Score Your Testset With a Single Click
+
+After you have run a Testset against your LLM and the model has generated responses for each Testcase, the Scorecard UI displays the status of “Awaiting Scoring”.
+<Frame caption="Run Scoring in the Scorecard UI">
+![Run Scoring in the Scorecard UI](/images/automated-scoring/2.webp)
+</Frame>
+Simply click the “Run Scoring” button and Scorecard will use AI to score all metrics that have AI scoring enabled.
+<Frame caption="Scoring in Progress">
+![Scoring in Progress](/images/automated-scoring/3.webp)
+</Frame>
+### Understand the AI Scores With Transparent Explanations
+
+Scorecard not only automates the scoring process, it also provides explanations of why the AI model scored the metrics in a certain way. This helps you understand the reasons of the AI scores, allowing you to re-evaluate whether the evaluations make sense.
+<Frame caption="Score Explained by the Scorecard AI Model">
+![Score Explained by the Scorecard AI Model](/images/automated-scoring/4.webp)
+</Frame>

@@ -1,0 +1,212 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Scorecard AI Docs",
+  "colors": {
+    "primary": "#a855f7",
+    "light": "#a855f7",
+    "dark": "#a855f7"
+  },
+  "background": {
+    "decoration": "grid"
+  },
+  "favicon": "/favicon.png",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "docs/documentation/introduction/overview",
+              "docs/documentation/introduction/what-is-scorecard",
+              "docs/documentation/introduction/the-llm-developer-s-journey",
+              "docs/documentation/introduction/technical-system-overview"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "docs/documentation/features/projects",
+              "docs/documentation/features/prompt-management",
+              "docs/documentation/features/tracing",
+              "docs/documentation/features/privacy-by-design",
+              "docs/documentation/features/automated-scoring",
+              "docs/documentation/features/best-in-class-metrics",
+              "docs/documentation/features/logging",
+              "docs/documentation/features/testset-management",
+              "docs/documentation/features/a-b-comparison",
+              "docs/documentation/features/ai-guardrails",
+              "docs/documentation/features/run-inspection",
+              "docs/documentation/features/ai-proxy"
+            ]
+          },
+          {
+            "group": "How To Use Scorecard",
+            "pages": [
+              {
+                "group": "Quickstart",
+                "pages": [
+                  "docs/documentation/how-to-use-scorecard/quickstart/python",
+                  "docs/documentation/how-to-use-scorecard/quickstart/node-js"
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": [
+                  {
+                    "group": "Create a Testset",
+                    "pages": [
+                      "docs/documentation/how-to-use-scorecard/guides/create-a-testset/using-the-testset-ui",
+                      "docs/documentation/how-to-use-scorecard/guides/create-a-testset/using-the-scorecard-sdk"
+                    ]
+                  },
+                  {
+                    "group": "Run Scoring",
+                    "pages": [
+                      "docs/documentation/how-to-use-scorecard/guides/run-scoring/using-the-playground",
+                      "docs/documentation/how-to-use-scorecard/guides/run-scoring/using-the-scorecard-sdk"
+                    ]
+                  }
+                ]
+              },
+              "docs/documentation/how-to-use-scorecard/cookbooks",
+              "docs/documentation/how-to-use-scorecard/rag-retrieval-augmented-generation",
+              "docs/documentation/how-to-use-scorecard/ci-cd-with-git-hub-actions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Testset",
+            "pages": [
+              "api-reference/v1/list-testsets",
+              "api-reference/v1/delete",
+              "api-reference/v1/update-testset",
+              "api-reference/v1/create-testset",
+              "api-reference/v1/read-testset-schema",
+              "api-reference/v1/read-testcases"
+            ]
+          },
+          {
+            "group": "Testcase",
+            "pages": [
+              "api-reference/v1/create-testcase",
+              "api-reference/v1/read-testcase",
+              "api-reference/v1/delete-testcase",
+              "api-reference/v1/update-testcase",
+              "api-reference/v1/batch-copy-testcases",
+              "api-reference/v1/batch-delete-testcases"
+            ]
+          },
+          {
+            "group": "Testrecord",
+            "pages": [
+              "api-reference/v1/read-testrecord",
+              "api-reference/v1/create-testrecord"
+            ]
+          },
+          {
+            "group": "Run",
+            "pages": [
+              "api-reference/v1/create-run",
+              "api-reference/v1/read-run",
+              "api-reference/v1/update-run-status"
+            ]
+          },
+          {
+            "group": "Score",
+            "pages": [
+              "api-reference/v1/create-score",
+              "api-reference/v1/update-score"
+            ]
+          },
+          {
+            "group": "Run Metric",
+            "pages": [
+              "api-reference/v1/read-run-metrics"
+            ]
+          },
+          {
+            "group": "Tracing",
+            "pages": [
+              "api-reference/v1/get-traces",
+              "api-reference/v1/get-trace",
+              "api-reference/v1/get-trace-span"
+            ]
+          },
+          {
+            "group": "Prompt",
+            "pages": [
+              "api-reference/v1/get-prompt-by-id",
+              "api-reference/v1/create-prompt",
+              "api-reference/v1/list-prompts",
+              "api-reference/v1/delete-root-prompt",
+              "api-reference/v1/update-prompt",
+              "api-reference/v1/get-prompt-by-name"
+            ]
+          },
+          {
+            "group": "Scoring Config",
+            "pages": [
+              "api-reference/v1/create-scoring-config",
+              "api-reference/v1/get-scoring-config",
+              "api-reference/v1/delete-scoring-config"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Glossary",
+        "groups": [
+          {
+            "group": "Glossary",
+            "pages": [
+              "docs/glossary/glossary"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "About Us",
+          "href": "https://www.scorecard.io/careers",
+          "icon": "building"
+        },
+        {
+          "anchor": "Blog",
+          "href": "https://www.scorecard.io/blog",
+          "icon": "newspaper"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Contact",
+        "href": "https://www.scorecard.io/contact"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Sign In",
+      "href": "https://app.getscorecard.ai/"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/scorecard-ai"
+    }
+  }
+}

@@ -1,0 +1,88 @@
+---
+title: "Using The Scorecard SDK"
+description: "This page walks through how to create a [Testset](/docs/documentation/features/testset-management) using the Scorecard SDK."
+---
+
+## Example
+<Card title="Create a Testset with Custom Schema" href="https://colab.research.google.com/github/scorecard-ai/scorecard-cookbook/blob/main/Testset_w_Custom_Schema_Example.ipynb" icon="google-scholar" iconType="solid" horizontal/>
+
+## 🧙‍♂️ Instructions
+
+1. Create an account and [login to Scorecard](https://app.getscorecard.ai/). Copy your [API key](https://app.getscorecard.ai/settings).
+2. Add your Scorecard API Key below.
+3. (If running as notebook) Go to `Runtime` -> `Run all`. Enjoy!
+
+```py
+1	#@title 👉 API Keys
+2	
+3	SCORECARD_API_KEY = "" #@param { type: "string" }
+```
+
+## Colab Sections
+
+### Setup
+
+```py
+1	#@title Install dependencies
+2	#@markdown In order to keep the notebook working for all future users, we pin the dependency versions.
+3	
+4	!pip install scorecard-ai==0.1.12
+5	!pip install openai==1.11.1
+```
+
+```py
+1	#@title Imports
+2	
+3	from openai import OpenAI
+4	from scorecard.client import Scorecard
+```
+
+### Create a Testset in Scorecard
+
+```py
+1	#@title 1. Create a basic Testset with Custom Schema
+2	#@markdown Here we'll create a basic Testset that gets stored in Scorecard.
+3	
+4	from scorecard.types import CustomSchema, CustomVariable
+5	import json
+6	
+7	client = Scorecard(
+8	    api_key=SCORECARD_API_KEY,
+9	)
+10	
+11	# Create a Testset
+12	testset = client.testset.create(
+13	    name="Story Opening Lines",
+14	    description="Demo of a Testset created via Scorecard Python SDK",
+15	    using_retrieval=False,
+16	    custom_schema=CustomSchema(
+17	        variables=[
+18	            CustomVariable(
+19	                name="inputs",
+20	                description="Custom Parameters for this Testset.",
+21	                role="input",
+22	                data_type="json_object",
+23	            ),
+24	        ]
+25	    ),
+26	)
+27	
+28	# Add three Testcases
+29	client.testcase.create(
+30	    testset_id=testset.id,
+31	    user_query="query",
+32	    custom_inputs={
+33	        "inputs": json.dumps(
+34	            {
+35	                "key": "value",
+36	                "link": "https://www.google.com",
+37	                "number": 1,
+38	                "nested": {"key": "value"},
+39	            }
+40	        ),
+41	    },
+42	)
+43	
+44	print("Visit the Scorecard UI to view your Testset:")
+45	print(f"https://app.getscorecard.ai/view-dataset/{testset.id}")
+```

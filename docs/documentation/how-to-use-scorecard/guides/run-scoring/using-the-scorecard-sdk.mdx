@@ -1,0 +1,46 @@
+---
+title: "Using The Scorecard SDK"
+description: "Another way of kicking off evaluations is via the Scorecard SDK. To further automate your development workflows, you can integrate Scorecard AI by GitHub Actions. "
+---
+
+Through this platform, evaluations are seamlessly run and integrated with your codebase, either automatically upon specific triggers or manually when needed.
+
+## Automated Runs on Push/PR
+<Frame caption="DoctorGPT workflow PR trigger">
+![DoctorGPT workflow PR trigger](/images/scorecard-sdk/1.png)
+</Frame>
+When integrated, GitHub Actions automatically run evaluations for Scorecard AI each time a push or pull request is made to the repository. This is a fundamental feature, ensuring that your system under test remains consistent with expected behavior after each code change.
+
+For instance, consider you’ve made significant changes in a feature branch and raise a pull request to merge it with the main branch. Scorecard AI, using the GitHub Actions automation, will immediately run the necessary evaluations. The results can then be viewed directly on the pull request, helping developers address any discrepancies before finalizing the merge.
+
+To set this up:
+
+1. Ensure the triggering conditions in your `.github/workflows/scorecard-eval.yml` file are appropriately set. The `on: push:` and `on: pull_request:` sections should be uncommented to enable automatic runs on these events.
+
+## Manual Triggering via GitHub UI
+<Frame caption="DoctorGPT workflow event trigger">
+![DoctorGPT workflow event trigger](/images/scorecard-sdk/2.png)
+</Frame>
+For scenarios where you’d like to run evaluations without any code change, GitHub offers the “workflow\_dispatch” event. This manual trigger allows users to start evaluations directly from the GitHub repository’s Actions tab.
+
+Steps:
+
+1. Navigate to your repository on GitHub.
+2. Click on the “Actions” tab.
+3. Locate the “Scorecard Eval” workflow.
+4. Click on the “Run workflow” dropdown.
+5. Input the necessary parameters (like Testset ID, Scoring Config ID) if prompted.
+6. Click the “Run workflow” button.
+
+This flexibility ensures that even without a new push or PR, developers can assess system performance using Scorecard AI.
+
+## Triggering via Scorecard API
+
+For those looking for a programmatic approach to run evaluations, Scorecard AI can trigger GitHub Actions using a repository dispatch event via the Scorecard API. This method is particularly useful when integrating evaluations as part of a more extensive CI/CD process or another system.
+
+To utilize this:
+
+1. Ensure your `.github/workflows/scorecard-eval.yml` file has the `repository_dispatch` event configured.
+2. Use the Scorecard API endpoint for triggering evaluations.
+
+These diverse triggering methods support a broad range of development workflows, offering flexibility to best fit your specific needs.
