@@ -8,7 +8,7 @@ description: Here you find guides and resources to help evaluate your LLM applic
     Evaluate a simple LLM application with the Scorecard SDK.
   </Card>
   <Card title="API Reference" icon="book" href="/api-reference">
-    Browse Scorecard’s API documentation.
+    Browse Scorecard's API documentation.
   </Card>
   <Card title="Cookbooks" icon="utensils" href="/docs/documentation/how-to-use-scorecard/cookbooks">
     Explore code examples showing how to implement Scorecard end-to-end.
@@ -23,7 +23,7 @@ description: Here you find guides and resources to help evaluate your LLM applic
     Learn about which features Scorecard offers.
   </Card>
   <Card title="Privacy & Security" icon="shield" href="https://trust.getscorecard.ai/">
-    Review Scorecard’s privacy and security measures.
+    Review Scorecard's privacy and security measures.
   </Card>
   <Card title="Service Status" icon="wrench" href="https://status.getscorecard.ai/">
     Check the status of Scorecard services.
@@ -40,6 +40,45 @@ description: Here you find guides and resources to help evaluate your LLM applic
 </iframe>
 </Frame>
 
+## How Scorecard Works 🔄
+
+Evaluating your LLM application with Scorecard follows a simple three-step workflow:
+
+<Steps>
+  <Step title="Create Your Testcases">
+    First, you'll ingest your data and add testcases into Scorecard. These testcases should be representative of your LLM use case and cover the scenarios you want to evaluate. You can create testcases through our UI or programmatically using our SDK.
+    
+    <Frame caption="Step 1: Ingesting Testcases">
+    ![Ingesting Testcases into Scorecard](/images/technical-system/2.png)
+    </Frame>
+  </Step>
+
+  <Step title="Execute Your Tests">
+    Next, you'll run your defined testcases against your LLM application. Scorecard makes it easy to execute tests at scale and collect all the responses from your LLM application for evaluation.
+    
+    <Frame caption="Step 2: Test Execution">
+    ![Executing Your LLM App With Scorecard](/images/technical-system/3.png)
+    </Frame>
+  </Step>
+
+  <Step title="Score the Results">
+    Finally, Scorecard evaluates the performance of your LLM application by scoring the inputs and outputs for each testcase. This can be done:
+    - Automatically using Scorecard's AI models
+    - Manually through your subject-matter experts
+    - Using a combination of both approaches
+    
+    <Frame caption="Step 3: Scoring Process">
+    ![Scoring Your LLM App With Scorecard](/images/technical-system/4.png)
+    </Frame>
+  </Step>
+</Steps>
+
+This systematic approach helps you:
+- Ensure consistent quality across your LLM application
+- Catch potential issues before they reach production
+- Track performance improvements over time
+- Make data-driven decisions about your LLM deployment
+
 ## Questions? Contact Us 💬
 
-The Scorecard team supports you in your LLM evaluation journey. If you get stuck, [write us an email](mailto:team@getscorecard.ai). We’re here to help!
+The Scorecard team supports you in your LLM evaluation journey. If you get stuck, [write us an email](mailto:team@getscorecard.ai). We're here to help!

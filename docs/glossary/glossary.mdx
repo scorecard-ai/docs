@@ -2,13 +2,17 @@
 title: "Glossary"
 ---
 
-[A](/docs/glossary/glossary#a) - [C](/docs/glossary/glossary#c) - [G](/docs/glossary/glossary#g) - [I](/docs/glossary/glossary#i) - [M](/docs/glossary/glossary#m) - [P](/docs/glossary/glossary#p) - [R](/docs/glossary/glossary#r) - [S](/docs/glossary/glossary#s) - [T](/docs/glossary/glossary#t) - [U](/docs/glossary/glossary#u)
+[A](/docs/glossary/glossary#a) - [C](/docs/glossary/glossary#c) - [D](/docs/glossary/glossary#d) - [G](/docs/glossary/glossary#g) - [I](/docs/glossary/glossary#i) - [L](/docs/glossary/glossary#l) - [M](/docs/glossary/glossary#m) - [P](/docs/glossary/glossary#p) - [R](/docs/glossary/glossary#r) - [S](/docs/glossary/glossary#s) - [T](/docs/glossary/glossary#t) - [U](/docs/glossary/glossary#u)
 
 ## A
 
 ### AI Proxy
 
 The Scorecard AI Proxy is a feature that allows multiple LLM APIs to be managed using a standardized format. The AI Proxy makes it easy to switch between models on different platforms (e.g. Azure, OpenAI, Cohere) without rewriting code.
+
+### API Key
+
+A unique authentication token that grants secure access to Scorecard's services and features. API keys are required to make authenticated requests to the Scorecard API and are used to identify and track API usage.
 
 ## C
 
@@ -19,6 +23,12 @@ The Scorecard Cookbooks are code examples showing how to implement Scorecard end
 ### Context
 
 A context is an optional input field of a [Testcase](/docs/glossary/glossary#testcase) that provides additional background information to the [user query](/docs/glossary/glossary#user-query) input field. A context is particularly useful in applications that require access to a knowledge base or dialog history.
+
+## D
+
+### Dashboard
+
+The Scorecard Dashboard is a visual interface that provides an overview of your LLM evaluation metrics, test results, and performance analytics. It displays key insights, trends, and comparisons through charts, graphs, and summary statistics.
 
 ## G
 
@@ -32,11 +42,21 @@ The Scorecard Guides are step-by-step guides to learn how to use Scorecard. A sp
 
 An ideal response is an optional input field of a [Testcase](/docs/glossary/glossary#testcase) that defines the ideal response to a given [user query](/docs/glossary/glossary#user-query). The ideal response can be specific text, structured data, or criteria that the LLM must meet.
 
+## L
+
+### Large Language Model (LLM)
+
+A type of artificial intelligence model trained on vast amounts of text data that can understand, generate, and manipulate human-like text. LLMs are the core technology being evaluated and monitored by Scorecard, including models from providers like OpenAI, Anthropic, and Google.
+
 ## M
 
 ### Metric
 
 A metric is a standard of measurement. In LLM evaluation, a metric serves as a benchmark for assessing the quality of LLM responses. When defining metrics in Scorecard, users can choose between already defined Core Metrics (including metrics from MLflow and RAGAS) or custom metrics.
+
+### Model
+
+A specific implementation of a Large Language Model (LLM) with defined parameters and capabilities. Models can vary in size, specialization, and performance characteristics. Examples include GPT-4, Claude 2, and PaLM.
 
 ## P
 
@@ -56,7 +76,7 @@ RAG stands for Retrieval Augmented Generation, a technique in AI where a model r
 
 ### Run
 
-A Run in Scorecard refers to the process of evaluating a [Testset](/docs/glossary/glossary#testset) against defined metrics or a defined [Scoring Config](/docs/glossary/glossary#scoring-config). The results of a Scorecard Run can be inspected under “Runs & Results” in the Scorecard UI.
+A Run in Scorecard refers to the process of evaluating a [Testset](/docs/glossary/glossary#testset) against defined metrics or a defined [Scoring Config](/docs/glossary/glossary#scoring-config). The results of a Scorecard Run can be inspected under "Runs & Results" in the Scorecard UI.
 
 ## S
 
@@ -104,10 +124,10 @@ Tracing records the flow of requests or transactions across the different compon
 
 ### Trust Center
 
-The [Scorecard Trust Center](https://trust.getscorecard.ai/) is a centralized hub that provides information about Scorecards’s security, privacy, compliance, and data protection practices, designed to build trust with customers and stakeholders.
+The [Scorecard Trust Center](https://trust.getscorecard.ai/) is a centralized hub that provides information about Scorecards's security, privacy, compliance, and data protection practices, designed to build trust with customers and stakeholders.
 
 ## U
 
 ### User Query
 
-A user query is an optional input field of a [Testcase](/docs/glossary/glossary#testcase) that defines the user’s prompt to the LLM. A user query can range from a simple text message to providing complex structured data.
+A user query is an optional input field of a [Testcase](/docs/glossary/glossary#testcase) that defines the user's prompt to the LLM. A user query can range from a simple text message to providing complex structured data.
