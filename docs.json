@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "sage",
   "name": "Scorecard AI Docs",
   "colors": {
     "primary": "#a855f7",
