@@ -80,12 +80,15 @@
       },
       {
         "tab": "API Reference",
-        "pages": [
-          "docs/api-reference/overview",
+        "groups": [
           {
-            "openapi": "https://api.scorecard.io/openapi.json"
+            "group": "Overview",
+            "pages": [
+              "docs/api-reference/overview"
+            ]
           }
-        ]
+        ],
+        "openapi": "https://api.scorecard.io/openapi.json"
       },
       {
         "tab": "Glossary",
