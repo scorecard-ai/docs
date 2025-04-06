@@ -43,7 +43,7 @@ You can use this [Observable notebook](https://observablehq.com/@twotau/scorecar
       // Add three testcases
       await scorecard.testcase.create(testset.id, {
         userQuery:
-          "The amount of access cabinet secretaries have to the president is most likely to be controlled by thew",
+          "The amount of access cabinet secretaries have to the president is most likely to be controlled by the",
       });
       await scorecard.testcase.create(testset.id, {
         userQuery: "The exclusionary rule was established to",
@@ -125,7 +125,7 @@ You can use this [Observable notebook](https://observablehq.com/@twotau/scorecar
       console.log("Visit the Scorecard UI to score the run:");
     
       // Use your testset's project ID here:
-      console.log(`https://app.getscorecard.ai/projects/${projectId}/runs/grades/${scoringConfigId}`);
+      console.log(`https://app.getscorecard.ai/projects/${projectId}/runs/grades/${run.id}`);
     
       return run;
     }
