@@ -79,7 +79,7 @@ In this quickstart we will:
     ```
   </Step>
   <Step title="Create Metrics">
-    Now that we have a system that answers questions from the MMLU dataset, let’s build a metric to understand how relevent the system responses are to our user query. Let’s go to the [Scoring Lab](https://app.getscorecard.ai/scoring-lab) and select “New Metric”
+    Now that we have a system that answers questions from the MMLU dataset, let’s build a metric to understand how relvent the system responses are to our user query. Let’s go to the [Scoring Lab](https://app.getscorecard.ai/scoring-lab) and select “New Metric”
 
     <Frame caption="Scorecard UI: New Metric">
       ![Scorecard UI: New Metric](/images/python/1.png)
@@ -98,7 +98,7 @@ In this quickstart we will:
   <Step title="Create Test System">
     Now let’s use our mock system and run our Testset against it replacing the Testset id below with the Testset from before and the Scoring Config ID above:
 
-    ```py    	
+    ```py
     client.run_tests(
     	input_testset_id=demo_testset.id,
     	scoring_config_id=456, # Replace with your scoring config ID
