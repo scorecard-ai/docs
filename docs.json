@@ -19,6 +19,15 @@
           {
             "group": "Introduction",
             "pages": [
+
+              {
+                "group": "Quickstart",
+                "pages": [
+                  "docs/documentation/how-to-use-scorecard/quickstart/python",
+                  "docs/documentation/how-to-use-scorecard/quickstart/node-js"
+                ]
+              },
+              
               "docs/documentation/introduction/overview",
               "docs/documentation/introduction/what-is-scorecard",
               "docs/documentation/introduction/the-llm-developer-s-journey",
@@ -45,13 +54,6 @@
           {
             "group": "How To Use Scorecard",
             "pages": [
-              {
-                "group": "Quickstart",
-                "pages": [
-                  "docs/documentation/how-to-use-scorecard/quickstart/python",
-                  "docs/documentation/how-to-use-scorecard/quickstart/node-js"
-                ]
-              },
               {
                 "group": "Guides",
                 "pages": [
