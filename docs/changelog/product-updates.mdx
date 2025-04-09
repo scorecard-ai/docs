@@ -3,77 +3,103 @@ title: "Product Updates"
 description: "New updates and improvements"
 mode: "center"
 ---
-
-<Update label="April 4, 2025">
+<Update label="April 4, 2025" tags={["feature", "tracing", "examples", "bugfix"]}>
   ### Tracing
-
   We've significantly improved our trace management system by relocating traces within the project hierarchy for better organization. Users can now leverage robust search capabilities with full-text search across trace data, complete with highlighted match previews. The new date range filtering system offers multiple time range options from 30 minutes to all time, while project scope filtering allows viewing traces from either the current project or across all projects. We've enhanced data visualization with dynamic activity charts and improved trace tables for better insights. Our library support now focuses specifically on Traceloop, OpenLLMetry, and OpenTelemetry for optimal integration.
-
+  
   In addition, the trace system now includes intelligent AI span detection that automatically recognizes AI operations across different providers. Visual AI indicators with special badges clearly show model information at a glance. We've added test case generation capabilities that extract prompts and completions to easily create test cases. For better resource monitoring, token usage tracking provides detailed metrics for LLM consumption.
-
+  
   ![Tracing Pn](/images/tracing.png)
-
+  
   ### Examples repository
-
   We've published comprehensive integration examples demonstrating OpenTelemetry configuration with Scorecard, including Python Flask implementation with LLM tracing for OpenAI and Node.js Express implementation with similar capabilities. A new setup wizard provides clear configuration instructions for popular telemetry libraries to help users get started quickly.
-
+  
   We also updated our quickstart documentation to be more comprehensive.
-
+  
   ![Examples Pn](/images/examples.png)
-
+  
   ### Bug fixes and improvements
-
   - **[Scoring]** When a run metric has not yet been scored, we now display N/A instead of NaN, making it clearer that it has no data.
   - **[Prompt Management]** We made stability and performance improvements to prompt management workflows.
   - **[Projects]** All resources now belong to projects, including those created before Scorecard Projects were introduced.
   - **[Exports]** Custom fields in CSV exports of run results are handled more reliably.
-  - **[Organizations]** When a user switches organizations, we now redirect them to the organization’s projects page.
+  - **[Organizations]** When a user switches organizations, we now redirect them to the organization's projects page.
   - **[Testsets]** On the testcase page, we fixed the link back to the testset.
   - **[Metrics]** We added a new autosize textarea component that lets you keep typing the metric description without running out of space.
-  - **[Playground]** The “Prompt manager”, “Update”, and “Delete prompt” buttons are now disabled for default prompts. When selecting metrics, the “Select and score now” button is now the primary button rather than the “Select” button.
-  - **[API]** When a user does not include their Scorecard API key, we now return a friendlier 401 error: “Missing API key” rather than “malformed token”.
+  - **[Playground]** The "Prompt manager", "Update", and "Delete prompt" buttons are now disabled for default prompts. When selecting metrics, the "Select and score now" button is now the primary button rather than the "Select" button.
+  - **[API]** When a user does not include their Scorecard API key, we now return a friendlier 401 error: "Missing API key" rather than "malformed token".
   - **[Scoring]** The human scoring panel collapses the run details page allowing users to see model responses and while scoring.
   - **[Platform]** We enhanced platform stability and increased test coverage.
 </Update>
 
-<Update label="March 14, 2025">
+<Update label="March 14, 2025" tags={["ui", "feature"]}>
   ### New Project Overview Page
-
   We redesigned our project overview page, including some useful information in the new sidebar and made it possible to edit the name and description of a project in the same place.
-
+  
   ![Project Overview Pn](/images/project_overview.png)
 </Update>
 
-<Update label="February 24, 2025">
+<Update label="February 24, 2025" tags={["feature", "export", "bugfix"]}>
   ### Download Testset CSVs
-
   You can now download an entire testset as a CSV using the 'Export as CSV' option.
-
+  
   ### Bug fixes and improvements
-
   When looking at a run's detailed results, the popover for looking at a cell's contents would randomly disappear. This issue is now fixed.
 </Update>
 
-<Update label="February 24, 2025">
-  ### Download Testset CSVs
-
-  You can now download an entire testset as a CSV using the 'Export as CSV' option.
-
-  ### Bug fixes and improvements
-
-  When looking at a run's detailed results, the popover for looking at a cell's contents would randomly disappear. This issue is now fixed.
-</Update>
-
-<Update label="February 13, 2025">
+<Update label="February 13, 2025" tags={["documentation"]}>
   ### Docs Site Revamp
-
   We're excited to announce we've moved to a completely revamped documentation site\! Key improvements include:
-
   - Improved navigation structure
   - Better search functionality
   - Enhanced API documentation
   - New updates section to track changes
   - Modern, cleaner design
-
+  
   This change will help us better serve our users with clearer, more organized documentation.
 </Update>
+
+# Update
+> Keep track of changes and updates
+The `Update` component is used to keep track of changes and updates.
+
+<Update label="2024-10-12" description="v0.1.1" tags={["example", "screenshot"]}>
+  <Frame>
+    <img className="block" src="https://mintlify-assets.b-cdn.net/hero-light.png" />
+  </Frame>
+  ## Changelog
+  You can add anything here, like a screenshot, a code snippet, or a list of changes.
+  #### Features
+  * Responsive design
+  * Sticky section for each changelog
+</Update>
+
+<Update label="2024-10-11" description="v0.1.0" tags={["example", "code"]}>
+  ### How to use
+  ```md
+  <Update label="2024-10-12" description="v0.1.1" tags={["tag1", "tag2"]}>
+    This is how you use a changelog with a label, 
+    description, and tags.
+  </Update>
+  <Update label="2024-10-11" description="v0.1.0" tags={["tag3"]}>
+    This is how you use a changelog with a label, 
+    description, and tags.
+  </Update>
+  ```
+  You can use multiple `Update` components to create changelogs.
+</Update>
+
+<Tip>
+  Each `label` creates an anchor and also shows up on the table of contents on the right. The `tags` property allows for filtering in the right side panel.
+</Tip>
+
+## Props
+<ResponseField name="label" type="string" required>
+  Label in the changelog, on the sticky left side.
+</ResponseField>
+<ResponseField name="description" type="string">
+  Description below the label in the Changelog preview.
+</ResponseField>
+<ResponseField name="tags" type="string[]">
+  Tags for the changelog, will be shown as filters in the right side panel
+</ResponseField>
