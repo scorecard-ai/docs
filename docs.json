@@ -79,10 +79,6 @@
         ]
       },
       {
-        "tab": "API v2 Reference",
-        "openapi": "openapi-v2.yaml"
-      },
-      {
         "tab": "API Reference",
         "groups": [
           {
