@@ -2,22 +2,46 @@
 title: "Product Updates"
 description: "New updates and improvements"
 ---
+
+<Update label="April 11, 2025">
+  ### Projects
+
+  We simplified project creation by adding a create project modal to the projects page and project detail pages.
+
+  ![Create Project](/Create_project)
+
+  ### SDKs
+
+  - We're working on overhauling our API and SDKs. We switched to using Stainless for SDK generation and released version 1.0.0-alpha.0 of our Node SDK. Over the next few weeks, we will stabilize the new API and Node and Python SDKs.
+
+  ### Bug fixes and improvements
+
+  - **[Playground]** Filtering by testcase now works properly as well as searching. The pagination was also improved and now works as expected when before it showed inconsistent items in some cases.
+  - **[Testsets]** We fixed a bug where we exported empty testcase values as the string "null" instead of an empty string.
+  - **[Projects]** We simplified project creation by adding a create project modal to the projects page and project detail pages.
+  - **[Testcases]** We fixed a bug that broke the Generate testcases feature.
+  - **[Settings]** We added some text on the API keys page to clarify that your Scorecard API key is personal, but model API keys are scoped to the organization.
+</Update>
+
 <Update label="April 4, 2025">
   ### Tracing
+
   We've significantly improved our trace management system by relocating traces within the project hierarchy for better organization. Users can now leverage robust search capabilities with full-text search across trace data, complete with highlighted match previews. The new date range filtering system offers multiple time range options from 30 minutes to all time, while project scope filtering allows viewing traces from either the current project or across all projects. We've enhanced data visualization with dynamic activity charts and improved trace tables for better insights. Our library support now focuses specifically on Traceloop, OpenLLMetry, and OpenTelemetry for optimal integration.
-  
+
   In addition, the trace system now includes intelligent AI span detection that automatically recognizes AI operations across different providers. Visual AI indicators with special badges clearly show model information at a glance. We've added test case generation capabilities that extract prompts and completions to easily create test cases. For better resource monitoring, token usage tracking provides detailed metrics for LLM consumption.
-  
+
   ![Tracing Pn](/images/tracing.png)
-  
+
   ### Examples repository
+
   We've published comprehensive integration examples demonstrating OpenTelemetry configuration with Scorecard, including Python Flask implementation with LLM tracing for OpenAI and Node.js Express implementation with similar capabilities. A new setup wizard provides clear configuration instructions for popular telemetry libraries to help users get started quickly.
-  
+
   We also updated our quickstart documentation to be more comprehensive.
-  
+
   ![Examples Pn](/images/examples.png)
-  
+
   ### Bug fixes and improvements
+
   - **[Scoring]** When a run metric has not yet been scored, we now display N/A instead of NaN, making it clearer that it has no data.
   - **[Prompt Management]** We made stability and performance improvements to prompt management workflows.
   - **[Projects]** All resources now belong to projects, including those created before Scorecard Projects were introduced.
@@ -33,27 +57,32 @@ description: "New updates and improvements"
 
 <Update label="March 14, 2025">
   ### New Project Overview Page
+
   We redesigned our project overview page, including some useful information in the new sidebar and made it possible to edit the name and description of a project in the same place.
-  
+
   ![Project Overview Pn](/images/project_overview.png)
 </Update>
 
 <Update label="February 24, 2025">
   ### Download Testset CSVs
+
   You can now download an entire testset as a CSV using the 'Export as CSV' option.
-  
+
   ### Bug fixes and improvements
+
   When looking at a run's detailed results, the popover for looking at a cell's contents would randomly disappear. This issue is now fixed.
 </Update>
 
 <Update label="February 13, 2025">
   ### Docs Site Revamp
+
   We're excited to announce we've moved to a completely revamped documentation site\! Key improvements include:
+
   - Improved navigation structure
   - Better search functionality
   - Enhanced API documentation
   - New updates section to track changes
   - Modern, cleaner design
-  
+
   This change will help us better serve our users with clearer, more organized documentation.
 </Update>
