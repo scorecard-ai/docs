@@ -26,7 +26,7 @@ You can use this [Observable notebook](https://observablehq.com/@twotau/scorecar
     ```
   </Step>
   <Step title="Create Testcases">
-    Now let’s create and run a create_testset.js script to create a testset and add some test cases using the SDK. Test cases are a way to collect examples that you can run evaluations against and improve over time. After we create a testset, we’ll grab that testset ID to use later:
+    Now let’s create and run a `create_testset.js` script to create a Testset in a specific project and add some Testcases using the SDK. Testcases are a way to collect examples that you can run evaluations against and improve over time. After we create a Testset, we’ll grab that Testset ID to use later:
 
     ```js
     const { ScorecardClient } = require("scorecard-ai");
@@ -38,9 +38,10 @@ You can use this [Observable notebook](https://observablehq.com/@twotau/scorecar
       const testset = await scorecard.testset.create({
         name: "MMLU Demo",
         description: "Demo of a MMLU testset created via Scorecard Node SDK",
+        projectId: 1, // Use your actual project ID here
       });
     
-      // Add three testcases
+      // Add three Testcases
       await scorecard.testcase.create(testset.id, {
         userQuery:
           "The amount of access cabinet secretaries have to the president is most likely to be controlled by the",
@@ -105,27 +106,39 @@ You can use this [Observable notebook](https://observablehq.com/@twotau/scorecar
     ```js
     async function runTests() {
       const run = await scorecard.run.create({
-        testsetId, // Use the actual testset ID
+        testsetId, // Use the actual Testset ID
         scoringConfigId, // Use the actual Scoring Config ID
       });
     
-      // Run all testcases in parallel
+      // Run all Testcases in parallel
       const testcases = await scorecard.testset.getTestcases(testsetId);
       await Promise.all(
-        testcases.results.map((testcase) =>
-          runTestcase(systemPrompt, run, testcase)
-        )
+        testcases.results.map(async (testcase) => {
+          // Run model on the given Testcase
+          const modelResponse = await answerQuery(testcase.userQuery);
+          // Record model response in Scorecard
+          await scorecard.testrecord.create(run.id, {
+            testcaseId: testcase.id,
+            testsetId: run.testsetId,
+            userQuery: testcase.userQuery,
+            context: testcase.context,
+            ideal: testcase.ideal,
+            response: modelResponse,
+          });
+        })
       );
     
       // Set run status to waiting for metric scoring
       await scorecard.run.updateStatus(run.id, {
-        status: "awaiting_scoring"
+        status: "awaiting_scoring",
       });
     
       console.log("Visit the Scorecard UI to score the run:");
     
-      // Use your testset's project ID here:
-      console.log(`https://app.getscorecard.ai/projects/${projectId}/runs/grades/${run.id}`);
+      // Use your Testset's project ID here:
+      console.log(
+        `https://app.getscorecard.ai/projects/${projectId}/runs/grades/${run.id}`
+      );
     
       return run;
     }
