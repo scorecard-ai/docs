@@ -3,6 +3,60 @@ title: "Product Updates"
 description: "New updates and improvements"
 ---
 
+<Update label="April 23, 2025">
+  ### Run insights
+
+  We’ve added a new Run History chart on Runs & Results that visualises your performance trends over time to spot regressions or sustained improvements at a glance (up and to the right\!).  The x‑axis is the run date, the y‑axis is the mean score, and each metric gets its own colored line. You can view this by clicking on the ‘All Runs’ tab of Runs & Results.
+
+  ![Run History Pn](/images/run_history.png)
+
+  ### 🧪 Testsets 2.0 for Easier creation and iteration
+
+  Testsets got a full upgrade. We reworked the creation flow, added AI-powered example generation, and streamlined testcase iteration. Filtering, sorting, editing, and bulk actions are now faster and more intuitive—so you can ship better tests, faster.
+
+  - You can now create testsets with a simplified modal and generate relevant example testcases based on title and description.
+  - Bulk editing tools make it easier to manage and update multiple testcases at once.
+  - You can edit large JSON blobs inline in the testcase detail view, with improved scroll and copy behavior.
+  - The testset detail page now shows the associated schema in context for easier debugging and review.
+  - Navigation has improved with linked testset titles and run/testcase summaries directly accessible from the cards.
+
+    ![Testset Toast Pn](/images/testset_toast.png)
+    ![Create Testset Pn](/images/create_testset.png)
+
+
+  ### 🗂️ Improved schema management
+
+Schemas are now defined and managed per testset, rather than at the project level—giving teams more flexibility and control.
+
+  - The schema editor has been redesigned, allowing teams to update schemas independently for each testset.
+  - Schema changes now reflect immediately in the testcase table to help users see their impact in real time.
+  - Users can view and copy raw schema JSON for integration with their own tools or SDKs.
+  - We’ve also improved messaging in the schema editor to clarify the distinction between inputs and labels.
+
+  ![Testset Card Pn](/images/testset_card.png)
+  ![Schema Edit Pn](/images/schema_edit.png)
+
+
+  ### Bug fixes and improvements
+
+  - **[Platform]** Internal tech stack upgrades to support faster product iteration
+  - **[Testsets]** Friendlier zero-state, faster load, cards with quick actions and live counts
+  - **[Testsets]** Tag propagation fix — updates now apply across all testsets and views
+  - **[Testsets]** Improved sorting behavior, including reliable default and column sorting
+  - **[Testsets]** Filter testcases by keyword, searching across the full dataset
+  - **[Testsets]** Updated page actions with visible bulk tools for managing multiple testcases
+  - **[Testsets]** Testset cards now link to runs/testcases, and support fast schema editing, duplication, or deletion
+  - **[Testsets]** Titles now link directly to the testset detail page
+  - **[Testcases]** Detail page supports editing and copying large JSON blobs
+  - **[Testcases]** Schema panel added for better context while reviewing or editing testcases
+  - **[Projects]** Enhanced cards with summaries for testsets, metrics, and runs, all linked for easier navigation
+  - **[Projects]** Improved sorting with more intuitive labels and default order
+  - **[Projects]** Faster load performance across the project overview page
+  - **[Schemas]** Improved editor messaging to clarify the difference between input fields and labels
+  - **[Toast Messages]** Now deep-link to newly created items (testsets, testcases, projects)
+  - **[Performance]** Faster page loads, filtering, sorting, and table actions, powered by new APIs and backend improvements
+</Update>
+
 <Update label="April 11, 2025">
   ### Projects
 
@@ -12,7 +66,7 @@ description: "New updates and improvements"
 
   ### SDKs
 
-  - We're working on overhauling our API and SDKs. We switched to using Stainless for SDK generation and released version 1.0.0-alpha.0 of our Node SDK. Over the next few weeks, we will stabilize the new API and Node and Python SDKs.
+  We're working on overhauling our API and SDKs. We switched to using Stainless for SDK generation and released version 1.0.0-alpha.0 of our Node SDK. Over the next few weeks, we will stabilize the new API and Node and Python SDKs.
 
   ### Bug fixes and improvements
 
