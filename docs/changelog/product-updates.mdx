@@ -3,6 +3,33 @@ title: "Product Updates"
 description: "New updates and improvements"
 ---
 
+<Update label="April 25, 2025">
+  ### New API and SDK
+
+We've released the alpha of our new Scorecard SDKs, featuring streamlined API endpoints for creating, listing, and updating system configurations, as well as programmatic experiment execution. With this alpha, you can integrate scoring runs directly into your development and CI workflows, configure systems as code, and fully automate your evaluation pipeline without manual steps.  
+Our pre-release Python SDK ([2.0.0-alpha.0](https://pypi.org/project/scorecard-ai/2.0.0a0/)) and Javascript SDK ([1.0.0-alpha.1](https://www.npmjs.com/package/scorecard-ai/v/1.0.0-alpha.1)) are now available.
+
+  ![Npm Pn](/images/npm.png)
+
+  ### New Quickstarts and Documentation
+
+  To support the SDK alpha, we've launched comprehensive SDK reference docs and concise quickstart guides that show you how to:
+
+  - Install and initialize the TypeScript or Python SDK.
+  - Create and manage system configurations in code.
+  - Run your first experiment programmatically.
+  - Retrieve and interpret run results within your applications.
+  - Follow these step-by-step walkthroughs to get your first experiment up and running in under five minutes.
+
+    ### Bug fixes and improvements
+  - **[Performance]** Reduced page load times and improved responsiveness when handling large run results for the run history table.
+  - **[UI]** Removed metric-specific scoring progress, scoring and execution start and end times, and improved project names wrap across all screen sizes.
+  - **[Testsets] **Resolved bug with new CSV upload flow
+  - **[Testsets] **Added back Move testset to project
+  - **[Testsets]** Archived testsets are hidden correctly, keeping your workspace clutter‑free.
+  - **[Reliability]** Improved API reliability and workflow robustness: fixed run creation schema errors, streamlined testcase creation/duplication/deletion flows, and added inline schema validation to prevent submission errors
+</Update>
+
 <Update label="April 18, 2025">
   ### Run insights
 
@@ -21,12 +48,13 @@ description: "New updates and improvements"
   - Navigation has improved with linked testset titles and run/testcase summaries directly accessible from the cards.
 
     ![Testset Toast Pn](/images/testset_toast.png)
-    ![Create Testset Pn](/images/create_testset.png)
 
+    
+    ![Create Testset Pn](/images/create_testset.png)
 
   ### 🗂️ Improved schema management
 
-Schemas are now defined and managed per testset, rather than at the project level—giving teams more flexibility and control.
+  Schemas are now defined and managed per testset, rather than at the project level—giving teams more flexibility and control.
 
   - The schema editor has been redesigned, allowing teams to update schemas independently for each testset.
   - Schema changes now reflect immediately in the testcase table to help users see their impact in real time.
@@ -34,8 +62,9 @@ Schemas are now defined and managed per testset, rather than at the project leve
   - We’ve also improved messaging in the schema editor to clarify the distinction between inputs and labels.
 
   ![Testset Card Pn](/images/testset_card.png)
-  ![Schema Edit Pn](/images/schema_edit.png)
 
+  
+  ![Schema Edit Pn](/images/schema_edit.png)
 
   ### Bug fixes and improvements
 
