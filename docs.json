@@ -3,14 +3,19 @@
   "theme": "maple",
   "name": "Scorecard AI Docs",
   "colors": {
-    "primary": "#a855f7",
-    "light": "#a855f7",
-    "dark": "#a855f7"
+    "primary": "#ff6e3e",
+    "light": "#ff6e3e",
+    "dark": "#ff6e3e"
   },
   "background": {
     "decoration": "grid"
   },
   "favicon": "/favicon.png",
+  "api": {
+    "examples": {
+      "languages": ["javascript", "python", "curl", "go", "java"]
+    }
+  },
   "navigation": {
     "tabs": [
       {
@@ -19,7 +24,6 @@
           {
             "group": "Introduction",
             "pages": [
-
               {
                 "group": "Quickstart",
                 "pages": [
@@ -27,7 +31,7 @@
                   "docs/documentation/how-to-use-scorecard/quickstart/node-js"
                 ]
               },
-              
+
               "docs/documentation/introduction/overview",
               "docs/documentation/introduction/what-is-scorecard",
               "docs/documentation/introduction/the-llm-developer-s-journey",
@@ -82,16 +86,69 @@
       },
       {
         "tab": "API Reference",
-        "openapi": "openapi.yaml"
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": ["docs/api-reference/overview"]
+          },
+          {
+            "group": "Projects",
+            "pages": ["api-reference/get-projects"]
+          },
+          {
+            "group": "Testsets",
+            "pages": [
+              "api-reference/create-testset",
+              "api-reference/get-testsets-in-project",
+              "api-reference/get-testset-by-id",
+              "api-reference/update-testset",
+              "api-reference/delete-testset"
+            ]
+          },
+          {
+            "group": "Testcases",
+            "pages": [
+              "api-reference/create-multiple-testcases",
+              "api-reference/get-testcases-in-testset",
+              "api-reference/get-testcase",
+              "api-reference/update-testcase",
+              "api-reference/delete-multiple-testcases"
+            ]
+          },
+          {
+            "group": "Runs",
+            "pages": ["api-reference/create-run"]
+          },
+          {
+            "group": "Execution records",
+            "pages": ["api-reference/create-execution-record"]
+          },
+          {
+            "group": "Systems",
+            "pages": [
+              "api-reference/create-system",
+              "api-reference/get-systems",
+              "api-reference/get-system-by-id",
+              "api-reference/update-system",
+              "api-reference/delete-system"
+            ]
+          },
+          {
+            "group": "System configurations",
+            "pages": [
+              "api-reference/create-system-configuration",
+              "api-reference/get-system-configurations",
+              "api-reference/get-system-configuration-by-id"
+            ]
+          }
+        ]
       },
       {
         "tab": "Glossary",
         "groups": [
           {
             "group": "Glossary",
-            "pages": [
-              "docs/glossary/glossary"
-            ]
+            "pages": ["docs/glossary/glossary"]
           }
         ]
       },
@@ -100,9 +157,7 @@
         "groups": [
           {
             "group": "Updates",
-            "pages": [
-              "docs/changelog/product-updates"
-            ]
+            "pages": ["docs/changelog/product-updates"]
           }
         ]
       }
