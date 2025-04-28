@@ -31,9 +31,9 @@ paths:
             results.
           schema:
             type: string
-            example: '123'
+            example: "123"
       responses:
-        '200':
+        "200":
           description: Successfully retrieved list of projects.
           content:
             application/json:
@@ -51,7 +51,7 @@ paths:
                         name:
                           type:
                             - string
-                            - 'null'
+                            - "null"
                           description: The name of the project
                       required:
                         - id
@@ -60,7 +60,7 @@ paths:
                   nextCursor:
                     type:
                       - string
-                      - 'null'
+                      - "null"
                   hasMore:
                     type: boolean
                   total:
@@ -80,14 +80,14 @@ paths:
                       - id: 124
                         name: Summarizer (Europe)
                         description: Summarizer for documents in the Europe region.
-                    nextCursor: '125'
+                    nextCursor: "125"
                     hasMore: true
                   summary: Project list with pagination
                   description: Example response showing a list of two projects with pagination information.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -143,9 +143,9 @@ paths:
             results.
           schema:
             type: string
-            example: '123'
+            example: "123"
       responses:
-        '200':
+        "200":
           description: Successfully retrieved list of testsets.
           content:
             application/json:
@@ -155,11 +155,11 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Testset'
+                      $ref: "#/components/schemas/Testset"
                   nextCursor:
                     type:
                       - string
-                      - 'null'
+                      - "null"
                   hasMore:
                     type: boolean
                   total:
@@ -195,16 +195,16 @@ paths:
                           metadata:
                             - provenance
                             - geo
-                    nextCursor: '125'
+                    nextCursor: "125"
                     hasMore: true
                   summary: Testset list with fields
                   description: >-
                     Example response showing a paginated list of testsets with schema and field mapping
                     details.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -319,12 +319,12 @@ paths:
                   Request to create a testset for evaluating long context Q&A with fields for the question,
                   ideal answer, and metadata like provenance and geographical context.
       responses:
-        '201':
+        "201":
           description: Testset created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Testset'
+                $ref: "#/components/schemas/Testset"
               examples:
                 Created testset response:
                   value:
@@ -354,10 +354,10 @@ paths:
                   description: >-
                     Response after successfully creating a testset, showing the assigned ID and complete
                     schema with automatically populated field mappings.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -435,12 +435,12 @@ paths:
             type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Successfully retrieved testset
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Testset'
+                $ref: "#/components/schemas/Testset"
               examples:
                 Complete testset details:
                   value:
@@ -470,10 +470,10 @@ paths:
                   description: >-
                     Example response showing all details of a testset including its schema definition and
                     field mappings.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -617,12 +617,12 @@ paths:
                   testset structure. This example removes the 'geo' field and explicitly updates the field
                   mappings to exclude 'provenance' from metadata.
       responses:
-        '200':
+        "200":
           description: Testset updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Testset'
+                $ref: "#/components/schemas/Testset"
               examples:
                 Updated metadata only:
                   value:
@@ -701,10 +701,10 @@ paths:
                   description: >-
                     Result after explicit schema and field mapping update. Note that 'provenance' is not
                     included in metadata since it wasn't specified in the request's field mapping.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -749,7 +749,7 @@ paths:
             type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Testset deleted successfully
           content:
             application/json:
@@ -761,10 +761,10 @@ paths:
                     description: Whether the deletion was successful
                 required:
                   - success
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -820,9 +820,9 @@ paths:
             results.
           schema:
             type: string
-            example: '123'
+            example: "123"
       responses:
-        '200':
+        "200":
           description: Successfully retrieved list of testcases.
           content:
             application/json:
@@ -832,11 +832,11 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Testcase'
+                      $ref: "#/components/schemas/Testcase"
                   nextCursor:
                     type:
                       - string
-                      - 'null'
+                      - "null"
                   hasMore:
                     type: boolean
                   total:
@@ -881,14 +881,14 @@ paths:
                         validationErrors:
                           - path: /data
                             message: Required field 'idealAnswer' is missing
-                    nextCursor: '126'
+                    nextCursor: "126"
                     hasMore: true
                   summary: Testcase list with pagination
                   description: Example response showing a paginated list of testcases.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -984,7 +984,7 @@ paths:
                 summary: Create multiple testcases
                 description: Create multiple testcases in a single request.
       responses:
-        '201':
+        "201":
           description: Testcases created successfully
           content:
             application/json:
@@ -994,7 +994,7 @@ paths:
                   items:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Testcase'
+                      $ref: "#/components/schemas/Testcase"
                 required:
                   - items
               examples:
@@ -1036,10 +1036,10 @@ paths:
                             message: Expected string, received number
                   summary: Created testcases
                   description: Example response showing successfully created testcases.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -1129,12 +1129,12 @@ paths:
             type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Successfully retrieved testcase.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Testcase'
+                $ref: "#/components/schemas/Testcase"
               examples:
                 Testcase details:
                   value:
@@ -1150,10 +1150,10 @@ paths:
                       idealAnswer: Paris
                   summary: Testcase details
                   description: Example response showing a testcase's details.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -1215,12 +1215,12 @@ paths:
                 summary: Update testcase data
                 description: Update the content of a testcase with improved information.
       responses:
-        '200':
+        "200":
           description: Testcase updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Testcase'
+                $ref: "#/components/schemas/Testcase"
               examples:
                 Updated testcase:
                   value:
@@ -1236,10 +1236,10 @@ paths:
                       idealAnswer: Paris is the capital of France
                   summary: Updated testcase
                   description: Example response showing a successfully updated testcase.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -1305,7 +1305,7 @@ paths:
                     - 124
                     - 125
       responses:
-        '200':
+        "200":
           description: Testcases deleted successfully
           content:
             application/json:
@@ -1321,10 +1321,10 @@ paths:
                 Delete multiple testcases:
                   value:
                     success: true
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -1389,35 +1389,35 @@ paths:
             examples:
               Create run with metrics:
                 value:
-                  testsetId: '123'
-                  systemConfigId: '456'
+                  testsetId: "123"
+                  systemConfigId: "456"
                   metricIds:
-                    - '789'
-                    - '101'
+                    - "789"
+                    - "101"
                 summary: Create run with metrics
                 description: Request to create a run with metrics.
       responses:
-        '201':
+        "201":
           description: Run created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Run'
+                $ref: "#/components/schemas/Run"
               examples:
                 Created run with a scoring config:
                   value:
-                    id: '135'
-                    testsetId: '123'
+                    id: "135"
+                    testsetId: "123"
                     systemConfigId: 5fa85f64-5717-4562-b3fc-2c963f66afa7
                     metricIds:
-                      - '789'
-                      - '101'
+                      - "789"
+                      - "101"
                   summary: Created run
                   description: Response after successfully creating a run.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -1451,6 +1451,101 @@ paths:
                 metric_ids=["789", "101"],
                 testset_id="123",
                 system_config_id="456",
+            )
+            print(run.id)
+  /runs/{runId}:
+    patch:
+      operationId: updateRun
+      summary: Update run status
+      description: Update the status of a run.
+      parameters:
+        - in: path
+          name: runId
+          description: The ID of the run to update
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: &ref_0
+                    - pending
+                    - awaiting_execution
+                    - running_execution
+                    - awaiting_scoring
+                    - running_scoring
+                    - awaiting_human_scoring
+                    - completed
+                  description: The status of the Run
+              required:
+                - status
+            examples:
+              Update run status:
+                value:
+                  status: awaiting_scoring
+                summary: Update run after execution
+                description: Request to update the status of a run to awaiting_scoring.
+      responses:
+        "200":
+          description: Run updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID of the Run
+                  status:
+                    type: string
+                    enum: *ref_0
+                    description: The status of the Run
+                required:
+                  - id
+                  - status
+              examples:
+                Updated run status:
+                  value:
+                    id: "135"
+                    status: awaiting_scoring
+                  summary: Updated run status
+                  description: Response after successfully updating the status of a run.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              bearerToken: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+            });
+
+            async function main() {
+              const run = await client.runs.update('runId', { status: 'awaiting_scoring' });
+
+              console.log(run.id);
+            }
+
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+            )
+            run = client.runs.update(
+                run_id="runId",
+                status="awaiting_scoring",
             )
             print(run.id)
   /runs/{runId}/executionrecords:
@@ -1493,7 +1588,7 @@ paths:
             examples:
               Create execution record:
                 value:
-                  testcaseId: '123'
+                  testcaseId: "123"
                   inputs:
                     question: What is the capital of France?
                   labels:
@@ -1503,17 +1598,17 @@ paths:
                 summary: Create execution record
                 description: Request to create an execution record.
       responses:
-        '201':
+        "201":
           description: Execution record created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExecutionRecord'
+                $ref: "#/components/schemas/ExecutionRecord"
               examples:
                 Created execution record:
                   value:
-                    id: '864'
-                    testcaseId: '123'
+                    id: "864"
+                    testcaseId: "123"
                     inputs:
                       question: What is the capital of France?
                     labels:
@@ -1522,10 +1617,10 @@ paths:
                       response: The capital of France is Paris.
                   summary: Created execution record
                   description: Response after successfully creating an execution record.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -1598,7 +1693,7 @@ paths:
             type: string
             example: eyJvZmZzZXQiOjAsInBhZ2VJZCI6ImNvZGUifQ
       responses:
-        '200':
+        "200":
           description: Successfully retrieved list of systems.
           content:
             application/json:
@@ -1608,11 +1703,11 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/System'
+                      $ref: "#/components/schemas/System"
                   nextCursor:
                     type:
                       - string
-                      - 'null'
+                      - "null"
                   hasMore:
                     type: boolean
                   total:
@@ -1719,10 +1814,10 @@ paths:
                   description: >-
                     Example response showing a paginated list of two systems with their contracts - a simple
                     chatbot and a RAG system.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -1909,12 +2004,12 @@ paths:
                   inputs, produces answers with citations, and can be configured with different embedding and
                   generation models.
       responses:
-        '201':
+        "201":
           description: System created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/System'
+                $ref: "#/components/schemas/System"
               examples:
                 Created system response:
                   value:
@@ -1965,10 +2060,10 @@ paths:
                         - model
                   summary: Created system response
                   description: Response after successfully creating a system definition for a GPT-4 chatbot.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -2090,12 +2185,12 @@ paths:
             format: uuid
           required: true
       responses:
-        '200':
+        "200":
           description: Successfully retrieved system.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/System'
+                $ref: "#/components/schemas/System"
               examples:
                 Complete system details:
                   value:
@@ -2148,10 +2243,10 @@ paths:
                   description: >-
                     Example response showing all details of a system including its input, output, and
                     configuration schema contracts.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -2257,12 +2352,12 @@ paths:
                   Updates the configuration schema to add support for a new model option and a systemPrompt
                   parameter.
       responses:
-        '200':
+        "200":
           description: System updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/System'
+                $ref: "#/components/schemas/System"
               examples:
                 Updated system:
                   value:
@@ -2316,10 +2411,10 @@ paths:
                         - model
                   summary: Updated system
                   description: Result after updating both the metadata and the configuration schema of the system.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -2366,7 +2461,7 @@ paths:
             format: uuid
           required: true
       responses:
-        '200':
+        "200":
           description: System deleted successfully
           content:
             application/json:
@@ -2384,10 +2479,10 @@ paths:
                     success: true
                   summary: Delete system success
                   description: Response indicating successful deletion of the system.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -2451,7 +2546,7 @@ paths:
             type: string
             example: eyJvZmZzZXQiOjAsInBhZ2VJZCI6ImNvZGUifQ
       responses:
-        '200':
+        "200":
           description: Successfully retrieved list of system configurations.
           content:
             application/json:
@@ -2461,11 +2556,11 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/SystemConfig'
+                      $ref: "#/components/schemas/SystemConfig"
                   nextCursor:
                     type:
                       - string
-                      - 'null'
+                      - "null"
                   hasMore:
                     type: boolean
                   total:
@@ -2505,7 +2600,7 @@ paths:
                         systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
                         name: Invalid Config (Wrong Type)
                         config:
-                          temperature: '0.5'
+                          temperature: "0.5"
                           maxTokens: 2048
                           model: gpt-4-turbo
                         validationErrors:
@@ -2517,10 +2612,10 @@ paths:
                   description: >-
                     Example response showing a list of configurations for a chatbot system, including
                     production, experimental, and invalid configurations with validation errors.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -2647,7 +2742,7 @@ paths:
                   systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
                   name: Invalid Config Example
                   config:
-                    temperature: '0.7'
+                    temperature: "0.7"
                     maxTokens: 1024
                     model: gpt-4-experimental
                 summary: Create configuration with validation errors
@@ -2655,12 +2750,12 @@ paths:
                   Create a configuration with values that don't strictly conform to the system's configSchema.
                   The configuration will still be created but will include validation errors in the response.
       responses:
-        '201':
+        "201":
           description: System configuration created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SystemConfig'
+                $ref: "#/components/schemas/SystemConfig"
               examples:
                 Created system configuration:
                   value:
@@ -2679,7 +2774,7 @@ paths:
                     systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
                     name: Invalid Config Example
                     config:
-                      temperature: '0.7'
+                      temperature: "0.7"
                       maxTokens: 1024
                       model: gpt-4-experimental
                     validationErrors:
@@ -2691,10 +2786,10 @@ paths:
                   description: >-
                     Response after creating a system configuration with values that don't strictly conform to
                     the configSchema. Note the validationErrors array that details each issue.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -2753,12 +2848,12 @@ paths:
             format: uuid
           required: true
       responses:
-        '200':
+        "200":
           description: Successfully retrieved system configuration.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SystemConfig'
+                $ref: "#/components/schemas/SystemConfig"
               examples:
                 System configuration details:
                   value:
@@ -2777,7 +2872,7 @@ paths:
                     systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
                     name: Invalid Config Example
                     config:
-                      temperature: '0.7'
+                      temperature: "0.7"
                       maxTokens: 1024
                       model: gpt-4-experimental
                     validationErrors:
@@ -2790,10 +2885,10 @@ paths:
                     Example response showing a system configuration with validation errors. The configuration
                     is still usable, but includes details about fields that don't conform to the system's
                     schema.
-        '401':
-          $ref: '#/components/responses/UnauthenticatedError'
-        '500':
-          $ref: '#/components/responses/ServiceError'
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
           source: |-
@@ -3004,10 +3099,22 @@ components:
           items:
             type: string
           description: The IDs of the metrics this Run is using
+        status:
+          type: string
+          enum:
+            - pending
+            - awaiting_execution
+            - running_execution
+            - awaiting_scoring
+            - running_scoring
+            - awaiting_human_scoring
+            - completed
+          description: The status of the Run
       required:
         - id
         - testsetId
         - metricIds
+        - status
       description: A Run in the Scorecard system.
     ExecutionRecord:
       type: object
@@ -3144,7 +3251,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ApiError'
+            $ref: "#/components/schemas/ApiError"
           examples:
             Authentication failure:
               value:
@@ -3157,7 +3264,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ApiError'
+            $ref: "#/components/schemas/ApiError"
           examples:
             Internal error:
               value:

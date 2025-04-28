@@ -117,7 +117,10 @@
           },
           {
             "group": "Runs",
-            "pages": ["api-reference/create-run"]
+            "pages": [
+              "api-reference/create-run",
+              "api-reference/update-run-status"
+            ]
           },
           {
             "group": "Execution records",
