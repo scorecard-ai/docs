@@ -145,7 +145,7 @@ In this quickstart we will:
     # Run the system on each Testcase.
     for testcase in scorecard.testcases.list(testset.id):
         outputs = run_system(testcase.inputs)
-        scorecard.execution_records.create(run_id=run.id, testcase_id=testcase.id, inputs=testcase.inputs, labels=testcase.labels, outputs=outputs)
+        scorecard.records.create(run_id=run.id, testcase_id=testcase.id, inputs=testcase.inputs, labels=testcase.labels, outputs=outputs)
     
     # Mark the Run as done with execution and ready for scoring.
     scorecard.runs.update(run_id=run.id, status="awaiting_scoring")
@@ -155,7 +155,7 @@ In this quickstart we will:
     ```
   </Step>
   <Step title="Run Scoring">
-    Now let’s review the outputs of our execution in the Scorecard UI and run scoring by clicking on the “Run Scoring button’.
+    Now let’s review the outputs of our execution in the Scorecard UI and run scoring by clicking on the “Run Scoring" button.
 
     <Frame caption="Scorecard UI: Run Scoring">
       ![Scorecard UI: Run Scoring](/images/python/4.png)
