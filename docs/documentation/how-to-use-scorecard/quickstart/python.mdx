@@ -12,6 +12,8 @@ In this quickstart we will:
 - Score the LLM app with the Testset
 - Review evaluation results in the Scorecard UI
 
+[Follow along in the Google Colab notebook.](https://colab.research.google.com/drive/1A53j48o75Decrjz7WzDVP62XeDEKCHHP#scrollTo=Gia_JdwunHlJ)
+
 ## Steps
 
 <Steps>
@@ -21,61 +23,99 @@ In this quickstart we will:
     ```sh Python Setup
     export SCORECARD_API_KEY="SCORECARD_API_KEY"
     export OPENAI_API_KEY="OPENAI_API_KEY"
-    pip install scorecard-ai
+    pip install --pre scorecard-ai
     pip install openai
     ```
   </Step>
-  <Step title="Create a Testset and Add Testcases">
-    A Testset is a collection of Testcases used to evaluate the performance of an LLM application across a variety of inputs and scenarios. A Testcase is a single input to an LLM that is used for scoring. Now let’s create a Testset and add some Testcases using the Scorecard Python SDK:
+  <Step title="Setup constants">
+    Configure the Scorecard client and enter your Project's ID. We'll need that to know which Project to place our Testsets and Runs in.
 
     ```py
-    from scorecard.client import Scorecard
+    from scorecard_ai import Scorecard
     
-    client = Scorecard(
-    	api_key=SCORECARD_API_KEY
+    scorecard = Scorecard(bearer_token=SCORECARD_API_KEY)
+    
+    PROJECT_ID = "310"  # Replace with your Project id
+    ```
+  </Step>
+  <Step title="Create a Testset and Add Testcases">
+    Now, let's create a Testset in a specific project and add some Testcases using the SDK. A Testset is a collection of Testcases used to evaluate the performance of an LLM application across a variety of inputs and scenarios. A Testcase is a single input to an LLM that is used for scoring. After we create a Testset, we’ll grab its ID to use later.
+
+    ```py
+    # Create a Testset with a schema matching our use case
+    testset = scorecard.testsets.create(
+        project_id=PROJECT_ID,
+        name="Tone rewriter testset",
+        description="Testcases about rewriting messages in a different tone.",
+        field_mapping={
+            # Inputs are fields that represent the input to the AI system.
+            "inputs": ["original", "recipient", "tone"],
+            # Labels are fields represent the expected output of the AI system.
+            "labels": ["idealRewritten"],
+            # Metadata fields are used for grouping Testcases, but not seen by the AI system.
+            "metadata": [],
+        },
+        json_schema={
+            "type": "object",
+            "properties": {
+                # The original message.
+                "original": {"type": "string"},
+                # The recipient of the message.
+                "recipient": {"type": "string"},
+                # The tone that the message should be rewritten in.
+                "tone": {"type": "string"},
+                # The ideal AI-generated rewritten message.
+                "idealRewritten": {"type": "string"},
+            },
+            "required": ["original", "tone", "idealRewritten"],
+        },
     )
     
-    # Create a Testset
-    demo_testset = client.testset.create(
-    	name="Demo Testset",
-    	description="Demo Testset created via Scorecard Python SDK",
-    )
-    
-    # Add three Testcases
-    client.testcase.create(
-    	testset_id=demo_testset.id,
-    	user_query="The amount of access cabinet secretaries have to the president is most likely to be controlled by the"
-    )
-    client.testcase.create(
-    	testset_id=demo_testset.id,
-    	user_query="The exclusionary rule was established to"
-    )
-    client.testcase.create(
-    	testset_id=demo_testset.id,
-    	user_query="Ruled unconstitutional in 1983, the legislative veto had allowed"
+    # Add Testcases matching the Testset's schema to the Testset
+    scorecard.testcases.create(
+        testset_id=testset.id,
+        items=[
+            {
+                "json_data": {
+                    "original": "We need your feedback on the new designs ASAP.",
+                    "tone": "polite",
+                    "recipient": "Darius",
+                    "idealRewritten": "Hi Darius, your feedback is crucial to the success of the new designs. Please share your thoughts as soon as possible.",
+                },
+            },
+            {
+                "json_data": {
+                    "original": "I'll be late to the office because my cat is sleeping on my keyboard.",
+                    "tone": "funny",
+                    "recipient": "team",
+                    "idealRewritten": "Hey team! My cat's napping on my keyboard and I'm just waiting for her to give me permission to leave. I'll be a bit late!",
+                },
+            },
+        ],
     )
     
     print("Visit the Scorecard UI to view your Testset:")
-    print(f"https://app.getscorecard.ai/projects/{demo_testset.project_id}/testsets/{demo_testset.id}")
+    print(f"https://app.getscorecard.ai/projects/{PROJECT_ID}/testsets/{testset.id}")
     ```
   </Step>
   <Step title="Create a Simple LLM App">
-    Next let’s create a simple LLM application which we will be evaluating using Scorecard. This LLM application is represented with the following function that sends a request with a user-defined input to the OpenAI API Here we’ve created a system that will be a helpful assistant in response to our input user query.
+    Next, let’s create a simple LLM application which we will be evaluating using Scorecard. This LLM application is represented with the following function that uses OpenAI's GPT-4o-mini to translate the user's message into a specified tone.
 
     ```py
     from openai import OpenAI
     
-    def answer_query(user_topic: str) -> str:
-    	client = OpenAI(api_key=OPENAI_API_KEY)
-    	response = client.chat.completions.create(
-      	model="gpt-4o-mini",  
-      	messages=[
-      		{"role": "system", "content": "You are a helpful assistant."},
-      		{"role": "user", "content": user_topic},
-          ]
-    	)
+    openai = OpenAI(api_key=OPENAI_API_KEY)
     
-    	return response.choices[0].message.content
+    # The "system under test" -- the AI system that you want to evaluate.
+    def run_system(system_input: dict) -> dict:
+        response = openai.responses.create(
+            model="gpt-4o-mini",
+            instructions=f"You are a tone translator that converts a user's message to a different tone ({system_input['tone']}). Address the recipient: {system_input.get('recipient')}",
+            input=system_input['original'],
+        )
+        return {
+            "rewritten": response.output_text
+        }
     ```
   </Step>
   <Step title="Create Metrics">
@@ -89,24 +129,29 @@ In this quickstart we will:
     <Frame caption="Scorecard UI: Metric Definition">
       ![Scorecard UI: Metric Definition](/images/python/2.webp)
     </Frame>
-    You can evaluate your LLM systems with one or multiple metrics. A good practice is to routinely test the LLM system with the same metrics for a specific use case. For this, Scorecard offers to define Scoring Configs, collection of metrics to be used to consistently evaluate LLM use cases with the same metrics. For the quick start, we will create a Scoring Config just including the previously created Answer Relevancy metric. Let’s head over to the “Scoring Config” tab in the Scoring Lab and create this Scoring Config. Let’s grab that Scoring Config ID for later:
+    You can evaluate your LLM systems with one or multiple metrics. For the quick start, let's just use that Answer Relevancy metric and grab the Metric ID for later.
 
-    <Frame caption="Scorecard UI: Scoring Config">
-      ![Scorecard UI: Scoring Config](/images/python/3.webp)
-    </Frame>
+    ```python
+    METRIC_IDS = ["987"]  # Replace with your Metric ID(s)
+    ```
   </Step>
   <Step title="Create Test System">
     Now let’s use our mock system and run our Testset against it replacing the Testset id below with the Testset from before and the Scoring Config ID above:
 
     ```py
-    client.run_tests(
-    	input_testset_id=demo_testset.id,
-    	scoring_config_id=456, # Replace with your scoring config ID
-    	model_invocation=lambda prompt: answer_query(prompt),
-    )
+    # Create a new Run on the Testset with the given Metrics.
+    run = scorecard.runs.create(project_id=PROJECT_ID, testset_id=testset.id, metric_ids=METRIC_IDS)
     
-    print("Visit the Scorecard UI to view your Run:")
-      print(f"https://app.getscorecard.ai/projects/{demo_testset.project_id}/runs/grades/{run.id}")
+    # Run the system on each Testcase.
+    for testcase in scorecard.testcases.list(testset.id):
+        outputs = run_system(testcase.inputs)
+        scorecard.execution_records.create(run_id=run.id, testcase_id=testcase.id, inputs=testcase.inputs, labels=testcase.labels, outputs=outputs)
+    
+    # Mark the Run as done with execution and ready for scoring.
+    scorecard.runs.update(run_id=run.id, status="awaiting_scoring")
+    
+    run_url = f"https://app.getscorecard.ai/projects/{PROJECT_ID}/runs/grades/{run.id}"
+    print(f"Go to {run_url} and click \"Run Scoring\" to grade your Records.")
     ```
   </Step>
   <Step title="Run Scoring">
