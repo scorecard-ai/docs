@@ -13,7 +13,7 @@ paths:
       operationId: listProjects
       summary: Get projects
       description: >-
-        Retrieve a paginated list of all projects. Projects are ordered by creation date, with oldest projects
+        Retrieve a paginated list of all Projects. Projects are ordered by creation date, with oldest Projects
         first.
       parameters:
         - in: query
@@ -34,7 +34,7 @@ paths:
             example: "123"
       responses:
         "200":
-          description: Successfully retrieved list of projects.
+          description: Successfully retrieved list of Projects.
           content:
             application/json:
               schema:
@@ -47,16 +47,16 @@ paths:
                       properties:
                         id:
                           type: string
-                          description: The ID of the project
+                          description: The ID of the Project.
                         name:
                           type:
                             - string
                             - "null"
-                          description: The name of the project
+                          description: The name of the Project.
                       required:
                         - id
                         - name
-                      description: A project in the Scorecard system.
+                      description: A Project in the Scorecard system.
                   nextCursor:
                     type:
                       - string
@@ -83,7 +83,7 @@ paths:
                     nextCursor: "125"
                     hasMore: true
                   summary: Project list with pagination
-                  description: Example response showing a list of two projects with pagination information.
+                  description: Example response showing a list of two Projects with pagination information.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -119,14 +119,15 @@ paths:
   /projects/{projectId}/testsets:
     get:
       operationId: listTestsets
-      summary: Get testsets in project
-      description: Retrieve a paginated list of testsets belonging to a project.
+      summary: Get Testsets in Project
+      description: Retrieve a paginated list of Testsets belonging to a Project.
       parameters:
         - in: path
           name: projectId
-          description: The ID of the project
+          description: The ID of the Project.
           schema:
             type: string
+            example: "314"
           required: true
         - in: query
           name: limit
@@ -146,7 +147,7 @@ paths:
             example: "123"
       responses:
         "200":
-          description: Successfully retrieved list of testsets.
+          description: Successfully retrieved list of Testsets.
           content:
             application/json:
               schema:
@@ -173,7 +174,7 @@ paths:
                 Testset list with fields:
                   value:
                     data:
-                      - id: 123
+                      - id: "246"
                         name: Long Context Q&A
                         description: Testset for long context Q&A chatbot.
                         jsonSchema:
@@ -195,11 +196,11 @@ paths:
                           metadata:
                             - provenance
                             - geo
-                    nextCursor: "125"
+                    nextCursor: "247"
                     hasMore: true
                   summary: Testset list with fields
                   description: >-
-                    Example response showing a paginated list of testsets with schema and field mapping
+                    Example response showing a paginated list of Testsets with schema and field mapping
                     details.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
@@ -216,7 +217,7 @@ paths:
 
             async function main() {
               // Automatically fetches more pages as needed.
-              for await (const testset of client.testsets.list('projectId')) {
+              for await (const testset of client.testsets.list('314')) {
                 console.log(testset.id);
               }
             }
@@ -231,20 +232,21 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             page = client.testsets.list(
-                project_id="projectId",
+                project_id="314",
             )
             page = page.data[0]
             print(page.id)
     post:
       operationId: createTestset
-      summary: Create testset
-      description: Create a new testset for a project. The testset will be created in the project specified in the path.
+      summary: Create Testset
+      description: Create a new Testset for a Project. The Testset will be created in the Project specified in the path.
       parameters:
         - in: path
           name: projectId
-          description: The ID of the project to create the testset in
+          description: The ID of the Project to create the Testset in.
           schema:
             type: string
+            example: "314"
           required: true
       requestBody:
         content:
@@ -254,13 +256,13 @@ paths:
               properties:
                 name:
                   type: string
-                  description: The name of the testset
+                  description: The name of the Testset.
                 description:
                   type: string
-                  description: The description of the testset
+                  description: The description of the Testset.
                 jsonSchema:
                   type: object
-                  description: The JSON schema for each testcase in the testset
+                  description: The JSON schema for each Testcase in the Testset.
                   additionalProperties: true
                 fieldMapping:
                   type: object
@@ -269,23 +271,23 @@ paths:
                       type: array
                       items:
                         type: string
-                      description: Fields that represent inputs to the AI system
+                      description: Fields that represent inputs to the AI system.
                     labels:
                       type: array
                       items:
                         type: string
-                      description: Fields that represent expected outputs/labels
+                      description: Fields that represent expected outputs/labels.
                     metadata:
                       type: array
                       items:
                         type: string
-                      description: Fields that are not inputs or labels
+                      description: Fields that are not inputs or labels.
                   required:
                     - inputs
                     - labels
                     - metadata
                   description: >-
-                    Maps top-level keys of the testcase schema to their roles (input/label). Unmapped fields
+                    Maps top-level keys of the Testcase schema to their roles (input/label). Unmapped fields
                     are treated as metadata.
               required:
                 - name
@@ -293,7 +295,7 @@ paths:
                 - jsonSchema
                 - fieldMapping
             examples:
-              Create Q&A testset:
+              Create Q&A Testset:
                 value:
                   name: Long Context Q&A
                   description: Testset for long context Q&A chatbot.
@@ -314,9 +316,9 @@ paths:
                     labels:
                       - idealAnswer
                     metadata: []
-                summary: Create Q&A testset
+                summary: Create Q&A Testset
                 description: >-
-                  Request to create a testset for evaluating long context Q&A with fields for the question,
+                  Request to create a Testset for evaluating long context Q&A with fields for the question,
                   ideal answer, and metadata like provenance and geographical context.
       responses:
         "201":
@@ -326,9 +328,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/Testset"
               examples:
-                Created testset response:
+                Created Testset response:
                   value:
-                    id: 123
+                    id: "246"
                     name: Long Context Q&A
                     description: Testset for long context Q&A chatbot.
                     jsonSchema:
@@ -350,9 +352,9 @@ paths:
                       metadata:
                         - provenance
                         - geo
-                  summary: Created testset response
+                  summary: Created Testset response
                   description: >-
-                    Response after successfully creating a testset, showing the assigned ID and complete
+                    Response after successfully creating a Testset, showing the assigned ID and complete
                     schema with automatically populated field mappings.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
@@ -368,7 +370,7 @@ paths:
             });
 
             async function main() {
-              const testset = await client.testsets.create('projectId', {
+              const testset = await client.testsets.create('314', {
                 description: 'Testset for long context Q&A chatbot.',
                 fieldMapping: { inputs: ['question'], labels: ['idealAnswer'], metadata: [] },
                 jsonSchema: {
@@ -396,7 +398,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             testset = client.testsets.create(
-                project_id="projectId",
+                project_id="314",
                 description="Testset for long context Q&A chatbot.",
                 field_mapping={
                     "inputs": ["question"],
@@ -426,25 +428,26 @@ paths:
   /testsets/{testsetId}:
     get:
       operationId: getTestset
-      summary: Get testset by ID
+      summary: Get Testset by ID
       parameters:
         - in: path
           name: testsetId
-          description: The ID of the testset
+          description: The ID of the Testset.
           schema:
             type: string
+            example: "246"
           required: true
       responses:
         "200":
-          description: Successfully retrieved testset
+          description: Successfully retrieved Testset
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Testset"
               examples:
-                Complete testset details:
+                Complete Testset details:
                   value:
-                    id: 123
+                    id: "246"
                     name: Long Context Q&A
                     description: Testset for long context Q&A chatbot.
                     jsonSchema:
@@ -466,9 +469,9 @@ paths:
                       metadata:
                         - provenance
                         - geo
-                  summary: Complete testset details
+                  summary: Complete Testset details
                   description: >-
-                    Example response showing all details of a testset including its schema definition and
+                    Example response showing all details of a Testset including its schema definition and
                     field mappings.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
@@ -484,7 +487,7 @@ paths:
             });
 
             async function main() {
-              const testset = await client.testsets.get('testsetId');
+              const testset = await client.testsets.get('246');
 
               console.log(testset.id);
             }
@@ -499,14 +502,14 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             testset = client.testsets.get(
-                "testsetId",
+                "246",
             )
             print(testset.id)
     patch:
       operationId: updateTestset
-      summary: Update testset
+      summary: Update Testset
       description: >-
-        Update a testset. Only the fields provided in the request body will be updated.
+        Update a Testset. Only the fields provided in the request body will be updated.
 
         If a field is provided, the new content will replace the existing content.
 
@@ -524,9 +527,10 @@ paths:
       parameters:
         - in: path
           name: testsetId
-          description: The ID of the testset to update
+          description: The ID of the Testset to update.
           schema:
             type: string
+            example: "246"
           required: true
       requestBody:
         content:
@@ -536,13 +540,13 @@ paths:
               properties:
                 name:
                   type: string
-                  description: The name of the testset
+                  description: The name of the Testset.
                 description:
                   type: string
-                  description: The description of the testset
+                  description: The description of the Testset.
                 jsonSchema:
                   type: object
-                  description: The JSON schema for each testcase in the testset
+                  description: The JSON schema for each Testcase in the Testset.
                   additionalProperties: true
                 fieldMapping:
                   type: object
@@ -551,29 +555,29 @@ paths:
                       type: array
                       items:
                         type: string
-                      description: Fields that represent inputs to the AI system
+                      description: Fields that represent inputs to the AI system.
                     labels:
                       type: array
                       items:
                         type: string
-                      description: Fields that represent expected outputs/labels
+                      description: Fields that represent expected outputs/labels.
                     metadata:
                       type: array
                       items:
                         type: string
-                      description: Fields that are not inputs or labels
+                      description: Fields that are not inputs or labels.
                   required:
                     - inputs
                     - labels
                     - metadata
                   description: >-
-                    Maps top-level keys of the testcase schema to their roles (input/label). Unmapped fields
+                    Maps top-level keys of the Testcase schema to their roles (input/label). Unmapped fields
                     are treated as metadata.
             examples:
               Update metadata only:
                 value:
                   name: Updated Q&A Testset
-                  description: Updated description for the Q&A testset.
+                  description: Updated description for the Q&A Testset.
                 summary: Update metadata only
                 description: >-
                   Simple metadata update without changing schema or mappings. Updates only the name and
@@ -614,7 +618,7 @@ paths:
                 summary: Full schema revision
                 description: >-
                   Explicit update of both schema and field mappings, allowing complete control over the
-                  testset structure. This example removes the 'geo' field and explicitly updates the field
+                  Testset structure. This example removes the 'geo' field and explicitly updates the field
                   mappings to exclude 'provenance' from metadata.
       responses:
         "200":
@@ -626,9 +630,9 @@ paths:
               examples:
                 Updated metadata only:
                   value:
-                    id: 123
+                    id: "246"
                     name: Updated Q&A Testset
-                    description: Updated description for the Q&A testset.
+                    description: Updated description for the Q&A Testset.
                     jsonSchema:
                       type: object
                       properties:
@@ -650,11 +654,11 @@ paths:
                         - geo
                   summary: Updated metadata only
                   description: >-
-                    Result after updating only the testset's name and description. All schema fields and
+                    Result after updating only the Testset's name and description. All schema fields and
                     mappings remain unchanged.
                 Auto-updated mappings:
                   value:
-                    id: 123
+                    id: "246"
                     name: Long Context Q&A
                     description: Testset for long context Q&A chatbot.
                     jsonSchema:
@@ -679,7 +683,7 @@ paths:
                     automatically removed from the metadata mapping since it no longer exists in the schema.
                 Custom field mapping:
                   value:
-                    id: 123
+                    id: "246"
                     name: Long Context Q&A
                     description: Testset for long context Q&A chatbot.
                     jsonSchema:
@@ -715,8 +719,8 @@ paths:
             });
 
             async function main() {
-              const testset = await client.testsets.update('testsetId', {
-                description: 'Updated description for the Q&A testset.',
+              const testset = await client.testsets.update('246', {
+                description: 'Updated description for the Q&A Testset.',
                 name: 'Updated Q&A Testset',
               });
 
@@ -733,20 +737,21 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             testset = client.testsets.update(
-                testset_id="testsetId",
-                description="Updated description for the Q&A testset.",
+                testset_id="246",
+                description="Updated description for the Q&A Testset.",
                 name="Updated Q&A Testset",
             )
             print(testset.id)
     delete:
       operationId: deleteTestset
-      summary: Delete testset
+      summary: Delete Testset
       parameters:
         - in: path
           name: testsetId
-          description: The ID of the testset to delete
+          description: The ID of the Testset to delete.
           schema:
             type: string
+            example: "246"
           required: true
       responses:
         "200":
@@ -758,7 +763,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    description: Whether the deletion was successful
+                    description: Whether the deletion was successful.
                 required:
                   - success
         "401":
@@ -775,7 +780,7 @@ paths:
             });
 
             async function main() {
-              const testset = await client.testsets.delete('testsetId');
+              const testset = await client.testsets.delete('246');
 
               console.log(testset.success);
             }
@@ -790,20 +795,21 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             testset = client.testsets.delete(
-                "testsetId",
+                "246",
             )
             print(testset.success)
   /testsets/{testsetId}/testcases:
     get:
       operationId: listTestcases
-      summary: Get testcases in testset
-      description: Retrieve a paginated list of testcases belonging to a testset.
+      summary: Get Testcases in Testset
+      description: Retrieve a paginated list of Testcases belonging to a Testset.
       parameters:
         - in: path
           name: testsetId
-          description: The ID of the testset to list testcases from
+          description: The ID of the Testset to list Testcases from.
           schema:
             type: string
+            example: "246"
           required: true
         - in: query
           name: limit
@@ -823,7 +829,7 @@ paths:
             example: "123"
       responses:
         "200":
-          description: Successfully retrieved list of testcases.
+          description: Successfully retrieved list of Testcases.
           content:
             application/json:
               schema:
@@ -850,8 +856,8 @@ paths:
                 Testcase list with pagination:
                   value:
                     data:
-                      - id: 123
-                        testsetId: 456
+                      - id: "123"
+                        testsetId: "246"
                         jsonData:
                           question: What is the capital of France?
                           idealAnswer: Paris
@@ -860,8 +866,8 @@ paths:
                           question: What is the capital of France?
                         labels:
                           idealAnswer: Paris
-                      - id: 124
-                        testsetId: 456
+                      - id: "124"
+                        testsetId: "246"
                         jsonData:
                           question: What is the largest planet in our solar system?
                           idealAnswer: Jupiter
@@ -870,8 +876,8 @@ paths:
                           question: What is the largest planet in our solar system?
                         labels:
                           idealAnswer: Jupiter
-                      - id: 125
-                        testsetId: 456
+                      - id: "125"
+                        testsetId: "246"
                         jsonData:
                           question: What is the deepest ocean on Earth?
                           provenance: user_feedback
@@ -884,7 +890,7 @@ paths:
                     nextCursor: "126"
                     hasMore: true
                   summary: Testcase list with pagination
-                  description: Example response showing a paginated list of testcases.
+                  description: Example response showing a paginated list of Testcases.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -900,7 +906,7 @@ paths:
 
             async function main() {
               // Automatically fetches more pages as needed.
-              for await (const testcase of client.testcases.list('testsetId')) {
+              for await (const testcase of client.testcases.list('246')) {
                 console.log(testcase.id);
               }
             }
@@ -915,20 +921,21 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             page = client.testcases.list(
-                testset_id="testsetId",
+                testset_id="246",
             )
             page = page.data[0]
             print(page.id)
     post:
       operationId: createTestcases
-      summary: Create multiple testcases
-      description: Create multiple testcases in the specified testset.
+      summary: Create multiple Testcases
+      description: Create multiple Testcases in the specified Testset.
       parameters:
         - in: path
           name: testsetId
-          description: The ID of the testset to add the testcases to
+          description: The ID of the Testset to add the Testcases to.
           schema:
             type: string
+            example: "246"
           required: true
       requestBody:
         content:
@@ -944,26 +951,26 @@ paths:
                       jsonData:
                         type: object
                         additionalProperties: true
-                        description: The JSON data of the testcase, which is validated against the testset's schema.
+                        description: The JSON data of the Testcase, which is validated against the Testset's schema.
                     required:
                       - jsonData
                     description: >-
                       A test case in the Scorecard system. Contains JSON data that is validated against the
-                      schema defined by its testset.
+                      schema defined by its Testset.
 
                       The `inputs` and `labels` fields are derived from the `data` field based on the
-                      testset's `fieldMapping`, and include all mapped fields, including those with validation
+                      Testset's `fieldMapping`, and include all mapped fields, including those with validation
                       errors.
 
                       Testcases are stored regardless of validation results, with any validation errors
                       included in the `validationErrors` field.
                   minItems: 1
                   maxItems: 100
-                  description: Testcases to create (max 100)
+                  description: Testcases to create (max 100).
               required:
                 - items
             examples:
-              Create multiple testcases:
+              Create multiple Testcases:
                 value:
                   items:
                     - jsonData:
@@ -981,8 +988,8 @@ paths:
                       validationErrors:
                         - path: /data/idealAnswer
                           message: Expected string, received number
-                summary: Create multiple testcases
-                description: Create multiple testcases in a single request.
+                summary: Create multiple Testcases
+                description: Create multiple Testcases in a single request.
       responses:
         "201":
           description: Testcases created successfully
@@ -998,11 +1005,11 @@ paths:
                 required:
                   - items
               examples:
-                Created testcases response:
+                Created Testcases response:
                   value:
                     items:
-                      - id: 123
-                        testsetId: 456
+                      - id: "123"
+                        testsetId: "246"
                         jsonData:
                           question: What is the capital of France?
                           idealAnswer: Paris
@@ -1011,8 +1018,8 @@ paths:
                           question: What is the capital of France?
                         labels:
                           idealAnswer: Paris
-                      - id: 124
-                        testsetId: 456
+                      - id: "124"
+                        testsetId: "246"
                         jsonData:
                           question: What is the largest planet in our solar system?
                           idealAnswer: Jupiter
@@ -1021,8 +1028,8 @@ paths:
                           question: What is the largest planet in our solar system?
                         labels:
                           idealAnswer: Jupiter
-                      - id: 125
-                        testsetId: 456
+                      - id: "125"
+                        testsetId: "246"
                         jsonData:
                           question: How many planets are in our solar system?
                           idealAnswer: 8
@@ -1034,8 +1041,8 @@ paths:
                         validationErrors:
                           - path: /data/idealAnswer
                             message: Expected string, received number
-                  summary: Created testcases
-                  description: Example response showing successfully created testcases.
+                  summary: Created Testcases
+                  description: Example response showing successfully created Testcases.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -1050,7 +1057,7 @@ paths:
             });
 
             async function main() {
-              const testcase = await client.testcases.create('testsetId', {
+              const testcase = await client.testcases.create('246', {
                 items: [
                   {
                     jsonData: {
@@ -1090,7 +1097,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             testcase = client.testcases.create(
-                testset_id="testsetId",
+                testset_id="246",
                 items=[{
                     "json_data": {
                         "question": "What is the capital of France?",
@@ -1119,18 +1126,19 @@ paths:
   /testcases/{testcaseId}:
     get:
       operationId: getTestcase
-      summary: Get testcase
-      description: Retrieve a specific testcase by ID.
+      summary: Get Testcase
+      description: Retrieve a specific Testcase by ID.
       parameters:
         - in: path
           name: testcaseId
-          description: The ID of the testcase to retrieve
+          description: The ID of the Testcase to retrieve.
           schema:
             type: string
+            example: "248"
           required: true
       responses:
         "200":
-          description: Successfully retrieved testcase.
+          description: Successfully retrieved Testcase.
           content:
             application/json:
               schema:
@@ -1138,8 +1146,8 @@ paths:
               examples:
                 Testcase details:
                   value:
-                    id: 123
-                    testsetId: 456
+                    id: "248"
+                    testsetId: "246"
                     jsonData:
                       question: What is the capital of France?
                       idealAnswer: Paris
@@ -1149,7 +1157,7 @@ paths:
                     labels:
                       idealAnswer: Paris
                   summary: Testcase details
-                  description: Example response showing a testcase's details.
+                  description: Example response showing a Testcase's details.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -1164,7 +1172,7 @@ paths:
             });
 
             async function main() {
-              const testcase = await client.testcases.get('testcaseId');
+              const testcase = await client.testcases.get('248');
 
               console.log(testcase.id);
             }
@@ -1179,19 +1187,20 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             testcase = client.testcases.get(
-                "testcaseId",
+                "248",
             )
             print(testcase.id)
     put:
       operationId: updateTestcase
-      summary: Update testcase
-      description: Replace the data of an existing testcase while keeping its ID.
+      summary: Update Testcase
+      description: Replace the data of an existing Testcase while keeping its ID.
       parameters:
         - in: path
           name: testcaseId
-          description: The ID of the testcase to update
+          description: The ID of the Testcase to update.
           schema:
             type: string
+            example: "248"
           required: true
       requestBody:
         content:
@@ -1202,18 +1211,18 @@ paths:
                 jsonData:
                   type: object
                   additionalProperties: true
-                  description: The JSON data of the testcase, which is validated against the testset's schema.
+                  description: The JSON data of the Testcase, which is validated against the Testset's schema.
               required:
                 - jsonData
             examples:
-              Update testcase data:
+              Update Testcase data:
                 value:
                   jsonData:
                     question: What is the capital of France?
                     idealAnswer: Paris is the capital of France
                     provenance: hand_curated
-                summary: Update testcase data
-                description: Update the content of a testcase with improved information.
+                summary: Update Testcase data
+                description: Update the content of a Testcase with improved information.
       responses:
         "200":
           description: Testcase updated successfully
@@ -1222,10 +1231,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Testcase"
               examples:
-                Updated testcase:
+                Updated Testcase:
                   value:
-                    id: 123
-                    testsetId: 456
+                    id: "248"
+                    testsetId: "246"
                     jsonData:
                       question: What is the capital of France?
                       idealAnswer: Paris is the capital of France
@@ -1234,8 +1243,8 @@ paths:
                       question: What is the capital of France?
                     labels:
                       idealAnswer: Paris is the capital of France
-                  summary: Updated testcase
-                  description: Example response showing a successfully updated testcase.
+                  summary: Updated Testcase
+                  description: Example response showing a successfully updated Testcase.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -1250,7 +1259,7 @@ paths:
             });
 
             async function main() {
-              const testcase = await client.testcases.update('testcaseId', {
+              const testcase = await client.testcases.update('248', {
                 jsonData: {
                   question: 'What is the capital of France?',
                   idealAnswer: 'Paris is the capital of France',
@@ -1271,7 +1280,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             testcase = client.testcases.update(
-                testcase_id="testcaseId",
+                testcase_id="248",
                 json_data={
                     "question": "What is the capital of France?",
                     "idealAnswer": "Paris is the capital of France",
@@ -1282,8 +1291,8 @@ paths:
   /testcases/bulk-delete:
     post:
       operationId: deleteTestcases
-      summary: Delete multiple testcases
-      description: Delete multiple testcases by their IDs.
+      summary: Delete multiple Testcases
+      description: Delete multiple Testcases by their IDs.
       requestBody:
         content:
           application/json:
@@ -1294,16 +1303,16 @@ paths:
                   type: array
                   items:
                     type: string
-                  description: IDs of testcases to delete
+                  description: IDs of Testcases to delete.
               required:
                 - ids
             examples:
-              Delete multiple testcases:
+              Delete multiple Testcases:
                 value:
                   ids:
-                    - 123
-                    - 124
-                    - 125
+                    - "123"
+                    - "124"
+                    - "125"
       responses:
         "200":
           description: Testcases deleted successfully
@@ -1314,11 +1323,11 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    description: Whether the deletion was successful
+                    description: Whether the deletion was successful.
                 required:
                   - success
               examples:
-                Delete multiple testcases:
+                Delete multiple Testcases:
                   value:
                     success: true
         "401":
@@ -1356,14 +1365,15 @@ paths:
   /projects/{projectId}/runs:
     post:
       operationId: createRun
-      summary: Create run
-      description: Create a new run.
+      summary: Create Run
+      description: Create a new Run.
       parameters:
         - in: path
           name: projectId
-          description: The ID of the project
+          description: The ID of the Project.
           schema:
             type: string
+            example: "314"
           required: true
       requestBody:
         content:
@@ -1373,29 +1383,29 @@ paths:
               properties:
                 testsetId:
                   type: string
-                  description: The ID of the Testset this Run is testing
+                  description: The ID of the Testset this Run is testing.
                 systemConfigId:
                   type: string
                   format: uuid
-                  description: The ID of the system configuration this Run is using
+                  description: The ID of the system configuration this Run is using.
                 metricIds:
                   type: array
                   items:
                     type: string
-                  description: The IDs of the metrics this Run is using
+                  description: The IDs of the metrics this Run is using.
               required:
                 - testsetId
                 - metricIds
             examples:
-              Create run with metrics:
+              Create Run with metrics:
                 value:
-                  testsetId: "123"
-                  systemConfigId: "456"
+                  testsetId: "246"
+                  systemConfigId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
                   metricIds:
                     - "789"
                     - "101"
-                summary: Create run with metrics
-                description: Request to create a run with metrics.
+                summary: Create Run with metrics
+                description: Request to create a Run with metrics.
       responses:
         "201":
           description: Run created successfully
@@ -1404,16 +1414,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/Run"
               examples:
-                Created run with a scoring config:
+                Created Run with metrics:
                   value:
                     id: "135"
-                    testsetId: "123"
-                    systemConfigId: 5fa85f64-5717-4562-b3fc-2c963f66afa7
+                    testsetId: "246"
+                    systemConfigId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
                     metricIds:
                       - "789"
                       - "101"
-                  summary: Created run
-                  description: Response after successfully creating a run.
+                  summary: Created Run
+                  description: Response after successfully creating a Run.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -1428,10 +1438,10 @@ paths:
             });
 
             async function main() {
-              const run = await client.runs.create('projectId', {
+              const run = await client.runs.create('314', {
                 metricIds: ['789', '101'],
-                testsetId: '123',
-                systemConfigId: '456',
+                testsetId: '246',
+                systemConfigId: '87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0',
               });
 
               console.log(run.id);
@@ -1447,23 +1457,24 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             run = client.runs.create(
-                project_id="projectId",
+                project_id="314",
                 metric_ids=["789", "101"],
-                testset_id="123",
-                system_config_id="456",
+                testset_id="246",
+                system_config_id="87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0",
             )
             print(run.id)
   /runs/{runId}:
     patch:
       operationId: updateRun
-      summary: Update run status
-      description: Update the status of a run.
+      summary: Update Run status
+      description: Update the status of a Run.
       parameters:
         - in: path
           name: runId
-          description: The ID of the run to update
+          description: The ID of the Run to update.
           schema:
             type: string
+            example: "135"
           required: true
       requestBody:
         content:
@@ -1481,15 +1492,15 @@ paths:
                     - running_scoring
                     - awaiting_human_scoring
                     - completed
-                  description: The status of the Run
+                  description: The status of the Run.
               required:
                 - status
             examples:
-              Update run status:
+              Update Run status:
                 value:
                   status: awaiting_scoring
-                summary: Update run after execution
-                description: Request to update the status of a run to awaiting_scoring.
+                summary: Update Run after execution
+                description: Request to update the status of a Run to `awaiting_scoring`.
       responses:
         "200":
           description: Run updated successfully
@@ -1500,21 +1511,21 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: The ID of the Run
+                    description: The ID of the Run.
                   status:
                     type: string
                     enum: *ref_0
-                    description: The status of the Run
+                    description: The status of the Run.
                 required:
                   - id
                   - status
               examples:
-                Updated run status:
+                Updated Run status:
                   value:
                     id: "135"
                     status: awaiting_scoring
-                  summary: Updated run status
-                  description: Response after successfully updating the status of a run.
+                  summary: Updated Run status
+                  description: Response after successfully updating the status of a Run.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -1529,7 +1540,7 @@ paths:
             });
 
             async function main() {
-              const run = await client.runs.update('runId', { status: 'awaiting_scoring' });
+              const run = await client.runs.update('135', { status: 'awaiting_scoring' });
 
               console.log(run.id);
             }
@@ -1544,21 +1555,22 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             run = client.runs.update(
-                run_id="runId",
+                run_id="135",
                 status="awaiting_scoring",
             )
             print(run.id)
-  /runs/{runId}/executionrecords:
+  /runs/{runId}/records:
     post:
-      operationId: createExecutionRecord
-      summary: Create execution record
-      description: Create a new execution record.
+      operationId: createRecord
+      summary: Create Record
+      description: Create a new Record in a Run.
       parameters:
         - in: path
           name: runId
-          description: The ID of the run
+          description: The ID of the Run.
           schema:
             type: string
+            example: "135"
           required: true
       requestBody:
         content:
@@ -1568,55 +1580,55 @@ paths:
               properties:
                 testcaseId:
                   type: string
-                  description: The ID of the testcase
+                  description: The ID of the Testcase.
                 inputs:
                   type: object
                   additionalProperties: true
-                  description: The actual inputs sent to the system, which should match the system's input schema
+                  description: The actual inputs sent to the system, which should match the system's input schema.
                 labels:
                   type: object
                   additionalProperties: true
-                  description: The expected outputs for the testcase
+                  description: The expected outputs for the Testcase.
                 outputs:
                   type: object
                   additionalProperties: true
-                  description: The actual outputs from the system
+                  description: The actual outputs from the system.
               required:
                 - inputs
                 - labels
                 - outputs
             examples:
-              Create execution record:
+              Create Record:
                 value:
-                  testcaseId: "123"
+                  testcaseId: "248"
                   inputs:
                     question: What is the capital of France?
                   labels:
                     idealAnswer: Paris is the capital of France
                   outputs:
                     response: The capital of France is Paris.
-                summary: Create execution record
-                description: Request to create an execution record.
+                summary: Create Record
+                description: Request to create a Record.
       responses:
         "201":
-          description: Execution record created successfully
+          description: Record created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ExecutionRecord"
+                $ref: "#/components/schemas/Record"
               examples:
-                Created execution record:
+                Created Record:
                   value:
-                    id: "864"
-                    testcaseId: "123"
+                    id: "135"
+                    testcaseId: "248"
                     inputs:
                       question: What is the capital of France?
                     labels:
                       idealAnswer: Paris is the capital of France
                     outputs:
                       response: The capital of France is Paris.
-                  summary: Created execution record
-                  description: Response after successfully creating an execution record.
+                  summary: Created Record
+                  description: Response after successfully creating a Record.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -1631,14 +1643,14 @@ paths:
             });
 
             async function main() {
-              const executionRecord = await client.executionRecords.create('runId', {
+              const record = await client.records.create('135', {
                 inputs: { question: 'What is the capital of France?' },
                 labels: { idealAnswer: 'Paris is the capital of France' },
                 outputs: { response: 'The capital of France is Paris.' },
-                testcaseId: '123',
+                testcaseId: '248',
               });
 
-              console.log(executionRecord.id);
+              console.log(record.id);
             }
 
             main();
@@ -1650,8 +1662,8 @@ paths:
             client = Scorecard(
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
-            execution_record = client.execution_records.create(
-                run_id="runId",
+            record = client.records.create(
+                run_id="135",
                 inputs={
                     "question": "What is the capital of France?"
                 },
@@ -1661,9 +1673,9 @@ paths:
                 outputs={
                     "response": "The capital of France is Paris."
                 },
-                testcase_id="123",
+                testcase_id="248",
             )
-            print(execution_record.id)
+            print(record.id)
   /projects/{projectId}/systems:
     get:
       operationId: listSystems
@@ -1672,9 +1684,10 @@ paths:
       parameters:
         - in: path
           name: projectId
-          description: The ID of the system's project
+          description: The ID of the system's Project.
           schema:
             type: string
+            example: "314"
           required: true
         - in: query
           name: limit
@@ -1829,7 +1842,7 @@ paths:
 
             async function main() {
               // Automatically fetches more pages as needed.
-              for await (const system of client.systems.list('projectId')) {
+              for await (const system of client.systems.list('314')) {
                 console.log(system.id);
               }
             }
@@ -1844,7 +1857,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             page = client.systems.list(
-                project_id="projectId",
+                project_id="314",
             )
             page = page.data[0]
             print(page.id)
@@ -1870,9 +1883,10 @@ paths:
       parameters:
         - in: path
           name: projectId
-          description: The ID of the system's project
+          description: The ID of the system's Project.
           schema:
             type: string
+            example: "314"
           required: true
       requestBody:
         content:
@@ -1882,21 +1896,21 @@ paths:
               properties:
                 name:
                   type: string
-                  description: The name of the system
+                  description: The name of the system.
                 description:
                   type: string
-                  description: The description of the system
+                  description: The description of the system.
                 inputSchema:
                   type: object
-                  description: The schema of the system's inputs
+                  description: The schema of the system's inputs.
                   additionalProperties: true
                 outputSchema:
                   type: object
-                  description: The schema of the system's outputs
+                  description: The schema of the system's outputs.
                   additionalProperties: true
                 configSchema:
                   type: object
-                  description: The schema of the system's configuration
+                  description: The schema of the system's configuration.
                   additionalProperties: true
               required:
                 - name
@@ -2074,7 +2088,7 @@ paths:
             });
 
             async function main() {
-              const system = await client.systems.create('projectId', {
+              const system = await client.systems.create('314', {
                 configSchema: {
                   type: 'object',
                   properties: {
@@ -2119,7 +2133,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             system = client.systems.create(
-                project_id="projectId",
+                project_id="314",
                 config_schema={
                     "type": "object",
                     "properties": {
@@ -2179,10 +2193,11 @@ paths:
       parameters:
         - in: path
           name: systemId
-          description: The ID of the system to retrieve
+          description: The ID of the system to retrieve.
           schema:
             type: string
             format: uuid
+            example: 12345678-0a8b-4f66-b6f3-2ddcfa097257
           required: true
       responses:
         "200":
@@ -2257,7 +2272,7 @@ paths:
             });
 
             async function main() {
-              const system = await client.systems.get('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
+              const system = await client.systems.get('12345678-0a8b-4f66-b6f3-2ddcfa097257');
 
               console.log(system.id);
             }
@@ -2272,7 +2287,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             system = client.systems.get(
-                "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                "12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             print(system.id)
     patch:
@@ -2290,10 +2305,11 @@ paths:
       parameters:
         - in: path
           name: systemId
-          description: The ID of the system to update
+          description: The ID of the system to update.
           schema:
             type: string
             format: uuid
+            example: 12345678-0a8b-4f66-b6f3-2ddcfa097257
           required: true
       requestBody:
         content:
@@ -2303,21 +2319,21 @@ paths:
               properties:
                 name:
                   type: string
-                  description: The name of the system
+                  description: The name of the system.
                 description:
                   type: string
-                  description: The description of the system
+                  description: The description of the system.
                 inputSchema:
                   type: object
-                  description: The schema of the system's inputs
+                  description: The schema of the system's inputs.
                   additionalProperties: true
                 outputSchema:
                   type: object
-                  description: The schema of the system's outputs
+                  description: The schema of the system's outputs.
                   additionalProperties: true
                 configSchema:
                   type: object
-                  description: The schema of the system's configuration
+                  description: The schema of the system's configuration.
                   additionalProperties: true
             examples:
               Update system metadata:
@@ -2425,7 +2441,7 @@ paths:
             });
 
             async function main() {
-              const system = await client.systems.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+              const system = await client.systems.update('12345678-0a8b-4f66-b6f3-2ddcfa097257', {
                 description: 'Updated production chatbot powered by GPT-4 Turbo',
                 name: 'GPT-4 Turbo Chatbot',
               });
@@ -2443,7 +2459,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             system = client.systems.update(
-                system_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                system_id="12345678-0a8b-4f66-b6f3-2ddcfa097257",
                 description="Updated production chatbot powered by GPT-4 Turbo",
                 name="GPT-4 Turbo Chatbot",
             )
@@ -2455,10 +2471,11 @@ paths:
       parameters:
         - in: path
           name: systemId
-          description: The ID of the system to delete
+          description: The ID of the system to delete.
           schema:
             type: string
             format: uuid
+            example: 12345678-0a8b-4f66-b6f3-2ddcfa097257
           required: true
       responses:
         "200":
@@ -2470,7 +2487,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    description: Whether the deletion was successful
+                    description: Whether the deletion was successful.
                 required:
                   - success
               examples:
@@ -2493,7 +2510,7 @@ paths:
             });
 
             async function main() {
-              const system = await client.systems.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
+              const system = await client.systems.delete('12345678-0a8b-4f66-b6f3-2ddcfa097257');
 
               console.log(system.success);
             }
@@ -2508,7 +2525,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             system = client.systems.delete(
-                "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                "12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             print(system.success)
   /systems/{systemId}/configs:
@@ -2524,10 +2541,11 @@ paths:
       parameters:
         - in: path
           name: systemId
-          description: The ID of the system to list configurations for
+          description: The ID of the system to list configurations for.
           schema:
             type: string
             format: uuid
+            example: 12345678-0a8b-4f66-b6f3-2ddcfa097257
           required: true
         - in: query
           name: limit
@@ -2575,21 +2593,21 @@ paths:
                   value:
                     data:
                       - id: 5fa85f64-5717-4562-b3fc-2c963f66afa7
-                        systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                        systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
                         name: Production (Low Temperature)
                         config:
                           temperature: 0.1
                           maxTokens: 1024
                           model: gpt-4-turbo
                       - id: 6fa85f64-5717-4562-b3fc-2c963f66afa8
-                        systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                        systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
                         name: Production (Balanced)
                         config:
                           temperature: 0.7
                           maxTokens: 1024
                           model: gpt-4-turbo
                       - id: 7fa85f64-5717-4562-b3fc-2c963f66afa9
-                        systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                        systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
                         name: Experimental (GPT-4 Vision)
                         config:
                           temperature: 0.5
@@ -2597,7 +2615,7 @@ paths:
                           model: gpt-4-vision
                           systemPrompt: You are a helpful visual assistant.
                       - id: 8fa85f64-5717-4562-b3fc-2c963f66afa9
-                        systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                        systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
                         name: Invalid Config (Wrong Type)
                         config:
                           temperature: "0.5"
@@ -2627,7 +2645,7 @@ paths:
 
             async function main() {
               // Automatically fetches more pages as needed.
-              for await (const systemConfig of client.systemConfigs.list('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e')) {
+              for await (const systemConfig of client.systemConfigs.list('12345678-0a8b-4f66-b6f3-2ddcfa097257')) {
                 console.log(systemConfig.id);
               }
             }
@@ -2642,7 +2660,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             page = client.system_configs.list(
-                system_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                system_id="12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             page = page.data[0]
             print(page.id)
@@ -2671,10 +2689,11 @@ paths:
       parameters:
         - in: path
           name: systemId
-          description: The ID of the system to create the configuration for
+          description: The ID of the system to create the configuration for.
           schema:
             type: string
             format: uuid
+            example: 12345678-0a8b-4f66-b6f3-2ddcfa097257
           required: true
       requestBody:
         content:
@@ -2684,11 +2703,11 @@ paths:
               properties:
                 name:
                   type: string
-                  description: The name of the system configuration
+                  description: The name of the system configuration.
                 config:
                   type: object
                   additionalProperties: true
-                  description: The configuration of the system
+                  description: The configuration of the system.
                 validationErrors:
                   type: array
                   items:
@@ -2696,11 +2715,11 @@ paths:
                     properties:
                       path:
                         type: string
-                        description: JSON Pointer to the field with the validation error
+                        description: JSON Pointer to the field with the validation error.
                         example: /data/question
                       message:
                         type: string
-                        description: Human-readable error description
+                        description: Human-readable error description.
                         example: Required field missing
                     required:
                       - path
@@ -2714,7 +2733,6 @@ paths:
             examples:
               Create chatbot configuration:
                 value:
-                  systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
                   name: Production (Low Temperature)
                   config:
                     temperature: 0.1
@@ -2726,7 +2744,6 @@ paths:
                   temperature, token limit, and model version.
               Create RAG configuration:
                 value:
-                  systemId: 8fb15f74-2918-4982-a4fc-9c157f77dca7
                   name: Production RAG (ada-002 + gpt-4)
                   config:
                     vectorDbEndpoint: https://vector-db.example.com/prod
@@ -2739,7 +2756,6 @@ paths:
                   model, generation model, and number of documents to retrieve.
               Create configuration with validation errors:
                 value:
-                  systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
                   name: Invalid Config Example
                   config:
                     temperature: "0.7"
@@ -2760,7 +2776,7 @@ paths:
                 Created system configuration:
                   value:
                     id: 5fa85f64-5717-4562-b3fc-2c963f66afa7
-                    systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
                     name: Production (Low Temperature)
                     config:
                       temperature: 0.1
@@ -2771,7 +2787,7 @@ paths:
                 Created configuration with validation errors:
                   value:
                     id: 8fa85f64-5717-4562-b3fc-2c963f66afa9
-                    systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
                     name: Invalid Config Example
                     config:
                       temperature: "0.7"
@@ -2800,7 +2816,7 @@ paths:
             });
 
             async function main() {
-              const systemConfig = await client.systemConfigs.create('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+              const systemConfig = await client.systemConfigs.create('12345678-0a8b-4f66-b6f3-2ddcfa097257', {
                 config: { temperature: 0.1, maxTokens: 1024, model: 'gpt-4-turbo' },
                 name: 'Production (Low Temperature)',
               });
@@ -2818,7 +2834,7 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             system_config = client.system_configs.create(
-                system_id="3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                system_id="12345678-0a8b-4f66-b6f3-2ddcfa097257",
                 config={
                     "temperature": 0.1,
                     "maxTokens": 1024,
@@ -2835,17 +2851,19 @@ paths:
       parameters:
         - in: path
           name: systemId
-          description: The ID of the system the configuration belongs to
+          description: The ID of the system the configuration belongs to.
           schema:
             type: string
             format: uuid
+            example: 12345678-0a8b-4f66-b6f3-2ddcfa097257
           required: true
         - in: path
           name: systemConfigId
-          description: The ID of the system configuration to retrieve
+          description: The ID of the system configuration to retrieve.
           schema:
             type: string
             format: uuid
+            example: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
           required: true
       responses:
         "200":
@@ -2857,8 +2875,8 @@ paths:
               examples:
                 System configuration details:
                   value:
-                    id: 5fa85f64-5717-4562-b3fc-2c963f66afa7
-                    systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    id: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                    systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
                     name: Production (Low Temperature)
                     config:
                       temperature: 0.1
@@ -2868,8 +2886,8 @@ paths:
                   description: Example response showing the complete details of a valid system configuration.
                 System configuration with validation errors:
                   value:
-                    id: 8fa85f64-5717-4562-b3fc-2c963f66afa9
-                    systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    id: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                    systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
                     name: Invalid Config Example
                     config:
                       temperature: "0.7"
@@ -2899,8 +2917,8 @@ paths:
             });
 
             async function main() {
-              const systemConfig = await client.systemConfigs.get('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-                systemId: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+              const systemConfig = await client.systemConfigs.get('87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0', {
+                systemId: '12345678-0a8b-4f66-b6f3-2ddcfa097257',
               });
 
               console.log(systemConfig.id);
@@ -2916,8 +2934,8 @@ paths:
                 bearer_token=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
             system_config = client.system_configs.get(
-                system_config_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-                system_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+                system_config_id="87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0",
+                system_id="12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             print(system_config.id)
 components:
@@ -2942,22 +2960,22 @@ components:
         - code
         - message
         - details
-      description: An API error
+      description: An API error.
     Testset:
       type: object
       properties:
         id:
           type: string
-          description: The ID of the testset
+          description: The ID of the Testset.
         name:
           type: string
-          description: The name of the testset
+          description: The name of the Testset.
         description:
           type: string
-          description: The description of the testset
+          description: The description of the Testset.
         jsonSchema:
           type: object
-          description: The JSON schema for each testcase in the testset
+          description: The JSON schema for each Testcase in the Testset.
           additionalProperties: true
         fieldMapping:
           type: object
@@ -2966,23 +2984,23 @@ components:
               type: array
               items:
                 type: string
-              description: Fields that represent inputs to the AI system
+              description: Fields that represent inputs to the AI system.
             labels:
               type: array
               items:
                 type: string
-              description: Fields that represent expected outputs/labels
+              description: Fields that represent expected outputs/labels.
             metadata:
               type: array
               items:
                 type: string
-              description: Fields that are not inputs or labels
+              description: Fields that are not inputs or labels.
           required:
             - inputs
             - labels
             - metadata
           description: >-
-            Maps top-level keys of the testcase schema to their roles (input/label). Unmapped fields are
+            Maps top-level keys of the Testcase schema to their roles (input/label). Unmapped fields are
             treated as metadata.
       required:
         - id
@@ -2991,11 +3009,11 @@ components:
         - jsonSchema
         - fieldMapping
       description: >-
-        A collection of test cases that share the same schema.
+        A collection of Testcases that share the same schema.
 
-        Each testset defines the structure of its test cases through a JSON schema.
+        Each Testset defines the structure of its Testcases through a JSON schema.
 
-        The `fieldMapping` object maps top-level keys of the testcase schema to their roles (input/label).
+        The `fieldMapping` object maps top-level keys of the Testcase schema to their roles (input/label).
 
         Fields not mentioned in the `fieldMapping` during creation or update are treated as metadata.
 
@@ -3003,49 +3021,49 @@ components:
         ## JSON Schema validation constraints supported:
 
 
-        - **Required fields** - Fields listed in the schema's `required` array must be present in testcases
+        - **Required fields** - Fields listed in the schema's `required` array must be present in Testcases.
 
         - **Type validation** - Values must match the specified type (string, number, boolean, null, integer,
-        object, array)
+        object, array).
 
-        - **Enum validation** - Values must be one of the options specified in the `enum` array
+        - **Enum validation** - Values must be one of the options specified in the `enum` array.
 
-        - **Object property validation** - Properties of objects must conform to their defined schemas
+        - **Object property validation** - Properties of objects must conform to their defined schemas.
 
-        - **Array item validation** - Items in arrays must conform to the `items` schema
+        - **Array item validation** - Items in arrays must conform to the `items` schema.
 
-        - **Logical composition** - Values must conform to at least one schema in the `anyOf` array
+        - **Logical composition** - Values must conform to at least one schema in the `anyOf` array.
 
 
         Testcases that fail validation will still be stored, but will include `validationErrors` detailing the
         issues.
 
-        Extra fields in the testcase data that are not in the schema will be stored but are ignored during
+        Extra fields in the Testcase data that are not in the schema will be stored but are ignored during
         validation.
     Testcase:
       type: object
       properties:
         id:
           type: string
-          description: The ID of the testcase
+          description: The ID of the Testcase.
         testsetId:
           type: string
-          description: The ID of the testset this testcase belongs to
+          description: The ID of the Testset this Testcase belongs to.
         jsonData:
           type: object
           additionalProperties: true
-          description: The JSON data of the testcase, which is validated against the testset's schema.
+          description: The JSON data of the Testcase, which is validated against the Testset's schema.
         inputs:
           type: object
           additionalProperties: true
           description: >-
-            Derived from data based on the testset's fieldMapping. Contains all fields marked as inputs,
+            Derived from data based on the Testset's fieldMapping. Contains all fields marked as inputs,
             including those with validation errors.
         labels:
           type: object
           additionalProperties: true
           description: >-
-            Derived from data based on the testset's fieldMapping. Contains all fields marked as labels,
+            Derived from data based on the Testset's fieldMapping. Contains all fields marked as labels,
             including those with validation errors.
         validationErrors:
           type: array
@@ -3054,18 +3072,18 @@ components:
             properties:
               path:
                 type: string
-                description: JSON Pointer to the field with the validation error
+                description: JSON Pointer to the field with the validation error.
                 example: /data/question
               message:
                 type: string
-                description: Human-readable error description
+                description: Human-readable error description.
                 example: Required field missing
             required:
               - path
               - message
           description: >-
-            Validation errors found in the testcase data. If present, the testcase doesn't fully conform to
-            its testset's schema.
+            Validation errors found in the Testcase data. If present, the Testcase doesn't fully conform to
+            its Testset's schema.
       required:
         - id
         - testsetId
@@ -3074,9 +3092,9 @@ components:
         - labels
       description: >-
         A test case in the Scorecard system. Contains JSON data that is validated against the schema defined
-        by its testset.
+        by its Testset.
 
-        The `inputs` and `labels` fields are derived from the `data` field based on the testset's
+        The `inputs` and `labels` fields are derived from the `data` field based on the Testset's
         `fieldMapping`, and include all mapped fields, including those with validation errors.
 
         Testcases are stored regardless of validation results, with any validation errors included in the
@@ -3086,19 +3104,19 @@ components:
       properties:
         id:
           type: string
-          description: The ID of the Run
+          description: The ID of the Run.
         testsetId:
           type: string
-          description: The ID of the Testset this Run is testing
+          description: The ID of the Testset this Run is testing.
         systemConfigId:
           type: string
           format: uuid
-          description: The ID of the system configuration this Run is using
+          description: The ID of the system configuration this Run is using.
         metricIds:
           type: array
           items:
             type: string
-          description: The IDs of the metrics this Run is using
+          description: The IDs of the metrics this Run is using.
         status:
           type: string
           enum:
@@ -3109,68 +3127,68 @@ components:
             - running_scoring
             - awaiting_human_scoring
             - completed
-          description: The status of the Run
+          description: The status of the Run.
       required:
         - id
         - testsetId
         - metricIds
         - status
       description: A Run in the Scorecard system.
-    ExecutionRecord:
+    Record:
       type: object
       properties:
         id:
           type: string
-          description: The ID of the execution record
+          description: The ID of the Record.
         runId:
           type: string
-          description: The ID of the run containing this execution record
+          description: The ID of the Run containing this Record.
         testcaseId:
           type: string
-          description: The ID of the testcase
+          description: The ID of the Testcase.
         inputs:
           type: object
           additionalProperties: true
-          description: The actual inputs sent to the system, which should match the system's input schema
+          description: The actual inputs sent to the system, which should match the system's input schema.
         labels:
           type: object
           additionalProperties: true
-          description: The expected outputs for the testcase
+          description: The expected outputs for the Testcase.
         outputs:
           type: object
           additionalProperties: true
-          description: The actual outputs from the system
+          description: The actual outputs from the system.
       required:
         - id
         - runId
         - inputs
         - labels
         - outputs
-      description: An execution record in the Scorecard system.
+      description: A record of a system execution in the Scorecard system.
     System:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          description: The ID of the system
+          description: The ID of the system.
         name:
           type: string
-          description: The name of the system
+          description: The name of the system.
         description:
           type: string
-          description: The description of the system
+          description: The description of the system.
         inputSchema:
           type: object
-          description: The schema of the system's inputs
+          description: The schema of the system's inputs.
           additionalProperties: true
         outputSchema:
           type: object
-          description: The schema of the system's outputs
+          description: The schema of the system's outputs.
           additionalProperties: true
         configSchema:
           type: object
-          description: The schema of the system's configuration
+          description: The schema of the system's configuration.
           additionalProperties: true
       required:
         - id
@@ -3183,9 +3201,9 @@ components:
         A System Under Test (SUT) defines the interface to a component or service you want to evaluate.
 
         It specifies three contracts through schemas:
-        - inputSchema: The structure of data the system accepts
-        - outputSchema: The structure of data the system produces
-        - configSchema: The parameters that modify system behavior
+        - inputSchema: The structure of data the system accepts.
+        - outputSchema: The structure of data the system produces.
+        - configSchema: The parameters that modify system behavior.
 
         This abstraction lets you evaluate any system as a black box, focusing on its interface rather than
         implementation details. It's particularly useful for systems with variable outputs or complex
@@ -3199,18 +3217,18 @@ components:
         id:
           type: string
           format: uuid
-          description: The ID of the system configuration
+          description: The ID of the system configuration.
         systemId:
           type: string
           format: uuid
-          description: The ID of the system the configuration belongs to
+          description: The ID of the system the configuration belongs to.
         name:
           type: string
-          description: The name of the system configuration
+          description: The name of the system configuration.
         config:
           type: object
           additionalProperties: true
-          description: The configuration of the system
+          description: The configuration of the system.
         validationErrors:
           type: array
           items:
@@ -3218,11 +3236,11 @@ components:
             properties:
               path:
                 type: string
-                description: JSON Pointer to the field with the validation error
+                description: JSON Pointer to the field with the validation error.
                 example: /data/question
               message:
                 type: string
-                description: Human-readable error description
+                description: Human-readable error description.
                 example: Required field missing
             required:
               - path

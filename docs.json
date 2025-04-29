@@ -123,8 +123,8 @@
             ]
           },
           {
-            "group": "Execution records",
-            "pages": ["api-reference/create-execution-record"]
+            "group": "Records",
+            "pages": ["api-reference/create-record"]
           },
           {
             "group": "Systems",
