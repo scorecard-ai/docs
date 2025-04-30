@@ -11,11 +11,65 @@
     "decoration": "grid"
   },
   "favicon": "/favicon.png",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Contact",
+        "href": "https://www.scorecard.io/contact"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Sign In",
+      "href": "https://app.getscorecard.ai/"
+    }
+  },
+  "footer": {
+    "socials": {
+      "website": "https://www.scorecard.io/",
+      "github": "https://github.com/scorecard-ai"
+    }
+  },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-Y98MZSSCE3"
+    }
+  },
   "api": {
     "examples": {
       "languages": ["javascript", "python", "curl", "go", "java"]
     }
   },
+  "redirects": [
+    {
+      "source": "/docs/documentation/introduction/:slug*",
+      "destination": "/intro/:slug*"
+    },
+    {
+      "source": "/docs/documentation/how-to-use-scorecard/quickstart/:slug*",
+      "destination": "/quickstart/:slug*"
+    },
+    {
+      "source": "/docs/changelog/product-updates",
+      "destination": "/changelog"
+    },
+    {
+      "source": "/docs/docs/glossary",
+      "destination": "/glossary"
+    },
+    {
+      "source": "/docs/api-reference/overview",
+      "destination": "/api-reference/overview"
+    },
+    {
+      "source": "/docs/documentation/:slug*",
+      "destination": "/:slug*"
+    }
+  ],
   "navigation": {
     "tabs": [
       {
@@ -24,35 +78,31 @@
           {
             "group": "Introduction",
             "pages": [
+              "intro/overview",
               {
                 "group": "Quickstart",
-                "pages": [
-                  "docs/documentation/how-to-use-scorecard/quickstart/python",
-                  "docs/documentation/how-to-use-scorecard/quickstart/node-js"
-                ]
+                "pages": ["quickstart/python", "quickstart/node-js"]
               },
-
-              "docs/documentation/introduction/overview",
-              "docs/documentation/introduction/what-is-scorecard",
-              "docs/documentation/introduction/the-llm-developer-s-journey",
-              "docs/documentation/introduction/technical-system-overview"
+              "intro/what-is-scorecard",
+              "intro/the-llm-developers-journey",
+              "intro/technical-system-overview"
             ]
           },
           {
             "group": "Features",
             "pages": [
-              "docs/documentation/features/projects",
-              "docs/documentation/features/prompt-management",
-              "docs/documentation/features/tracing",
-              "docs/documentation/features/privacy-by-design",
-              "docs/documentation/features/automated-scoring",
-              "docs/documentation/features/best-in-class-metrics",
-              "docs/documentation/features/logging",
-              "docs/documentation/features/testset-management",
-              "docs/documentation/features/a-b-comparison",
-              "docs/documentation/features/ai-guardrails",
-              "docs/documentation/features/run-inspection",
-              "docs/documentation/features/ai-proxy"
+              "features/projects",
+              "features/prompt-management",
+              "features/tracing",
+              "features/privacy-by-design",
+              "features/automated-scoring",
+              "features/best-in-class-metrics",
+              "features/logging",
+              "features/testset-management",
+              "features/a-b-comparison",
+              "features/ai-guardrails",
+              "features/run-inspection",
+              "features/ai-proxy"
             ]
           },
           {
@@ -64,22 +114,22 @@
                   {
                     "group": "Create a Testset",
                     "pages": [
-                      "docs/documentation/how-to-use-scorecard/guides/create-a-testset/using-the-testset-ui",
-                      "docs/documentation/how-to-use-scorecard/guides/create-a-testset/using-the-scorecard-sdk"
+                      "how-to-use-scorecard/guides/create-a-testset/using-the-testset-ui",
+                      "how-to-use-scorecard/guides/create-a-testset/using-the-scorecard-sdk"
                     ]
                   },
                   {
                     "group": "Run Scoring",
                     "pages": [
-                      "docs/documentation/how-to-use-scorecard/guides/run-scoring/using-the-playground",
-                      "docs/documentation/how-to-use-scorecard/guides/run-scoring/using-the-scorecard-sdk"
+                      "how-to-use-scorecard/guides/run-scoring/using-the-playground",
+                      "how-to-use-scorecard/guides/run-scoring/using-the-scorecard-sdk"
                     ]
                   }
                 ]
               },
-              "docs/documentation/how-to-use-scorecard/cookbooks",
-              "docs/documentation/how-to-use-scorecard/rag-retrieval-augmented-generation",
-              "docs/documentation/how-to-use-scorecard/ci-cd-with-git-hub-actions"
+              "how-to-use-scorecard/cookbooks",
+              "how-to-use-scorecard/rag-retrieval-augmented-generation",
+              "how-to-use-scorecard/ci-cd-with-github-actions"
             ]
           }
         ]
@@ -89,7 +139,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["docs/api-reference/overview"]
+            "pages": ["api-reference/overview"]
           },
           {
             "group": "Projects",
@@ -151,7 +201,7 @@
         "groups": [
           {
             "group": "Glossary",
-            "pages": ["docs/glossary/glossary"]
+            "pages": ["glossary"]
           }
         ]
       },
@@ -160,7 +210,7 @@
         "groups": [
           {
             "group": "Updates",
-            "pages": ["docs/changelog/product-updates"]
+            "pages": ["changelog"]
           }
         ]
       }
@@ -178,28 +228,6 @@
           "icon": "newspaper"
         }
       ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Contact",
-        "href": "https://www.scorecard.io/contact"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Sign In",
-      "href": "https://app.getscorecard.ai/"
-    }
-  },
-  "footer": {
-    "socials": {
-      "github": "https://github.com/scorecard-ai"
     }
   }
 }
