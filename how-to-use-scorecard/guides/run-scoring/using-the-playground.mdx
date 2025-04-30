@@ -1,0 +1,94 @@
+---
+title: "Using The Playground"
+description: "One way of running scoring and kicking off LLM evaluations is via the [Scorecard Playground](https://app.getscorecard.ai/playground)."
+---
+
+This is a fast way of iterating on prompts or trying out different models on Testsets or on-the-fly Testcases.
+
+<Note>
+The Scorecard Playground is just like other playgrounds, e.g. the playground of OpenAI. It does not execute your production LLM system — treat the playground as a mock system.
+</Note>
+
+You can navigate to the [Scorecard Playground](https://app.getscorecard.ai/playground) using the top navigation bar:
+<Frame caption="Scorecard Playground via the Navigation Bar in the Scorecard UI">
+![Scorecard Playground via the Navigation Bar in the Scorecard UI](/images/playground/1.webp)
+</Frame>
+Using the Scorecard Playground, we can either:
+
+* Run a single Testcase
+* Score a Testset
+
+## Specifying the Playground LLM System
+
+The Scorecard Playground is just like other playgrounds, e.g., the playground of OpenAI. It does not execute your production LLM system but rather is a mock system. However, you have some flexibility in adjusting this mock system in the Playground via the following parameters:
+<Frame caption="Parameters Specifying the Scorecard Playground LLM System">
+![Parameters Specifying the Scorecard Playground LLM System](/images/playground/2.webp)
+</Frame>
+* *Model:* From the dropdown, choose between various models provided by OpenAI or Anthropic. Tip: When you hover over a model’s name, you will see an info box pop up that gives you some details about the model.
+* *Temperature:* Use the slider and adjust the temperature parameter of the chosen model. The temperature controls the randomness of a LLM’s output, where a high temperature produces more unpredictable and creative results, while a low temperature produces more deterministic and conservative output.
+* *Maximum Length:* Use the slider and adjust the maximum length of a LLM system’s response, in specific the maximum number of output tokens.
+* *Top P:* Use the slider and adjust the top p parameter of the chosen model. Top p controls the diversity of the generated text by selecting words from the smallest possible set whose cumulative probability is greater than or equal to a specified threshold p.
+
+## Running a Single Testcase
+
+### On the Fly
+
+On the fly, you can come up with a Testcase to try out in the Scorecard Playground to easily test different prompts, LLM models, and model parameters.
+
+<Note>
+As of now, you cannot score on-the-fly Testcases in the Scorecard Playground. In case you have come up with a Testcase that you also want to consider for future scoring, create a Testset and add this Testcase to it.
+</Note>
+<Frame caption="Running a Single On-the-Fly Testcase">
+![Running a Single On-the-Fly Testcase](/images/playground/3.webp)
+</Frame>
+You can edit the following input fields to enter your single Testcase:
+
+* *Prompt Template:* The prompt template is a text input that will be sent to the Playground LLM system. If provided, the `{context}` variable will be filled with the provided document context and the `{user_query}` variable will be filled with the user query input.
+* **User Query**: This simulates the user’s input to your LLM system.
+* *Document Context:* If desired, you can provide context to simulate a RAG application. This context can be additional metadata, documents, or text that is additionally provided to the LLM.
+* *Saved Prompts:* In case you have already saved previously a prompt template, you can choose a prompt from the dropdown instead of filling out each of the input fields.
+<Frame caption="Scorecard Playground: Searching a Saved Prompt">
+![Scorecard Playground: Searching a Saved Prompt](/images/playground/4.webp)
+</Frame>
+After filling out some or all of these input fields, select “Run one test” and run the Testcase via a click on the “Run Now” button.
+<Frame caption="Results of Running a Single On-The-Fly Testcase">
+![Results of Running a Single On-The-Fly Testcase](/images/playground/5.webp)
+</Frame>
+After the run, you will see below the prompt that was sent to the Playground LLM system, populated with potentially provided `{user_query}` and `{context}`. On the right side, you can see the response of the Playground system.
+
+### From an Existing Testset
+
+Alternatively, if you have an existing Testset, you can select it from the dropdown at the top of the Playground page. Then, the playground’s input fields will be populated with the first Testcase from that Testset. As before, select “Run one test” and run the Testcase via a click on the “Run Now” button.
+<Frame caption="Selecting an Existing Testset">
+![Selecting an Existing Testset](/images/playground/6.webp)
+</Frame>
+## Scoring a Testset
+
+If you have an existing Testset that you would like to score with the Scorecard Playground mock environment, take the following steps:
+
+1. Select the Testset from the drop-down at the top of the Playground.
+<Frame caption="Selecting an Existing Testset">
+![Selecting an Existing Testset](/images/playground/7.webp)
+</Frame>
+2. Set the Playground input fields, such as prompt template, model, model parameters, `{user_query}`, and `{context}`. Select “Run one test” and click “Run Now” and run a single Testcase of the Testset to make sure that the configuration works as intended.
+<Frame caption="Running a Single On-The-Fly Testcase">
+![Running a Single On-The-Fly Testcase](/images/playground/8.webp)
+</Frame>
+3. Select “Run full test set” and run the Testset via a click on the “Run Now” button.
+
+4. On the next page that pops up, either select certain metrics to use for scoring on the left side (multiple selection is possible), or select an already configured Scoring Config from the shown dropdown on the right side.
+
+<Tip>
+You can also select an existing Scoring Config and additionally add further metrics to it in this view.
+</Tip>
+<Frame caption="Selectring Scoring Config and/or Metric to Use for Scoring">
+![Selectring Scoring Config and/or Metric to Use for Scoring](/images/playground/9.webp)
+</Frame>
+5. Click the “Run Testset” at the bottom and view the performance metrics of this run on the next page. You can see that the run is now “Awaiting Scoring”. So do not wait any longer and click “Run Scoring”!
+<Frame caption="Performance Metrics of a Playground Testset Run">
+![Performance Metrics of a Playground Testset Run](/images/playground/10.webp)
+</Frame>
+6. Last but not least, inspect the Scoring results after the Playground system has scored your Testset and deep-dive into the LLM evaluations!
+<Frame caption="Metrics Performance of a Playground Testset Run">
+![Metrics Performance of a Playground Testset Run](/images/playground/11.webp)
+</Frame>

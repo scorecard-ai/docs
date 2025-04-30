@@ -1,0 +1,78 @@
+---
+title: "Tracing"
+description: Learn what is the Tracing feature
+---
+
+Imagine these scenarios: The performance of your LLM application drops suddenly, you lose track of which LLM calls you have made, or you do not notice potential security leaks. We know that dealing with LLMs can become challenging and introducing LLMOps practices is crucial. That is why we offer tracing with Scorecard!
+
+## Trace Your LLM Application With Scorecard
+
+<Frame caption="Traces View in the Scorecard UI">
+  ![Traces View in the Scorecard UI](/images/tracing/1.webp)
+</Frame>
+
+LLM observability refers to the ability to gain insight into the behavior and performance of Large Language Models (LLMs) across their entire lifecycle. This LLMOps practice is essential for ensuring the reliability, performance, and security of LLM applications, especially given their complexity and the challenges associated with debugging and troubleshooting. To properly monitor an LLM application, tracing various aspects is important. But what is Tracing?
+
+Tracing records the flow and path of a single invocation of a LLM system across the different components of such an LLM system. Relevant events, errors, and activities are documented with traces.
+
+Traces are ultimately a hierarchical collection of records that contain information about the function calls made, variables used, and messages exchanged between different LLM components. Traces provide a detailed record of what happened during the entire execution of the LLM system (from user input to LLM output), aiding in debugging, troubleshooting, and auditing. For example, this helps to identify where potential delays occur and how services interact with each other.
+
+A single trace consists of a series of time intervals known as spans. Spans are the building blocks of traces and represent a specific operation or sub-activity of a trace, such as sending the user input as a request to a LLM. Each span contains metadata such as timestamps, duration, and contextual information. In summary, a trace represents an overall record of the activity of a LLM system, while a span is a more focused view of a specific portion of that LLM system activity.
+
+### Inspect a LLM Trace and Its Individual Spans
+
+Inspect the metadata of a trace, such as its duration and overall token count. This can help in quickly identifying anomalies and very long durations or very low/high token counts, which could be indicators that something went wrong. Additionally, get an overview of each individual span that belongs to a trace and dive into further details!
+
+<Frame caption="Trace Details with Individual Spans">
+  ![Trace Details with Individual Spans](/images/tracing/2.webp)
+</Frame>
+
+### Access Span Details on a Granular Level
+
+Besides metadata, spans can provide details about requests sent to the LLM, such as a request to the `ChatCompletion` endpoint of OpenAI. In this case, it shows the individual prompt messages that were sent as input, the LLM’s response as output, and further details that can help in debugging and inspecting your LLM application.
+
+<Frame caption="Span Details in a Trace">
+  ![Span Details in a Trace](/images/tracing/3.webp)
+</Frame>
+
+## OpenAI Agents SDK Integration
+
+Scorecard supports the OpenAI Agents SDK, allowing you to trace your agent-based applications with minimal setup and leverage your trace data in Scorecard
+
+### Quick Start
+
+Connect your OpenAI Agents to Scorecard with just a few lines of code:
+
+```python
+from scorecard import Tracer
+from agents import Agent, Runner
+
+# Create a Scorecard tracer for OpenAI Agents
+tracer = Tracer(api_key="your_api_key")
+tracer.instrument_agents()
+
+# Your existing OpenAI Agents code works unchanged
+agent = Agent(name="Assistant", instructions="You are a helpful assistant")
+result = Runner.run_sync(agent, "Write a haiku about recursion in programming.")
+print(result.final_output)
+```
+
+Every agent run is now automatically traced and available in your Scorecard AI dashboard.
+
+### What Gets Traced
+
+Scorecard's OpenAI Agents integration captures the complete execution flow:
+
+* Agent instructions and configurations
+
+* Input/output messages
+
+* Tool/function calls
+
+* Agent handoffs
+
+* Complete execution timeline
+
+## Check Out the Tracing Demo
+
+Check out the [cookbooks](/how-to-use-scorecard/cookbooks) that show you end-to-end Scorecard implementations and the demo project that shows you how to use [Tracing with Scorecard](https://github.com/scorecard-ai/scorecard-tracing-demo)!

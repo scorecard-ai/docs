@@ -1,0 +1,163 @@
+---
+title: "Node.js"
+description: "The Scorecard platform helps you evaluate the performance of your LLM app to ship faster with more confidence. "
+mode: "center"
+---
+
+In this quickstart we will:
+
+- Get an API key and create a Testset
+- Create an example LLM app
+- Execute a script with the Scorecard SDK within our production application
+- Review results in the Scorecard UI
+
+## Steps
+
+<Steps>
+  <Step title="Setup">
+    First let’s create a [Scorecard account](https://app.getscorecard.ai/dashboard) and find your [Scorecard API Key](https://app.getscorecard.ai/settings). Then we’ll get a [OpenAI API Key](https://platform.openai.com/api-keys), and set these as environment variables and also install the Scorecard and OpenAI Node Libraries:
+
+    ```sh Node install
+    export SCORECARD_API_KEY="SCORECARD_API_KEY"
+    export OPENAI_API_KEY="OPENAI_API_KEY"
+    npm install scorecard-ai@alpha
+    npm install openai
+    ```
+  </Step>
+  <Step title="Setup constants">
+    Configure the Scorecard client and enter your Project's ID. We'll need that to know which Project to place our Testsets and Runs in.
+
+    ```typescript
+    import Scorecard from 'scorecard-ai';
+    
+    const scorecard = new Scorecard({
+      bearerToken: process.env['SCORECARD_API_KEY'],
+    });
+    
+    const PROJECT_ID = "310" // Replace with your Project ID
+    ```
+  </Step>
+  <Step title="Create Testcases">
+    Now, let's create a Testset in a specific project and add some Testcases using the SDK. A Testset is a collection of Testcases used to evaluate the performance of an LLM application across a variety of inputs and scenarios. A Testcase is a single input to an LLM that is used for scoring. After we create a Testset, we’ll grab its ID to use later.
+
+    ```js
+    /**
+     * Creates a Testset with a schema matching our use case
+     */
+    async function createTestset() {
+      const testset = await scorecard.testsets.create(PROJECT_ID, {
+        name: testsetName,
+        description: 'Testcases about rewriting messages in a different tone.',
+        fieldMapping: {
+          // Inputs are fields that represent the input to the AI system.
+          inputs: ['original', 'recipient', 'tone'],
+          // Labels are fields represent the expected output of the AI system.
+          labels: ['idealRewritten'],
+          // Metadata fields are used for grouping Testcases, but not seen by the AI system.
+          metadata: [],
+        },
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            original: { type: 'string' }, // The original message.
+            recipient: { type: 'string' }, // The recipient of the message.
+            tone: { type: 'string' }, // The tone that the message should be rewritten in.
+            idealRewritten: { type: 'string' }, // The ideal AI-generated rewritten message.
+          },
+          required: ['original', 'tone', 'idealRewritten'],
+        },
+      });
+    
+      // Add Testcases matching the Testset's schema
+      await scorecard.testcases.create(testsetId, {
+        items: [
+          {
+            jsonData: {
+              original: 'We need your feedback on the new designs ASAP.',
+              tone: 'polite',
+              recipient: 'Darius',
+              idealRewritten:
+                'Hi Darius, your feedback is crucial to the success of the new designs. Please share your thoughts as soon as possible.',
+            },
+          },
+          {
+            jsonData: {
+              original: "I'll be late to the office because my cat is sleeping on my keyboard.",
+              tone: 'funny',
+              recipient: 'team',
+              idealRewritten:
+                "Hey team! My cat's napping on my keyboard and I'm just waiting for her to give me permission to leave. I'll be a bit late!",
+            },
+          },
+        ],
+      });
+    
+      return testset;
+    }
+    
+    const testset = await createTestset();
+    ```
+  </Step>
+  <Step title="Create Test System">
+    Next, let’s create a simple LLM application which we will be evaluating using Scorecard. This LLM application is represented with the following function that uses OpenAI's GPT-4o-mini to translate the user's message into a specified tone.
+
+    ```js
+    import OpenAI from 'openai';
+    const openai = new OpenAI({ apiKey: process.env['OPENAI_API_KEY'] });
+    
+    async function runSystem(input) {
+      const response = await openai.responses.create({
+        model: 'gpt-4o-mini',
+        instructions: `You are a tone translator that converts a user's message to a different tone ("${input.tone}"). Address the recipient: ${input.recipient ?? ''}`,
+        input: input.original,
+      });
+    
+      return { rewritten: response.output_text };
+    }
+    ```
+  </Step>
+  <Step title="Create Metrics">
+    Now that we have a system that answers questions from the MMLU dataset, let’s build a metric to understand how relevant the system responses are to our user query. Let’s go to the **Metrics** page and select “New Metric”
+
+    <Frame caption="Scorecard UI: New Metric">
+      ![Scorecard UI: New Metric](/images/python/1.png)
+    </Frame>
+    From here, let’s create a metric for answer relevancy:
+
+    <Frame caption="Scorecard UI: Metric Definition">
+      ![Scorecard UI: Metric Definition](/images/python/2.webp)
+    </Frame>
+    You can evaluate your LLM systems with one or multiple metrics. For the quick start, let's just use that Answer Relevancy metric and grab the Metric ID for later.
+
+    ```js
+    const METRIC_IDS = ["987"] // Replace with your Metric ID(s)
+    ```
+  </Step>
+  <Step title="Create Test System">
+    Now let’s use our mock system and run our Testset against it replacing the Testset id below with the Testset from before and the Scoring Config ID above:
+
+    ```js
+    const run = await runAndEvaluate(scorecard, {
+        projectId: PROJECT_ID,
+        testsetId: testset.id,
+        metricIds: METRIC_IDS,
+        system: runSystem,
+      });
+      console.log(`Go to ${run.url} and click "Run Scoring" to grade your Run.`);
+    ```
+  </Step>
+  <Step title="Run Scoring">
+    Now let’s review the outputs of our execution in Scorecard and run scoring by clicking on the “Run Scoring button’.
+
+    <Frame caption="Scorecard UI: Run Scoring">
+      ![Scorecard UI: Run Scoring](/images/python/4.png)
+    </Frame>
+  </Step>
+  <Step title="View Results">
+    Finally let’s review the results in the Scorecard UI. Here you can view and understand the performance of your LLM system:
+
+    <Frame caption="Scorecard UI: Viewing Results">
+      ![Scorecard UI: Viewing Results](/images/python/5.png)
+    </Frame>
+  </Step>
+</Steps>

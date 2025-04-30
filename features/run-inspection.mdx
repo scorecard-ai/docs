@@ -1,0 +1,56 @@
+---
+title: "Run Inspection"
+---
+
+You have defined individual Testcases and grouped them into a Testset. Additionally, you have established several metrics to evaluate your LLM application from different dimensions and selected them manually for scoring or grouped them into a Scoring Config. After running the automated scoring, the question now is: What’s next? Let’s review our runs and analyze the results!
+
+## Inspect Scoring Results in Scorecard
+
+You can find an overview of all your past runs in the “Runs & Results” tab of the Scorecard UI. The following information is displayed for each run:
+
+* Run ID
+
+* Timestamp of Run Creation
+
+* Run Status
+
+  * Awaiting Scoring: Model has generated responses for each Testcase that have not yet been scored.
+  * Awaiting Human Scoring: AI-powered scoring has been completed, and subject-matter experts still need to score the manually scored metrics.
+  * Completed: All Testcases have been scored for all metrics.
+
+* Used Testset
+
+* Model parameter set
+<Frame caption="Runs & Results Overview in the Scorecard UI">
+![Runs & Results Overview in the Scorecard UI](/images/run-inspection/1.webp)
+</Frame>
+### Inspect Metric Results
+
+By clicking on the “Results” button of a run, the results of the scored metrics are displayed directly in individual metric visualizations. In addition to bar charts showing the distribution of the scores, certain out-of-the-box statistics such as mean and median are calculated.
+<Frame caption="Visualized Metric Results in Run Details">
+![Visualized Metric Results in Run Details](/images/run-inspection/2.webp)
+</Frame>
+### Filter Metric Scores
+
+If you want to examine Testcases that performed poorly or very well, you can automatically filter the test cases by clicking on a bar in the bar charts.
+<Frame caption="Filtered Results in Run Details">
+![Filtered Results in Run Details](/images/run-inspection/3.webp)
+</Frame>
+### Inspect Individual Testcase Results
+
+The individual Testcase results show each input and output, the scores for each metric, and certain model debug information (e.g., latency and cost).
+<Frame caption="Individual Testcase Scoring Results in Run Details">
+![Individual Testcase Scoring Results in Run Details](/images/run-inspection/4.webp)
+</Frame>
+### Inspect Run Performance
+
+In addition to the metrics, the “Run performance” tab visually displays the performance of each run.
+<Frame caption="Run Performance Visualized in Scorecard">
+![Run Performance Visualized in Scorecard](/images/run-inspection/5.webp)
+</Frame>
+### View Run Details
+
+Click the “Show Details” button to inspect the details of the selected run.
+<Frame caption="Run Details">
+![Run Details](/images/run-inspection/6.webp)
+</Frame>
