@@ -4,39 +4,28 @@ description: "New updates and improvements"
 ---
 
 <Update label="May 2, 2025">
-  ### 🔌Scorecard MCP Server
-
+  ### 🔌 Scorecard MCP Server
   We've published an MCP server for Scorecard, enabling powerful new integration possibilities\! MCP is an open protocol that standardizes how applications provide context to LLMs. This allows your Scorecard evaluations to seamlessly connect with AI systems. This lets you integrate your evaluation data with various AI tools through a single protocol rather than maintaining separate integrations for each service.
-
-    <iframe
-    width="560"
-    height="315"
-    src="https://www.youtube.com/embed/aM79Cn6hiCo"
-    title="Scorecard MCP Server Overview"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-  ></iframe>
-
-
-  ### 💯Scorecard Eval Day\!
-
+  
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/aM79Cn6hiCo" title="Scorecard MCP Server Overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen />
+  
+  ### 💯 Scorecard Eval Day\!
   We recently held our first Scorecard Evaluation Day with a cohort of inception-stage founders who are deeply invested in their AI agents' quality. During the event, we exchanged valuable ideas around evaluation goals and methodologies, had thoughtful discussions about defining meaningful metrics, and explored approaches to evaluation (including the Scorecard method) and integrating evaluation into CI/CD pipelines. Thanks to everyone who attended\! We greatly appreciate the insightful feedback from these teams and have already implemented several improvements to our UI flows and SDK integration patterns based on your input.
-
+  
+  ![Eval Day Pn](/images/eval_day.png)
+  
   ### 📚 In-App Documentation Search
-
   We've launched in-app documentation search, making it easier to find exactly what you need without leaving the platform. Now you can quickly search through all of Scorecard's documentation directly within the application. You can access it by pressing Cmd K or clicking the search docs button in the top right.
-
-  ### ⚠️ SDK v2 Beta & Documentation Improvements
-
-  We've added ergonomic methods to our SDKs to make integration even more seamless. These helper functions runAndEvaluate in the JS/TS SDK and run_and_evaluate in the Python SDK to easily evaluate systems against testcases and metrics
-
-  ### 👷 Scorecard Playground Schleduled Maintenance
-
+  
+  ![Qa Docsbot Pn](/images/qa_docsbot.png)
+  
+  ### 👷 SDK v2 Beta
+  We've added ergonomic methods to our SDKs to make integration even more seamless. These helper functions `runAndEvaluate` in the JS/TS SDK and `run_and_evaluate` in the Python SDK let you easily evaluate systems against testcases and metrics.
+  
+  ### 🔧 Scorecard Playground Scheduled Maintenance
   We are taking the Scorecard Cloud playground offline for maintenance and upgrades starting May 7th. Note this will not affect custom integrations (eg Github kickoff). Please reach out to the team at [team@scorecard.io](mailto:team@scorecard.io) or via direct message if you have a workflow that will be affected by this\!
-
+  
   ### Bug fixes and improvements
-
   - **[UI]** Fixed record rendering in the UI when using the new SDK
   - **[Navigation]** Repaired broken links in the Run grades table to Testcase and Record pages
   - **[Terminology]** Standardized terminology by renaming "test record" to "record" throughout the UI
