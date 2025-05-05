@@ -1,0 +1,8 @@
+export const AdaptiveModeImage = ({ lightImage, darkImage, alt }) => {
+  return (
+    <div>
+      <img className="block dark:hidden" src={lightImage} alt={alt} />
+      <img className="hidden dark:block" src={darkImage} alt={alt} />
+    </div>
+  );
+};
