@@ -3,7 +3,6 @@ title: "Quickstart"
 description: "Evaluate a simple LLM system with Scorecard in minutes."
 mode: "center"
 ---
-import { AdaptiveModeImage } from "/snippets/adaptive-mode-image.mdx";
 
 Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](https://www.npmjs.com/package/scorecard-ai) SDKs. If you're using Python, you can follow along in [Google Colab](https://colab.research.google.com/drive/1A53j48o75Decrjz7WzDVP62XeDEKCHHP).
 
@@ -246,11 +245,8 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
     From the Scorecard UI, create an AI-graded Metric named "Tone accuracy" to evaluate the tone translator system on. Copy the Metric ID for later.
 
     <Frame caption="Creating a Metric in the Scorecard UI." height="500">
-      <AdaptiveModeImage
-        lightImage="/images/quickstart/create-metric-light.png"
-        darkImage="/images/quickstart/create-metric-dark.png"
-        caption="Screenshot of creating a 'Tone accuracy' metric."
-      />
+      <img className="block dark:hidden" height="100" src="/images/quickstart/create-metric-light.png" alt="Screenshot of creating a 'Tone accuracy' metric." />
+      <img className="hidden dark:block" height="100" src="/images/quickstart/create-metric-dark.png" alt="Screenshot of creating a 'Tone accuracy' metric." />
     </Frame>
 
     <CodeGroup>
@@ -302,11 +298,8 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
     Finally, review the results in Scorecard to understand the performance of the tone translator system.
 
     <Frame caption="Viewing results in the Scorecard UI." height="500">
-      <AdaptiveModeImage
-        lightImage="/images/quickstart/scoring-done-light.png"
-        darkImage="/images/quickstart/scoring-done-dark.png"
-        caption="Screenshot of viewing results in the Scorecard UI."
-      />
+      <img className="block dark:hidden" height="100" src="/images/quickstart/scoring-done-light.png" alt="Screenshot of viewing results in the Scorecard UI." />
+      <img className="hidden dark:block" height="100" src="/images/quickstart/scoring-done-dark.png" alt="Screenshot of viewing results in the Scorecard UI." />
     </Frame>
   </Step>
 </Steps>
