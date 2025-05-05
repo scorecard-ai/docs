@@ -31,7 +31,8 @@
   "footer": {
     "socials": {
       "website": "https://www.scorecard.io/",
-      "github": "https://github.com/scorecard-ai"
+      "github": "https://github.com/scorecard-ai",
+      "linkedin": "https://www.linkedin.com/company/scorecard-ai"
     }
   },
   "integrations": {
@@ -46,12 +47,20 @@
   },
   "redirects": [
     {
+      "source": "/quickstart/python",
+      "destination": "/intro/quickstart"
+    },
+    {
+      "source": "/quickstart/node-js",
+      "destination": "/intro/quickstart"
+    },
+    {
       "source": "/docs/documentation/introduction/:slug*",
       "destination": "/intro/:slug*"
     },
     {
       "source": "/docs/documentation/how-to-use-scorecard/quickstart/:slug*",
-      "destination": "/quickstart/:slug*"
+      "destination": "/intro/quickstart"
     },
     {
       "source": "/docs/changelog/product-updates",
@@ -79,10 +88,7 @@
             "group": "Introduction",
             "pages": [
               "intro/overview",
-              {
-                "group": "Quickstart",
-                "pages": ["quickstart/python", "quickstart/node-js"]
-              },
+              "intro/quickstart",
               "intro/what-is-scorecard",
               "intro/the-llm-developers-journey",
               "intro/technical-system-overview"
