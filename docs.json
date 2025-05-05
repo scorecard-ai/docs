@@ -145,7 +145,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["api-reference/overview"]
+            "pages": ["api-reference/overview", "sdk-migration-guide"]
           },
           {
             "group": "Projects",
