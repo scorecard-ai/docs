@@ -9,9 +9,108 @@ security:
   - bearerAuth: []
 paths:
   /projects:
+    post:
+      operationId: createProject
+      summary: Create Project
+      description: Create a new Project.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the Project.
+                description:
+                  type: string
+                  description: The description of the Project.
+              required:
+                - name
+                - description
+            examples:
+              Create a new project:
+                value:
+                  name: My Project
+                  description: This is a test project
+                summary: Create a new project
+                description: Request to create a new project with a name and description.
+      responses:
+        "201":
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+              examples:
+                Created project response:
+                  value:
+                    id: "314"
+                    name: My Project
+                    description: This is a test project
+                  summary: Created project response
+                  description: Response after successfully creating a project.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+            });
+
+            async function main() {
+              const project = await client.projects.create({ description: 'This is a test project', name: 'My Project' });
+
+              console.log(project.id);
+            }
+
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+            )
+            project = client.projects.create(
+                description="This is a test project",
+                name="My Project",
+            )
+            print(project.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              project, err := client.Projects.New(context.TODO(), scorecard.ProjectNewParams{
+                Description: "This is a test project",
+                Name: "My Project",
+              })
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", project.ID)
+            }
     get:
       operationId: listProjects
-      summary: Get projects
+      summary: List Projects
       description: >-
         Retrieve a paginated list of all Projects. Projects are ordered by creation date, with oldest Projects
         first.
@@ -43,20 +142,7 @@ paths:
                   data:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: The ID of the Project.
-                        name:
-                          type:
-                            - string
-                            - "null"
-                          description: The name of the Project.
-                      required:
-                        - id
-                        - name
-                      description: A Project in the Scorecard system.
+                      $ref: "#/components/schemas/Project"
                   nextCursor:
                     type:
                       - string
@@ -74,10 +160,10 @@ paths:
                 Project list with pagination:
                   value:
                     data:
-                      - id: 123
+                      - id: "123"
                         name: Q&A Chatbot
                         description: Chatbot for answering questions about the company.
-                      - id: 124
+                      - id: "124"
                         name: Summarizer (Europe)
                         description: Summarizer for documents in the Europe region.
                     nextCursor: "125"
@@ -99,8 +185,8 @@ paths:
 
             async function main() {
               // Automatically fetches more pages as needed.
-              for await (const projectListResponse of client.projects.list()) {
-                console.log(projectListResponse.id);
+              for await (const project of client.projects.list()) {
+                console.log(project.id);
               }
             }
 
@@ -116,10 +202,34 @@ paths:
             page = client.projects.list()
             page = page.data[0]
             print(page.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              page, err := client.Projects.List(context.TODO(), scorecard.ProjectListParams{
+
+              })
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", page)
+            }
   /projects/{projectId}/testsets:
     get:
       operationId: listTestsets
-      summary: Get Testsets in Project
+      summary: List Testsets in Project
       description: Retrieve a paginated list of Testsets belonging to a Project.
       parameters:
         - in: path
@@ -236,6 +346,34 @@ paths:
             )
             page = page.data[0]
             print(page.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              page, err := client.Testsets.List(
+                context.TODO(),
+                "314",
+                scorecard.TestsetListParams{
+
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", page)
+            }
     post:
       operationId: createTestset
       summary: Create Testset
@@ -425,6 +563,57 @@ paths:
                 name="Long Context Q&A",
             )
             print(testset.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              testset, err := client.Testsets.New(
+                context.TODO(),
+                "314",
+                scorecard.TestsetNewParams{
+                  Description: "Testset for long context Q&A chatbot.",
+                  FieldMapping: scorecard.TestsetNewParamsFieldMapping{
+                    Inputs: []string{"question"},
+                    Labels: []string{"idealAnswer"},
+                    Metadata: []string{},
+                  },
+                  JsonSchema: map[string]any{
+                  "type": "object",
+                  "properties": map[string]interface{}{
+                  "question": map[string]interface{}{
+                  "type": "string",
+                  },
+                  "idealAnswer": map[string]interface{}{
+                  "type": "string",
+                  },
+                  "provenance": map[string]interface{}{
+                  "type": "string",
+                  },
+                  "geo": map[string]interface{}{
+                  "type": "string",
+                  },
+                  },
+                  },
+                  Name: "Long Context Q&A",
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", testset.ID)
+            }
   /testsets/{testsetId}:
     get:
       operationId: getTestset
@@ -505,6 +694,28 @@ paths:
                 "246",
             )
             print(testset.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              testset, err := client.Testsets.Get(context.TODO(), "246")
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", testset.ID)
+            }
     patch:
       operationId: updateTestset
       summary: Update Testset
@@ -742,6 +953,35 @@ paths:
                 name="Updated Q&A Testset",
             )
             print(testset.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              testset, err := client.Testsets.Update(
+                context.TODO(),
+                "246",
+                scorecard.TestsetUpdateParams{
+                  Description: scorecard.String("Updated description for the Q&A Testset."),
+                  Name: scorecard.String("Updated Q&A Testset"),
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", testset.ID)
+            }
     delete:
       operationId: deleteTestset
       summary: Delete Testset
@@ -798,10 +1038,32 @@ paths:
                 "246",
             )
             print(testset.success)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              testset, err := client.Testsets.Delete(context.TODO(), "246")
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", testset.Success)
+            }
   /testsets/{testsetId}/testcases:
     get:
       operationId: listTestcases
-      summary: Get Testcases in Testset
+      summary: List Testcases in Testset
       description: Retrieve a paginated list of Testcases belonging to a Testset.
       parameters:
         - in: path
@@ -925,6 +1187,34 @@ paths:
             )
             page = page.data[0]
             print(page.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              page, err := client.Testcases.List(
+                context.TODO(),
+                "246",
+                scorecard.TestcaseListParams{
+
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", page)
+            }
     post:
       operationId: createTestcases
       summary: Create multiple Testcases
@@ -985,9 +1275,6 @@ paths:
                         question: How many planets are in our solar system?
                         idealAnswer: 8
                         provenance: user_feedback
-                      validationErrors:
-                        - path: /data/idealAnswer
-                          message: Expected string, received number
                 summary: Create multiple Testcases
                 description: Create multiple Testcases in a single request.
       responses:
@@ -1079,7 +1366,6 @@ paths:
                       idealAnswer: 8,
                       provenance: 'user_feedback',
                     },
-                    validationErrors: [{ path: '/data/idealAnswer', message: 'Expected string, received number' }],
                   },
                 ],
               });
@@ -1115,14 +1401,56 @@ paths:
                         "question": "How many planets are in our solar system?",
                         "idealAnswer": 8,
                         "provenance": "user_feedback",
-                    },
-                    "validation_errors": [{
-                        "path": "/data/idealAnswer",
-                        "message": "Expected string, received number",
-                    }],
+                    }
                 }],
             )
             print(testcase.items)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              testcase, err := client.Testcases.New(
+                context.TODO(),
+                "246",
+                scorecard.TestcaseNewParams{
+                  Items: []scorecard.TestcaseNewParamsItem{scorecard.TestcaseNewParamsItem{
+                    JsonData: map[string]any{
+                    "question": "What is the capital of France?",
+                    "idealAnswer": "Paris",
+                    "provenance": "hand_curated",
+                    },
+                  }, scorecard.TestcaseNewParamsItem{
+                    JsonData: map[string]any{
+                    "question": "What is the largest planet in our solar system?",
+                    "idealAnswer": "Jupiter",
+                    "provenance": "synthetic",
+                    },
+                  }, scorecard.TestcaseNewParamsItem{
+                    JsonData: map[string]any{
+                    "question": "How many planets are in our solar system?",
+                    "idealAnswer": 8,
+                    "provenance": "user_feedback",
+                    },
+                  }},
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", testcase.Items)
+            }
   /testcases/{testcaseId}:
     get:
       operationId: getTestcase
@@ -1190,6 +1518,28 @@ paths:
                 "248",
             )
             print(testcase.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              testcase, err := client.Testcases.Get(context.TODO(), "248")
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", testcase.ID)
+            }
     put:
       operationId: updateTestcase
       summary: Update Testcase
@@ -1288,6 +1638,38 @@ paths:
                 },
             )
             print(testcase.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              testcase, err := client.Testcases.Update(
+                context.TODO(),
+                "248",
+                scorecard.TestcaseUpdateParams{
+                  JsonData: map[string]any{
+                  "question": "What is the capital of France?",
+                  "idealAnswer": "Paris is the capital of France",
+                  "provenance": "hand_curated",
+                  },
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", testcase.ID)
+            }
   /testcases/bulk-delete:
     post:
       operationId: deleteTestcases
@@ -1362,6 +1744,30 @@ paths:
                 ids=["123", "124", "125"],
             )
             print(testcase.success)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              testcase, err := client.Testcases.Delete(context.TODO(), scorecard.TestcaseDeleteParams{
+                IDs: []string{"123", "124", "125"},
+              })
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", testcase.Success)
+            }
   /projects/{projectId}/runs:
     post:
       operationId: createRun
@@ -1463,6 +1869,36 @@ paths:
                 system_config_id="87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0",
             )
             print(run.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              run, err := client.Runs.New(
+                context.TODO(),
+                "314",
+                scorecard.RunNewParams{
+                  MetricIDs: []string{"789", "101"},
+                  TestsetID: "246",
+                  SystemConfigID: scorecard.String("87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0"),
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", run.ID)
+            }
   /runs/{runId}:
     patch:
       operationId: updateRun
@@ -1566,6 +2002,34 @@ paths:
                 status="awaiting_scoring",
             )
             print(run.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              run, err := client.Runs.Update(
+                context.TODO(),
+                "135",
+                scorecard.RunUpdateParams{
+                  Status: scorecard.RunUpdateParamsStatusAwaitingScoring,
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", run.ID)
+            }
   /runs/{runId}/records:
     post:
       operationId: createRecord
@@ -1683,10 +2147,47 @@ paths:
                 testcase_id="248",
             )
             print(record.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              record, err := client.Records.New(
+                context.TODO(),
+                "135",
+                scorecard.RecordNewParams{
+                  Inputs: map[string]any{
+                  "question": "What is the capital of France?",
+                  },
+                  Labels: map[string]any{
+                  "idealAnswer": "Paris is the capital of France",
+                  },
+                  Outputs: map[string]any{
+                  "response": "The capital of France is Paris.",
+                  },
+                  TestcaseID: scorecard.String("248"),
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", record.ID)
+            }
   /projects/{projectId}/systems:
     get:
       operationId: listSystems
-      summary: Get systems
+      summary: List systems
       description: Retrieve a paginated list of all systems. Systems are ordered by creation date.
       parameters:
         - in: path
@@ -1868,6 +2369,34 @@ paths:
             )
             page = page.data[0]
             print(page.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              page, err := client.Systems.List(
+                context.TODO(),
+                "314",
+                scorecard.SystemListParams{
+
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", page)
+            }
     post:
       operationId: createSystem
       summary: Create system
@@ -2192,10 +2721,102 @@ paths:
                 },
             )
             print(system.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              system, err := client.Systems.New(
+                context.TODO(),
+                "314",
+                scorecard.SystemNewParams{
+                  ConfigSchema: map[string]any{
+                  "type": "object",
+                  "properties": map[string]interface{}{
+                  "temperature": map[string]interface{}{
+                  "type": "number",
+                  },
+                  "maxTokens": map[string]interface{}{
+                  "type": "integer",
+                  },
+                  "model": map[string]interface{}{
+                  "type": "string",
+                  "enum": map[string]interface{}{
+                  "0": "gpt-4",
+                  "1": "gpt-4-turbo",
+                  },
+                  },
+                  },
+                  "required": map[string]interface{}{
+                  "0": "model",
+                  },
+                  },
+                  Description: "Production chatbot powered by GPT-4",
+                  InputSchema: map[string]any{
+                  "type": "object",
+                  "properties": map[string]interface{}{
+                  "messages": map[string]interface{}{
+                  "type": "array",
+                  "items": map[string]interface{}{
+                  "type": "object",
+                  "properties": map[string]interface{}{
+                  "role": map[string]interface{}{
+                  "type": "string",
+                  "enum": map[string]interface{}{
+                  "0": "system",
+                  "1": "user",
+                  "2": "assistant",
+                  },
+                  },
+                  "content": map[string]interface{}{
+                  "type": "string",
+                  },
+                  },
+                  "required": map[string]interface{}{
+                  "0": "role",
+                  "1": "content",
+                  },
+                  },
+                  },
+                  },
+                  "required": map[string]interface{}{
+                  "0": "messages",
+                  },
+                  },
+                  Name: "GPT-4 Chatbot",
+                  OutputSchema: map[string]any{
+                  "type": "object",
+                  "properties": map[string]interface{}{
+                  "response": map[string]interface{}{
+                  "type": "string",
+                  },
+                  },
+                  "required": map[string]interface{}{
+                  "0": "response",
+                  },
+                  },
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", system.ID)
+            }
   /systems/{systemId}:
     get:
       operationId: getSystem
-      summary: Get system by ID
+      summary: Get system
       description: Retrieve a specific system by ID.
       parameters:
         - in: path
@@ -2297,6 +2918,28 @@ paths:
                 "12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             print(system.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              system, err := client.Systems.Get(context.TODO(), "12345678-0a8b-4f66-b6f3-2ddcfa097257")
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", system.ID)
+            }
     patch:
       operationId: updateSystem
       summary: Update system
@@ -2471,6 +3114,35 @@ paths:
                 name="GPT-4 Turbo Chatbot",
             )
             print(system.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              system, err := client.Systems.Update(
+                context.TODO(),
+                "12345678-0a8b-4f66-b6f3-2ddcfa097257",
+                scorecard.SystemUpdateParams{
+                  Description: scorecard.String("Updated production chatbot powered by GPT-4 Turbo"),
+                  Name: scorecard.String("GPT-4 Turbo Chatbot"),
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", system.ID)
+            }
     delete:
       operationId: deleteSystem
       summary: Delete system
@@ -2535,6 +3207,28 @@ paths:
                 "12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             print(system.success)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              system, err := client.Systems.Delete(context.TODO(), "12345678-0a8b-4f66-b6f3-2ddcfa097257")
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", system.Success)
+            }
   /systems/{systemId}/configs:
     get:
       operationId: listSystemConfigs
@@ -2671,6 +3365,34 @@ paths:
             )
             page = page.data[0]
             print(page.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              page, err := client.SystemConfigs.List(
+                context.TODO(),
+                "12345678-0a8b-4f66-b6f3-2ddcfa097257",
+                scorecard.SystemConfigListParams{
+
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", page)
+            }
     post:
       operationId: createSystemConfig
       summary: Create system configuration
@@ -2850,6 +3572,39 @@ paths:
                 name="Production (Low Temperature)",
             )
             print(system_config.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              systemConfig, err := client.SystemConfigs.New(
+                context.TODO(),
+                "12345678-0a8b-4f66-b6f3-2ddcfa097257",
+                scorecard.SystemConfigNewParams{
+                  Config: map[string]any{
+                  "temperature": 0.1,
+                  "maxTokens": 1024,
+                  "model": "gpt-4-turbo",
+                  },
+                  Name: "Production (Low Temperature)",
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", systemConfig.ID)
+            }
   /systems/{systemId}/configs/{systemConfigId}:
     get:
       operationId: getSystemConfig
@@ -2945,6 +3700,34 @@ paths:
                 system_id="12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             print(system_config.id)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              systemConfig, err := client.SystemConfigs.Get(
+                context.TODO(),
+                "87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0",
+                scorecard.SystemConfigGetParams{
+                  SystemID: "12345678-0a8b-4f66-b6f3-2ddcfa097257",
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", systemConfig.ID)
+            }
 components:
   securitySchemes:
     bearerAuth:
@@ -2952,6 +3735,27 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the Project.
+        name:
+          type:
+            - string
+            - "null"
+          description: The name of the Project.
+        description:
+          type:
+            - string
+            - "null"
+          description: The description of the Project.
+      required:
+        - id
+        - name
+        - description
+      description: A Project in the Scorecard system.
     ApiError:
       type: object
       properties:
