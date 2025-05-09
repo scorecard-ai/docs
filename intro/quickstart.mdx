@@ -405,7 +405,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
           system=lambda input: run_system(input)
       )
 
-      print(f'Go to {run.url} and click "Run Scoring" to grade your Run.')
+      print(f'Go to {run["url"]} and click "Run Scoring" to grade your Run.')
       ```
 
       ```js JavaScript
@@ -419,6 +419,19 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
       ```
 
       ```go Go
+      run, err := scorecardClient.Runs.New(
+        context.TODO(),
+        PROJECT_ID,
+        scorecard.RunNewParams{
+          TestsetID: TESTSET_ID,
+          MetricIDs: METRIC_IDS,
+        },
+      )
+
+      if err != nil {
+        panic(err.Error())
+      }
+      
       // Load the Testcases in the Testset
       testcasePager := scorecardClient.Testcases.ListAutoPaging(
         context.TODO(),
