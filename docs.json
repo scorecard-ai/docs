@@ -19,7 +19,7 @@
     "links": [
       {
         "label": "Contact",
-        "href": "https://www.scorecard.io/contact"
+        "href": "https://www.scorecard.io/book-a-demo"
       }
     ],
     "primary": {
@@ -186,6 +186,10 @@
             "pages": ["api-reference/create-record"]
           },
           {
+            "group": "Scores",
+            "pages": ["api-reference/upsert-score"]
+          },
+          {
             "group": "Systems",
             "pages": [
               "api-reference/create-system",
@@ -228,7 +232,7 @@
       "anchors": [
         {
           "anchor": "About Us",
-          "href": "https://www.scorecard.io/careers",
+          "href": "https://www.scorecard.io/about-us",
           "icon": "building"
         },
         {

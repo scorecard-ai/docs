@@ -3728,6 +3728,176 @@ paths:
               }
               fmt.Printf("%+v\n", systemConfig.ID)
             }
+  /records/{recordId}/scores/{metricConfigId}:
+    put:
+      operationId: upsertScore
+      summary: Upsert Score
+      description: >-
+        Create or update a Score for a given Record and MetricConfig. If a Score with the specified Record ID
+        and MetricConfig ID already exists, it will be updated. Otherwise, a new Score will be created. The
+        score provided should conform to the schema defined by the MetricConfig; otherwise, validation errors
+        will be reported.
+      parameters:
+        - in: path
+          name: recordId
+          description: The ID of the Record.
+          schema:
+            type: string
+            example: "777"
+          required: true
+        - in: path
+          name: metricConfigId
+          description: The ID of the MetricConfig.
+          schema:
+            type: string
+            format: uuid
+            example: a1b2c3d4-e5f6-7890-1234-567890abcdef
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                score:
+                  type: object
+                  additionalProperties: true
+                  description: >-
+                    The score of the Record, as arbitrary JSON. This data should ideally conform to the output
+                    schema defined by the associated MetricConfig. If it doesn't, validation errors will be
+                    captured in the `validationErrors` field.
+              required:
+                - score
+            examples:
+              Upsert simple score:
+                value:
+                  score:
+                    value: true
+                    reasoning: The response is correct
+                summary: Upsert a simple score
+                description: Creates or updates a Score with a basic score object.
+              Upsert complex score:
+                value:
+                  score:
+                    f1_score: 0.75
+                    precision: 0.8
+                    recall: 0.7
+                    reasoning: Model performed well on typical cases.
+                summary: Upsert a complex score
+                description: >-
+                  Creates or updates a Score with a more detailed, structured score, potentially including
+                  multiple metrics and qualitative feedback.
+              Upsert score needing validation:
+                value:
+                  score:
+                    rating: excellent
+                summary: Upsert score that may have validation issues
+                description: >-
+                  Example of a score that might not fully conform to the metric's output schema, which would
+                  result in validationErrors in the response.
+      responses:
+        "200":
+          description: Score upserted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Score"
+              examples:
+                Upserted simple score:
+                  value:
+                    recordId: "777"
+                    metricConfigId: a1b2c3d4-e5f6-7890-1234-567890abcdef
+                    score:
+                      value: true
+                      reasoning: The response is correct
+                    validationErrors: []
+                  summary: Successful simple score upsert
+                  description: Response showing the full Score after a successful upsert with a simple score.
+                Upserted score with validation errors:
+                  value:
+                    recordId: "778"
+                    metricConfigId: b2c3d4e5-f6a7-8901-2345-67890abcdef0
+                    score:
+                      rating: excellent
+                    validationErrors:
+                      - path: /score/rating
+                        message: Expected number, received string
+                  summary: Upserted score with validation errors
+                  description: >-
+                    Response for a Score that was stored but whose `score` field had discrepancies with the
+                    MetricConfig's output schema, detailed in `validationErrors`.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+            });
+
+            async function main() {
+              const score = await client.scores.upsert('a1b2c3d4-e5f6-7890-1234-567890abcdef', {
+                recordId: '777',
+                score: { value: true, reasoning: 'The response is correct' },
+              });
+
+              console.log(score.validationErrors);
+            }
+
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+            )
+            score = client.scores.upsert(
+                metric_config_id="a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                record_id="777",
+                score={
+                    "value": True,
+                    "reasoning": "The response is correct",
+                },
+            )
+            print(score.validation_errors)
+        - lang: Go
+          source: |
+            package main
+
+            import (
+              "context"
+              "fmt"
+
+              "github.com/scorecard-ai/scorecard-go"
+              "github.com/scorecard-ai/scorecard-go/option"
+            )
+
+            func main() {
+              client := scorecard.NewClient(
+                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
+              )
+              score, err := client.Scores.Upsert(
+                context.TODO(),
+                "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                scorecard.ScoreUpsertParams{
+                  RecordID: "777",
+                  Score: map[string]any{
+                  "value": true,
+                  "reasoning": "The response is correct",
+                  },
+                },
+              )
+              if err != nil {
+                panic(err.Error())
+              }
+              fmt.Printf("%+v\n", score.ValidationErrors)
+            }
 components:
   securitySchemes:
     bearerAuth:
@@ -4074,6 +4244,51 @@ components:
 
         Configurations will be validated against the system's configSchema, with non-conforming values
         generating warnings.
+    Score:
+      type: object
+      properties:
+        recordId:
+          type: string
+          description: The ID of the Record this Score is for.
+        metricConfigId:
+          type: string
+          format: uuid
+          description: The ID of the MetricConfig this Score is for.
+        score:
+          type: object
+          additionalProperties: true
+          description: >-
+            The score of the Record, as arbitrary JSON. This data should ideally conform to the output schema
+            defined by the associated MetricConfig. If it doesn't, validation errors will be captured in the
+            `validationErrors` field.
+        validationErrors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                description: JSON Pointer to the field with the validation error.
+                example: /data/question
+              message:
+                type: string
+                description: Human-readable error description.
+                example: Required field missing
+            required:
+              - path
+              - message
+          description: >-
+            Validation errors found in the Score data. If present, the Score doesn't fully conform to its
+            MetricConfig's schema.
+      required:
+        - recordId
+        - metricConfigId
+        - score
+      description: >-
+        A Score represents the evaluation of a Record against a specific MetricConfig. The actual `score` is
+        stored as flexible JSON. While any JSON is accepted, it is expected to conform to the output schema
+        defined by the MetricConfig. Any discrepancies will be noted in the `validationErrors` field, but the
+        Score will still be stored.
   responses:
     UnauthenticatedError:
       description: Error indicating that the request is not authenticated.
