@@ -98,6 +98,7 @@
             "group": "Features",
             "pages": [
               "features/projects",
+              "features/playground",
               "features/prompt-management",
               "features/tracing",
               "features/privacy-by-design",
