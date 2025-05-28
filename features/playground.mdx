@@ -1,0 +1,112 @@
+---
+title: "Playground Quickstart"
+description: "The Playground is where you test and refine your AI prompts using real data. It's a three-panel interface that lets you select test data, edit prompts with Jinja templating, configure AI models, and see results in real-time."
+---
+
+<Frame caption="Playground overview">
+![Playground overview](/images/playground/playground-1.png)
+</Frame>
+
+## Getting Started
+
+### 1. Select Your Test Data (Left Panel)
+
+**Choose a Testset:**
+- Click the testset dropdown at the top of the left panel
+- Select a testset that contains the data you want to test your prompt against
+- The first testcase will be automatically selected
+
+**Select Testcases:**
+- Click on individual testcases to select them
+- Hold Shift and click to select multiple testcases
+- Selected testcases have a blue left border
+- Hover over the info icon to see the full testcase data
+- Testcases with a green flask icon have been tested
+
+### 2. Edit Your Prompt (Middle Panel)
+
+**Choose a Prompt:**
+- Select a prompt from the dropdown in the header
+- If you don't have prompts yet, create one first in the Prompts section
+
+**Work with Prompt Versions:**
+- The left sidebar shows all versions of your selected prompt
+- Click any version to switch to it
+- Versions with unsaved changes show a save indicator
+- The production version is marked with a badge
+
+**Edit Prompt Templates:**
+- Use the "Prompt Templates" tab to write your prompts
+- The editor supports **Jinja syntax** for dynamic content
+- Insert variables from your testcase data like `{{variable_name}}`
+- Add multiple messages by clicking "+ Add Message"
+- Set message roles (System, User, Assistant) using the dropdown
+- Remove messages with the minus button
+
+**Configure Model Settings:**
+- Switch to the "Model Settings" tab
+- Choose your AI model (GPT-4, Claude, etc.)
+- Adjust parameters like temperature, max tokens, and top-p
+- These settings affect how the AI generates responses
+
+### 3. Preview and Test (Right Panel)
+
+**Template Preview:**
+- The "Template Preview" tab shows how your prompt looks with real data
+- Variables are automatically replaced with values from selected testcases
+- This helps you verify your Jinja templating is working correctly
+
+**Run Tests:**
+- Click "Try" to test your prompt on selected testcases
+- Click "Try All" to test on all testcases in the testset
+- Results appear in the "Results" tab automatically
+
+**View Results:**
+- The "Results" tab shows AI responses for each testcase
+- See response time, token count, and full output
+- Click the completion badge to open a detailed results modal
+- Green indicates successful completion, yellow shows partial results
+
+## Key Features
+
+### Jinja Templating
+Your prompts support Jinja syntax for dynamic content:
+```jinja
+Hello {{name}}, your order #{{order_id}} is {{status}}.
+```
+
+### Multi-testcase Testing
+- Test individual testcases for quick iteration
+- Run all testcases for comprehensive evaluation
+- Compare results across different prompt versions
+
+### Version Management
+- Save new versions of your prompts with the "Save" button
+- Switch between versions to compare performance
+- Publish versions to production when ready
+
+### Real-time Preview
+- See exactly how your prompt will look with real data
+- Catch templating errors before running tests
+- Understand how variables are populated
+
+## Best Practices
+
+1. **Start Small**: Select one testcase first to quickly iterate on your prompt
+2. **Use Variables**: Leverage Jinja templating to make prompts dynamic and reusable
+3. **Test Thoroughly**: Run all testcases before publishing to production
+4. **Save Versions**: Create new versions when making significant changes
+5. **Monitor Results**: Check response times and token usage to optimize costs
+
+## Common Workflows
+
+**Quick Testing:**
+1. Select a testcase → Edit prompt → Preview → Try → Review results
+
+**Comprehensive Evaluation:**
+1. Select all testcases → Edit prompt → Try All → Analyze results modal
+
+**Version Comparison:**
+1. Test Version A → Switch to Version B → Test → Compare results
+
+The Playground makes prompt engineering intuitive by providing immediate feedback and real data testing in a single interface.
