@@ -188,8 +188,8 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
           field_mapping={
               # Inputs represent the input to the system.
               "inputs": ["original", "tone"],
-              # Labels represent the expected output of the system.
-              "labels": ["idealRewritten"],
+              # Expected represents the expected output of the system.
+              "expected": ["idealRewritten"],
               # Metadata fields are used for grouping Testcases, but not seen by the system.
               "metadata": [],
           },
@@ -246,8 +246,8 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
         fieldMapping: {
           // Inputs represent the input to the system.
           inputs: ["original", "tone"],
-          // Labels represent the expected output of the system.
-          labels: ["idealRewritten"],
+          // Expected represent the expected output of the system.
+          expected: ["idealRewritten"],
           // Metadata fields are used for grouping Testcases, but not seen by the system.
           metadata: [],
         },
@@ -304,7 +304,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
           Description: "Testcases about rewriting messages in a different tone.",
           FieldMapping: scorecard.TestsetNewParamsFieldMapping{
             Inputs:   []string{"original", "tone"},
-            Labels:   []string{"idealRewritten"},
+            Expected: []string{"idealRewritten"},
             Metadata: []string{},
           },
           JsonSchema: map[string]any{
@@ -459,7 +459,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
             TestcaseID: scorecard.String(testcase.ID),
             Inputs:     testcase.Inputs,
             Outputs:    map[string]any{"rewritten": modelResponse.rewritten},
-            Labels:     testcase.Labels,
+            Expected:   testcase.Expected,
           },
         )
 

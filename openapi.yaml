@@ -301,7 +301,7 @@ paths:
                         fieldMapping:
                           inputs:
                             - question
-                          labels:
+                          expected:
                             - idealAnswer
                           metadata:
                             - provenance
@@ -410,23 +410,23 @@ paths:
                       items:
                         type: string
                       description: Fields that represent inputs to the AI system.
-                    labels:
+                    expected:
                       type: array
                       items:
                         type: string
-                      description: Fields that represent expected outputs/labels.
+                      description: Fields that represent expected outputs.
                     metadata:
                       type: array
                       items:
                         type: string
-                      description: Fields that are not inputs or labels.
+                      description: Fields that are not inputs or expected outputs.
                   required:
                     - inputs
-                    - labels
+                    - expected
                     - metadata
                   description: >-
-                    Maps top-level keys of the Testcase schema to their roles (input/label). Unmapped fields
-                    are treated as metadata.
+                    Maps top-level keys of the Testcase schema to their roles (input/expected output).
+                    Unmapped fields are treated as metadata.
               required:
                 - name
                 - description
@@ -451,7 +451,7 @@ paths:
                   fieldMapping:
                     inputs:
                       - question
-                    labels:
+                    expected:
                       - idealAnswer
                     metadata: []
                 summary: Create Q&A Testset
@@ -485,7 +485,7 @@ paths:
                     fieldMapping:
                       inputs:
                         - question
-                      labels:
+                      expected:
                         - idealAnswer
                       metadata:
                         - provenance
@@ -510,7 +510,7 @@ paths:
             async function main() {
               const testset = await client.testsets.create('314', {
                 description: 'Testset for long context Q&A chatbot.',
-                fieldMapping: { inputs: ['question'], labels: ['idealAnswer'], metadata: [] },
+                fieldMapping: { inputs: ['question'], expected: ['idealAnswer'], metadata: [] },
                 jsonSchema: {
                   type: 'object',
                   properties: {
@@ -540,7 +540,7 @@ paths:
                 description="Testset for long context Q&A chatbot.",
                 field_mapping={
                     "inputs": ["question"],
-                    "labels": ["idealAnswer"],
+                    "expected": ["idealAnswer"],
                     "metadata": [],
                 },
                 json_schema={
@@ -586,7 +586,7 @@ paths:
                   Description: "Testset for long context Q&A chatbot.",
                   FieldMapping: scorecard.TestsetNewParamsFieldMapping{
                     Inputs: []string{"question"},
-                    Labels: []string{"idealAnswer"},
+                    Expected: []string{"idealAnswer"},
                     Metadata: []string{},
                   },
                   JsonSchema: map[string]any{
@@ -653,7 +653,7 @@ paths:
                     fieldMapping:
                       inputs:
                         - question
-                      labels:
+                      expected:
                         - idealAnswer
                       metadata:
                         - provenance
@@ -767,23 +767,23 @@ paths:
                       items:
                         type: string
                       description: Fields that represent inputs to the AI system.
-                    labels:
+                    expected:
                       type: array
                       items:
                         type: string
-                      description: Fields that represent expected outputs/labels.
+                      description: Fields that represent expected outputs.
                     metadata:
                       type: array
                       items:
                         type: string
-                      description: Fields that are not inputs or labels.
+                      description: Fields that are not inputs or expected outputs.
                   required:
                     - inputs
-                    - labels
+                    - expected
                     - metadata
                   description: >-
-                    Maps top-level keys of the Testcase schema to their roles (input/label). Unmapped fields
-                    are treated as metadata.
+                    Maps top-level keys of the Testcase schema to their roles (input/expected output).
+                    Unmapped fields are treated as metadata.
             examples:
               Update metadata only:
                 value:
@@ -823,7 +823,7 @@ paths:
                   fieldMapping:
                     inputs:
                       - question
-                    labels:
+                    expected:
                       - idealAnswer
                     metadata: []
                 summary: Full schema revision
@@ -858,7 +858,7 @@ paths:
                     fieldMapping:
                       inputs:
                         - question
-                      labels:
+                      expected:
                         - idealAnswer
                       metadata:
                         - provenance
@@ -884,7 +884,7 @@ paths:
                     fieldMapping:
                       inputs:
                         - question
-                      labels:
+                      expected:
                         - idealAnswer
                       metadata:
                         - provenance
@@ -909,7 +909,7 @@ paths:
                     fieldMapping:
                       inputs:
                         - question
-                      labels:
+                      expected:
                         - idealAnswer
                       metadata: []
                   summary: Custom field mapping
@@ -1126,7 +1126,7 @@ paths:
                           provenance: hand_curated
                         inputs:
                           question: What is the capital of France?
-                        labels:
+                        expected:
                           idealAnswer: Paris
                       - id: "124"
                         testsetId: "246"
@@ -1136,7 +1136,7 @@ paths:
                           provenance: synthetic
                         inputs:
                           question: What is the largest planet in our solar system?
-                        labels:
+                        expected:
                           idealAnswer: Jupiter
                       - id: "125"
                         testsetId: "246"
@@ -1145,7 +1145,7 @@ paths:
                           provenance: user_feedback
                         inputs:
                           question: What is the deepest ocean on Earth?
-                        labels: {}
+                        expected: {}
                         validationErrors:
                           - path: /data
                             message: Required field 'idealAnswer' is missing
@@ -1244,16 +1244,6 @@ paths:
                         description: The JSON data of the Testcase, which is validated against the Testset's schema.
                     required:
                       - jsonData
-                    description: >-
-                      A test case in the Scorecard system. Contains JSON data that is validated against the
-                      schema defined by its Testset.
-
-                      The `inputs` and `labels` fields are derived from the `data` field based on the
-                      Testset's `fieldMapping`, and include all mapped fields, including those with validation
-                      errors.
-
-                      Testcases are stored regardless of validation results, with any validation errors
-                      included in the `validationErrors` field.
                   minItems: 1
                   maxItems: 100
                   description: Testcases to create (max 100).
@@ -1303,7 +1293,7 @@ paths:
                           provenance: hand_curated
                         inputs:
                           question: What is the capital of France?
-                        labels:
+                        expected:
                           idealAnswer: Paris
                       - id: "124"
                         testsetId: "246"
@@ -1313,7 +1303,7 @@ paths:
                           provenance: synthetic
                         inputs:
                           question: What is the largest planet in our solar system?
-                        labels:
+                        expected:
                           idealAnswer: Jupiter
                       - id: "125"
                         testsetId: "246"
@@ -1323,7 +1313,7 @@ paths:
                           provenance: user_feedback
                         inputs:
                           question: How many planets are in our solar system?
-                        labels:
+                        expected:
                           idealAnswer: 8
                         validationErrors:
                           - path: /data/idealAnswer
@@ -1482,7 +1472,7 @@ paths:
                       provenance: hand_curated
                     inputs:
                       question: What is the capital of France?
-                    labels:
+                    expected:
                       idealAnswer: Paris
                   summary: Testcase details
                   description: Example response showing a Testcase's details.
@@ -1591,7 +1581,7 @@ paths:
                       provenance: hand_curated
                     inputs:
                       question: What is the capital of France?
-                    labels:
+                    expected:
                       idealAnswer: Paris is the capital of France
                   summary: Updated Testcase
                   description: Example response showing a successfully updated Testcase.
@@ -1899,137 +1889,6 @@ paths:
               }
               fmt.Printf("%+v\n", run.ID)
             }
-  /runs/{runId}:
-    patch:
-      operationId: updateRun
-      summary: Update Run status
-      description: Update the status of a Run.
-      parameters:
-        - in: path
-          name: runId
-          description: The ID of the Run to update.
-          schema:
-            type: string
-            example: "135"
-          required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                status:
-                  type: string
-                  enum:
-                    - pending
-                    - awaiting_execution
-                    - running_execution
-                    - awaiting_scoring
-                    - running_scoring
-                    - awaiting_human_scoring
-                    - completed
-                  description: The status of the Run.
-              required:
-                - status
-            examples:
-              Update Run status:
-                value:
-                  status: awaiting_scoring
-                summary: Update Run after execution
-                description: Request to update the status of a Run to `awaiting_scoring`.
-      responses:
-        "200":
-          description: Run updated successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: The ID of the Run.
-                  status:
-                    type: string
-                    enum:
-                      - pending
-                      - awaiting_execution
-                      - running_execution
-                      - awaiting_scoring
-                      - running_scoring
-                      - awaiting_human_scoring
-                      - completed
-                    description: The status of the Run.
-                required:
-                  - id
-                  - status
-              examples:
-                Updated Run status:
-                  value:
-                    id: "135"
-                    status: awaiting_scoring
-                  summary: Updated Run status
-                  description: Response after successfully updating the status of a Run.
-        "401":
-          $ref: "#/components/responses/UnauthenticatedError"
-        "500":
-          $ref: "#/components/responses/ServiceError"
-      x-codeSamples:
-        - lang: JavaScript
-          source: |-
-            import Scorecard from 'scorecard-ai';
-
-            const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
-            });
-
-            async function main() {
-              const run = await client.runs.update('135', { status: 'awaiting_scoring' });
-
-              console.log(run.id);
-            }
-
-            main();
-        - lang: Python
-          source: |-
-            import os
-            from scorecard_ai import Scorecard
-
-            client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
-            )
-            run = client.runs.update(
-                run_id="135",
-                status="awaiting_scoring",
-            )
-            print(run.id)
-        - lang: Go
-          source: |
-            package main
-
-            import (
-              "context"
-              "fmt"
-
-              "github.com/scorecard-ai/scorecard-go"
-              "github.com/scorecard-ai/scorecard-go/option"
-            )
-
-            func main() {
-              client := scorecard.NewClient(
-                option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SCORECARD_API_KEY")
-              )
-              run, err := client.Runs.Update(
-                context.TODO(),
-                "135",
-                scorecard.RunUpdateParams{
-                  Status: scorecard.RunUpdateParamsStatusAwaitingScoring,
-                },
-              )
-              if err != nil {
-                panic(err.Error())
-              }
-              fmt.Printf("%+v\n", run.ID)
-            }
   /runs/{runId}/records:
     post:
       operationId: createRecord
@@ -2056,7 +1915,7 @@ paths:
                   type: object
                   additionalProperties: true
                   description: The actual inputs sent to the system, which should match the system's input schema.
-                labels:
+                expected:
                   type: object
                   additionalProperties: true
                   description: The expected outputs for the Testcase.
@@ -2066,7 +1925,7 @@ paths:
                   description: The actual outputs from the system.
               required:
                 - inputs
-                - labels
+                - expected
                 - outputs
             examples:
               Create Record:
@@ -2074,7 +1933,7 @@ paths:
                   testcaseId: "248"
                   inputs:
                     question: What is the capital of France?
-                  labels:
+                  expected:
                     idealAnswer: Paris is the capital of France
                   outputs:
                     response: The capital of France is Paris.
@@ -2094,7 +1953,7 @@ paths:
                     testcaseId: "248"
                     inputs:
                       question: What is the capital of France?
-                    labels:
+                    expected:
                       idealAnswer: Paris is the capital of France
                     outputs:
                       response: The capital of France is Paris.
@@ -2115,8 +1974,8 @@ paths:
 
             async function main() {
               const record = await client.records.create('135', {
+                expected: { idealAnswer: 'Paris is the capital of France' },
                 inputs: { question: 'What is the capital of France?' },
-                labels: { idealAnswer: 'Paris is the capital of France' },
                 outputs: { response: 'The capital of France is Paris.' },
                 testcaseId: '248',
               });
@@ -2135,11 +1994,11 @@ paths:
             )
             record = client.records.create(
                 run_id="135",
+                expected={
+                    "idealAnswer": "Paris is the capital of France"
+                },
                 inputs={
                     "question": "What is the capital of France?"
-                },
-                labels={
-                    "idealAnswer": "Paris is the capital of France"
                 },
                 outputs={
                     "response": "The capital of France is Paris."
@@ -2167,11 +2026,11 @@ paths:
                 context.TODO(),
                 "135",
                 scorecard.RecordNewParams{
+                  Expected: map[string]any{
+                  "idealAnswer": "Paris is the capital of France",
+                  },
                   Inputs: map[string]any{
                   "question": "What is the capital of France?",
-                  },
-                  Labels: map[string]any{
-                  "idealAnswer": "Paris is the capital of France",
                   },
                   Outputs: map[string]any{
                   "response": "The capital of France is Paris.",
@@ -3966,23 +3825,23 @@ components:
               items:
                 type: string
               description: Fields that represent inputs to the AI system.
-            labels:
+            expected:
               type: array
               items:
                 type: string
-              description: Fields that represent expected outputs/labels.
+              description: Fields that represent expected outputs.
             metadata:
               type: array
               items:
                 type: string
-              description: Fields that are not inputs or labels.
+              description: Fields that are not inputs or expected outputs.
           required:
             - inputs
-            - labels
+            - expected
             - metadata
           description: >-
-            Maps top-level keys of the Testcase schema to their roles (input/label). Unmapped fields are
-            treated as metadata.
+            Maps top-level keys of the Testcase schema to their roles (input/expected output). Unmapped fields
+            are treated as metadata.
       required:
         - id
         - name
@@ -3994,7 +3853,8 @@ components:
 
         Each Testset defines the structure of its Testcases through a JSON schema.
 
-        The `fieldMapping` object maps top-level keys of the Testcase schema to their roles (input/label).
+        The `fieldMapping` object maps top-level keys of the Testcase schema to their roles (input/expected
+        output).
 
         Fields not mentioned in the `fieldMapping` during creation or update are treated as metadata.
 
@@ -4040,12 +3900,12 @@ components:
           description: >-
             Derived from data based on the Testset's fieldMapping. Contains all fields marked as inputs,
             including those with validation errors.
-        labels:
+        expected:
           type: object
           additionalProperties: true
           description: >-
-            Derived from data based on the Testset's fieldMapping. Contains all fields marked as labels,
-            including those with validation errors.
+            Derived from data based on the Testset's fieldMapping. Contains all fields marked as expected
+            outputs, including those with validation errors.
         validationErrors:
           type: array
           items:
@@ -4070,12 +3930,12 @@ components:
         - testsetId
         - jsonData
         - inputs
-        - labels
+        - expected
       description: >-
         A test case in the Scorecard system. Contains JSON data that is validated against the schema defined
         by its Testset.
 
-        The `inputs` and `labels` fields are derived from the `data` field based on the Testset's
+        The `inputs` and `expected` fields are derived from the `data` field based on the Testset's
         `fieldMapping`, and include all mapped fields, including those with validation errors.
 
         Testcases are stored regardless of validation results, with any validation errors included in the
@@ -4131,7 +3991,7 @@ components:
           type: object
           additionalProperties: true
           description: The actual inputs sent to the system, which should match the system's input schema.
-        labels:
+        expected:
           type: object
           additionalProperties: true
           description: The expected outputs for the Testcase.
@@ -4143,7 +4003,7 @@ components:
         - id
         - runId
         - inputs
-        - labels
+        - expected
         - outputs
       description: A record of a system execution in the Scorecard system.
     System:
