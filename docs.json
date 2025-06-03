@@ -25,7 +25,7 @@
     "primary": {
       "type": "button",
       "label": "Sign In",
-      "href": "https://app.getscorecard.ai/"
+      "href": "https://app.scorecard.io/"
     }
   },
   "footer": {

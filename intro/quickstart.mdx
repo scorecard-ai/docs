@@ -10,7 +10,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
 
 <Steps>
   <Step title="Setup accounts">
-    Create a [Scorecard account](https://app.getscorecard.ai/dashboard) and an [OpenAI account](https://platform.openai.com), then set your [Scorecard API key](https://app.getscorecard.ai/settings) and [OpenAI API key](https://platform.openai.com/api-keys) as environment variables.
+    Create a [Scorecard account](https://app.scorecard.io/dashboard) and an [OpenAI account](https://platform.openai.com), then set your [Scorecard API key](https://app.scorecard.io/settings) and [OpenAI API key](https://platform.openai.com/api-keys) as environment variables.
 
     ```sh
     export SCORECARD_API_KEY="your_scorecard_api_key"
@@ -405,17 +405,19 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
           system=lambda input: run_system(input)
       )
 
-      print(f'Go to {run["url"]} and click "Run Scoring" to grade your Run.')
+      print(f'Go to {run["url"]} and view your results.')
       ```
 
       ```js JavaScript
+      import { runAndEvaluate } from 'scorecard-ai/lib/runAndEvaluate'
+      
       const run = await runAndEvaluate(scorecard, {
           projectId: PROJECT_ID,
           testsetId: TESTSET_ID,
           metricIds: METRIC_IDS,
           system: runSystem,
       });
-      console.log(`Go to ${run.url} and click "Run Scoring" to grade your Run.`);
+      console.log(`Go to ${run.url} and view your results.`);
       ```
 
       ```go Go
@@ -477,14 +479,10 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
         },
       )
 
-      runUrl := fmt.Sprintf("https://app.getscorecard.ai/projects/%s/runs/grades/%s", PROJECT_ID, run.ID)
-      fmt.Printf("Go to %s and click 'Run Scoring' to score your system.\n", runUrl)
+      runUrl := fmt.Sprintf("https://app.scorecard.io/projects/%s/runs/grades/%s", PROJECT_ID, run.ID)
+      fmt.Printf("Go to %s and view your results.\n", runUrl)
       ```
     </CodeGroup>
-  </Step>
-
-  <Step title="Run scoring">
-    Click the link in the output above, or find the Run in the Scorecard UI. On the Run page, click the "Run Scoring" button to score your system using the Metric you created.
   </Step>
 
   <Step title="Analyze results">
