@@ -1,0 +1,84 @@
+---
+title: "Systems: Beyond Simple Prompts"
+description: "Evaluate a simple LLM system with Scorecard in minutes."
+---
+
+_[→ Jump to code example](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-jokebot)_
+
+## You Already Know Prompts
+
+If you've used ChatGPT or any AI tool, you've written prompts:
+
+```
+"Write a joke about programming"
+```
+
+And when you want to improve results, you tweak the prompt:
+
+```
+"Write a FUNNY joke about programming, make it witty not cheesy"
+```
+
+## But Real AI Applications Are More Complex
+
+In production, your AI might:
+
+- Use multiple prompts working together
+- Call different models for different tasks
+- Adjust temperature, max tokens, and other parameters
+- Process inputs through several steps
+- Depend on context, rules, and configurations
+
+Suddenly you're not managing one prompt—you're juggling an entire system of interconnected pieces.
+
+## Enter: Systems
+
+A System captures **all the moving parts** that affect your AI's behavior:
+
+- Your prompts (yes, plural!)
+- Model selection and parameters
+- Processing steps and logic
+- Any configuration that changes the output
+
+Instead of tracking these pieces separately, a System bundles them into one testable unit.
+
+## A Simple Example
+
+Even a basic joke bot has multiple variables:
+
+```
+SYSTEM: Joke Bot
+
+Inputs:
+└── topic: "programming"
+
+Configurations:
+├── Model: "gpt-3.5" or "gpt-4"
+├── Style: "dad-joke" or "witty"
+├── Temperature: 0.5 to 1.0
+└── (and any other settings that matter)
+
+Output:
+└── joke: "Why do programmers prefer dark mode?..."
+```
+
+Change any configuration, and you get different results. Systems let you test these variations systematically instead of guessing.
+
+## Why This Matters
+
+- **Everything in one place**: No more scattered prompts and configs
+- **Test combinations**: See how different settings work together
+- **Track what works**: Know exactly which configuration is in production
+- **Scale confidently**: From single prompts to multi-step workflows
+
+## Your Turn: Build a Joke Bot in 5 Minutes
+
+The best way to understand Systems is to build one. We've created a simple example that shows the concept in action:
+
+**[→ Try the Joke Bot Quickstart](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-jokebot)**
+
+In just 5 minutes, you'll see how even a simple AI task benefits from thinking in Systems rather than individual prompts.
+
+---
+
+_Ready to level up from copy-pasting prompts? Systems are how teams build AI that's reliable, testable, and scalable. Start small with the Joke Bot—the concepts will click immediately._
