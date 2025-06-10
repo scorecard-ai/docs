@@ -161,7 +161,7 @@
             "pages": [
               "api-reference/create-testset",
               "api-reference/list-testsets-in-project",
-              "api-reference/get-testset-by-id",
+              "api-reference/get-testset",
               "api-reference/update-testset",
               "api-reference/delete-testset"
             ]
@@ -175,6 +175,10 @@
               "api-reference/update-testcase",
               "api-reference/delete-multiple-testcases"
             ]
+          },
+          {
+            "group": "Metrics",
+            "pages": ["api-reference/create-metric"]
           },
           {
             "group": "Runs",
@@ -199,11 +203,11 @@
             ]
           },
           {
-            "group": "System configurations",
+            "group": "System versions",
             "pages": [
-              "api-reference/create-system-configuration",
-              "api-reference/get-system-configurations",
-              "api-reference/get-system-configuration-by-id"
+              "api-reference/create-system-version",
+              "api-reference/list-system-versions",
+              "api-reference/get-system-version"
             ]
           }
         ]
