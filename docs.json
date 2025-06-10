@@ -25,7 +25,7 @@
     "primary": {
       "type": "button",
       "label": "Sign In",
-      "href": "https://app.getscorecard.ai/"
+      "href": "https://app.scorecard.io/"
     }
   },
   "footer": {
@@ -89,6 +89,7 @@
             "pages": [
               "intro/overview",
               "intro/quickstart",
+              "intro/systems",
               "intro/what-is-scorecard",
               "intro/the-llm-developers-journey",
               "intro/technical-system-overview"
@@ -98,6 +99,7 @@
             "group": "Features",
             "pages": [
               "features/projects",
+              "features/playground",
               "features/prompt-management",
               "features/tracing",
               "features/privacy-by-design",
@@ -176,10 +178,7 @@
           },
           {
             "group": "Runs",
-            "pages": [
-              "api-reference/create-run",
-              "api-reference/update-run-status"
-            ]
+            "pages": ["api-reference/create-run"]
           },
           {
             "group": "Records",

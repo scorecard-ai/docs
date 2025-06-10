@@ -4,13 +4,13 @@ description: "Evaluate a simple LLM system with Scorecard in minutes."
 mode: "center"
 ---
 
-Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](https://www.npmjs.com/package/scorecard-ai), and [Go](https://github.com/scorecard-ai/scorecard-go) SDKs. If you're using Python, you can follow along in [Google Colab](https://colab.research.google.com/drive/1A53j48o75Decrjz7WzDVP62XeDEKCHHP).
+Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](https://www.npmjs.com/package/scorecard-ai) SDKs. If you're using Python, you can follow along in [Google Colab](https://colab.research.google.com/drive/1A53j48o75Decrjz7WzDVP62XeDEKCHHP).
 
 ## Steps
 
 <Steps>
   <Step title="Setup accounts">
-    Create a [Scorecard account](https://app.getscorecard.ai/dashboard) and an [OpenAI account](https://platform.openai.com), then set your [Scorecard API key](https://app.getscorecard.ai/settings) and [OpenAI API key](https://platform.openai.com/api-keys) as environment variables.
+    Create a [Scorecard account](https://app.scorecard.io/dashboard) and an [OpenAI account](https://platform.openai.com), then set your [Scorecard API key](https://app.scorecard.io/settings) and [OpenAI API key](https://platform.openai.com/api-keys) as environment variables.
 
     ```sh
     export SCORECARD_API_KEY="your_scorecard_api_key"
@@ -22,19 +22,14 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
     Install the Scorecard and OpenAI libraries:
 
     <CodeGroup>
-      ```sh Python (pip install)
+      ```sh Python (pip)
       pip install --pre scorecard-ai
       pip install openai
       ```
 
-      ```sh JavaScript (npm install)
+      ```sh JavaScript (npm)
       npm install scorecard-ai@alpha
       npm install openai
-      ```
-
-      ```sh Go (go get)
-      go get github.com/scorecard-ai/scorecard-go
-      go get github.com/openai/openai-go
       ```
     </CodeGroup>
   </Step>
@@ -87,44 +82,6 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
         };
       }
       ```
-
-      ```go Go
-      import (
-        "context"
-        "fmt"
-        "github.com/openai/openai-go"
-        openaiResponses "github.com/openai/openai-go/responses"
-      )
-
-      type SystemInput struct {
-        tone     string
-        original string
-      }
-
-      type SystemOutput struct {
-        rewritten string
-      }
-
-      // Example:
-      // runSystem(SystemInput{original: "Hello, world!", tone: "formal",})
-      // -> SystemOutput{rewritten: "Greetings, world.",}
-      func runSystem(systemInput SystemInput) (SystemOutput, error) {
-        // By default, the API key is taken from the environment variable.
-        openaiClient := openai.NewClient()
-
-        response, err := openaiClient.Responses.New(context.TODO(), openaiResponses.ResponseNewParams{
-          Model:        openai.ChatModelGPT4oMini,
-          Instructions: openai.String("You are a tone translator. Convert the user's message to the tone: " + systemInput.tone),
-          Input:        openaiResponses.ResponseNewParamsInputUnion{OfString: openai.String(systemInput.original)},
-        })
-        if err != nil {
-          return SystemOutput{}, err
-        }
-        return SystemOutput{
-          rewritten: response.OutputText(),
-        }, nil
-      }
-      ```
     </CodeGroup>
   </Step>
 
@@ -143,15 +100,6 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
       // By default, the API key is taken from the environment variable.
       const scorecard = new Scorecard();
       ```
-
-      ```go Go
-      import (
-        "github.com/scorecard-ai/scorecard-go"
-      )
-
-      // By default, the API key is taken from the environment variable.
-    	client := scorecard.NewClient()
-      ```
     </CodeGroup>
   </Step>
   
@@ -166,203 +114,61 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
       ```js JavaScript
       const PROJECT_ID = "310"; // Replace with your Project ID
       ```
-
-      ```go Go
-      const PROJECT_ID = "310" // Replace with your Project ID
-      ```
     </CodeGroup>
   </Step>
   
   <Step title="Create Testset with Testcases">
-    Create a Testset in the Project and add some Testcases. A Testset is a collection of Testcases used to evaluate the performance of an LLM system. A Testcase is a single input and ideal output pair that is used for scoring. Copy the Testset ID for later.
-
-    Run this code to create a Testset with a schema matching our tone translator app.
+    Create some testcases to represent the inputs to your system and the ideal (`expected`) outputs.
 
     <CodeGroup>
-      ```py Python [expandable]
-      # Create a Testset with a schema matching our use case
-      testset = scorecard.testsets.create(
-          project_id=PROJECT_ID,
-          name="Tone rewriter testset",
-          description="Testcases about rewriting messages in a different tone.",
-          field_mapping={
-              # Inputs represent the input to the system.
-              "inputs": ["original", "tone"],
-              # Labels represent the expected output of the system.
-              "labels": ["idealRewritten"],
-              # Metadata fields are used for grouping Testcases, but not seen by the system.
-              "metadata": [],
+      ```py Python
+      testcases = [
+          {
+              # `inputs` gets passed to the system.
+              "inputs": {
+                  "original": "We need your feedback on the new designs ASAP.",
+                  "tone": "polite",
+              },
+              # `expected` is the ideal output of the system used by the LLM-as-a-judge to evaluate the system.
+              "expected": {
+                  "idealRewritten": "Hi, your feedback is crucial to the success of the new designs. Please share your thoughts as soon as possible.",
+              },
           },
-          json_schema={
-              "type": "object",
-              "properties": {
-                  # The original message.
-                  "original": {"type": "string"},
-                  # The tone that the message should be rewritten in.
-                  "tone": {"type": "string"},
-                  # The ideal AI-generated rewritten message.
-                  "idealRewritten": {"type": "string"},
+          {
+              "inputs": {
+                  "original": "I'll be late to the office because my cat is sleeping on my keyboard.",
+                  "tone": "funny",
               },
-              "required": ["original", "tone", "idealRewritten"],
+              "expected": {
+                  "idealRewritten": "Hey team! My cat's napping on my keyboard and I'm just waiting for her to give me permission to leave. I'll be a bit late!",
+              },
           },
-      )
-
-      # Add Testcases matching the Testset's schema to the Testset
-      scorecard.testcases.create(
-          testset_id=testset.id,
-          items=[
-              {
-                  "json_data": {
-                      "original": "We need your feedback on the new designs ASAP.",
-                      "tone": "polite",
-                      "idealRewritten": "Hi, your feedback is crucial to the success of the new designs. Please share your thoughts as soon as possible.",
-                  },
-              },
-              {
-                  "json_data": {
-                      "original": "I'll be late to the office because my cat is sleeping on my keyboard.",
-                      "tone": "funny",
-                      "idealRewritten": "Hey team! My cat's napping on my keyboard and I'm just waiting for her to give me permission to leave. I'll be a bit late!",
-                  },
-              },
-              {
-                  "json_data": {
-                      "original": "Schedule a meeting to discuss this project.",
-                      "tone": "casual",
-                      "idealRewritten": "Let's find a time to chat about the project. Coffee or boba?",
-                  },
-              },
-          ],
-      )
-
-      TESTSET_ID = testset.id
+      ]
       ```
 
-      ```js JavaScript [expandable]
-      // Create a Testset with a schema matching our use case
-      const testset = await scorecard.testsets.create(PROJECT_ID, {
-        name: "Tone rewriter testset",
-        description: "Testcases about rewriting messages in a different tone.",
-        fieldMapping: {
-          // Inputs represent the input to the system.
-          inputs: ["original", "tone"],
-          // Labels represent the expected output of the system.
-          labels: ["idealRewritten"],
-          // Metadata fields are used for grouping Testcases, but not seen by the system.
-          metadata: [],
-        },
-        jsonSchema: {
-          type: "object",
-          properties: {
-            original: { type: "string" },
-            tone: { type: "string" },
-            idealRewritten: { type: "string" },
+      ```js JavaScript
+      const testcases = [
+        {
+          // `inputs` gets passed to the system.
+          inputs: {
+            original: 'We need your feedback on the new designs ASAP.',
+            tone: 'polite',
           },
-          required: ["original", "tone", "idealRewritten"],
-        },
-      });
-
-      // Add Testcases matching the Testset's schema
-      await scorecard.testcases.create(testset.id, {
-        items: [
-          {
-            jsonData: {
-              original: 'We need your feedback on the new designs ASAP.',
-              tone: 'polite',
-              idealRewritten:
-                'Hi, your feedback is crucial to the success of the new designs. Please share your thoughts as soon as possible.',
-            },
-          },
-          {
-            jsonData: {
-              original: "I'll be late to the office because my cat is sleeping on my keyboard.",
-              tone: 'funny',
-              idealRewritten:
-                "Hey team! My cat's napping on my keyboard and I'm just waiting for her to give me permission to leave. I'll be a bit late!",
-            },
-          },
-          {
-            jsonData: {
-              original: "Schedule a meeting to discuss this project.",
-              tone: 'casual',
-              idealRewritten:
-                "Let's find a time to chat about the project. Coffee or boba?",
-            },
-          },
-        ],
-      });
-
-      const TESTSET_ID = testset.id;
-      ```
-
-      ```go Go [expandable]
-      testset, err := scorecardClient.Testsets.New(
-        context.TODO(),
-        PROJECT_ID,
-        scorecard.TestsetNewParams{
-          Name:        "Tone rewriter testset",
-          Description: "Testcases about rewriting messages in a different tone.",
-          FieldMapping: scorecard.TestsetNewParamsFieldMapping{
-            Inputs:   []string{"original", "tone"},
-            Labels:   []string{"idealRewritten"},
-            Metadata: []string{},
-          },
-          JsonSchema: map[string]any{
-            "type": "object",
-            "properties": map[string]interface{}{
-              "original": map[string]interface{}{
-                "type": "string",
-              },
-              "tone": map[string]interface{}{
-                "type": "string",
-              },
-              "idealRewritten": map[string]interface{}{
-                "type": "string",
-              },
-            },
-            "required": []string{"original", "tone", "idealRewritten"},
-          },
-        })
-      
-      if err != nil {
-        panic(err.Error())
-      }
-
-      _, err = scorecardClient.Testcases.New(
-        context.TODO(),
-        testset.ID,
-        scorecard.TestcaseNewParams{
-          Items: []scorecard.TestcaseNewParamsItem{
-            {
-              JsonData: map[string]any{
-                "original":       "We need your feedback on the new designs ASAP.",
-                "tone":           "polite",
-                "idealRewritten": "Hi, your feedback is crucial to the success of the new designs. Please share your thoughts as soon as possible.",
-              },
-            },
-            {
-              JsonData: map[string]any{
-                "original":       "I'll be late to the office because my cat is sleeping on my keyboard.",
-                "tone":           "funny",
-                "idealRewritten": "Hey team! My cat's napping on my keyboard and I'm just waiting for her to give me permission to leave. I'll be a bit late!",
-              },
-            },
-            {
-              JsonData: map[string]any{
-                "original":       "Schedule a meeting to discuss this project.",
-                "tone":           "casual",
-                "idealRewritten": "Let's find a time to chat about the project. Coffee or boba?",
-              },
-            },
+          // `expected` is the ideal output of the system used by the LLM-as-a-judge to evaluate the system.
+          expected: {
+            idealRewritten: 'Hi! your feedback is crucial to the success of the new designs. Please share your thoughts as soon as possible.',
           },
         },
-      )
-
-      if err != nil {
-        panic(err.Error())
-      }
-
-      TESTSET_ID := testset.ID
+        {
+          inputs: {
+            original: "I'll be late to the office because my cat is sleeping on my keyboard.",
+            tone: 'funny',
+          },
+          expected: {
+            idealRewritten: "Hey team! My cat's napping on my keyboard and I'm just waiting for her to give me permission to leave. I'll be a bit late!",
+          },
+        },
+      ];
       ```
     </CodeGroup>
   </Step>
@@ -383,15 +189,11 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
       ```js JavaScript
       const METRIC_IDS = ["987"]; // Replace with your Metric ID
       ```
-
-      ```go Go
-      METRIC_IDS := []string{"987"} // Replace with your Metric ID
-      ```
     </CodeGroup>
   </Step>
 
   <Step title="Evaluate system">
-    Run the system against the Testset and Metrics you've created and record the results in Scorecard.
+    Run the system against the Metrics you've created and record the results in Scorecard.
 
     <CodeGroup>
       ```py Python
@@ -400,91 +202,26 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai), [JavaScript](http
       run = run_and_evaluate(
           client=scorecard,
           project_id=PROJECT_ID,
-          testset_id=TESTSET_ID,
           metric_ids=METRIC_IDS,
-          system=lambda input: run_system(input)
+          system=lambda input: run_system(input),
+          testcases=testcases,
       )
 
-      print(f'Go to {run["url"]} and click "Run Scoring" to grade your Run.')
+      print(f'Go to {run["url"]} and view your results.')
       ```
 
       ```js JavaScript
-      const run = await runAndEvaluate(scorecard, {
-          projectId: PROJECT_ID,
-          testsetId: TESTSET_ID,
-          metricIds: METRIC_IDS,
-          system: runSystem,
-      });
-      console.log(`Go to ${run.url} and click "Run Scoring" to grade your Run.`);
-      ```
-
-      ```go Go
-      run, err := scorecardClient.Runs.New(
-        context.TODO(),
-        PROJECT_ID,
-        scorecard.RunNewParams{
-          TestsetID: TESTSET_ID,
-          MetricIDs: METRIC_IDS,
-        },
-      )
-
-      if err != nil {
-        panic(err.Error())
-      }
+      import { runAndEvaluate } from 'scorecard-ai';
       
-      // Load the Testcases in the Testset
-      testcasePager := scorecardClient.Testcases.ListAutoPaging(
-        context.TODO(),
-        TESTSET_ID,
-        scorecard.TestcaseListParams{},
-      )
-
-      // Run each Testcase sequentially
-      for testcasePager.Next() {
-        testcase := testcasePager.Current()
-        modelResponse, err := runSystem(SystemInput{
-          tone:     testcase.Inputs["tone"].(string),
-          original: testcase.Inputs["original"].(string),
-        })
-
-        if err != nil {
-          panic(err.Error())
-        }
-
-        // Record the result of running the Testcase
-        _, err = scorecardClient.Records.New(
-          context.TODO(),
-          run.ID,
-          scorecard.RecordNewParams{
-            TestcaseID: scorecard.String(testcase.ID),
-            Inputs:     testcase.Inputs,
-            Outputs:    map[string]any{"rewritten": modelResponse.rewritten},
-            Labels:     testcase.Labels,
-          },
-        )
-
-        if err != nil {
-          panic(err.Error())
-        }
-      }
-
-      // Mark the Run as done with execution and ready for scoring
-      scorecardClient.Runs.Update(
-        context.TODO(),
-        run.ID,
-        scorecard.RunUpdateParams{
-          Status: scorecard.RunUpdateParamsStatus(scorecard.RunStatusAwaitingScoring),
-        },
-      )
-
-      runUrl := fmt.Sprintf("https://app.getscorecard.ai/projects/%s/runs/grades/%s", PROJECT_ID, run.ID)
-      fmt.Printf("Go to %s and click 'Run Scoring' to score your system.\n", runUrl)
+      const run = await runAndEvaluate(scorecard, {
+        projectId: PROJECT_ID,
+        metricIds: METRIC_IDS,
+        system: runSystem,
+        testcases: testcases,
+      });
+      console.log(`Go to ${run.url} and view your results.`);
       ```
     </CodeGroup>
-  </Step>
-
-  <Step title="Run scoring">
-    Click the link in the output above, or find the Run in the Scorecard UI. On the Run page, click the "Run Scoring" button to score your system using the Metric you created.
   </Step>
 
   <Step title="Analyze results">

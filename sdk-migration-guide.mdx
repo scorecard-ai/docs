@@ -157,8 +157,8 @@ testset = client.testsets.create(
     field_mapping={
         # Inputs represent the input to the AI system.
         "inputs": ["userQuery"],
-        # Labels represent the expected output of the AI system.
-        "labels": ["ideal"],
+        # Expected represent the expected output of the AI system.
+        "expected": ["ideal"],
         # Metadata fields are used for grouping Testcases, but not seen by the AI system.
         "metadata": [],
     },
@@ -182,8 +182,8 @@ const testset = await scorecard.testsets.create("1234", {
   fieldMapping: {
     // Inputs are fields that represent the input to the AI system.
     inputs: ['userQuery'],
-    // Labels are fields represent the expected output of the AI system.
-    labels: ['ideal'],
+    // Expected are fields represent the expected output of the AI system.
+    expected: ['ideal'],
     // Metadata fields are used for grouping Testcases, but not seen by the AI system.
     metadata: [],
   },
