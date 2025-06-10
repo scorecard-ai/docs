@@ -477,7 +477,7 @@ paths:
   /testsets/{testsetId}:
     get:
       operationId: getTestset
-      summary: Get Testset by ID
+      summary: Get Testset
       parameters:
         - in: path
           name: testsetId
@@ -1361,6 +1361,342 @@ paths:
                 ids=["123", "124", "125"],
             )
             print(testcase.success)
+  /projects/{projectId}/metrics:
+    post:
+      operationId: createMetric
+      summary: Create Metric
+      description: Create a new Metric for evaluating system outputs.
+      parameters:
+        - in: path
+          name: projectId
+          description: The ID of the Project to create the Metric in.
+          schema:
+            type: string
+            example: "314"
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: ai
+                      description: AI-based evaluation type.
+                    guidelines:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: Guidelines for AI evaluation on how to score the metric.
+                    promptTemplate:
+                      type: string
+                      description: >-
+                        The complete prompt template for AI evaluation. Should include placeholders for
+                        dynamic content.
+                    modelName:
+                      type: string
+                      default: gpt-4o
+                      description: The AI model to use for evaluation.
+                    temperature:
+                      type: number
+                      minimum: 0
+                      maximum: 2
+                      default: 0
+                      description: The temperature for AI evaluation (0-2).
+                    outputType:
+                      type: string
+                      const: int
+                    passingThreshold:
+                      type: integer
+                      minimum: 1
+                      maximum: 5
+                      default: 4
+                      description: The threshold for determining pass/fail from integer scores (1-5).
+                  required:
+                    - name
+                    - evalType
+                    - promptTemplate
+                    - outputType
+                  description: A Metric with AI evaluation and integer output.
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: human
+                      description: Human-based evaluation type.
+                    guidelines:
+                      type: string
+                      description: Guidelines for human evaluators.
+                    outputType:
+                      type: string
+                      const: int
+                    passingThreshold:
+                      type: integer
+                      minimum: 1
+                      maximum: 5
+                      default: 4
+                      description: The threshold for determining pass/fail from integer scores (1-5).
+                  required:
+                    - name
+                    - evalType
+                    - outputType
+                  description: A Metric with human evaluation and integer output.
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: heuristic
+                      description: Heuristic-based evaluation type.
+                    guidelines:
+                      type: string
+                      description: Optional guidelines for heuristic evaluation logic.
+                    outputType:
+                      type: string
+                      const: int
+                    passingThreshold:
+                      type: integer
+                      minimum: 1
+                      maximum: 5
+                      default: 4
+                      description: The threshold for determining pass/fail from integer scores (1-5).
+                  required:
+                    - name
+                    - evalType
+                    - outputType
+                  description: A Metric with heuristic evaluation and integer output.
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: ai
+                      description: AI-based evaluation type.
+                    guidelines:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: Guidelines for AI evaluation on how to score the metric.
+                    promptTemplate:
+                      type: string
+                      description: >-
+                        The complete prompt template for AI evaluation. Should include placeholders for
+                        dynamic content.
+                    modelName:
+                      type: string
+                      default: gpt-4o
+                      description: The AI model to use for evaluation.
+                    temperature:
+                      type: number
+                      minimum: 0
+                      maximum: 2
+                      default: 0
+                      description: The temperature for AI evaluation (0-2).
+                    outputType:
+                      type: string
+                      const: boolean
+                  required:
+                    - name
+                    - evalType
+                    - promptTemplate
+                    - outputType
+                  description: A Metric with AI evaluation and boolean output.
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: human
+                      description: Human-based evaluation type.
+                    guidelines:
+                      type: string
+                      description: Guidelines for human evaluators.
+                    outputType:
+                      type: string
+                      const: boolean
+                  required:
+                    - name
+                    - evalType
+                    - outputType
+                  description: A Metric with human evaluation and boolean output.
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: heuristic
+                      description: Heuristic-based evaluation type.
+                    guidelines:
+                      type: string
+                      description: Optional guidelines for heuristic evaluation logic.
+                    outputType:
+                      type: string
+                      const: boolean
+                  required:
+                    - name
+                    - evalType
+                    - outputType
+                  description: A Metric with heuristic evaluation and boolean output.
+            examples:
+              Create AI Metric:
+                value:
+                  name: Response Accuracy
+                  description: Evaluates if the response is factually accurate
+                  outputType: boolean
+                  evalType: ai
+                  guidelines: Check if the response contains factually correct information
+                  promptTemplate: "Please evaluate if the following response is factually accurate: {{outputs.response}}"
+                  modelName: gpt-4o
+                  temperature: 0.1
+                summary: Created AI Metric
+                description: Response after successfully creating an AI metric.
+              Create Human Metric:
+                value:
+                  name: Response Quality
+                  description: Human evaluation of response quality
+                  outputType: int
+                  evalType: human
+                  guidelines: Rate the quality of the response on a scale of 1-5
+                  passingThreshold: 3
+                summary: Create Human Metric
+                description: Request to create a human-evaluated metric with integer scoring.
+              Create Heuristic Metric:
+                value:
+                  name: Response Length
+                  description: Checks if response meets length requirements
+                  outputType: boolean
+                  evalType: heuristic
+                  guidelines: Response should be between 50-200 characters
+                summary: Create Heuristic Metric
+                description: Request to create a rule-based metric that uses algorithmic validation.
+              Create Simple Heuristic Metric:
+                value:
+                  name: Non-Empty Response
+                  description: Checks if response is not empty
+                  outputType: boolean
+                  evalType: heuristic
+                summary: Create Simple Heuristic Metric
+                description: Request to create a simple heuristic metric without guidelines.
+      responses:
+        "201":
+          description: Metric created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Metric"
+              examples:
+                Created AI Metric:
+                  value:
+                    id: "456"
+                    name: Response Accuracy
+                    description: Evaluates if the response is factually accurate
+                    outputType: boolean
+                    evalType: ai
+                    guidelines: Check if the response contains factually correct information
+                    promptTemplate: "Please evaluate if the following response is factually accurate: {{response}}"
+                    modelName: gpt-4o
+                    temperature: 0.1
+                  summary: Created AI Metric
+                  description: Response after successfully creating an AI metric.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+            });
+
+            const metric = await client.metrics.create('314', {
+              evalType: 'ai',
+              name: 'Response Accuracy',
+              outputType: 'boolean',
+              promptTemplate: 'Please evaluate if the following response is factually accurate: {{outputs.response}}',
+              description: 'Evaluates if the response is factually accurate',
+              guidelines: 'Check if the response contains factually correct information',
+              modelName: 'gpt-4o',
+              temperature: 0.1,
+            });
+
+            console.log(metric);
+        - lang: Python
+          source: |-
+            import os
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+            )
+            metric = client.metrics.create(
+                project_id="314",
+                eval_type="ai",
+                name="Response Accuracy",
+                output_type="boolean",
+                prompt_template="Please evaluate if the following response is factually accurate: {{outputs.response}}",
+                description="Evaluates if the response is factually accurate",
+                guidelines="Check if the response contains factually correct information",
+                model_name="gpt-4o",
+                temperature=0.1,
+            )
+            print(metric)
   /projects/{projectId}/runs:
     post:
       operationId: createRun
@@ -1386,10 +1722,10 @@ paths:
                     - "null"
                   default: null
                   description: The ID of the Testset this Run is testing.
-                systemConfigId:
+                systemVersionId:
                   type: string
                   format: uuid
-                  description: The ID of the system configuration this Run is using.
+                  description: The ID of the system version this Run is using.
                 metricIds:
                   type: array
                   items:
@@ -1401,7 +1737,7 @@ paths:
               Create Run with a Testset:
                 value:
                   testsetId: "246"
-                  systemConfigId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                  systemVersionId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
                   metricIds:
                     - "789"
                     - "101"
@@ -1409,7 +1745,7 @@ paths:
                 description: Request to create a Run with a Testset and metrics.
               Create Run without a Testset:
                 value:
-                  systemConfigId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                  systemVersionId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
                   metricIds:
                     - "789"
                 summary: Create Run without a Testset
@@ -1455,7 +1791,7 @@ paths:
 
             const run = await client.runs.create('314', {
               metricIds: ['789', '101'],
-              systemConfigId: '87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0',
+              systemVersionId: '87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0',
               testsetId: '246',
             });
 
@@ -1471,7 +1807,7 @@ paths:
             run = client.runs.create(
                 project_id="314",
                 metric_ids=["789", "101"],
-                system_config_id="87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0",
+                system_version_id="87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0",
                 testset_id="246",
             )
             print(run.id)
@@ -2363,7 +2699,7 @@ paths:
     delete:
       operationId: deleteSystem
       summary: Delete system
-      description: Delete a system definition by ID. This will not delete associated system configurations.
+      description: Delete a system definition by ID. This will not delete associated system versions.
       parameters:
         - in: path
           name: systemId
@@ -2422,18 +2758,18 @@ paths:
             print(system.success)
   /systems/{systemId}/configs:
     get:
-      operationId: listSystemConfigs
-      summary: Get system configurations
+      operationId: listSystemVersions
+      summary: List system versions
       description: >-
-        Retrieve a paginated list of configurations for a specific system.
+        Retrieve a paginated list of system versions for a specific system.
 
 
-        System configurations provide concrete parameter values for a System Under Test, defining exactly how
-        the system should be configured during an evaluation run.
+        System versions provide concrete parameter values for a System Under Test, defining exactly how the
+        system should be configured during an evaluation run.
       parameters:
         - in: path
           name: systemId
-          description: The ID of the system to list configurations for.
+          description: The ID of the system to list system versions for.
           schema:
             type: string
             format: uuid
@@ -2457,7 +2793,7 @@ paths:
             example: eyJvZmZzZXQiOjAsInBhZ2VJZCI6ImNvZGUifQ
       responses:
         "200":
-          description: Successfully retrieved list of system configurations.
+          description: Successfully retrieved list of system versions.
           content:
             application/json:
               schema:
@@ -2466,7 +2802,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/SystemConfig"
+                      $ref: "#/components/schemas/SystemVersion"
                   nextCursor:
                     type:
                       - string
@@ -2481,7 +2817,7 @@ paths:
                   - nextCursor
                   - hasMore
               examples:
-                System configurations list:
+                System versions list:
                   value:
                     data:
                       - id: 5fa85f64-5717-4562-b3fc-2c963f66afa7
@@ -2518,10 +2854,10 @@ paths:
                             message: Expected number, received string
                     nextCursor: 7fa85f64-5717-4562-b3fc-2c963f66afaa
                     hasMore: false
-                  summary: System configurations list
+                  summary: System versions list
                   description: >-
-                    Example response showing a list of configurations for a chatbot system, including
-                    production, experimental, and invalid configurations with validation errors.
+                    Example response showing a list of versions for a chatbot system, including production,
+                    experimental, and invalid versions with validation errors.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -2539,9 +2875,9 @@ paths:
 
             // Automatically fetches more pages as needed.
 
-            for await (const systemConfig of
-            client.systemConfigs.list('12345678-0a8b-4f66-b6f3-2ddcfa097257')) {
-              console.log(systemConfig.id);
+            for await (const systemVersion of
+            client.systems.versions.list('12345678-0a8b-4f66-b6f3-2ddcfa097257')) {
+              console.log(systemVersion.id);
             }
         - lang: Python
           source: |-
@@ -2551,37 +2887,37 @@ paths:
             client = Scorecard(
                 api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
-            page = client.system_configs.list(
+            page = client.systems.versions.list(
                 system_id="12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             page = page.data[0]
             print(page.id)
     post:
-      operationId: createSystemConfig
-      summary: Create system configuration
+      operationId: createSystemVersion
+      summary: Create system version
       description: >-
-        Create a new configuration for a system.
+        Create a new version for a system.
 
 
-        Each configuration contains specific parameter values that match the system's configSchema - things
-        like model parameters, thresholds, or processing options.
+        Each version contains specific parameter values that match the system's `configSchema` - things like
+        model parameters, thresholds, or processing options.
 
-        Once created, configurations cannot be modified, ensuring stable reference points for evaluations.
+        Once created, versions cannot be modified, ensuring stable reference points for evaluations.
 
 
-        When creating a configuration:
+        When creating a system version:
 
-        - The 'config' object is validated against the parent system's configSchema
+        - The `config` object is validated against the parent system's `configSchema`.
 
-        - Configurations with validation errors are still stored, with errors included in the response
+        - System versions with validation errors are still stored, with errors included in the response.
 
-        - Validation errors indicate fields that don't match the schema but don't prevent creation
+        - Validation errors indicate fields that don't match the schema but don't prevent creation.
 
-        - Having validation errors may affect how some evaluation metrics are calculated
+        - Having validation errors may affect how some evaluation metrics are calculated.
       parameters:
         - in: path
           name: systemId
-          description: The ID of the system to create the configuration for.
+          description: The ID of the system to create the system version for.
           schema:
             type: string
             format: uuid
@@ -2595,46 +2931,27 @@ paths:
               properties:
                 name:
                   type: string
-                  description: The name of the system configuration.
+                  description: The name of the system version.
                 config:
                   type: object
                   additionalProperties: true
-                  description: The configuration of the system.
-                validationErrors:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      path:
-                        type: string
-                        description: JSON Pointer to the field with the validation error.
-                        example: /data/question
-                      message:
-                        type: string
-                        description: Human-readable error description.
-                        example: Required field missing
-                    required:
-                      - path
-                      - message
-                  description: >-
-                    Validation errors found in the configuration. If present, the configuration doesn't fully
-                    conform to its system's configSchema.
+                  description: The configuration of the system version.
               required:
                 - name
                 - config
             examples:
-              Create chatbot configuration:
+              Create chatbot system version:
                 value:
                   name: Production (Low Temperature)
                   config:
                     temperature: 0.1
                     maxTokens: 1024
                     model: gpt-4-turbo
-                summary: Create chatbot configuration
+                summary: Create chatbot system version
                 description: >-
-                  Create a configuration for the GPT-4 chatbot system with specific parameter values for
+                  Create a system version for the GPT-4 chatbot system with specific parameter values for
                   temperature, token limit, and model version.
-              Create RAG configuration:
+              Create RAG system version:
                 value:
                   name: Production RAG (ada-002 + gpt-4)
                   config:
@@ -2642,30 +2959,31 @@ paths:
                     embeddingModel: text-embedding-ada-002
                     generationModel: gpt-4
                     retrievalTopK: 5
-                summary: Create RAG configuration
+                summary: Create RAG system version
                 description: >-
-                  Create a configuration for the RAG system specifying the vector database endpoint, embedding
-                  model, generation model, and number of documents to retrieve.
-              Create configuration with validation errors:
+                  Create a system version for the RAG system specifying the vector database endpoint,
+                  embedding model, generation model, and number of documents to retrieve.
+              Create system version with validation errors:
                 value:
-                  name: Invalid Config Example
+                  name: Invalid System Version Example
                   config:
                     temperature: "0.7"
                     maxTokens: 1024
                     model: gpt-4-experimental
-                summary: Create configuration with validation errors
+                summary: Create system version with validation errors
                 description: >-
-                  Create a configuration with values that don't strictly conform to the system's configSchema.
-                  The configuration will still be created but will include validation errors in the response.
+                  Create a system version with values that don't strictly conform to the system's
+                  configSchema. The system version will still be created but will include validation errors in
+                  the response.
       responses:
         "201":
-          description: System configuration created successfully
+          description: System version created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SystemConfig"
+                $ref: "#/components/schemas/SystemVersion"
               examples:
-                Created system configuration:
+                Created system version:
                   value:
                     id: 5fa85f64-5717-4562-b3fc-2c963f66afa7
                     systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
@@ -2674,13 +2992,13 @@ paths:
                       temperature: 0.1
                       maxTokens: 1024
                       model: gpt-4-turbo
-                  summary: Created system configuration
-                  description: Response after successfully creating a system configuration with valid parameters.
-                Created configuration with validation errors:
+                  summary: Created system version
+                  description: Response after successfully creating a system version with valid parameters.
+                Created system version with validation errors:
                   value:
                     id: 8fa85f64-5717-4562-b3fc-2c963f66afa9
                     systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
-                    name: Invalid Config Example
+                    name: Invalid System Version Example
                     config:
                       temperature: "0.7"
                       maxTokens: 1024
@@ -2690,29 +3008,33 @@ paths:
                         message: Expected number, received string
                       - path: /config/model
                         message: Invalid enum value. Expected 'gpt-4' | 'gpt-4-turbo'
-                  summary: Created configuration with validation errors
+                  summary: Created system version with validation errors
                   description: >-
-                    Response after creating a system configuration with values that don't strictly conform to
-                    the configSchema. Note the validationErrors array that details each issue.
+                    Response after creating a system version with values that don't strictly conform to the
+                    configSchema. Note the validationErrors array that details each issue.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
           $ref: "#/components/responses/ServiceError"
       x-codeSamples:
         - lang: JavaScript
-          source: |-
+          source: >-
             import Scorecard from 'scorecard-ai';
+
 
             const client = new Scorecard({
               apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
             });
 
-            const systemConfig = await client.systemConfigs.create('12345678-0a8b-4f66-b6f3-2ddcfa097257', {
+
+            const systemVersion = await client.systems.versions.create('12345678-0a8b-4f66-b6f3-2ddcfa097257',
+            {
               config: { temperature: 0.1, maxTokens: 1024, model: 'gpt-4-turbo' },
               name: 'Production (Low Temperature)',
             });
 
-            console.log(systemConfig.id);
+
+            console.log(systemVersion.id);
         - lang: Python
           source: |-
             import os
@@ -2721,7 +3043,7 @@ paths:
             client = Scorecard(
                 api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
-            system_config = client.system_configs.create(
+            system_version = client.systems.versions.create(
                 system_id="12345678-0a8b-4f66-b6f3-2ddcfa097257",
                 config={
                     "temperature": 0.1,
@@ -2730,16 +3052,16 @@ paths:
                 },
                 name="Production (Low Temperature)",
             )
-            print(system_config.id)
-  /systems/configs/{systemConfigId}:
+            print(system_version.id)
+  /systems/configs/{systemVersionId}:
     get:
-      operationId: getSystemConfig
-      summary: Get system configuration by ID
-      description: Retrieve a specific system configuration by ID.
+      operationId: getSystemVersion
+      summary: Get system version
+      description: Retrieve a specific system version by ID.
       parameters:
         - in: path
-          name: systemConfigId
-          description: The ID of the system configuration to retrieve.
+          name: systemVersionId
+          description: The ID of the system version to retrieve.
           schema:
             type: string
             format: uuid
@@ -2747,13 +3069,13 @@ paths:
           required: true
       responses:
         "200":
-          description: Successfully retrieved system configuration.
+          description: Successfully retrieved system version.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SystemConfig"
+                $ref: "#/components/schemas/SystemVersion"
               examples:
-                System configuration details:
+                System version details:
                   value:
                     id: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
                     systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
@@ -2762,13 +3084,13 @@ paths:
                       temperature: 0.1
                       maxTokens: 1024
                       model: gpt-4-turbo
-                  summary: System configuration details
-                  description: Example response showing the complete details of a valid system configuration.
-                System configuration with validation errors:
+                  summary: System version details
+                  description: Example response showing the complete details of a valid system version.
+                System version with validation errors:
                   value:
                     id: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
                     systemId: 12345678-0a8b-4f66-b6f3-2ddcfa097257
-                    name: Invalid Config Example
+                    name: Invalid System Version Example
                     config:
                       temperature: "0.7"
                       maxTokens: 1024
@@ -2778,11 +3100,10 @@ paths:
                         message: Expected number, received string
                       - path: /config/model
                         message: Invalid enum value. Expected 'gpt-4' | 'gpt-4-turbo'
-                  summary: System configuration with validation errors
+                  summary: System version with validation errors
                   description: >-
-                    Example response showing a system configuration with validation errors. The configuration
-                    is still usable, but includes details about fields that don't conform to the system's
-                    schema.
+                    Example response showing a system version with validation errors. The system version is
+                    still usable, but includes details about fields that don't conform to the system's schema.
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -2796,9 +3117,9 @@ paths:
               apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
             });
 
-            const systemConfig = await client.systemConfigs.get('87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0');
+            const systemVersion = await client.systems.versions.get('87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0');
 
-            console.log(systemConfig.id);
+            console.log(systemVersion.id);
         - lang: Python
           source: |-
             import os
@@ -2807,10 +3128,10 @@ paths:
             client = Scorecard(
                 api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
             )
-            system_config = client.system_configs.get(
+            system_version = client.systems.versions.get(
                 "87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0",
             )
-            print(system_config.id)
+            print(system_version.id)
   /records/{recordId}/scores/{metricConfigId}:
     put:
       operationId: upsertScore
@@ -3128,6 +3449,260 @@ components:
 
         Testcases are stored regardless of validation results, with any validation errors included in the
         `validationErrors` field.
+    Metric:
+      anyOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the Metric.
+            name:
+              type: string
+              description: The name of the Metric.
+            description:
+              type:
+                - string
+                - "null"
+              default: null
+              description: The description of the Metric.
+            evalType:
+              type: string
+              const: ai
+              description: AI-based evaluation type.
+            guidelines:
+              type:
+                - string
+                - "null"
+              default: null
+              description: Guidelines for AI evaluation on how to score the metric.
+            promptTemplate:
+              type: string
+              description: >-
+                The complete prompt template for AI evaluation. Should include placeholders for dynamic
+                content.
+            modelName:
+              type: string
+              default: gpt-4o
+              description: The AI model to use for evaluation.
+            temperature:
+              type: number
+              minimum: 0
+              maximum: 2
+              default: 0
+              description: The temperature for AI evaluation (0-2).
+            outputType:
+              type: string
+              const: int
+            passingThreshold:
+              type: integer
+              minimum: 1
+              maximum: 5
+              default: 4
+              description: The threshold for determining pass/fail from integer scores (1-5).
+          required:
+            - id
+            - name
+            - description
+            - evalType
+            - guidelines
+            - promptTemplate
+            - modelName
+            - temperature
+            - outputType
+            - passingThreshold
+          description: A Metric with AI evaluation and integer output.
+        - type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the Metric.
+            name:
+              type: string
+              description: The name of the Metric.
+            description:
+              type:
+                - string
+                - "null"
+              default: null
+              description: The description of the Metric.
+            evalType:
+              type: string
+              const: human
+              description: Human-based evaluation type.
+            guidelines:
+              type: string
+              description: Guidelines for human evaluators.
+            outputType:
+              type: string
+              const: int
+            passingThreshold:
+              type: integer
+              minimum: 1
+              maximum: 5
+              default: 4
+              description: The threshold for determining pass/fail from integer scores (1-5).
+          required:
+            - id
+            - name
+            - description
+            - evalType
+            - outputType
+            - passingThreshold
+          description: A Metric with human evaluation and integer output.
+        - type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the Metric.
+            name:
+              type: string
+              description: The name of the Metric.
+            description:
+              type:
+                - string
+                - "null"
+              default: null
+              description: The description of the Metric.
+            evalType:
+              type: string
+              const: heuristic
+              description: Heuristic-based evaluation type.
+            guidelines:
+              type: string
+              description: Optional guidelines for heuristic evaluation logic.
+            outputType:
+              type: string
+              const: int
+            passingThreshold:
+              type: integer
+              minimum: 1
+              maximum: 5
+              default: 4
+              description: The threshold for determining pass/fail from integer scores (1-5).
+          required:
+            - id
+            - name
+            - description
+            - evalType
+            - outputType
+            - passingThreshold
+          description: A Metric with heuristic evaluation and integer output.
+        - type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the Metric.
+            name:
+              type: string
+              description: The name of the Metric.
+            description:
+              type:
+                - string
+                - "null"
+              default: null
+              description: The description of the Metric.
+            evalType:
+              type: string
+              const: ai
+              description: AI-based evaluation type.
+            guidelines:
+              type:
+                - string
+                - "null"
+              default: null
+              description: Guidelines for AI evaluation on how to score the metric.
+            promptTemplate:
+              type: string
+              description: >-
+                The complete prompt template for AI evaluation. Should include placeholders for dynamic
+                content.
+            modelName:
+              type: string
+              default: gpt-4o
+              description: The AI model to use for evaluation.
+            temperature:
+              type: number
+              minimum: 0
+              maximum: 2
+              default: 0
+              description: The temperature for AI evaluation (0-2).
+            outputType:
+              type: string
+              const: boolean
+          required:
+            - id
+            - name
+            - description
+            - evalType
+            - guidelines
+            - promptTemplate
+            - modelName
+            - temperature
+            - outputType
+          description: A Metric with AI evaluation and boolean output.
+        - type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the Metric.
+            name:
+              type: string
+              description: The name of the Metric.
+            description:
+              type:
+                - string
+                - "null"
+              default: null
+              description: The description of the Metric.
+            evalType:
+              type: string
+              const: human
+              description: Human-based evaluation type.
+            guidelines:
+              type: string
+              description: Guidelines for human evaluators.
+            outputType:
+              type: string
+              const: boolean
+          required:
+            - id
+            - name
+            - description
+            - evalType
+            - outputType
+          description: A Metric with human evaluation and boolean output.
+        - type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the Metric.
+            name:
+              type: string
+              description: The name of the Metric.
+            description:
+              type:
+                - string
+                - "null"
+              default: null
+              description: The description of the Metric.
+            evalType:
+              type: string
+              const: heuristic
+              description: Heuristic-based evaluation type.
+            guidelines:
+              type: string
+              description: Optional guidelines for heuristic evaluation logic.
+            outputType:
+              type: string
+              const: boolean
+          required:
+            - id
+            - name
+            - description
+            - evalType
+            - outputType
+          description: A Metric with heuristic evaluation and boolean output.
+      description: A Metric defines how to evaluate system outputs against expected results.
     Run:
       type: object
       properties:
@@ -3140,10 +3715,10 @@ components:
             - "null"
           default: null
           description: The ID of the Testset this Run is testing.
-        systemConfigId:
+        systemVersionId:
           type: string
           format: uuid
-          description: The ID of the system configuration this Run is using.
+          description: The ID of the system version this Run is using.
         metricIds:
           type: array
           items:
@@ -3241,26 +3816,26 @@ components:
         implementation details. It's particularly useful for systems with variable outputs or complex
         internal state.
 
-        Systems are templates - to run evaluations, pair them with a SystemConfig that provides specific
+        Systems are templates - to run evaluations, pair them with a SystemVersion that provides specific
         parameter values.
-    SystemConfig:
+    SystemVersion:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          description: The ID of the system configuration.
+          description: The ID of the system version.
         systemId:
           type: string
           format: uuid
-          description: The ID of the system the configuration belongs to.
+          description: The ID of the system the system version belongs to.
         name:
           type: string
-          description: The name of the system configuration.
+          description: The name of the system version.
         config:
           type: object
           additionalProperties: true
-          description: The configuration of the system.
+          description: The configuration of the system version.
         validationErrors:
           type: array
           items:
@@ -3278,22 +3853,28 @@ components:
               - path
               - message
           description: >-
-            Validation errors found in the configuration. If present, the configuration doesn't fully conform
-            to its system's configSchema.
+            Validation errors found in the system version. If present, the system version doesn't fully
+            conform to its system's configSchema.
       required:
         - id
         - systemId
         - name
         - config
-      description: |-
-        A SystemConfig defines the specific settings for a System Under Test.
+      description: >-
+        A SystemVersion defines the specific settings for a System Under Test.
 
-        Configurations contain parameter values that determine system behavior during evaluation.
+
+        System versions contain parameter values that determine system behavior during evaluation.
+
         They are immutable snapshots - once created, they never change.
 
-        When running evaluations, you reference a specific configId to establish which configuration to test.
 
-        Configurations will be validated against the system's configSchema, with non-conforming values
+        When running evaluations, you reference a specific systemVersionId to establish which system version
+        to test.
+
+
+        System versions will be validated against the system's configSchema, with non-conforming values
+
         generating warnings.
     Score:
       type: object
