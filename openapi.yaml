@@ -1405,7 +1405,7 @@ paths:
                       description: >-
                         The complete prompt template for AI evaluation. Should include placeholders for
                         dynamic content.
-                    modelName:
+                    evalModelName:
                       type: string
                       default: gpt-4o
                       description: The AI model to use for evaluation.
@@ -1418,6 +1418,7 @@ paths:
                     outputType:
                       type: string
                       const: int
+                      description: Integer output type.
                     passingThreshold:
                       type: integer
                       minimum: 1
@@ -1430,6 +1431,7 @@ paths:
                     - promptTemplate
                     - outputType
                   description: A Metric with AI evaluation and integer output.
+                  title: AI int metric
                 - type: object
                   properties:
                     name:
@@ -1451,6 +1453,7 @@ paths:
                     outputType:
                       type: string
                       const: int
+                      description: Integer output type.
                     passingThreshold:
                       type: integer
                       minimum: 1
@@ -1462,6 +1465,7 @@ paths:
                     - evalType
                     - outputType
                   description: A Metric with human evaluation and integer output.
+                  title: Human int metric
                 - type: object
                   properties:
                     name:
@@ -1483,6 +1487,7 @@ paths:
                     outputType:
                       type: string
                       const: int
+                      description: Integer output type.
                     passingThreshold:
                       type: integer
                       minimum: 1
@@ -1494,6 +1499,7 @@ paths:
                     - evalType
                     - outputType
                   description: A Metric with heuristic evaluation and integer output.
+                  title: Heuristic int metric
                 - type: object
                   properties:
                     name:
@@ -1520,7 +1526,7 @@ paths:
                       description: >-
                         The complete prompt template for AI evaluation. Should include placeholders for
                         dynamic content.
-                    modelName:
+                    evalModelName:
                       type: string
                       default: gpt-4o
                       description: The AI model to use for evaluation.
@@ -1533,12 +1539,14 @@ paths:
                     outputType:
                       type: string
                       const: boolean
+                      description: Boolean output type.
                   required:
                     - name
                     - evalType
                     - promptTemplate
                     - outputType
                   description: A Metric with AI evaluation and boolean output.
+                  title: AI boolean metric
                 - type: object
                   properties:
                     name:
@@ -1560,11 +1568,13 @@ paths:
                     outputType:
                       type: string
                       const: boolean
+                      description: Boolean output type.
                   required:
                     - name
                     - evalType
                     - outputType
                   description: A Metric with human evaluation and boolean output.
+                  title: Human boolean metric
                 - type: object
                   properties:
                     name:
@@ -1586,11 +1596,13 @@ paths:
                     outputType:
                       type: string
                       const: boolean
+                      description: Boolean output type.
                   required:
                     - name
                     - evalType
                     - outputType
                   description: A Metric with heuristic evaluation and boolean output.
+                  title: Heuristic boolean metric
             examples:
               Create AI Metric:
                 value:
@@ -1600,7 +1612,7 @@ paths:
                   evalType: ai
                   guidelines: Check if the response contains factually correct information
                   promptTemplate: "Please evaluate if the following response is factually accurate: {{outputs.response}}"
-                  modelName: gpt-4o
+                  evalModelName: gpt-4o
                   temperature: 0.1
                 summary: Created AI Metric
                 description: Response after successfully creating an AI metric.
@@ -1648,7 +1660,7 @@ paths:
                     evalType: ai
                     guidelines: Check if the response contains factually correct information
                     promptTemplate: "Please evaluate if the following response is factually accurate: {{response}}"
-                    modelName: gpt-4o
+                    evalModelName: gpt-4o
                     temperature: 0.1
                   summary: Created AI Metric
                   description: Response after successfully creating an AI metric.
@@ -1671,8 +1683,8 @@ paths:
               outputType: 'boolean',
               promptTemplate: 'Please evaluate if the following response is factually accurate: {{outputs.response}}',
               description: 'Evaluates if the response is factually accurate',
+              evalModelName: 'gpt-4o',
               guidelines: 'Check if the response contains factually correct information',
-              modelName: 'gpt-4o',
               temperature: 0.1,
             });
 
@@ -1692,8 +1704,8 @@ paths:
                 output_type="boolean",
                 prompt_template="Please evaluate if the following response is factually accurate: {{outputs.response}}",
                 description="Evaluates if the response is factually accurate",
+                eval_model_name="gpt-4o",
                 guidelines="Check if the response contains factually correct information",
-                model_name="gpt-4o",
                 temperature=0.1,
             )
             print(metric)
@@ -3480,7 +3492,7 @@ components:
               description: >-
                 The complete prompt template for AI evaluation. Should include placeholders for dynamic
                 content.
-            modelName:
+            evalModelName:
               type: string
               default: gpt-4o
               description: The AI model to use for evaluation.
@@ -3493,6 +3505,7 @@ components:
             outputType:
               type: string
               const: int
+              description: Integer output type.
             passingThreshold:
               type: integer
               minimum: 1
@@ -3506,11 +3519,12 @@ components:
             - evalType
             - guidelines
             - promptTemplate
-            - modelName
+            - evalModelName
             - temperature
             - outputType
             - passingThreshold
           description: A Metric with AI evaluation and integer output.
+          title: AI int metric
         - type: object
           properties:
             id:
@@ -3535,6 +3549,7 @@ components:
             outputType:
               type: string
               const: int
+              description: Integer output type.
             passingThreshold:
               type: integer
               minimum: 1
@@ -3549,6 +3564,7 @@ components:
             - outputType
             - passingThreshold
           description: A Metric with human evaluation and integer output.
+          title: Human int metric
         - type: object
           properties:
             id:
@@ -3573,6 +3589,7 @@ components:
             outputType:
               type: string
               const: int
+              description: Integer output type.
             passingThreshold:
               type: integer
               minimum: 1
@@ -3587,6 +3604,7 @@ components:
             - outputType
             - passingThreshold
           description: A Metric with heuristic evaluation and integer output.
+          title: Heuristic int metric
         - type: object
           properties:
             id:
@@ -3616,7 +3634,7 @@ components:
               description: >-
                 The complete prompt template for AI evaluation. Should include placeholders for dynamic
                 content.
-            modelName:
+            evalModelName:
               type: string
               default: gpt-4o
               description: The AI model to use for evaluation.
@@ -3629,6 +3647,7 @@ components:
             outputType:
               type: string
               const: boolean
+              description: Boolean output type.
           required:
             - id
             - name
@@ -3636,10 +3655,11 @@ components:
             - evalType
             - guidelines
             - promptTemplate
-            - modelName
+            - evalModelName
             - temperature
             - outputType
           description: A Metric with AI evaluation and boolean output.
+          title: AI boolean metric
         - type: object
           properties:
             id:
@@ -3664,6 +3684,7 @@ components:
             outputType:
               type: string
               const: boolean
+              description: Boolean output type.
           required:
             - id
             - name
@@ -3671,6 +3692,7 @@ components:
             - evalType
             - outputType
           description: A Metric with human evaluation and boolean output.
+          title: Human boolean metric
         - type: object
           properties:
             id:
@@ -3695,6 +3717,7 @@ components:
             outputType:
               type: string
               const: boolean
+              description: Boolean output type.
           required:
             - id
             - name
@@ -3702,6 +3725,7 @@ components:
             - evalType
             - outputType
           description: A Metric with heuristic evaluation and boolean output.
+          title: Heuristic boolean metric
       description: A Metric defines how to evaluate system outputs against expected results.
     Run:
       type: object
