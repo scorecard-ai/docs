@@ -3,6 +3,36 @@ title: "Product Updates"
 description: "New updates and improvements"
 ---
 
+<Update label="June 10, 2025">
+  ### 🚀 SDK v2 Stable Release
+
+  Following our May 30th launch, SDK v2 is now fully stable and battle-tested. The new SDK features simplified APIs with ergonomic helper methods like `runAndEvaluate` (JS/TS) and `run_and_evaluate` (Python), making it easier than ever to integrate evaluations into your workflow.
+
+  We've made the SDK even more flexible - `testset_id` is now optional in our helper methods, allowing you to run evaluations with custom inputs without requiring a pre-defined testset. Additional improvements include:
+
+  - System configurations for experimenting with different model settings
+  - Enhanced error handling and debugging capabilities
+  - Full TypeScript support with comprehensive type definitions
+
+  Available now on [npm](https://www.npmjs.com/package/scorecard-ai) and [PyPI](https://pypi.org/project/scorecard-ai/). Check out our [migration guide](/sdk-migration-guide) to upgrade from v1 - most migrations take less than 15 minutes.
+
+  ### 🎯 Basic and Advanced Metric Modes
+
+  We've introduced a two-mode system for creating and editing metrics, making Scorecard accessible to users at every technical level.
+
+  Basic mode simplifies metric creation by focusing solely on the evaluation guidelines - just describe what you want to measure in plain language without worrying about prompt templates or variables. Advanced mode gives power users full control over the entire prompt template, including variable handling and custom formatting.
+
+  ![Metric editor interface showing Basic and Advanced mode options](/images/metric_.png)
+
+  ### Bug fixes and improvements
+
+  - **[Documentation]** Streamlined quickstart guide for faster onboarding
+  - **[Playground]** More detailed error messages and prominent results table button
+  - **[Runs]** Delete runs directly from the runs list page
+  - **[Runs]** Run status now updates automatically based on scoring progress
+  - **[Platform]** Fixed data invalidation bugs when managing metrics and testcases
+</Update>
+
 <Update label="May 30, 2025">
   ### 🔧 Metric Groups
 
