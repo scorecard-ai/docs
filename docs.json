@@ -67,10 +67,6 @@
       "destination": "/changelog"
     },
     {
-      "source": "/docs/docs/glossary",
-      "destination": "/glossary"
-    },
-    {
       "source": "/docs/api-reference/overview",
       "destination": "/api-reference/overview"
     },
@@ -209,15 +205,6 @@
               "api-reference/list-system-versions",
               "api-reference/get-system-version"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "Glossary",
-        "groups": [
-          {
-            "group": "Glossary",
-            "pages": ["glossary"]
           }
         ]
       },
