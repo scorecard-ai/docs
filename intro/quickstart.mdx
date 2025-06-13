@@ -174,20 +174,29 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
   </Step>
   
   <Step title="Create Metrics">
-    From the Scorecard UI, create an AI-graded Metric named "Tone accuracy" to evaluate the tone translator system on. Copy the Metric ID for later.
-
-    <Frame caption="Creating a Metric in the Scorecard UI." height="500">
-      <img className="block dark:hidden" height="100" src="/images/quickstart/create-metric-light.png" alt="Screenshot of creating a 'Tone accuracy' metric." />
-      <img className="hidden dark:block" height="100" src="/images/quickstart/create-metric-dark.png" alt="Screenshot of creating a 'Tone accuracy' metric." />
-    </Frame>
+    Create an LLM-as-a-judge Metric to evaluate the tone accuracy of your system.
+    
+    The Metric's prompt template uses Jinja syntax. For each Testcase, we will send the prompt template to the judge and replace `{{inputs.tone}}` with the Testcase's `tone` value.
 
     <CodeGroup>
       ```py Python
-      METRIC_IDS = ["987"]  # Replace with your Metric ID
+      metric = scorecard.metrics.create(
+          project_id=PROJECT_ID,
+          name="Tone accuracy",
+          eval_type="ai",
+          output_type="int",
+          prompt_template="You are a tone evaluator. Grade the response on how well it matches the intended tone {{inputs.tone}} and the tone of the ideal response. Use a score of 1 if the tones are very different and 5 if they are the exact same.\n\nResponse: {{output.rewritten}}\n\nIdeal response: {{expected.idealRewritten}}",
+      )
       ```
 
       ```js JavaScript
-      const METRIC_IDS = ["987"]; // Replace with your Metric ID
+      const metric = await scorecard.metrics.create({
+        projectId: PROJECT_ID,
+        name: "Tone accuracy",
+        evalType: "ai",
+        outputType: "int",
+        promptTemplate: "You are a tone evaluator. Grade the response on how well it matches the intended tone {{inputs.tone}} and the tone of the ideal response. Use a score of 1 if the tones are very different and 5 if they are the exact same.\n\nResponse: {{output.rewritten}}\n\nIdeal response: {{expected.idealRewritten}}",
+      });
       ```
     </CodeGroup>
   </Step>
@@ -202,12 +211,11 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
       run = run_and_evaluate(
           client=scorecard,
           project_id=PROJECT_ID,
-          metric_ids=METRIC_IDS,
+          metric_ids=[metric.id],
           system=lambda input: run_system(input),
           testcases=testcases,
       )
-
-      print(f'Go to {run["url"]} and view your results.')
+      print(f'Go to {run["url"]} to view your results.')
       ```
 
       ```js JavaScript
@@ -219,7 +227,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
         system: runSystem,
         testcases: testcases,
       });
-      console.log(`Go to ${run.url} and view your results.`);
+      console.log(`Go to ${run.url} to view your results.`);
       ```
     </CodeGroup>
   </Step>
