@@ -72,21 +72,29 @@ icon: "icon-name" # Optional, from Font Awesome or Lucide
   ```javascript
   console.log("Hello");
   ```
-- **Code block with title**: ```javascript title="example.js"
-- **Line highlighting**: ```javascript {1,3-5}
-- **Expandable code**: ```javascript title="Long Example" [expandable]
+- **Code block with title**
+  ```javascript title="example.js"
+    console.log("Hello world");
+  ```
+- **Line highlighting**
+  ```javascript {1,3-5}
+    console.log("Hello world")
+  ```
+- **Expandable code**
+  ```javascript title="Long Example" [expandable]
+    console.log("Very long example...");
+  ```
 - **Inline code**: Use single backticks `code`
 - **CodeGroup**: Each code block must have a filename
-  ```
   <CodeGroup>
     ```js example.js
     // JavaScript code
     ```
+
     ```py example.py
     # Python code
     ```
   </CodeGroup>
-  ```
 
 ### Text Formatting
 - Headers: `##` for section titles, `###` for subsections
