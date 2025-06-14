@@ -6,21 +6,15 @@ description: "New updates and improvements"
 <Update label="June 13, 2025">
   ### 🎯 Metric API
 
-  We've launched new API endpoints for programmatic metric management, enabling teams to [<u>create</u>](https://docs.scorecard.io/api-reference/create-metric) and [<u>update</u>](https://docs.scorecard.io/api-reference/update-metric) metrics directly through our SDK. Create metrics with full control over evaluation type, output format, and prompt templates: 
+  We've launched new API endpoints for programmatic metric management, enabling teams to [<u>create</u>](https://docs.scorecard.io/api-reference/create-metric) and [<u>update</u>](https://docs.scorecard.io/api-reference/update-metric) metrics directly through our SDK. Create metrics with full control over evaluation type, output format, and prompt templates:
 
   ```python
   client.metrics.create(
-  
-      project_id="314",
-  
-      name="Response Accuracy",
-  
-      eval_type="ai",
-  
-      output_type="boolean",
-  
-      prompt_template="Evaluate if the following response is factually accurate: {{outputs.response}}",
-  
+      project_id="314",
+      name="Response Accuracy",
+      eval_type="ai",
+      output_type="boolean",
+      prompt_template="Evaluate if the following response is factually accurate: {{outputs.response}}",
   )
   ```
 
@@ -30,21 +24,20 @@ description: "New updates and improvements"
 
   We switched to a new API key format, which supports having multiple API keys, revoking them, and setting expiry dates. Our new API keys are more concise (94% shorter\!) than the previously unwieldy API keys based on JWTs. We’ve deprecated the old API key format, but will continue to support them until July 20, 2025.
 
-  ![Api Key Pn](/images/api_key.png)
+  ![New API key management interface showing multiple keys and expiry options](/images/api_key.png)
 
   ### Bug fixes and improvements
 
   - **[Metrics]** Improved metrics management UI with tabbed sections for better organization
-
-
   - **[Metrics]** Added metric selector with searchable dropdown - no more manually typing metric IDs
 
-  ![Metric Group Pn](/images/metric_group.png)
+  ![Metric selector with searchable dropdown](/images/metric_group.png)
 
-  - **[Runs] **In the test record details page you can now see the text of the fully compiled metrics sent to the LLM for evaluation
+  - **[Runs]** In the test record details page you can now see the text of the fully compiled metrics sent to the LLM for evaluation
 
-  ![Runs Systems Pn](/images/runs_systems.png)
+  ![Compiled metrics text view in run details](/images/runs_systems.png)
 </Update>
+
 
 <Update label="June 10, 2025">
   ### 🚀 SDK v2 Stable Release
@@ -76,6 +69,7 @@ description: "New updates and improvements"
   - **[Platform]** Fixed data invalidation bugs when managing metrics and testcases
 </Update>
 
+
 <Update label="May 30, 2025">
   ### 🔧 Metric Groups
 
@@ -96,6 +90,7 @@ description: "New updates and improvements"
   ![Playground New UX](/images/playground_new.png)
 </Update>
 
+
 <Update label="May 23, 2025">
   ### 🎉 New Homepage Launch\!
 
@@ -112,6 +107,7 @@ description: "New updates and improvements"
 
   ![Screenshot of the Custom Metrics configuration interface](/images/custom-metrics.png)
 </Update>
+
 
 <Update label="May 2, 2025">
   ### 🔌 Scorecard MCP Server
@@ -148,6 +144,7 @@ description: "New updates and improvements"
   - **[Documentation]** Streamlined our [quickstart documentation](/intro/quickstart) so you can get started with Scorecard in just 5 minutes.
 </Update>
 
+
 <Update label="April 25, 2025">
   ### New API and SDK
 
@@ -175,6 +172,7 @@ description: "New updates and improvements"
   - **[Reliability]** Improved API reliability and workflow robustness: fixed run creation schema errors, streamlined testcase creation/duplication/deletion flows, and added inline schema validation to prevent submission errors
   - **[Evals]** Migrated from gpt4-1106-preview (Nov 2023) to gpt-4o for scoring metrics
 </Update>
+
 
 <Update label="April 18, 2025">
   ### Run insights
@@ -230,6 +228,7 @@ description: "New updates and improvements"
   - **[Performance]** Faster page loads, filtering, sorting, and table actions, powered by new APIs and backend improvements
 </Update>
 
+
 <Update label="April 11, 2025">
   ### Projects
 
@@ -249,6 +248,7 @@ description: "New updates and improvements"
   - **[Testcases]** We fixed a bug that broke the Generate testcases feature.
   - **[Settings]** We added some text on the API keys page to clarify that your Scorecard API key is personal, but model API keys are scoped to the organization.
 </Update>
+
 
 <Update label="April 4, 2025">
   ### Tracing
@@ -282,6 +282,7 @@ description: "New updates and improvements"
   - **[Platform]** We enhanced platform stability and increased test coverage.
 </Update>
 
+
 <Update label="March 14, 2025">
   ### New Project Overview Page
 
@@ -289,6 +290,7 @@ description: "New updates and improvements"
 
   ![Project Overview](/images/project_overview.png)
 </Update>
+
 
 <Update label="February 24, 2025">
   ### Download Testset CSVs
@@ -299,6 +301,7 @@ description: "New updates and improvements"
 
   When looking at a run's detailed results, the popover for looking at a cell's contents would randomly disappear. This issue is now fixed.
 </Update>
+
 
 <Update label="February 13, 2025">
   ### Docs Site Revamp
