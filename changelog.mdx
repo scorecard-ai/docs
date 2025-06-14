@@ -3,6 +3,49 @@ title: "Product Updates"
 description: "New updates and improvements"
 ---
 
+<Update label="June 13, 2025">
+  ### 🎯 Metric API
+
+  We've launched new API endpoints for programmatic metric management, enabling teams to [<u>create</u>](https://docs.scorecard.io/api-reference/create-metric) and [<u>update</u>](https://docs.scorecard.io/api-reference/update-metric) metrics directly through our SDK. Create metrics with full control over evaluation type, output format, and prompt templates: 
+
+  ```python
+  client.metrics.create(
+  
+      project_id="314",
+  
+      name="Response Accuracy",
+  
+      eval_type="ai",
+  
+      output_type="boolean",
+  
+      prompt_template="Evaluate if the following response is factually accurate: {{outputs.response}}",
+  
+  )
+  ```
+
+  These endpoints are supported in SDK versions [<u>1.1.0</u>](https://www.npmjs.com/package/scorecard-ai) (JS) and [<u>2.1.0</u>](https://pypi.org/project/scorecard-ai/) (Python).
+
+  ### 🎯 Improved API key format
+
+  We switched to a new API key format, which supports having multiple API keys, revoking them, and setting expiry dates. Our new API keys are more concise (94% shorter\!) than the previously unwieldy API keys based on JWTs. We’ve deprecated the old API key format, but will continue to support them until July 20, 2025.
+
+  ![Api Key Pn](/images/api_key.png)
+
+  ### Bug fixes and improvements
+
+  - **[Metrics]** Improved metrics management UI with tabbed sections for better organization
+
+
+  - **[Metrics]** Added metric selector with searchable dropdown - no more manually typing metric IDs
+
+  ![Metric Group Pn](/images/metric_group.png)
+
+  - **[Runs] **In the test record details page you can now see the text of the fully compiled metrics sent to the LLM for evaluation
+
+  ![Runs Systems Pn](/images/runs_systems.png)
+</Update>
+
 <Update label="June 10, 2025">
   ### 🚀 SDK v2 Stable Release
 
@@ -14,7 +57,7 @@ description: "New updates and improvements"
   - Enhanced error handling and debugging capabilities
   - Full TypeScript support with comprehensive type definitions
 
-  Available now on [npm](https://www.npmjs.com/package/scorecard-ai) and [PyPI](https://pypi.org/project/scorecard-ai/)!
+  Available now on [npm](https://www.npmjs.com/package/scorecard-ai) and [PyPI](https://pypi.org/project/scorecard-ai/)\!
 
   ### 🎯 Basic and Advanced Metric Modes
 
@@ -42,7 +85,7 @@ description: "New updates and improvements"
 
   ### 🧪 New Playground Experience
 
-  The new [Scorecard Playground](https://docs.scorecard.io/features/playground) is here! Built for product teams including prompt engineers, product managers, and subject matter experts, it provides a powerful environment to iterate on prompts and test them against multiple inputs simultaneously. Experience smart variable detection with autocomplete support for Jinja syntax, making template creation effortless. Watch your templates come to life with live preview that shows compiled output as you type. Key capabilities include:
+  The new [Scorecard Playground](https://docs.scorecard.io/features/playground) is here\! Built for product teams including prompt engineers, product managers, and subject matter experts, it provides a powerful environment to iterate on prompts and test them against multiple inputs simultaneously. Experience smart variable detection with autocomplete support for Jinja syntax, making template creation effortless. Watch your templates come to life with live preview that shows compiled output as you type. Key capabilities include:
 
   - Batch testing - run prompts against entire testsets with one click
   - Model configuration with customizable temperature and parameters
@@ -56,7 +99,7 @@ description: "New updates and improvements"
 <Update label="May 23, 2025">
   ### 🎉 New Homepage Launch\!
 
-    We're excited to announce the launch of our new [Scorecard homepage](https://scorecard.io/)! Explore our refreshed website with quick access to docs, product, and a new visual design to share how Scorecard can support you as you're building your AI product.
+  We're excited to announce the launch of our new [Scorecard homepage](https://scorecard.io/)\! Explore our refreshed website with quick access to docs, product, and a new visual design to share how Scorecard can support you as you're building your AI product.
 
   ![Screenshot of the new Scorecard homepage](/images/homepage.png)
 
