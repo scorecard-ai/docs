@@ -42,7 +42,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
     `input["original"]` is the user's message and `input["tone"]` is the tone to translate to. The output is a dictionary containing the translated message (`rewritten`).
 
     <CodeGroup>
-      ```py Python
+      ```py Python wrap
       from openai import OpenAI
       
       # By default, the API key is taken from the environment variable.
@@ -62,7 +62,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
           }
       ```
 
-      ```js JavaScript
+      ```js JavaScript wrap
       import OpenAI from 'openai';
 
       // By default, the API key is taken from the environment variable.
@@ -121,7 +121,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
     Create some testcases to represent the inputs to your system and the ideal (`expected`) outputs.
 
     <CodeGroup>
-      ```py Python
+      ```py Python wrap
       testcases = [
           {
               # `inputs` gets passed to the system.
@@ -146,7 +146,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
       ]
       ```
 
-      ```js JavaScript
+      ```js JavaScript wrap
       const testcases = [
         {
           // `inputs` gets passed to the system.
@@ -179,7 +179,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
     The Metric's prompt template uses Jinja syntax. For each Testcase, we will send the prompt template to the judge and replace `{{inputs.tone}}` with the Testcase's `tone` value.
 
     <CodeGroup>
-      ```py Python
+      ```py Python wrap
       metric = scorecard.metrics.create(
           project_id=PROJECT_ID,
           name="Tone accuracy",
@@ -189,7 +189,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
       )
       ```
 
-      ```js JavaScript
+      ```js JavaScript wrap
       const metric = await scorecard.metrics.create({
         projectId: PROJECT_ID,
         name: "Tone accuracy",
@@ -205,7 +205,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
     Run the system against the Metrics you've created and record the results in Scorecard.
 
     <CodeGroup>
-      ```py Python
+      ```py Python wrap
       from scorecard_ai.lib import run_and_evaluate
 
       run = run_and_evaluate(
@@ -218,7 +218,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
       print(f'Go to {run["url"]} to view your results.')
       ```
 
-      ```js JavaScript
+      ```js JavaScript wrap
       import { runAndEvaluate } from 'scorecard-ai';
       
       const run = await runAndEvaluate(scorecard, {

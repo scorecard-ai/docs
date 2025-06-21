@@ -1,45 +1,179 @@
 ---
 title: "CI/CD With GitHub Actions"
 ---
-## Why Use GitHub Actions?
 
-GitHub Actions provides a powerful and flexible way to automate software development workflows. With GitHub Actions, you can perform various automated tasks, such as building, testing, and deploying your code directly from your GitHub repository. This can save time and reduce errors by automating repetitive tasks and enabling faster feedback loops. For example, you can configure your workflow to automatically build and test your code whenever a pull request is opened. This can help catch bugs and issues earlier in the development process.
+## Why use GitHub Actions?
 
-## Supercharge Your Development Workflow With Scorecard’s GitHub App
-<Frame caption="Scorecard AI Github App">
-![Scorecard AI Github App](/images/ci-cd/1.png)
+GitHub Actions is a powerful, flexible automation platform for software development workflows.
+
+With Scorecard's GitHub action integration, you can test your code automatically on every PR, on a schedule, or manually with various configurations.
+
+**Automated Testing:** Perform extensive end-to-end tests for every push or pull request, or on a schedule.
+
+**Instant Actionable Feedback:** Catch issues before they reach production by getting direct, actionable feedback on your PRs.
+
+**Continuous Monitoring:** Monitor application behavior and ensure it aligns with expected outcomes.
+
+## Setup the GitHub Integration
+
+### 1. Setup the workflow
+
+Follow the steps on your Scorecard organization's [GitHub configuration page](https://app.scorecard.io/configure-github).
+
+1. Install the GitHub app.
+1. Choose which repository and branch to use.
+1. Configure when test runs should be triggered. For example:
+    * Nightly, or
+    * When a user kicks off a test run from the Scorecard UI, or
+    * When a pull request is opened, or
+    * When a pull request is merged.
+1. Add your Scorecard API key as a Github secret key named `SCORECARD_API_KEY`.
+1. Click "Create pull request" to create a PR in your repository to setup the Scorecard workflow.
+
+### 2. Customize the workflow
+
+When you click "Create pull request", a PR will be created in your repository with the following files:
+
+<Tabs>
+  <Tab title="scorecard-eval.yml">
+    `.github/workflows/scorecard-eval.yml` is the GitHub Actions workflow file that will be used to run the tests.
+    
+    You can update your testing parameters and triggering conditions here. For example, use environment variables to add any API keys you need to run your system.
+
+    ```yaml scorecard-eval.yml expandable wrap
+    name: Scorecard Evaluation Workflow
+
+    on:
+    workflow_dispatch:
+        inputs:
+        project_id:
+            description: Project ID
+            required: true
+        testset_id:
+            description: Testset ID
+            required: true
+        metric_ids:
+            description: Metric IDs
+            required: true
+        system_version_id:
+            description: System Version ID
+            required: false
+    repository_dispatch:
+        types: start-evaluation
+
+    permissions:
+    contents: read
+
+    jobs:
+    evaluation-test:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-python@v5
+            with:
+            python-version: "3.12"
+
+        - name: Install dependencies
+            run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+
+        - name: Run test
+            env:
+            SCORECARD_API_KEY: ${{ secrets.SCORECARD_API_KEY }}
+            # Scorecard config IDs
+            # 1. Check if there's an input from manual trigger (workflow_dispatch)
+            # 2. Fallback to values sent from external sources (repository_dispatch)
+            # 3. Fallback to default values
+            PROJECT_ID: ${{ github.event.inputs.project_id || github.event.client_payload.project_id || env.DEFAULT_PROJECT_ID }}
+            TESTSET_ID: ${{ github.event.inputs.testset_id || github.event.client_payload.testset_id || env.DEFAULT_TESTSET_ID }}
+            METRIC_IDS: ${{ github.event.inputs.metric_ids || github.event.client_payload.metric_ids || env.DEFAULT_METRIC_IDS }}
+            SYSTEM_VERSION_ID: ${{ github.event.inputs.system_version_id || github.event.client_payload.system_version_id || env.DEFAULT_SYSTEM_VERSION_ID }}
+            run: python3 run_tests.py
+    ```
+  </Tab>
+  <Tab title="run_tests.py">
+    This is the file that `scorecard-eval.yml` uses to run your system.
+    
+    You should update the `run_system()` function to call your actual system.
+
+    ```python run_tests.py expandable wrap
+    import os
+    import re
+    from typing import Any
+
+    from scorecard_ai import Scorecard
+    from scorecard_ai.lib import run_and_evaluate
+
+
+    def run_system(
+        system_input: dict[str, Any],
+        system_config: dict[str, Any] | None = None
+    ) -> dict:
+        """
+        FIXME: Replace this placeholder function with a call to your model
+        """
+        return {
+            "response": f"Placeholder LLM response, got input: {system_input}",
+        }
+
+
+    def main(
+        *,
+        scorecard_api_key: str,
+        project_id: str,
+        testset_id: str,
+        metric_ids: list[str],
+        system_version_id: str | None = None,
+    ) -> None:
+        """
+        Run and score all Testcases in a given Testset
+        """
+        client = Scorecard(api_key=scorecard_api_key)
+
+        run = run_and_evaluate(
+            client=client,
+            project_id=project_id,
+            testset_id=testset_id,
+            metric_ids=metric_ids,
+            **({"system_version_id": system_version_id} if system_version_id else {}),
+            system=run_system,
+        )
+
+        print(run["url"])
+
+
+    if __name__ == "__main__":
+        main(
+            scorecard_api_key=os.environ["SCORECARD_API_KEY"],
+            project_id=os.environ["PROJECT_ID"],
+            testset_id=os.environ["TESTSET_ID"],
+            metric_ids=re.findall(r"\b\d+\b", os.environ["METRIC_IDS"]),
+            system_version_id=os.environ["SYSTEM_VERSION_ID"] or None,
+        )
+    ```
+  </Tab>
+  <Tab title="requirements.txt">
+    This file contains the dependencies for your system.
+
+    ```txt requirements.txt wrap
+    scorecard-ai>=2.1.0,<2.2.0
+    ```
+  </Tab>
+</Tabs>
+
+### 3. Trigger a run automatically
+
+Depending on your configuration, every push or PR automatically triggers Scorecard tests.
+
+### 4. Trigger a run manually
+
+You can trigger a run manually from the Scorecard UI using the **Trigger Run** page.
+
+Just select a testset and some metrics, then click "Run tests"!
+
+<Frame caption="Triggering a run manually from the Scorecard UI." height="500">
+    <img className="block dark:hidden" height="100" src="/images/trigger-run-light.jpeg" alt="Screenshot of the trigger run page in the Scorecard UI." />
+    <img className="hidden dark:block" height="100" src="/images/trigger-run-dark.jpeg" alt="Screenshot of the trigger run page in the Scorecard UI." />
 </Frame>
-Integrating Scorecard AI with GitHub supercharges your software development workflow. By leveraging Scorecard’s capabilities within your GitHub repository, you can automatically run end-to-end tests, analyze system behavior, and obtain actionable insights—all in an automated manner. Imagine a scenario where every pull request is automatically assessed by Scorecard, presenting comprehensive test results and feedback directly in GitHub.
-
-### Benefits of Integration
-
-* *Automated Testing:* For every push or pull request, Scorecard can automatically perform extensive end-to-end tests.
-* *Instant Feedback:* Obtain direct feedback on your PRs in GitHub, making it easier to catch and rectify issues before they reach production.
-* *Continuous Monitoring:* With Scorecard, you can monitor application behavior, ensuring it aligns with expected outcomes.
-
-### How To Setup the GitHub Scorecard Integration
-
-#### 1. New Integration
-
-* Navigate to the [dashboard in the Scorecard UI](https://app.scorecard.io/).
-* Click on the “Integrate GitHub” button.
-* You’ll be redirected to GitHub. Here, you can choose which repository to use.
-
-#### 2. Configuration
-
-* In your GitHub repository, find the Scorecard configuration file at `.github/workflows/scorecard-eval.yml`
-* Update your testing parameters and triggering conditions, as well as any necessary secret key configurations in this file.
-* In your GitHub repository, find `run_tests.py`. Within the ‘run\_all\_tests’ function update your `"model_response"` to point to your actual system’s call.
-
-#### 3. Triggering Tests
-
-* Once integrated, every push or PR automatically triggers Scorecard tests based on your configuration.
-* Test results and feedback will be directly posted on the respective PR or push event in GitHub.
-
-#### 4. Customization
-
-* Use the Scorecard UI dashboard to customize testing behaviors, set up notifications, and more.
-
-<Note>
-Remember, the Scorecard platform is designed to be flexible and adaptive. You can always adjust configurations, add new test cases, or modify existing ones to fit your evolving needs.
-</Note>
