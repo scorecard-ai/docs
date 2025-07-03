@@ -73,6 +73,10 @@
     {
       "source": "/docs/documentation/:slug*",
       "destination": "/:slug*"
+    },
+    {
+      "source": "/how-to-use-scorecard/ci-cd-with-github-actions",
+      "destination": "/how-to-use-scorecard/trigger-run-with-github-actions"
     }
   ],
   "navigation": {
