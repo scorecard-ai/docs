@@ -32,7 +32,8 @@
     "socials": {
       "website": "https://www.scorecard.io/",
       "github": "https://github.com/scorecard-ai",
-      "linkedin": "https://www.linkedin.com/company/scorecard-ai"
+      "linkedin": "https://www.linkedin.com/company/scorecard-ai",
+      "twitter": "https://x.com/scorecardai"
     }
   },
   "integrations": {
@@ -137,7 +138,7 @@
               },
               "how-to-use-scorecard/cookbooks",
               "how-to-use-scorecard/rag-retrieval-augmented-generation",
-              "how-to-use-scorecard/ci-cd-with-github-actions"
+              "how-to-use-scorecard/trigger-run-with-github-actions"
             ]
           }
         ]
