@@ -199,7 +199,7 @@
           {
             "group": "Systems",
             "pages": [
-              "api-reference/create-system",
+              "api-reference/create-upsert-system",
               "api-reference/list-systems",
               "api-reference/get-system",
               "api-reference/update-system",
@@ -209,8 +209,7 @@
           {
             "group": "System versions",
             "pages": [
-              "api-reference/create-system-version",
-              "api-reference/list-system-versions",
+              "api-reference/upsert-system-version",
               "api-reference/get-system-version"
             ]
           }
