@@ -1,0 +1,260 @@
+---
+title: "Runs"
+sidebarTitle: "Runs"
+description: "Understanding how runs work in Scorecard and their UI features"
+icon: "play"
+---
+
+Runs are the core execution unit in Scorecard that evaluate your AI system's performance against testsets using selected metrics. They provide comprehensive insights into your AI application's behavior and quality.
+
+## What are Runs?
+
+A run in Scorecard represents a complete evaluation session where:
+- Your AI system processes test cases from a testset
+- Selected metrics score the system's responses
+- Results are aggregated and visualized for analysis
+
+Each run captures a snapshot of your system's performance at a specific point in time, allowing you to track improvements and identify issues.
+
+## Run Lifecycle
+
+Runs go through several stages during their execution:
+
+### Run Statuses
+
+<Frame caption="Run status indicators in the interface">
+![Run Status Indicators Placeholder](/images/runs/run-statuses.png)
+</Frame>
+
+- **🟡 Pending**: Run is created but execution hasn't started
+- **🔵 Scoring**: System responses are being evaluated by metrics
+- **🟢 Completed**: All test cases have been scored successfully
+- **🔴 Error**: An error occurred during execution
+
+## Runs Interface
+
+### Runs List View
+
+The main runs interface provides two views for organizing your evaluation history:
+
+<Frame caption="Runs list interface showing My Runs and All Runs tabs">
+![Runs List View Placeholder](/images/runs/runs-list.png)
+</Frame>
+
+#### My Runs Tab
+- Displays runs created by you
+- Personal evaluation history
+- Quick access to your experiments
+
+#### All Runs Tab
+- Shows all runs in the project
+- Team collaboration view
+- Organization-wide evaluation tracking
+
+### Run Table Features
+
+<Frame caption="Run table with sorting, filtering, and selection features">
+![Run Table Features Placeholder](/images/runs/run-table.png)
+</Frame>
+
+The runs table includes:
+
+- **ID Column**: Unique identifier for each run (clickable to view details)
+- **Created At**: Timestamp showing when the run was initiated
+- **Status**: Visual indicator of run progress
+- **Testset**: Name of the testset used for evaluation
+- **Notes**: Custom annotations for run context
+- **User**: Creator of the run
+- **System Config**: System configuration used (if applicable)
+
+#### Interactive Features
+
+- **Sorting**: Click column headers to sort by any field
+- **Multi-select**: Select multiple runs for batch operations
+- **Filtering**: Search and filter runs by various criteria
+- **Pagination**: Navigate through large run histories
+
+### Bulk Actions
+
+<Frame caption="Bulk actions for managing multiple runs">
+![Bulk Actions Placeholder](/images/runs/bulk-actions.png)
+</Frame>
+
+Select multiple runs to perform batch operations:
+- **Delete**: Remove selected runs from the project
+- **Export**: Download run data for external analysis
+
+## Run Details View
+
+### Run Overview
+
+<Frame caption="Run details header with key information">
+![Run Details Header Placeholder](/images/runs/run-details-header.png)
+</Frame>
+
+The run details page provides:
+
+- **Run ID**: Unique identifier for reference
+- **Testset Information**: Link to the associated testset
+- **System Configuration**: Version and parameters used
+- **Navigation**: Easy return to runs list
+
+### Run Status Dashboard
+
+<Frame caption="Run status dashboard showing execution progress">
+![Run Status Dashboard Placeholder](/images/runs/run-status-dashboard.png)
+</Frame>
+
+Key metrics displayed:
+- **Execution Progress**: Visual progress indicator
+- **Test Cases**: Total number processed
+- **Metrics**: Number of evaluation metrics applied
+- **Errors**: Any failures during execution
+
+### Run Notes
+
+<Frame caption="Editable run notes for documentation">
+![Run Notes Placeholder](/images/runs/run-notes.png)
+</Frame>
+
+- **Editable Notes**: Add context and observations
+- **Keyboard Shortcuts**: Cmd+Enter to save, Escape to cancel
+- **Persistent Storage**: Notes are saved automatically
+
+## Metrics Visualization
+
+### Performance Plots
+
+<Frame caption="Metric performance visualization cards">
+![Metrics Plots Placeholder](/images/runs/metrics-plots.png)
+</Frame>
+
+Each metric displays:
+
+#### Statistical Overview
+- **Passing Rate**: Percentage of test cases that passed
+- **Pass/Fail Counts**: Absolute numbers for quick assessment
+- **Error Handling**: Clear indication of evaluation failures
+
+#### Score Distribution
+- **Bar Charts**: Visual distribution of scores
+- **Interactive Filtering**: Click bars to filter results
+- **Statistical Measures**: Mean, median, min, max values
+
+### Metric Types
+
+#### Binary Metrics
+- **True/False Results**: Clear pass/fail visualization
+- **Success Rate**: Percentage-based scoring
+- **Binary Bar Plots**: Visual success/failure distribution
+
+#### Numeric Metrics
+- **Score Ranges**: Configurable thresholds
+- **Distribution Charts**: Histogram of score values
+- **Threshold Indicators**: Visual passing thresholds
+
+## Test Results Table
+
+<Frame caption="Detailed test results with scoring information">
+![Test Results Table Placeholder](/images/runs/test-results-table.png)
+</Frame>
+
+### Test Case Details
+
+For each test case, view:
+- **Inputs**: Original test case data
+- **Outputs**: System responses
+- **Scores**: Metric evaluations with reasoning
+- **Metadata**: Execution details and timing
+
+### Interactive Features
+
+- **Expandable Rows**: Detailed view of test case data
+- **Score Filtering**: Filter by metric performance
+- **Export Options**: Download specific result sets
+
+## Data Export
+
+<Frame caption="Export functionality for run data">
+![Export Options Placeholder](/images/runs/export-options.png)
+</Frame>
+
+### CSV Export
+- **Complete Data**: All inputs, outputs, and scores
+- **Structured Format**: Ready for analysis tools
+- **Batch Downloads**: Multiple runs at once
+
+### Export Features
+- **Comprehensive Data**: Includes all test case information
+- **Metric Scores**: All evaluation results with reasoning
+- **Legacy Support**: Backwards compatible format
+- **Truncation Handling**: Large text fields are appropriately truncated
+
+## Run Management
+
+### Creating Runs
+
+Runs can be created through:
+- **UI Interface**: Interactive run creation wizard
+- **API Integration**: Programmatic run execution
+- **GitHub Actions**: Automated CI/CD workflows
+
+### Run Configuration
+
+<Frame caption="Run configuration options">
+![Run Configuration Placeholder](/images/runs/run-configuration.png)
+</Frame>
+
+Configure runs with:
+- **Testset Selection**: Choose evaluation dataset
+- **Metric Selection**: Pick evaluation criteria
+- **System Parameters**: Set model configuration
+- **Execution Settings**: Control run behavior
+
+### Run Archiving
+
+- **Soft Delete**: Runs are archived, not permanently deleted
+- **Data Retention**: Historical data remains accessible
+- **Cleanup**: Manage project organization
+
+## Best Practices
+
+### Run Organization
+
+1. **Meaningful Names**: Use descriptive testset names
+2. **Comprehensive Notes**: Document run context and purpose
+3. **Consistent Metrics**: Use standardized evaluation criteria
+4. **Regular Cleanup**: Archive outdated runs
+
+### Performance Monitoring
+
+1. **Baseline Establishment**: Create reference runs for comparison
+2. **Trend Analysis**: Track performance over time
+3. **Error Investigation**: Investigate failed evaluations
+4. **Threshold Management**: Adjust passing criteria as needed
+
+### Team Collaboration
+
+1. **Shared Visibility**: Use "All Runs" view for team coordination
+2. **Documentation**: Maintain clear run notes
+3. **Result Sharing**: Export data for team analysis
+4. **Version Control**: Track system changes through runs
+
+## Integration Points
+
+### API Integration
+
+Runs integrate with:
+- **Scorecard SDK**: Programmatic run creation
+- **External Systems**: Third-party evaluation tools
+- **CI/CD Pipelines**: Automated quality gates
+
+### Data Flow
+
+1. **Input Processing**: Testset data flows into runs
+2. **System Evaluation**: AI system processes test cases
+3. **Metric Scoring**: Automated evaluation of responses
+4. **Result Aggregation**: Statistical analysis and visualization
+5. **Export/Analysis**: Data extraction for further processing
+
+Runs provide the foundation for comprehensive AI system evaluation, offering both detailed insights and high-level performance tracking to ensure your AI applications meet quality standards.

@@ -106,7 +106,6 @@
               "features/privacy-by-design",
               "features/automated-scoring",
               "features/best-in-class-metrics",
-              "features/logging",
               "features/testset-management",
               "features/a-b-comparison",
               "features/ai-guardrails",
@@ -117,26 +116,6 @@
           {
             "group": "How To Use Scorecard",
             "pages": [
-              {
-                "group": "Guides",
-                "pages": [
-                  {
-                    "group": "Create a Testset",
-                    "pages": [
-                      "how-to-use-scorecard/guides/create-a-testset/using-the-testset-ui",
-                      "how-to-use-scorecard/guides/create-a-testset/using-the-scorecard-sdk"
-                    ]
-                  },
-                  {
-                    "group": "Run Scoring",
-                    "pages": [
-                      "how-to-use-scorecard/guides/run-scoring/using-the-playground",
-                      "how-to-use-scorecard/guides/run-scoring/using-the-scorecard-sdk"
-                    ]
-                  }
-                ]
-              },
-              "how-to-use-scorecard/cookbooks",
               "how-to-use-scorecard/rag-retrieval-augmented-generation",
               "how-to-use-scorecard/trigger-run-with-github-actions"
             ]
