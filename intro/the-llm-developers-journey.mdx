@@ -36,7 +36,7 @@ With Scorecard, we can start to operationalize this process, so that you don’t
 
 Rather than boiling the ocean and creating a full testset from the get-go, let’s work backwards and start with the simplest approach and work our way up.
 
-In order to build a Sample Testset, you can take 5-10 of your favorite prompts or queries that you generally use for testing. A step-by-step guide can be found [here](/how-to-use-scorecard/guides/create-a-testset).
+In order to build a Sample Testset, you can take 5-10 of your favorite prompts or queries that you generally use for testing.
 
 ### Building a Golden Testset
 
@@ -48,15 +48,13 @@ From this set, we can validate custom metrics, and eventually expand into a Larg
 
 #### Importing a Golden Testset
 
-To import a Golden Testset, go to the Testset Builder and click on the “Import” button. From there, you can upload a CSV file containing your test data. A step-by-step guide can be found [here](/how-to-use-scorecard/guides/create-a-testset/using-the-testset-ui).
-
-Alternatively, you can use the [Scorecard SDK](/how-to-use-scorecard/guides/create-a-testset/using-the-scorecard-sdk).
+To import a Golden Testset, go to the Testset Builder and click on the “Import” button. From there, you can upload a CSV file containing your test data.
 
 ### Executing your Testset
 
-Once you have your Golden Testset, you can start executing it on the playground. This is a fast way of iterating on prompts or trying out different models on Testsets or arbitrary inputs. You can find more details on the [playground guide](/how-to-use-scorecard/guides/run-scoring/using-the-playground).
+Once you have your Golden Testset, you can start executing it on the playground. This is a fast way of iterating on prompts or trying out different models on Testsets or arbitrary inputs. You can find more details on the [playground guide](/features/playground).
 
-Another way of kicking off execution is via your own LLM application in production. This will allow you to collect data on the quality of your application’s responses. You can do this via the [Scorecard SDK](/how-to-use-scorecard/guides/run-scoring/using-the-scorecard-sdk).
+Another way of kicking off execution is via your own LLM application in production. This will allow you to collect data on the quality of your application’s responses. You can do this via the [Scorecard SDK](/how-to-use-scorecard/trigger-run-with-github-actions).
 
 ### Scoring your Testset with Metrics
 
