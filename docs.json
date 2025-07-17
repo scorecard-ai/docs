@@ -110,7 +110,7 @@
               "features/a-b-comparison",
               "features/ai-guardrails",
               "features/run-inspection",
-              "features/ai-proxy"
+              "features/custom-provider"
             ]
           },
           {
