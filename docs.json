@@ -104,7 +104,6 @@
               "features/prompt-management",
               "features/tracing",
               "features/privacy-by-design",
-              "features/automated-scoring",
               "features/best-in-class-metrics",
               "features/testset-management",
               "features/a-b-comparison",
