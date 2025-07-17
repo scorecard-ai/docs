@@ -90,9 +90,9 @@
             "pages": [
               "intro/overview",
               "intro/quickstart",
-              "intro/systems",
               "intro/what-is-scorecard",
-              "intro/system-architecture"
+              "intro/system-architecture",
+              "intro/systems"
             ]
           },
           {
