@@ -35,7 +35,7 @@ Scorecard is designed to help teams **ship LLM applications faster** with confid
     - **SDK support** for Python, TypeScript, and more
     
     ```python
-    # Test in one line
+    # Test in one line - runs testset and evaluates results
     scorecard.run("my-testset", model="gpt-4")
     ```
   </Tab>
@@ -88,6 +88,7 @@ Most teams start their LLM journey with manual "vibe checks" - but this doesn't 
     Start with 5-10 test cases that represent your use case. Import from CSV, create in UI, or generate from production logs.
     
     ```python
+    # Create a testset with test cases
     testset = scorecard.create_testset(
         name="customer-support",
         cases=[{"input": "How do I reset my password?"}]
@@ -98,6 +99,7 @@ Most teams start their LLM journey with manual "vibe checks" - but this doesn't 
     Execute against your LLM application through our playground, SDK, or CI/CD pipeline.
     
     ```python
+    # Execute testset against your LLM with specified config
     run = scorecard.run(
         testset_id="customer-support",
         model_config={"temperature": 0.7}
@@ -108,6 +110,7 @@ Most teams start their LLM journey with manual "vibe checks" - but this doesn't 
     Score outputs with pre-built metrics, custom evaluators, or human review.
     
     ```python
+    # Evaluate outputs using predefined metrics
     results = run.evaluate(
         metrics=["helpfulness", "accuracy", "tone"]
     )

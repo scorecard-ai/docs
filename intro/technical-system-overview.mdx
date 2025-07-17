@@ -88,10 +88,10 @@ Scorecard is built on four core primitives that power all LLM testing workflows:
     ```python
     class Metric:
         def evaluate(self, 
-                    input: str, 
-                    output: str, 
-                    expected: Optional[str] = None) -> Score:
-            # Implementation
+                    input: str,  # User input/prompt
+                    output: str,  # LLM generated response
+                    expected: Optional[str] = None) -> Score:  # Expected output (optional)
+            # Implementation of metric evaluation logic
             pass
     
     # Pre-built metrics
@@ -125,7 +125,7 @@ Scorecard is built on four core primitives that power all LLM testing workflows:
       endpoint?: string
       auth?: {
         type: 'bearer' | 'api_key' | 'oauth'
-        credentials: encrypted
+        credentials: encrypted  // AES-256 encrypted
       }
       default_config: ModelConfig
       rate_limits: {
@@ -171,8 +171,8 @@ graph LR
     POST   /v2/metrics           # Create custom metric
     ```
     
-    **Rate Limiting:** Token bucket algorithm
-    **Auth:** JWT with refresh tokens
+    **Rate Limiting:** Token bucket algorithm (sliding window)
+    **Auth:** JWT with refresh tokens (RS256 signature)
   </Tab>
   <Tab title="Execution Engine">
     **Components:**
@@ -451,8 +451,8 @@ curl -N https://api.scorecard.ai/v2/runs/{run_id}/stream \
     - **MFA**: Required for admin actions
   </Accordion>
   <Accordion title="Data Security" icon="shield">
-    - **Encryption**: AES-256 at rest, TLS 1.3 in transit
-    - **Key Management**: AWS KMS with automatic rotation
+    - **Encryption**: AES-256-GCM at rest, TLS 1.3 in transit
+    - **Key Management**: AWS KMS with automatic rotation (AES-256 keys)
     - **Data Isolation**: Logical separation by org
     - **PII Handling**: Automatic detection and masking
   </Accordion>
