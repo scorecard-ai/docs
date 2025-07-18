@@ -8,100 +8,86 @@ icon: "rocket"
 ![Scorecard Workflow](/images/what-is-scorecard/scorecard-workflow.gif)
 </Frame>
 
-Scorecard is an AI performance evaluation platform that helps teams build more reliable AI products. By creating a fast feedback loop for testing and improvement, Scorecard gives you transparency into your AI system's behavior before it impacts users.
+Scorecard is an AI evaluation platform that helps teams build reliable AI products through systematic testing. Test your AI systems before they impact users, catch regressions early, and deploy with confidence.
 
-## The problem we solve
+## Why you need AI testing
 
-Building production AI systems is challenging. Slow feedback cycles make it hard to iterate quickly, and without visibility into how your AI performs in real scenarios, issues are often discovered in production. Organizational silos create blind spots in AI development, making it difficult to ensure quality across teams.
+Building production AI systems without proper testing is risky. Teams often discover issues in production because they lack visibility into AI behavior across different scenarios. Manual testing doesn't scale, and without systematic evaluation, it's impossible to know if changes improve or degrade performance.
 
-Scorecard provides the infrastructure to test smarter, validate the right metrics, and continuously improve your AI products.
+Scorecard provides the infrastructure to test AI systems systematically, validate improvements, and prevent regressions.
 
-## How to use Scorecard
+## What Scorecard provides
 
-### Create and manage test cases
+**Testset management** — Convert real production scenarios into reusable test cases. When your AI fails in production, capture that case and add it to your regression suite.
 
-Convert real production scenarios into reusable test sets. When your AI fails in production, capture that case and add it to your regression suite.
+**Playground evaluation** — Test prompts and models side-by-side without writing code. Compare different approaches across providers (OpenAI, Anthropic, Google Gemini) to find what works best.
+
+**Domain-specific metrics** — Choose from pre-validated metrics for your industry or create custom evaluators. Available for legal, financial services, healthcare, customer support, and general quality evaluation.
+
+**Automated workflows** — Integrate testing into your CI/CD pipeline. Get alerts when performance drops and prevent regressions before they reach users.
+
+## How it works
+
+1. **Create testsets** from your real use cases and edge cases
+2. **Run evaluations** across different prompts, models, and configurations  
+3. **Compare results** to identify the best performing approaches
+4. **Deploy with confidence** knowing your AI system meets quality standards
 
 ```python
-# Create a testset from production failures
+# Example: Create and evaluate a testset
 testset = scorecard.create_testset(
-    name="customer-support-edge-cases",
-    cases=production_failures
+    name="customer-support-cases",
+    cases=production_scenarios
 )
+
+# Define custom metrics for your domain
+metric = scorecard.create_metric(
+    name="response-quality",
+    description="Evaluate helpfulness and accuracy"
+)
+
+# Run evaluation across your test cases
+scorecard.evaluate(testset, metric)
 ```
 
-### Compare models and prompts
+## Who uses Scorecard
 
-Use the playground to prototype and evaluate different approaches side-by-side. Test variations across multiple providers (OpenAI, Anthropic, Google Gemini) to find what works best.
+**AI Engineers** test systematically instead of manually checking outputs
 
-To compare prompts, enter your test inputs in the playground, configure different prompt versions, run evaluations across all variations, and view results side-by-side to identify the best performer.
+**Product Teams** validate that AI behavior matches user expectations
 
-### Evaluate with domain-specific metrics
+**QA Teams** build comprehensive test suites for AI systems
 
-Choose from pre-validated metrics for your industry or create custom evaluators by describing what you want to measure. Scorecard offers metrics for legal and compliance, financial services, healthcare, customer support, and general quality evaluation.
-
-```python
-# Define what matters for your use case
-custom_metric = scorecard.create_metric(
-    name="medical-accuracy",
-    description="Evaluate if medical advice follows guidelines"
-)
-```
-
-### Deploy tested configurations
-
-Once you've identified high-performing prompts through rigorous testing, deploy them to production with confidence. Test extensively in Scorecard, export your validated prompt configuration, deploy to your production system, and monitor performance with real-time monitoring.
-
-### Build a regression suite
-
-Transform production issues into test cases that prevent future regressions. Log production AI interactions, identify failures or suboptimal responses, add these cases to your testset, and run regression tests before each deployment.
-
-## Key capabilities
-
-**Live observability** helps you monitor how your AI system interacts with users in real-time. Trace requests, responses, and performance metrics to understand system behavior.
-
-**Prompt versioning** stores and tracks all prompt iterations. Compare performance across versions and roll back if needed.
-
-**A/B testing** lets you run controlled experiments to validate improvements before full deployment. Test different models, prompts, or parameters with statistical rigor.
-
-**Human validation** provides ground truth for complex evaluations when automated metrics aren't enough.
-
-## Who benefits from Scorecard
-
-AI Engineers can test systematically instead of manually checking outputs. Product Teams can validate that AI behavior matches user expectations. QA Teams can build comprehensive test suites for AI systems. Leadership gets visibility into AI reliability and performance.
+**Leadership** gets visibility into AI reliability and performance
 
 ## Getting started
 
 <Steps>
-  <Step title="Set up your workspace">
-    Create test sets that represent your real use cases
+  <Step title="Try the playground">
+    Test prompts interactively without writing code
   </Step>
-  <Step title="Configure evaluations">
-    Choose metrics that matter for your domain
+  <Step title="Create your first testset">
+    Add test cases that represent your real use cases
   </Step>
-  <Step title="Run tests">
-    Evaluate your AI system across all test cases
+  <Step title="Run evaluations">
+    Compare different approaches and measure performance
   </Step>
-  <Step title="Iterate and improve">
-    Use insights to refine prompts and configurations
+  <Step title="Integrate with CI/CD">
+    Automate testing to catch regressions early
   </Step>
 </Steps>
 
 <CardGroup cols={2}>
-  <Card title="Try the playground" icon="play" href="/features/playground">
-    Start testing without writing code
+  <Card title="5-minute quickstart" icon="play" href="/intro/quickstart">
+    Set up your first evaluation
   </Card>
-  <Card title="Read the quickstart" icon="book" href="/intro/quickstart">
-    Set up your first evaluation in 5 minutes
+  <Card title="Try the playground" icon="flask" href="/features/playground">
+    Start testing without code
   </Card>
 </CardGroup>
 
-## Technical integration
+## Next steps
 
-For engineering teams ready to integrate Scorecard into their workflow, we provide SDK support for Python and TypeScript, full REST API access for custom integrations, GitHub Actions and deployment pipeline integration, and OpenTelemetry-compatible logging.
+Ready to integrate Scorecard into your workflow? We provide SDK support for Python and TypeScript, full REST API access, and GitHub Actions integration.
 
-See our [Technical System Overview](/intro/technical-system-overview) for architecture details.
-
-## Learn more
-
-Browse our guides and API reference in the documentation. Join our [Slack](https://scorecard.io/slack) community to connect with other teams. Email support@scorecard.ai for help getting started.
+See our [Technical System Overview](/intro/technical-system-overview) for architecture details, or email support@scorecard.io for help getting started.
