@@ -69,21 +69,12 @@ The system creates a continuous feedback loop, where monitoring results feed bac
     ```typescript
     interface Run {
       id: string
+      url: string // Link to view results in UI
       testset_id: string
       status: 'pending' | 'running' | 'completed' | 'failed'
-      config: {
-        model: string
-        temperature: number
-        max_tokens: number
-        system_prompt?: string
-        // ... other model params
-      }
-      results: RunResult[] // Test execution results
-      metadata: {
-        triggered_by: 'api' | 'ui' | 'ci'
-        environment: string
-        commit_sha?: string
-      }
+      project_id: string
+      created_at: string // ISO 8601 format
+      // Additional metadata varies by implementation
     }
     ```
     
