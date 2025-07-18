@@ -1,32 +1,201 @@
 ---
 title: "Technical System Overview"
+description: "How Scorecard works under the hood - architecture, data flow, and integration points for engineers"
+icon: "diagram-project"
 ---
 
-## Scorecard Workflow
+## Architecture Overview
 
-The process of using the Scorecard platform consists of three general steps:
+Scorecard is built on four core primitives that power all LLM testing workflows:
 
-1. Ingest your data and add Testcases into Scorecard
-2. Execute your Testcases on your LLM application
-3. Score the responses of your LLM application
-<Frame caption="The Overall Scorecard Workflow">
-![Scorecard Workflow](/images/technical-system/1.png)
+<Frame caption="Scorecard Core Architecture">
+![Scorecard Core Architecture](/images/technical-system/1.png)
 </Frame>
-## Step 1: Ingestion
 
-As first step, you add the data and interesting Testcases that are representative of your LLM use case in the Scorecard platform.
-<Frame caption="Ingesting Testcases into Scorecard">
-![Ingesting Testcases into Scorecard](/images/technical-system/2.png)
-</Frame>
-## Step 2: Execution
+<Info>
+**For engineers:** This guide covers Scorecard's technical implementation. For a product overview, see [What is Scorecard?](/intro/what-is-scorecard)
+</Info>
 
-As second step, you run the defined Testcases against your LLM application.
-<Frame caption="Executing Your LLM App With Scorecard">
-![Executing Your LLM App With Scorecard](/images/technical-system/3.png)
-</Frame>
-## Step 3: Scoring
+## Core Primitives
 
-As third and final step, the inputs and LLM-produced outputs for each Testcase will be scored - either automatically via Scorecard AI models or manually via your subject-matter experts.
-<Frame caption="Scoring Your LLM App With Scorecard">
-![Scoring Your LLM App With Scorecard](/images/technical-system/4.png)
-</Frame>
+<Tabs>
+  <Tab title="Testsets">
+    ### Testsets
+    Collections of test cases representing real-world scenarios.
+    
+    ```typescript
+    interface Testset {
+      id: string
+      name: string
+      cases: TestCase[]
+      metadata: {
+        version: string
+        created_at: timestamp
+        tags: string[]
+      }
+    }
+    
+    interface TestCase {
+      id: string
+      input: {
+        prompt: string
+        context?: string
+        parameters?: Record<string, any>
+      }
+      expected?: {
+        output?: string
+        criteria?: EvaluationCriteria[]
+      }
+    }
+    ```
+    
+    **Storage:** PostgreSQL with version control
+    **Access:** REST API, SDK, UI
+  </Tab>
+  <Tab title="Runs">
+    ### Runs
+    Executions of testsets against your LLM application.
+    
+    ```typescript
+    interface Run {
+      id: string
+      testset_id: string
+      status: 'pending' | 'running' | 'completed' | 'failed'
+      config: {
+        model: string
+        temperature: number
+        max_tokens: number
+        system_prompt?: string
+        // ... other model params
+      }
+      results: RunResult[]
+      metadata: {
+        triggered_by: 'api' | 'ui' | 'ci'
+        environment: string
+        commit_sha?: string
+      }
+    }
+    ```
+    
+    **Execution:** Async job queue (Redis + workers)
+    **Storage:** S3 for outputs, PostgreSQL for metadata
+  </Tab>
+  <Tab title="Metrics">
+    ### Metrics
+    Evaluation functions that score LLM outputs.
+    
+    ```python
+    class Metric:
+        def evaluate(self, 
+                    input: str,  # User input/prompt
+                    output: str,  # LLM generated response
+                    expected: Optional[str] = None) -> Score:  # Expected output (optional)
+            # Implementation of metric evaluation logic
+            pass
+    
+    # Pre-built metrics
+    metrics = [
+        "relevance",      # Output addresses the input
+        "coherence",      # Logical flow and clarity
+        "factuality",     # Accuracy of claims
+        "safety",         # No harmful content
+        "helpfulness",    # Useful for the user
+    ]
+    
+    # Custom metric example
+    class ToneMetric(Metric):
+        def evaluate(self, input, output, expected=None):
+            # Check if output matches desired tone
+            return Score(value=0.95, reasoning="Professional tone")
+    ```
+    
+    **Evaluation:** Python workers with GPU support
+    **Caching:** Redis for repeated evaluations
+  </Tab>
+  <Tab title="Systems">
+    ### Systems
+    Your LLM application endpoints and configurations.
+    
+    ```typescript
+    interface System {
+      id: string
+      name: string
+      type: 'api' | 'sdk' | 'playground'
+      endpoint?: string
+      auth?: {
+        type: 'bearer' | 'api_key' | 'oauth'
+        credentials: encrypted  // AES-256 encrypted
+      }
+      default_config: ModelConfig
+      rate_limits: {
+        requests_per_minute: number
+        tokens_per_minute: number
+      }
+    }
+    ```
+    
+    **Integration:** REST API, gRPC, WebSockets
+    **Security:** End-to-end encryption, key rotation
+  </Tab>
+</Tabs>
+
+## Implementation Workflow
+
+<Steps>
+  <Step title="Data Preparation" icon="database">
+    <Frame caption="Ingesting Testcases into Scorecard">
+    ![Ingesting Testcases into Scorecard](/images/technical-system/2.png)
+    </Frame>
+    
+    **Best practices:**
+    - Start with production logs
+    - Include edge cases
+    - Version control testsets
+    - Tag by feature/risk level
+  </Step>
+  
+  <Step title="Execution" icon="play">
+    <Frame caption="Executing Your LLM App With Scorecard">
+    ![Executing Your LLM App With Scorecard](/images/technical-system/3.png)
+    </Frame>
+    
+    **Execution modes:**
+    - **Playground**: Manual testing
+    - **SDK**: Development workflow
+    - **CI/CD**: Automated checks
+    - **Monitoring**: Production traffic
+  </Step>
+  
+  <Step title="Evaluation" icon="chart-line">
+    <Frame caption="Scoring Your LLM App With Scorecard">
+    ![Scoring Your LLM App With Scorecard](/images/technical-system/4.png)
+    </Frame>
+    
+    **Evaluation stack:**
+    1. Rule-based checks (fast)
+    2. LLM-as-judge (accurate)
+    3. Human review (ground truth)
+    4. Meta-evaluation (validation)
+  </Step>
+</Steps>
+
+## Developer Resources
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="code" href="/api-reference">
+    Complete API documentation with examples
+  </Card>
+  <Card title="SDK Docs" icon="book" href="/how-to-use-scorecard/using-the-sdk">
+    Python, TypeScript, and more
+  </Card>
+  <Card title="Example Apps" icon="github" href="https://github.com/scorecard-ai/examples">
+    Reference implementations
+  </Card>
+  <Card title="Status Page" icon="signal" href="https://status.scorecard.ai">
+    Real-time system status
+  </Card>
+</CardGroup>
+
+<Note>
+**Questions?** Engineering support available at engineering@scorecard.ai or in #engineering on [Slack](https://scorecard.io/slack).
+</Note>
