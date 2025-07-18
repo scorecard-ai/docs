@@ -12,79 +12,132 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
 
 <Steps>
   <Step title="Setup accounts">
-    Create a [Scorecard account](https://app.scorecard.io/dashboard) and an [OpenAI account](https://platform.openai.com), then set your [Scorecard API key](https://app.scorecard.io/settings) and [OpenAI API key](https://platform.openai.com/api-keys) as environment variables.
+    Create a [Scorecard account](https://app.scorecard.io/dashboard), then set your [Scorecard API key](https://app.scorecard.io/settings) as an environment variable.
 
     ```sh
     export SCORECARD_API_KEY="your_scorecard_api_key"
-    export OPENAI_API_KEY="your_openai_api_key"
     ```
   </Step>
 
-  <Step title="Install SDKs">
-    Install the Scorecard and OpenAI libraries:
+  <Step title="Install Scorecard SDK">
+    Install the Scorecard library:
 
     <CodeGroup>
       ```sh Python (pip)
       pip install scorecard-ai
-      pip install openai
       ```
 
       ```sh JavaScript (npm)
       npm install scorecard-ai
-      npm install openai
       ```
     </CodeGroup>
   </Step>
 
-  <Step title="Create simple LLM system">
-    Create a simple LLM system to evaluate. When using Scorecard, systems use dictionaries as input and output.
+  <Step title="Create simple LLM system to evaluate">
+    For the quickstart, the LLM system is `run_system()`, which rewrites the user's message into a different tone and optionally addresses the recipient.
     
-    For the quickstart, the LLM system is `run_system()`, which translates the user's message to a different tone.
-    
-    `input["original"]` is the user's message and `input["tone"]` is the tone to translate to. The output is a dictionary containing the translated message (`rewritten`).
+    In Scorecard, system inputs and outputs are dictionaries, so:
 
-    <CodeGroup>
-      ```py Python wrap
-      from openai import OpenAI
-      
-      # By default, the API key is taken from the environment variable.
-      openai = OpenAI()
-      
-      # Example:
-      # run_system({"original": "Hello, world!", "tone": "formal"})
-      # -> {"rewritten": "Greetings, world."}
-      def run_system(system_input: dict) -> dict:
-          response = openai.responses.create(
-              model="gpt-4o-mini",
-              instructions=f"You are a tone translator. Convert the user's message to the tone: {system_input['tone']}",
-              input=system_input['original'],
-          )
-          return {
-              "rewritten": response.output_text
+    - `system_input["original"]` is the user's message.
+    - `system_input["tone"]` is the tone to translate to.
+    - `system_input["recipient"]` (optional) is the recipient to address.
+    - The output contains the rewritten message, e.g. `{ "rewritten": "..." }`
+
+    <Tabs>
+      <Tab title="Without OpenAI key">
+        Here's a simple system that does not require an OpenAI API key:
+
+        <CodeGroup>
+          ```py Python wrap
+          
+          # Example:
+          # run_system({"original": "How are you?", "recipient": "team", "tone": "formal"})
+          # -> {"rewritten": "Hello team,\nHOW ARE YOU?"}
+          def run_system(system_input: dict) -> dict:
+              recipient = system_input.get("recipient", "")
+              return {
+                "rewritten": f"Hello {recipient} in tone {system_input['tone']},\n{system_input['original'].upper()}"
+              }
+          ```
+
+          ```js JavaScript wrap
+          // Example:
+          // runSystem({"original": "How are you?", "recipient": "team", "tone": "formal"})
+          // -> {"rewritten": "Hello team,\nHOW ARE YOU?"}
+          async function runSystem(systemInput) {
+            const recipient = systemInput.recipient ?? "";
+            return {
+              rewritten: `Hello ${recipient} in tone ${systemInput.tone},\n${systemInput.original.toUpperCase()}`
+            };
           }
-      ```
+          ```
+        </CodeGroup>
+      </Tab>
+    
+      <Tab title="With OpenAI key">
+        If you have an OpenAI API key, you can create a realistic system.
 
-      ```js JavaScript wrap
-      import OpenAI from 'openai';
+        Install the OpenAI library:
 
-      // By default, the API key is taken from the environment variable.
-      const openai = new OpenAI();
-      
-      // Example:
-      // runSystem({"original": "Hello, world!", "tone": "formal"})
-      // -> {"rewritten": "Greetings, world."}
-      async function runSystem(systemInput) {
-        const response = await openai.responses.create({
-          model: 'gpt-4o-mini',
-          instructions: `You are a tone translator. Convert the user's message to the tone: ${systemInput.tone}`,
-          input: systemInput.original,
-        });
-        return {
-          rewritten: response.output_text
-        };
-      }
-      ```
-    </CodeGroup>
+        <CodeGroup>
+          ```sh Python (pip)
+          pip install openai
+          ```
+
+          ```sh JavaScript (npm)
+          npm install openai
+          ```
+        </CodeGroup>
+
+        Then, create the tone translator system:.
+
+        <CodeGroup>
+          ```py Python wrap
+          from openai import OpenAI
+          
+          # Find your API key at https://platform.openai.com/api-keys
+          openai = OpenAI(api_key="your_openai_api_key")
+          
+          # Example:
+          # run_system({"original": "Hello, world!", "tone": "formal concise", "recipient": "team"})
+          # -> {"rewritten": "Greetings, team."}
+          def run_system(system_input: dict) -> dict:
+              recipient = system_input.get('recipient','')
+              response = openai.responses.create(
+                  model="gpt-4o-mini",
+                  instructions=f"You are a tone translator. Convert the user's message to the tone: {system_input['tone']}." + (f" Address the recipient: {recipient}" if recipient else ""),
+                  input=system_input['original'],
+              )
+              return {
+                  "rewritten": response.output_text
+              }
+          ```
+
+          ```js JavaScript wrap
+          import OpenAI from 'openai';
+
+          // By default, the API key is taken from the environment variable.
+          const openai = new OpenAI();
+          
+          // Example:
+          // runSystem({"original": "Hello, world!", "tone": "formal concise", "recipient": "team"})
+          // -> {"rewritten": "Greetings, team."}
+          async function runSystem(systemInput) {
+            const recipient = systemInput.recipient ?? "";
+            const response = await openai.responses.create({
+              model: 'gpt-4o-mini',
+              instructions: `You are a tone translator. Convert the user's message to the tone: ${systemInput.tone}. ` +
+                (systemInput.recipient ? `Address the recipient: ${systemInput.recipient}` : ""),
+              input: systemInput.original,
+            });
+            return {
+              rewritten: response.output_text
+            };
+          }
+          ```
+        </CodeGroup>
+      </Tab>
+    </Tabs>
   </Step>
 
   <Step title="Setup Scorecard">
@@ -105,28 +158,30 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
     </CodeGroup>
   </Step>
   
-  <Step title="Create Project">
-    Create a Project in Scorecard. This will be where your tests and runs will be stored. Copy the Project ID for later.
+  <Step title="Specify Project">
+    Create a new Project in Scorecard, or use the existing default Project. This is where your testsets, metrics, and runs are stored.
+
+    Set the Project ID for later:
 
     <CodeGroup>
       ```py Python
-      PROJECT_ID = "310"  # Replace with your project ID
+      PROJECT_ID = "123"  # Replace with your project ID
       ```
 
       ```js JavaScript
-      const PROJECT_ID = "310"; // Replace with your Project ID
+      const PROJECT_ID = "123"; // Replace with your Project ID
       ```
     </CodeGroup>
   </Step>
   
-  <Step title="Create Testset with Testcases">
-    Create some testcases to represent the inputs to your system and the ideal (`expected`) outputs.
+  <Step title="Create test cases">
+    Create some test cases to represent the inputs and the ideal (`expected`) outputs of your tone translator system.
 
     <CodeGroup>
-      ```py Python wrap
+      ```py Python
       testcases = [
           {
-              # `inputs` gets passed to the system.
+              # `inputs` gets passed to the system as a dictionary.
               "inputs": {
                   "original": "We need your feedback on the new designs ASAP.",
                   "tone": "polite",
@@ -148,10 +203,10 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
       ]
       ```
 
-      ```js JavaScript wrap
+      ```js JavaScript
       const testcases = [
         {
-          // `inputs` gets passed to the system.
+          // `inputs` gets passed to the system as an object.
           inputs: {
             original: 'We need your feedback on the new designs ASAP.',
             tone: 'polite',
@@ -176,35 +231,73 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
   </Step>
   
   <Step title="Create Metrics">
-    Create an LLM-as-a-judge Metric to evaluate the tone accuracy of your system.
+    Create two LLM-as-a-judge Metrics to evaluate whether your system uses the correct tone and addresses the recipient.
     
-    The Metric's prompt template uses Jinja syntax. For each Testcase, we will send the prompt template to the judge and replace `{{inputs.tone}}` with the Testcase's `tone` value.
+    The Metric's prompt template uses Jinja syntax. For each Testcase, we will send the prompt template to the judge and replace `{{inputs.tone}}` with the test case's `tone` value.
 
     <CodeGroup>
-      ```py Python wrap
-      metric = scorecard.metrics.create(
+      ```py Python
+      import textwrap
+
+      tone_accuracy_metric = scorecard.metrics.create(
           project_id=PROJECT_ID,
           name="Tone accuracy",
+          description="How well does it match the intended tone?",
           eval_type="ai",
           output_type="int",
-          prompt_template="You are a tone evaluator. Grade the response on how well it matches the intended tone {{inputs.tone}} and the tone of the ideal response. Use a score of 1 if the tones are very different and 5 if they are the exact same.\n\nResponse: {{output.rewritten}}\n\nIdeal response: {{expected.idealRewritten}}",
+          prompt_template=textwrap.dedent("""
+            You are a tone evaluator. Grade the response on how well it matches the
+            intended tone: "{{inputs.tone}}". Use a score of 1 if the tones are very
+            different and 5 if they are the exact same.
+            
+            Response: {{outputs.rewritten}}
+            
+            Ideal response: {{expected.idealRewritten}}
+            
+            {{ gradingInstructionsAndExamples }}"""),
+      )
+
+      recipient_address_metric = scorecard.metrics.create(
+          project_id=PROJECT_ID,
+          name="Recipient address",
+          description="Does it address the recipient only if specified?",
+          eval_type="ai",
+          output_type="boolean",
+          prompt_template=textwrap.dedent("""
+            {% if inputs.recipient %}
+              Does the response refer to the correct recipient: {{inputs.recipient}}?
+              Response: {{outputs.rewritten}}
+            {% else %}
+              The response should avoid referring to any specific recipient.
+              Response: {{outputs.rewritten}}
+            {% endif %}
+            
+            {{ gradingInstructionsAndExamples }}"""),
       )
       ```
 
       ```js JavaScript wrap
-      const metric = await scorecard.metrics.create({
+      const toneAccuracyMetric = await scorecard.metrics.create({
         projectId: PROJECT_ID,
         name: "Tone accuracy",
         evalType: "ai",
         outputType: "int",
-        promptTemplate: "You are a tone evaluator. Grade the response on how well it matches the intended tone {{inputs.tone}} and the tone of the ideal response. Use a score of 1 if the tones are very different and 5 if they are the exact same.\n\nResponse: {{output.rewritten}}\n\nIdeal response: {{expected.idealRewritten}}",
+        promptTemplate: "You are a tone evaluator. Grade the response on how well it matches the intended tone {{inputs.tone}} and the tone of the ideal response. Use a score of 1 if the tones are very different and 5 if they are the exact same.\n\nResponse: {{outputs.rewritten}}\n\nIdeal response: {{expected.idealRewritten}}\n\n{{ gradingInstructionsAndExamples }}",
+      });
+
+      const recipientAddressMetric = await scorecard.metrics.create({
+        projectId: PROJECT_ID,
+        name: "Recipient address",
+        evalType: "ai",
+        outputType: "boolean",
+        promptTemplate: "Does the response refer to the correct recipient: {{inputs.recipient}}? Response: {{outputs.rewritten}}\n\n{{ gradingInstructionsAndExamples }}",
       });
       ```
     </CodeGroup>
   </Step>
 
   <Step title="Evaluate system">
-    Run the system against the Metrics you've created and record the results in Scorecard.
+    Call `run_system()` against the test cases and record the scored results in Scorecard.
 
     <CodeGroup>
       ```py Python wrap
@@ -213,11 +306,12 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
       run = run_and_evaluate(
           client=scorecard,
           project_id=PROJECT_ID,
-          metric_ids=[metric.id],
-          system=lambda input: run_system(input),
           testcases=testcases,
+          metric_ids=[tone_accuracy_metric.id, recipient_address_metric.id],
+          system=lambda input, _system_version: run_system(input),
       )
-      print(f'Go to {run["url"]} to view your results.')
+
+      print(f'Go to {run["url"]} to view your scored results.')
       ```
 
       ```js JavaScript wrap
@@ -225,11 +319,11 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
       
       const run = await runAndEvaluate(scorecard, {
         projectId: PROJECT_ID,
-        metricIds: METRIC_IDS,
-        system: runSystem,
         testcases: testcases,
+        metricIds: [toneAccuracyMetric.id, recipientAddressMetric.id],
+        system: runSystem,
       });
-      console.log(`Go to ${run.url} to view your results.`);
+      console.log(`Go to ${run.url} to view your scored results.`);
       ```
     </CodeGroup>
   </Step>
@@ -238,7 +332,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
     Finally, review the results in Scorecard to understand the performance of the tone translator system.
 
     <DarkLightImage
-      lightSrc="/images/quickstart/scoring-done-light.png"
+      lightSrc="/images/quickstart-run-light.png"
       caption="Viewing results in the Scorecard UI."
       alt="Screenshot of viewing results in the Scorecard UI."
     />
