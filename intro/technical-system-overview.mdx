@@ -4,7 +4,7 @@ description: "How Scorecard works under the hood - architecture, data flow, and 
 icon: "diagram-project"
 ---
 
-## <Icon icon="building" /> Architecture Overview
+## Architecture Overview
 
 Scorecard is built on four core primitives that power all LLM testing workflows:
 
@@ -16,7 +16,7 @@ Scorecard is built on four core primitives that power all LLM testing workflows:
 **For engineers:** This guide covers Scorecard's technical implementation. For a product overview, see [What is Scorecard?](/intro/what-is-scorecard)
 </Info>
 
-## <Icon icon="diagram-project" /> Product System Architecture
+## Product System Architecture
 
 <Frame caption="Scorecard Product System Architecture">
 ![Scorecard Product System Architecture](/images/technical-system/product-system-architecture.png)
@@ -34,7 +34,7 @@ This diagram illustrates the complete Scorecard product architecture:
 
 The system creates a continuous feedback loop, where monitoring results feed back into requirements and test management for ongoing improvement.
 
-## <Icon icon="cube" /> Core Primitives
+## Core Primitives
 
 <Tabs>
   <Tab title="Testsets" icon="database">
@@ -48,7 +48,7 @@ The system creates a continuous feedback loop, where monitoring results feed bac
       cases: TestCase[]
       metadata: {
         version: string
-        created_at: timestamp
+        created_at: string // ISO 8601 format
         tags: string[]
       }
     }
@@ -62,7 +62,7 @@ The system creates a continuous feedback loop, where monitoring results feed bac
       }
       expected?: {
         output?: string
-        criteria?: EvaluationCriteria[]
+        criteria?: EvaluationCriteria[] // Custom evaluation rules
       }
     }
     ```
@@ -86,7 +86,7 @@ The system creates a continuous feedback loop, where monitoring results feed bac
         system_prompt?: string
         // ... other model params
       }
-      results: RunResult[]
+      results: RunResult[] // Test execution results
       metadata: {
         triggered_by: 'api' | 'ui' | 'ci'
         environment: string
@@ -103,6 +103,14 @@ The system creates a continuous feedback loop, where monitoring results feed bac
     Evaluation functions that score LLM outputs.
     
     ```python
+    from typing import Optional
+    from dataclasses import dataclass
+    
+    @dataclass
+    class Score:
+        value: float  # Score between 0 and 1
+        reasoning: str  # Explanation for the score
+    
     class Metric:
         def evaluate(self, 
                     input: str,  # User input/prompt
@@ -142,9 +150,9 @@ The system creates a continuous feedback loop, where monitoring results feed bac
       endpoint?: string
       auth?: {
         type: 'bearer' | 'api_key' | 'oauth'
-        credentials: encrypted  // AES-256 encrypted
+        credentials: string  // AES-256 encrypted
       }
-      default_config: ModelConfig
+      default_config: ModelConfig // Default model parameters
       rate_limits: {
         requests_per_minute: number
         tokens_per_minute: number
@@ -157,7 +165,7 @@ The system creates a continuous feedback loop, where monitoring results feed bac
   </Tab>
 </Tabs>
 
-## <Icon icon="list-check" /> Implementation Workflow
+## Implementation Workflow
 
 <Steps>
   <Step title="Data Preparation" icon="database">
@@ -197,7 +205,7 @@ The system creates a continuous feedback loop, where monitoring results feed bac
   </Step>
 </Steps>
 
-## <Icon icon="code" /> Developer Resources
+## Developer Resources
 
 <CardGroup cols={2}>
   <Card title="API Reference" icon="code" href="/api-reference">
