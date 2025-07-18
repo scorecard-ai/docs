@@ -86,36 +86,32 @@ The system creates a continuous feedback loop, where monitoring results feed bac
     Evaluation functions that score LLM outputs.
     
     ```python
-    from typing import Optional
-    from dataclasses import dataclass
+    # Create metrics using the Scorecard API
+    metric = scorecard.metrics.create(
+        project_id=PROJECT_ID,
+        name="Response Quality",
+        eval_type="ai",  # AI-powered evaluation
+        output_type="int",  # Score as integer (1-5)
+        prompt_template="Rate the helpfulness and accuracy of this response from 1-5.\n\nInput: {{inputs.question}}\nOutput: {{output.response}}\nExpected: {{expected.response}}"
+    )
     
-    @dataclass
-    class Score:
-        value: float  # Score between 0 and 1
-        reasoning: str  # Explanation for the score
-    
-    class Metric:
-        def evaluate(self, 
-                    input: str,  # User input/prompt
-                    output: str,  # LLM generated response
-                    expected: Optional[str] = None) -> Score:  # Expected output (optional)
-            # Implementation of metric evaluation logic
-            pass
-    
-    # Pre-built metrics
-    metrics = [
-        "relevance",      # Output addresses the input
-        "coherence",      # Logical flow and clarity
-        "factuality",     # Accuracy of claims
-        "safety",         # No harmful content
-        "helpfulness",    # Useful for the user
+    # Built-in metric types
+    eval_types = [
+        "ai",           # LLM-as-a-judge evaluation
+        "exact_match",  # Exact string comparison
+        "contains",     # Check if output contains expected text
+        "regex",        # Regular expression matching
+        "custom"        # Custom evaluation logic
     ]
     
-    # Custom metric example
-    class ToneMetric(Metric):
-        def evaluate(self, input, output, expected=None):
-            # Check if output matches desired tone
-            return Score(value=0.95, reasoning="Professional tone")
+    # Example: Domain-specific metric
+    medical_metric = scorecard.metrics.create(
+        project_id=PROJECT_ID,
+        name="Medical Accuracy",
+        eval_type="ai",
+        output_type="int",
+        prompt_template="Evaluate if this medical advice follows clinical guidelines. Rate 1-5."
+    )
     ```
     
     **Evaluation:** Python workers with GPU support
