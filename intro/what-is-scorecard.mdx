@@ -1,6 +1,6 @@
 ---
 title: "What Is Scorecard?"
-description: "The complete platform for building, testing, and deploying production-ready LLM applications"
+description: "Build trusted AI agents with systematic testing and evaluation"
 icon: "rocket"
 ---
 
@@ -8,184 +8,143 @@ icon: "rocket"
 ![Scorecard Workflow](/images/what-is-scorecard/scorecard-workflow.gif)
 </Frame>
 
-## Welcome to Scorecard
+Scorecard is an AI performance evaluation platform that helps teams build more reliable AI products. By creating a fast feedback loop for testing and improvement, Scorecard gives you transparency into your AI system's behavior before it impacts users.
 
-Scorecard is designed to help teams **ship LLM applications faster** with confidence in their quality. We provide the complete toolkit for testing, evaluating, and monitoring AI applications throughout their lifecycle.
+## The problem we solve
 
-<CardGroup cols={3}>
-  <Card title="Quick Start" icon="play" href="/intro/quickstart">
-    Get up and running in 5 minutes
-  </Card>
-  <Card title="Watch Demo" icon="video" href="https://scorecard.io/demo">
-    See Scorecard in action
-  </Card>
-  <Card title="Join Community" icon="users" href="https://scorecard.io/slack">
-    Connect with other teams
-  </Card>
-</CardGroup>
+Building production AI systems is challenging:
 
-## Why teams choose Scorecard
+- **Slow feedback cycles** make it hard to iterate quickly
+- **Lack of visibility** into how your AI performs in real scenarios  
+- **No systematic testing** leads to issues discovered in production
+- **Organizational silos** create blind spots in AI development
 
-<Tabs>
-  <Tab title="For Engineers" icon="code">
-    ### Ship with confidence
-    - **Automated testing** catches regressions before production
-    - **Version control** for prompts and configurations
-    - **CI/CD integration** fits your existing workflow
-    - **SDK support** for Python, TypeScript, and more
-    
-    ```python
-    # Test in one line - runs testset and evaluates results
-    scorecard.run("my-testset", model="gpt-4")
-    ```
-  </Tab>
-  <Tab title="For Product Teams" icon="users">
-    ### Move faster, break less
-    - **No-code testing** through our playground
-    - **Visual analytics** to understand performance
-    - **Collaborative workflows** for cross-functional teams
-    - **Real-time monitoring** of production quality
-  </Tab>
-  <Tab title="For Leaders" icon="crown">
-    ### Scale AI reliably
-    - **Reduce AI incidents** by up to 90%
-    - **Ship 3x faster** with automated workflows
-    - **Save engineering time** on manual testing
-    - **Ensure compliance** with audit trails
-  </Tab>
-</Tabs>
+Scorecard provides the infrastructure to test smarter, validate the right metrics, and continuously improve your AI products.
 
-## From manual testing to automation
+## How to use Scorecard
 
-Most teams start their LLM journey with manual "vibe checks" - but this doesn't scale.
+### 1. Create and manage test cases
 
-<Frame caption="The evolution of LLM testing maturity">
-![Stages in the Evaluation Journey](/images/llm-developer-journey/4.png)
-</Frame>
+Convert real production scenarios into reusable test sets. When your AI fails in production, capture that case and add it to your regression suite.
 
-<AccordionGroup>
-  <Accordion title="Stage 1: Manual Testing" icon="hand" defaultOpen>
-    Teams test by manually trying prompts and checking outputs. Works for demos, breaks in production.
-    
-    **Problems:** No consistency, catches few edge cases, wastes developer time
-  </Accordion>
-  <Accordion title="Stage 2: Spreadsheet Tracking" icon="table">
-    Teams track test cases in spreadsheets. Better than nothing, still manual.
-    
-    **Problems:** Manual copy-paste, subjective evaluation, version control issues
-  </Accordion>
-  <Accordion title="Stage 3: Automated Evaluation" icon="robot">
-    Scorecard automates the entire testing workflow with consistent, scalable evaluation.
-    
-    **Benefits:** Catch regressions instantly, test at scale, objective metrics
-  </Accordion>
-</AccordionGroup>
+```python
+# Create a testset from production failures
+testset = scorecard.create_testset(
+    name="customer-support-edge-cases",
+    cases=production_failures
+)
+```
 
-## How Scorecard works
+### 2. Compare models and prompts
+
+Use the playground to prototype and evaluate different approaches side-by-side. Test variations across multiple providers (OpenAI, Anthropic, Google Gemini) to find what works best.
+
+**To compare prompts:**
+1. Enter your test inputs in the playground
+2. Configure different prompt versions
+3. Run evaluations across all variations
+4. View results side-by-side to identify the best performer
+
+### 3. Evaluate with domain-specific metrics
+
+Choose from pre-validated metrics for your industry or create custom evaluators by describing what you want to measure.
+
+**Available metric domains:**
+- Legal and compliance
+- Financial services  
+- Healthcare
+- Customer support
+- General quality (relevance, factuality, safety)
+
+**To create custom metrics:**
+```python
+# Define what matters for your use case
+custom_metric = scorecard.create_metric(
+    name="medical-accuracy",
+    description="Evaluate if medical advice follows guidelines"
+)
+```
+
+### 4. Deploy tested configurations
+
+Once you've identified high-performing prompts through rigorous testing, deploy them to production with confidence.
+
+**Deployment workflow:**
+1. Test extensively in Scorecard
+2. Export validated prompt configuration
+3. Deploy to your production system
+4. Monitor performance (real-time monitoring coming soon)
+
+### 5. Build a regression suite
+
+Transform production issues into test cases that prevent future regressions.
+
+**To build your test suite:**
+1. Log production AI interactions
+2. Identify failures or suboptimal responses
+3. Add these cases to your testset
+4. Run regression tests before each deployment
+
+## Key capabilities
+
+### Live observability
+Monitor how your AI system interacts with users in real-time. Trace requests, responses, and performance metrics to understand system behavior.
+
+### Prompt versioning
+Store and track all prompt iterations. Compare performance across versions and roll back if needed.
+
+### A/B testing
+Run controlled experiments to validate improvements before full deployment. Test different models, prompts, or parameters with statistical rigor.
+
+### Human validation
+When automated metrics aren't enough, use human labeling to establish ground truth for complex evaluations.
+
+## Who benefits from Scorecard
+
+- **AI Engineers**: Test systematically instead of manually checking outputs
+- **Product Teams**: Validate AI behavior matches user expectations
+- **QA Teams**: Build comprehensive test suites for AI systems
+- **Leadership**: Get visibility into AI reliability and performance
+
+## Getting started
 
 <Steps>
-  <Step title="Create your testset" icon="database">
-    Start with 5-10 test cases that represent your use case. Import from CSV, create in UI, or generate from production logs.
-    
-    ```python
-    # Create a testset with test cases
-    testset = scorecard.create_testset(
-        name="customer-support",
-        cases=[{"input": "How do I reset my password?"}]
-    )
-    ```
+  <Step title="Set up your workspace">
+    Create test sets that represent your real use cases
   </Step>
-  <Step title="Run your tests" icon="play">
-    Execute against your LLM application through our playground, SDK, or CI/CD pipeline.
-    
-    ```python
-    # Execute testset against your LLM with specified config
-    run = scorecard.run(
-        testset_id="customer-support",
-        model_config={"temperature": 0.7}
-    )
-    ```
+  <Step title="Configure evaluations">
+    Choose metrics that matter for your domain
   </Step>
-  <Step title="Evaluate results" icon="chart-line">
-    Score outputs with pre-built metrics, custom evaluators, or human review.
-    
-    ```python
-    # Evaluate outputs using predefined metrics
-    results = run.evaluate(
-        metrics=["helpfulness", "accuracy", "tone"]
-    )
-    ```
+  <Step title="Run tests">
+    Evaluate your AI system across all test cases
+  </Step>
+  <Step title="Iterate and improve">
+    Use insights to refine prompts and configurations
   </Step>
 </Steps>
 
-### Testing at every scale
-
-<Tabs>
-  <Tab title="Sample (5-10 tests)" icon="flask">
-    Perfect for quick iteration and demos. Test your most important cases.
-  </Tab>
-  <Tab title="Golden (100 tests)" icon="medal">
-    Production-ready coverage of core functionality. Catch regressions before deploy.
-  </Tab>
-  <Tab title="Comprehensive (1000+ tests)" icon="infinity">
-    Full coverage including edge cases. Monitor performance across all scenarios.
-  </Tab>
-</Tabs>
-
-## See Scorecard in action
-
 <CardGroup cols={2}>
-  <Card title="DoorDash" icon="truck">
-    "Scorecard helped us reduce hallucinations by 73% in our support bot while shipping 3x faster."
-    
-    **Results:** 90% fewer customer complaints, 50% reduction in testing time
+  <Card title="Try the playground" icon="play" href="/features/playground">
+    Start testing without writing code
   </Card>
-  <Card title="Notion" icon="file">
-    "We use Scorecard to ensure Notion AI delivers consistent, high-quality responses across millions of users."
-    
-    **Results:** 95% quality consistency, automated regression testing
+  <Card title="Read the quickstart" icon="book" href="/intro/quickstart">
+    Set up your first evaluation in 5 minutes
   </Card>
 </CardGroup>
 
-<Tip>
-**Pro tip:** Most teams see ROI within the first week by catching issues that would have reached production.
-</Tip>
+## Technical integration
 
-## Start building better LLM apps today
+For engineering teams ready to integrate Scorecard into their workflow:
 
-<CardGroup cols={2}>
-  <Card title="Start with Playground" icon="play" href="/features/playground">
-    No code required. Test your prompts and see results instantly.
-  </Card>
-  <Card title="Setup Integration" icon="code" href="/how-to-use-scorecard/trigger-run-with-github-actions">
-    Add testing to your codebase in minutes.
-    
-    ```bash
-    pip install scorecard-ai
-    ```
-  </Card>
-</CardGroup>
+- **SDK support**: Python and TypeScript libraries available
+- **API access**: Full REST API for custom integrations
+- **CI/CD integration**: GitHub Actions and deployment pipelines
+- **Tracing**: OpenTelemetry-compatible logging
 
-### Resources to get started
+See our [Technical System Overview](/intro/technical-system-overview) for architecture details.
 
-<CardGroup cols={3}>
-  <Card title="5-Minute Quickstart" icon="timer" href="/intro/quickstart">
-    Your first test in 5 minutes
-  </Card>
-  <Card title="Testset Management" icon="folder" href="/features/testset-management">
-    Create and manage test cases
-  </Card>
-  <Card title="RAG Guide" icon="star" href="/how-to-use-scorecard/rag-retrieval-augmented-generation">
-    Advanced evaluation techniques
-  </Card>
-</CardGroup>
+## Learn more
 
-### Learn more
-
-- **Technical details:** [Technical System Overview](/intro/technical-system-overview) for engineers
-- **Integration guides:** Connect with [GitHub Actions](/how-to-use-scorecard/trigger-run-with-github-actions) and automation workflows
-- **Community:** Join our [Slack](https://scorecard.io/slack) to connect with other teams
-
-<Info>
-**Questions?** Our team is here to help at support@scorecard.ai or via the chat widget.
-</Info>
+- **Documentation**: Browse our guides and API reference
+- **Community**: Join [Slack](https://scorecard.io/slack) to connect with other teams
+- **Support**: Email support@scorecard.ai for help getting started
