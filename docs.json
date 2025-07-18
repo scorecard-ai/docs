@@ -93,6 +93,10 @@
     {
       "source": "/features/run-inspection",
       "destination": "/features/runs"
+    },
+    {
+      "source": "/features/logging",
+      "destination": "/features/tracing"
     }
   ],
   "navigation": {
