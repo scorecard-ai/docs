@@ -1,8 +1,0 @@
-export const DarkLightImage = ({ lightSrc, caption, alt, darkSrc = null, width = "1000" }) => {
-  return (
-    <Frame caption={caption}>
-      <img className="block dark:hidden" width={width} src={lightSrc} alt={alt} />
-      <img className="hidden dark:block" width={width} src={darkSrc || lightSrc.replace('light', 'dark')} alt={alt} />
-    </Frame>
-  )
-}
