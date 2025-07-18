@@ -89,9 +89,8 @@
             "group": "Introduction",
             "pages": [
               "intro/overview",
-              "intro/quickstart",
-              "intro/systems",
               "intro/what-is-scorecard",
+              "intro/quickstart",
               "intro/technical-system-overview"
             ]
           },
@@ -100,16 +99,17 @@
             "pages": [
               "features/projects",
               "features/playground",
+              "features/testset-management",
+              "intro/systems",
               "features/prompt-management",
-              "features/tracing",
-              "features/privacy-by-design",
               "features/automated-scoring",
               "features/best-in-class-metrics",
-              "features/testset-management",
               "features/a-b-comparison",
-              "features/ai-guardrails",
               "features/run-inspection",
-              "features/ai-proxy"
+              "features/tracing",
+              "features/ai-guardrails",
+              "features/ai-proxy",
+              "features/privacy-by-design"
             ]
           },
           {
