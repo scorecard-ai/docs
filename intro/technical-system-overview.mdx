@@ -4,7 +4,7 @@ description: "How Scorecard works under the hood - architecture, data flow, and 
 icon: "diagram-project"
 ---
 
-## Architecture Overview
+## <Icon icon="building" /> Architecture Overview
 
 Scorecard is built on four core primitives that power all LLM testing workflows:
 
@@ -16,10 +16,28 @@ Scorecard is built on four core primitives that power all LLM testing workflows:
 **For engineers:** This guide covers Scorecard's technical implementation. For a product overview, see [What is Scorecard?](/intro/what-is-scorecard)
 </Info>
 
-## Core Primitives
+## <Icon icon="diagram-project" /> Product System Architecture
+
+<Frame caption="Scorecard Product System Architecture">
+![Scorecard Product System Architecture](/images/technical-system/product-system-architecture.png)
+</Frame>
+
+This diagram illustrates the complete Scorecard product architecture:
+
+- **Requirements**: Define metrics and evaluation criteria
+- **Test Management**: Organize test datasets and trial settings
+- **Configuration**: Set up model templates and prompt parameters
+- **Evaluation System**: Run simulations, trials, and analyze metrics
+- **Results**: View scorecards and run history
+- **Monitoring & Continuous Eval**: Track live performance and user feedback
+- **Improvement**: Get AI-powered suggestions for optimization
+
+The system creates a continuous feedback loop, where monitoring results feed back into requirements and test management for ongoing improvement.
+
+## <Icon icon="cube" /> Core Primitives
 
 <Tabs>
-  <Tab title="Testsets">
+  <Tab title="Testsets" icon="database">
     ### Testsets
     Collections of test cases representing real-world scenarios.
     
@@ -52,7 +70,7 @@ Scorecard is built on four core primitives that power all LLM testing workflows:
     **Storage:** PostgreSQL with version control
     **Access:** REST API, SDK, UI
   </Tab>
-  <Tab title="Runs">
+  <Tab title="Runs" icon="play">
     ### Runs
     Executions of testsets against your LLM application.
     
@@ -80,7 +98,7 @@ Scorecard is built on four core primitives that power all LLM testing workflows:
     **Execution:** Async job queue (Redis + workers)
     **Storage:** S3 for outputs, PostgreSQL for metadata
   </Tab>
-  <Tab title="Metrics">
+  <Tab title="Metrics" icon="chart-bar">
     ### Metrics
     Evaluation functions that score LLM outputs.
     
@@ -112,7 +130,7 @@ Scorecard is built on four core primitives that power all LLM testing workflows:
     **Evaluation:** Python workers with GPU support
     **Caching:** Redis for repeated evaluations
   </Tab>
-  <Tab title="Systems">
+  <Tab title="Systems" icon="server">
     ### Systems
     Your LLM application endpoints and configurations.
     
@@ -139,7 +157,7 @@ Scorecard is built on four core primitives that power all LLM testing workflows:
   </Tab>
 </Tabs>
 
-## Implementation Workflow
+## <Icon icon="list-check" /> Implementation Workflow
 
 <Steps>
   <Step title="Data Preparation" icon="database">
@@ -179,7 +197,7 @@ Scorecard is built on four core primitives that power all LLM testing workflows:
   </Step>
 </Steps>
 
-## Developer Resources
+## <Icon icon="code" /> Developer Resources
 
 <CardGroup cols={2}>
   <Card title="API Reference" icon="code" href="/api-reference">
