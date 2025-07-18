@@ -108,11 +108,8 @@
             "group": "Introduction",
             "pages": [
               "intro/overview",
-              "intro/quickstart",
-              "intro/systems",
               "intro/what-is-scorecard",
-              "intro/the-llm-developers-journey",
-              "intro/technical-system-overview"
+              "intro/quickstart"
             ]
           },
           {
@@ -121,15 +118,16 @@
               "features/projects",
               "features/playground",
               "features/prompts",
-              "features/tracing",
-              "features/privacy-by-design",
+              "features/systems",
+              "features/testsets",
               "features/automated-scoring",
               "features/best-in-class-metrics",
-              "features/testsets",
               "features/a-b-comparison",
               "features/ai-guardrails",
               "features/runs",
-              "features/ai-proxy"
+              "features/tracing",
+              "features/ai-proxy",
+              "features/privacy-by-design"
             ]
           },
           {
