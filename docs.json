@@ -100,7 +100,7 @@
               "features/projects",
               "features/playground",
               "features/testset-management",
-              "intro/systems",
+              "features/systems",
               "features/prompt-management",
               "features/automated-scoring",
               "features/best-in-class-metrics",
