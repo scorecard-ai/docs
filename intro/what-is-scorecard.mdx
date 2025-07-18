@@ -42,33 +42,6 @@ Scorecard provides the infrastructure to run AI evals systematically, validate i
 3. **Compare results** to identify the best performing approaches
 4. **Deploy with confidence** knowing your AI system meets quality standards
 
-```python
-# Example: Define test cases and run evaluation
-testcases = [
-    {
-        "inputs": {"question": "How do I reset my password?"},
-        "expected": {"response": "Click 'Forgot Password' on the login page"}
-    }
-]
-
-# Create a custom metric
-metric = scorecard.metrics.create(
-    project_id=PROJECT_ID,
-    name="response-quality",
-    eval_type="ai",
-    prompt_template="Rate the helpfulness from 1-5"
-)
-
-# Run evaluation
-from scorecard_ai.lib import run_and_evaluate
-run = run_and_evaluate(
-    client=scorecard,
-    project_id=PROJECT_ID,
-    metric_ids=[metric.id],
-    system=your_ai_system,
-    testcases=testcases
-)
-```
 
 <CardGroup cols={2}>
   <Card title="5-minute quickstart" icon="play" href="/intro/quickstart">
@@ -83,4 +56,4 @@ run = run_and_evaluate(
 
 Ready to integrate Scorecard into your workflow? We provide SDK support for Python and TypeScript, full REST API access, and GitHub Actions integration.
 
-See our [Technical System Overview](/intro/technical-system-overview) for architecture details, or email support@scorecard.io for help getting started.
+Email support@scorecard.io for help getting started.
