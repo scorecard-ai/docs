@@ -54,15 +54,8 @@ The system creates a continuous feedback loop, where monitoring results feed bac
     
     interface TestCase {
       id: string
-      input: {
-        prompt: string
-        context?: string
-        parameters?: Record<string, any>
-      }
-      expected?: {
-        output?: string
-        criteria?: EvaluationCriteria[] // Custom evaluation rules
-      }
+      inputs: Record<string, any> // Domain-specific inputs (e.g., {original: string, tone: string})
+      expected?: Record<string, any> // Domain-specific expected outputs (e.g., {idealRewritten: string})
     }
     ```
     
