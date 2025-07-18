@@ -34,20 +34,31 @@ Scorecard provides the infrastructure to run AI evals systematically, validate i
 4. **Deploy with confidence** knowing your AI system meets quality standards
 
 ```python
-# Example: Create and evaluate a testset
-testset = scorecard.create_testset(
-    name="customer-support-cases",
-    cases=production_scenarios
-)
+# Example: Define test cases and run evaluation
+testcases = [
+    {
+        "inputs": {"question": "How do I reset my password?"},
+        "expected": {"response": "Click 'Forgot Password' on the login page"}
+    }
+]
 
-# Define custom metrics for your domain
-metric = scorecard.create_metric(
+# Create a custom metric
+metric = scorecard.metrics.create(
+    project_id=PROJECT_ID,
     name="response-quality",
-    description="Evaluate helpfulness and accuracy"
+    eval_type="ai",
+    prompt_template="Rate the helpfulness from 1-5"
 )
 
-# Run evaluation across your test cases
-scorecard.evaluate(testset, metric)
+# Run evaluation
+from scorecard_ai.lib import run_and_evaluate
+run = run_and_evaluate(
+    client=scorecard,
+    project_id=PROJECT_ID,
+    metric_ids=[metric.id],
+    system=your_ai_system,
+    testcases=testcases
+)
 ```
 
 ## Who uses Scorecard
