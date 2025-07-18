@@ -122,21 +122,31 @@ The system creates a continuous feedback loop, where monitoring results feed bac
     Your LLM application endpoints and configurations.
     
     ```typescript
-    interface System {
-      id: string
-      name: string
-      type: 'api' | 'sdk' | 'playground'
-      endpoint?: string
-      auth?: {
-        type: 'bearer' | 'api_key' | 'oauth'
-        credentials: string  // AES-256 encrypted
-      }
-      default_config: ModelConfig // Default model parameters
-      rate_limits: {
-        requests_per_minute: number
-        tokens_per_minute: number
-      }
-    }
+    // Systems are functions that process inputs and return outputs
+    type SystemFunction = (inputs: Record<string, any>) => Promise<Record<string, any>>;
+    
+    // Example: Simple system function
+    const jokeBot: SystemFunction = async (inputs) => {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [{
+          role: "system", 
+          content: "You are a witty joke bot"
+        }, {
+          role: "user", 
+          content: `Tell a joke about ${inputs.topic}`
+        }]
+      });
+      return { joke: response.choices[0].message.content };
+    };
+    
+    // Systems can be passed to run_and_evaluate
+    run_and_evaluate(client, {
+      project_id: PROJECT_ID,
+      testcases: testcases,
+      system: jokeBot,
+      metric_ids: [metric.id]
+    });
     ```
     
     **Integration:** REST API, gRPC, WebSockets
