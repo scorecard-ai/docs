@@ -1,0 +1,239 @@
+---
+title: "Testsets"
+description: "Create test data to evaluate your AI systems"
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.mdx';
+
+A **Testset** is a collection of **Testcases** used to evaluate the performance of an AI system across various inputs and scenarios. Testsets belong to a central theme like "Core Functionality", "Edge Cases", or "Customer Support Queries".
+
+A **Testcase** is an individual test data point containing inputs, expected outputs, and metadata used for evaluation.
+
+<DarkLightImage
+  lightSrc="/images/testset-details-light.png"
+  caption='Testset details page showing eight Testcases for a "Message tone rewriter" LLM system.'
+  alt="Screenshot of the testset details page in the UI."
+/>
+
+## Create a Testset
+
+Go to the Testsets page in your project and click the **"New Testset"** button to create a new, empty Testset.
+
+<Tip>
+Checking "Add example Testcases" will automatically generate 3 sample Testcases using AI based on your Testset's description. This provides a starting point for your Testset.
+</Tip>
+
+<DarkLightImage
+  lightSrc="/images/testset-create-light.png"
+  caption="Create testset modal with AI generation option"
+  alt="Screenshot of the create testset modal in the UI."
+/>
+
+
+### Testset schema
+
+Each Testset has a _schema_, which defines which fields a Testcase has, the type of each field, and the role each field plays in evaluation.
+
+- <span className="text-blue-500 font-bold">Input fields</span> are sent to your AI system.
+- <span className="text-green-500 font-bold">Expected fields</span> are expected or ideal outputs, which metrics compare your AI system's output to.
+- <span className="dark:text-gray-400 text-gray-600 font-bold">Metadata fields</span> are additional context for analysis, not used by evaluation or your system.
+
+You can update the schema of a Testset by clicking the **"Edit Schema"** button in the Testset actions menu.
+
+This allows you to add or remove fields, modify field types, and update field descriptions. Existing Testcases are not modified, but are validated against the new schema.
+
+<DarkLightImage
+  lightSrc="/images/testset-schema-edit-light.png"
+  caption="Testset schema editor."
+  alt="Screenshot of the testset schema editor in the UI."
+/>
+
+### With the SDK
+
+You can also [create](/api-reference/create-testset) and [update](/api-reference/update-testset) Testsets with the Scorecard SDK.
+
+You define a Testset's schema using the [JSON Schema](https://json-schema.org/understanding-json-schema/about) format.
+
+For example, here's a schema for a customer support system:
+
+```json expandable
+{
+  "type": "object",
+  "title": "Customer Support Schema",
+  "properties": {
+    "userQuery": {
+      "type": "string",
+      "description": "The customer's question or request"
+    },
+    "context": {
+      "type": "string", 
+      "description": "Additional context about the customer"
+    },
+    "ideal": {
+      "type": "string",
+      "description": "The ideal response from support"
+    },
+    "expectedSentiment": {
+      "type": "string",
+      "description": "The expected predicted sentiment of the user query."
+    },
+    "difficulty": {
+      "type": "number",
+      "description": "How difficult the customer support request is to solve (1-10)"
+    }
+  },
+  "required": ["userQuery", "ideal"]
+}
+```
+
+**Supported Data Types**
+
+- **`string`**: Text content
+- **`number`**: Numeric values (integers or floats)
+- **`boolean`**: either `true` or `false`
+- **`object`**: Nested JSON objects
+- **`array`**: Lists of JSON values
+
+You also need to define the _field mapping_ when creating a Testset with the SDK.
+
+A field mapping categorizes schema fields by their role in evaluation.
+
+For example, here's a field mapping for the customer support schema above:
+
+```json
+{
+  "inputs": ["userQuery", "context"],
+  "expected": ["ideal", "expectedSentiment"], 
+  "metadata": ["difficulty"]
+}
+```
+
+## Create and edit Testcases
+
+### From the UI
+
+Click the **"New Testcase"** button to create a new Testcase matching your Testset's schema.
+
+<DarkLightImage
+  lightSrc="/images/testcase-create-light.png"
+  caption="Testcase creation modal."
+  alt="Screenshot of the testcase creation modal in the UI."
+/>
+
+You can edit a particular Testcase's fields from the Testcase table, or from the Testcase details page.
+
+<DarkLightImage
+  lightSrc="/images/testcase-details-light.png"
+  caption="Testcase details page."
+  alt="Screenshot of the testcase details page in the UI."
+/>
+
+### Importing from a file
+
+The Scorecard UI supports importing Testcases in CSV, TSV, JSON, and JSONL formats. Scorecard automatically maps your file's columns to the testset's schema fields and validates data.
+
+<CodeGroup>
+```csv CSV
+userQuery,context,ideal,category
+"How do I cancel my order?","Order placed 1 hour ago","You can cancel orders within 2 hours...","cancellation"
+"Where is my package?","Order shipped yesterday","Track your package using the link...","tracking"
+```
+
+```tsv TSV
+userQuery	context	ideal	category
+How do I cancel my order?	Order placed 1 hour ago	You can cancel orders within 2 hours...	cancellation
+Where is my package?	Order shipped yesterday	Track your package using the link...	tracking
+```
+
+```json JSON
+[
+    {
+        "userQuery": "Is my order eligible for expedited shipping?",
+        "context": "Order placed 1 hour ago",
+        "ideal": "Expedited shipping is available for orders over $50...",
+        "category": "shipping"
+    },
+    {
+        "userQuery": "How do I cancel my order?",
+        "context": "Order placed 1 hour ago. Order shipped yesterday.",
+        "ideal": "You can cancel orders within 2 hours...",
+        "category": "cancellation"
+    }
+]
+```
+
+```jsonl JSONL
+{"userQuery": "Is my order eligible for expedited shipping?", "context": "Order placed 1 hour ago", "ideal": "Expedited shipping is available for orders over $50...", "category": "shipping"}
+{"userQuery": "How do I cancel my order?", "context": "Order placed 1 hour ago. Order shipped yesterday.", "ideal": "You can cancel orders within 2 hours...", "category": "cancellation"}
+```
+</CodeGroup>
+
+### Using the API
+
+With our SDKs, you can [create](/api-reference/create-multiple-testcases), [update](/api-reference/update-testcase), and [delete](/api-reference/delete-multiple-testcases) Testcases.
+
+## Export Testset
+
+You can export a Testset's Testcases to a CSV file by clicking the **Export as CSV** button in the Testset's details page.
+
+## Other Testset features
+
+**Testset tags**
+
+You can add custom tags to your Testsets to categorize them. For example, `regression` or `edge-cases`.
+
+**Duplicate Testset**
+
+You can create a copy of a Testset by clicking the **"Duplicate"** button in the Testset actions menu.
+
+This maintains original field mappings, so it's useful for creating variants of your Testsets without having to recreate the schema.
+
+## Best practices
+
+**Testset strategy by use case**
+
+<AccordionGroup>
+  <Accordion title="Hillclimbing Testsets" icon="trending-up">
+    **Purpose**: Iterative improvement and development
+    
+    **Size**: 5-20 Testcases
+    
+    **Content**: Your favorite prompts and edge cases that matter most
+    
+    **Usage**: Quick feedback during development cycles
+  </Accordion>
+
+  <Accordion title="Regression Testsets" icon="shield-check">
+    **Purpose**: Ensure new changes don't break existing functionality
+    
+    **Size**: 50-100 Testcases
+    
+    **Content**: Representative examples of core use cases
+    
+    **Usage**: Run regularly (nightly builds, CI/CD pipelines)
+  </Accordion>
+
+  <Accordion title="Launch Evaluation Testsets" icon="rocket">
+    **Purpose**: Comprehensive testing before major releases
+    
+    **Size**: 100+ Testcases
+    
+    **Content**: Broad coverage of all use cases and edge cases
+    
+    **Usage**: Pre-launch validation and confidence building
+  </Accordion>
+
+  <Accordion title="Must-Pass Testsets" icon="triangle-alert">
+    **Purpose**: Critical functionality that must never fail
+    
+    **Size**: Variable (focus on precision over coverage)
+    
+    **Content**: High-precision Testcases for essential features
+    
+    **Usage**: Early checks in deployment pipelines
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+Remember that testcase data may contain sensitive information. Follow your organization's data handling policies and avoid including PII, secrets, or confidential data in Testsets.
+</Warning>

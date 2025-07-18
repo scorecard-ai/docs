@@ -1,0 +1,132 @@
+---
+title: "Runs & Results"
+description: "Execute evaluations and analyze AI system performance."
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.mdx';
+
+A **Run** is an execution that evaluates your AI system against some Testcases using specified metrics.
+
+Runs generate **Records** (individual test executions) and **Scores** (evaluation results) for each Record that help you understand your system's performance across different scenarios.
+
+<DarkLightImage
+  lightSrc="/images/run-details-light.png"
+  caption="Run details page."
+  alt="Screenshot of viewing run details in the UI."
+/>
+
+## What is a Run?
+
+Every run consists of:
+- (Optional) **Testset**: Collection of test cases to evaluate against
+- (Optional) **Metrics**: Evaluation criteria that score system outputs
+- (Optional) **System Version**: Configuration defining your AI system's behavior
+- **Records**: Individual test executions, one per Testcase
+- **Scores**: Evaluation results for each record against each metric
+
+<DarkLightImage
+  lightSrc="/images/runs-list-light.png"
+  caption="List of recent runs with statuses."
+  alt="Screenshot of viewing runs list in the UI."
+/>
+
+## Creating Runs
+
+### Kickoff Run from the UI
+
+TODO
+
+### From the Playground
+
+The [Playground](/features/playground) allows you to test prompts interactively.
+
+Click **Kickoff Run** to create a run with a specified testset, prompt version, and metrics. 
+
+<DarkLightImage
+  lightSrc="/images/playground/playground-1.png"
+  caption="Playground overview."
+  alt="Screenshot of playground in the UI."
+/>
+
+### Using the API
+
+You can create runs and records programmatically using the Scorecard SDK.
+
+<CodeGroup>
+```python Python
+from scorecard_ai import Scorecard
+from scorecard_ai.lib import run_and_evaluate
+
+run = run_and_evaluate(
+    client=Scorecard(),
+    project_id="123",
+    testset_id="456",
+    metric_ids=["789", "101"],
+    system=lambda system_input: ask_llm(system_input),
+)
+print(f'Go to {run["url"]} to view your results.')
+```
+
+```JavaScript JavaScript
+import Scorecard, { runAndEvaluate } from 'scorecard-ai';
+
+const scorecard = new Scorecard();
+
+const run = await runAndEvaluate(scorecard, {
+  projectId: "123",
+  metricIds: ["789", "101"],
+  testsetId: "456",
+  system: (systemInput) => askLLM(systemInput),
+});
+console.log(`Go to ${run.url} to view your results.`);
+```
+</CodeGroup>
+
+See the [SDK quickstart](/intro/quickstart) or [API reference](/api-reference/overview) for more details.
+
+### Via GitHub Actions
+
+Using Scorecard's [GitHub integration](/how-to-use-scorecard/trigger-run-with-github-actions), you can trigger runs automatically (e.g. on pull request or a schedule).
+
+With the integration set up, you can also trigger runs of your real system from the Scorecard UI.
+
+## Run status
+
+- **🟡 Pending**: Run is created but execution hasn't finished.
+- **🔵 Scoring**: Execution has finished, and Records are being scored by metrics.
+- **🟢 Completed**: All Records have been scored successfully.
+- **🔴 Error**: An error occurred during execution or scoring of one or more Records.
+
+## Inspect a Record
+
+<DarkLightImage 
+  lightSrc="/images/testrecord-score-explanation-light.png"
+  caption="Record score explanation."
+  alt="Screenshot of viewing testrecord score explanation in the UI."
+/>
+
+Drill down into specific test executions for detailed analysis:
+
+**Record Overview:**
+- **Inputs**: Original Testcase data sent to your system
+- **Outputs**: Generated responses from your AI system
+- **Expected Outputs**: Ideal responses for comparison
+- **Scores**: Detailed evaluation results from each metric
+
+## Export a Run
+
+Click the **Export as CSV** button on the run details page.
+
+## Run notes
+
+Click **Show Details** on a run page to view or edit the run notes and view the system/prompt version the run was executed with.
+
+<DarkLightImage
+  lightSrc="/images/run-notes-light.png"
+  caption="Run details with notes and system configuration."
+  alt="Screenshot of viewing run details with notes and system configuration in the UI."
+/>
+
+<Note>
+Run data includes potentially sensitive information from your Testsets and system outputs. Follow your organization's data handling policies and avoid including PII or confidential data in test configurations.
+</Note>
