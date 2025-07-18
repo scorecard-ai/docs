@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "Scorecard AI Docs",
+  "name": "Scorecard Docs",
   "colors": {
     "primary": "#ff6e3e",
     "light": "#ff6e3e",
@@ -9,6 +9,9 @@
   },
   "background": {
     "decoration": "grid"
+  },
+  "icons": {
+    "library": "lucide"
   },
   "favicon": "/favicon.png",
   "logo": {
@@ -43,7 +46,7 @@
   },
   "api": {
     "examples": {
-      "languages": ["javascript", "python", "go", "java", "curl"]
+      "languages": ["javascript", "python", "go", "curl"]
     }
   },
   "redirects": [
@@ -78,6 +81,18 @@
     {
       "source": "/how-to-use-scorecard/ci-cd-with-github-actions",
       "destination": "/how-to-use-scorecard/trigger-run-with-github-actions"
+    },
+    {
+      "source": "/features/prompt-management",
+      "destination": "/features/prompts"
+    },
+    {
+      "source": "/features/testset-management",
+      "destination": "/features/testsets"
+    },
+    {
+      "source": "/features/run-inspection",
+      "destination": "/features/runs"
     }
   ],
   "navigation": {
@@ -99,15 +114,15 @@
             "pages": [
               "features/projects",
               "features/playground",
-              "features/testset-management",
-              "features/prompt-management",
+              "features/prompts",
               "features/systems",
+              "features/testsets",
               "features/automated-scoring",
               "features/best-in-class-metrics",
               "features/a-b-comparison",
-              "features/run-inspection",
-              "features/tracing",
               "features/ai-guardrails",
+              "features/runs",
+              "features/tracing",
               "features/ai-proxy",
               "features/privacy-by-design"
             ]

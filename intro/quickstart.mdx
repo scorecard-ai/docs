@@ -5,6 +5,8 @@ icon: "play"
 mode: "center"
 ---
 
+import { DarkLightImage } from '/snippets/dark-light-image.mdx';
+
 Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](https://www.npmjs.com/package/scorecard-ai) SDKs. If you're using Python, you can follow along in [Google Colab](https://colab.research.google.com/drive/1A53j48o75Decrjz7WzDVP62XeDEKCHHP).
 
 ## Steps
@@ -236,9 +238,10 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai) and [JavaScript](h
   <Step title="Analyze results">
     Finally, review the results in Scorecard to understand the performance of the tone translator system.
 
-    <Frame caption="Viewing results in the Scorecard UI." height="500">
-      <img className="block dark:hidden" height="100" src="/images/quickstart/scoring-done-light.png" alt="Screenshot of viewing results in the Scorecard UI." />
-      <img className="hidden dark:block" height="100" src="/images/quickstart/scoring-done-dark.png" alt="Screenshot of viewing results in the Scorecard UI." />
-    </Frame>
+    <DarkLightImage
+      lightSrc="/images/quickstart/scoring-done-light.png"
+      caption="Viewing results in the Scorecard UI."
+      alt="Screenshot of viewing results in the Scorecard UI."
+    />
   </Step>
 </Steps>
