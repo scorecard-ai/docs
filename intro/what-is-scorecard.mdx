@@ -12,18 +12,13 @@ Scorecard is an AI performance evaluation platform that helps teams build more r
 
 ## The problem we solve
 
-Building production AI systems is challenging:
-
-- **Slow feedback cycles** make it hard to iterate quickly
-- **Lack of visibility** into how your AI performs in real scenarios  
-- **No systematic testing** leads to issues discovered in production
-- **Organizational silos** create blind spots in AI development
+Building production AI systems is challenging. Slow feedback cycles make it hard to iterate quickly, and without visibility into how your AI performs in real scenarios, issues are often discovered in production. Organizational silos create blind spots in AI development, making it difficult to ensure quality across teams.
 
 Scorecard provides the infrastructure to test smarter, validate the right metrics, and continuously improve your AI products.
 
 ## How to use Scorecard
 
-### 1. Create and manage test cases
+### Create and manage test cases
 
 Convert real production scenarios into reusable test sets. When your AI fails in production, capture that case and add it to your regression suite.
 
@@ -35,28 +30,16 @@ testset = scorecard.create_testset(
 )
 ```
 
-### 2. Compare models and prompts
+### Compare models and prompts
 
 Use the playground to prototype and evaluate different approaches side-by-side. Test variations across multiple providers (OpenAI, Anthropic, Google Gemini) to find what works best.
 
-**To compare prompts:**
-1. Enter your test inputs in the playground
-2. Configure different prompt versions
-3. Run evaluations across all variations
-4. View results side-by-side to identify the best performer
+To compare prompts, enter your test inputs in the playground, configure different prompt versions, run evaluations across all variations, and view results side-by-side to identify the best performer.
 
-### 3. Evaluate with domain-specific metrics
+### Evaluate with domain-specific metrics
 
-Choose from pre-validated metrics for your industry or create custom evaluators by describing what you want to measure.
+Choose from pre-validated metrics for your industry or create custom evaluators by describing what you want to measure. Scorecard offers metrics for legal and compliance, financial services, healthcare, customer support, and general quality evaluation.
 
-**Available metric domains:**
-- Legal and compliance
-- Financial services  
-- Healthcare
-- Customer support
-- General quality (relevance, factuality, safety)
-
-**To create custom metrics:**
 ```python
 # Define what matters for your use case
 custom_metric = scorecard.create_metric(
@@ -65,46 +48,27 @@ custom_metric = scorecard.create_metric(
 )
 ```
 
-### 4. Deploy tested configurations
+### Deploy tested configurations
 
-Once you've identified high-performing prompts through rigorous testing, deploy them to production with confidence.
+Once you've identified high-performing prompts through rigorous testing, deploy them to production with confidence. Test extensively in Scorecard, export your validated prompt configuration, deploy to your production system, and monitor performance with real-time monitoring.
 
-**Deployment workflow:**
-1. Test extensively in Scorecard
-2. Export validated prompt configuration
-3. Deploy to your production system
-4. Monitor performance (real-time monitoring coming soon)
+### Build a regression suite
 
-### 5. Build a regression suite
-
-Transform production issues into test cases that prevent future regressions.
-
-**To build your test suite:**
-1. Log production AI interactions
-2. Identify failures or suboptimal responses
-3. Add these cases to your testset
-4. Run regression tests before each deployment
+Transform production issues into test cases that prevent future regressions. Log production AI interactions, identify failures or suboptimal responses, add these cases to your testset, and run regression tests before each deployment.
 
 ## Key capabilities
 
-### Live observability
-Monitor how your AI system interacts with users in real-time. Trace requests, responses, and performance metrics to understand system behavior.
+**Live observability** helps you monitor how your AI system interacts with users in real-time. Trace requests, responses, and performance metrics to understand system behavior.
 
-### Prompt versioning
-Store and track all prompt iterations. Compare performance across versions and roll back if needed.
+**Prompt versioning** stores and tracks all prompt iterations. Compare performance across versions and roll back if needed.
 
-### A/B testing
-Run controlled experiments to validate improvements before full deployment. Test different models, prompts, or parameters with statistical rigor.
+**A/B testing** lets you run controlled experiments to validate improvements before full deployment. Test different models, prompts, or parameters with statistical rigor.
 
-### Human validation
-When automated metrics aren't enough, use human labeling to establish ground truth for complex evaluations.
+**Human validation** provides ground truth for complex evaluations when automated metrics aren't enough.
 
 ## Who benefits from Scorecard
 
-- **AI Engineers**: Test systematically instead of manually checking outputs
-- **Product Teams**: Validate AI behavior matches user expectations
-- **QA Teams**: Build comprehensive test suites for AI systems
-- **Leadership**: Get visibility into AI reliability and performance
+AI Engineers can test systematically instead of manually checking outputs. Product Teams can validate that AI behavior matches user expectations. QA Teams can build comprehensive test suites for AI systems. Leadership gets visibility into AI reliability and performance.
 
 ## Getting started
 
@@ -134,17 +98,10 @@ When automated metrics aren't enough, use human labeling to establish ground tru
 
 ## Technical integration
 
-For engineering teams ready to integrate Scorecard into their workflow:
-
-- **SDK support**: Python and TypeScript libraries available
-- **API access**: Full REST API for custom integrations
-- **CI/CD integration**: GitHub Actions and deployment pipelines
-- **Tracing**: OpenTelemetry-compatible logging
+For engineering teams ready to integrate Scorecard into their workflow, we provide SDK support for Python and TypeScript, full REST API access for custom integrations, GitHub Actions and deployment pipeline integration, and OpenTelemetry-compatible logging.
 
 See our [Technical System Overview](/intro/technical-system-overview) for architecture details.
 
 ## Learn more
 
-- **Documentation**: Browse our guides and API reference
-- **Community**: Join [Slack](https://scorecard.io/slack) to connect with other teams
-- **Support**: Email support@scorecard.ai for help getting started
+Browse our guides and API reference in the documentation. Join our [Slack](https://scorecard.io/slack) community to connect with other teams. Email support@scorecard.ai for help getting started.
