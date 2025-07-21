@@ -117,10 +117,12 @@
             "pages": [
               "features/projects",
               "features/playground",
+              "features/prompt-management",
+              "features/tracing",
+              "features/privacy-by-design",
               "features/prompts",
               "features/systems",
               "features/testsets",
-              "features/automated-scoring",
               "features/best-in-class-metrics",
               "features/a-b-comparison",
               "features/ai-guardrails",
