@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "Scorecard AI Docs",
+  "name": "Scorecard Docs",
   "colors": {
     "primary": "#ff6e3e",
     "light": "#ff6e3e",
@@ -9,6 +9,9 @@
   },
   "background": {
     "decoration": "grid"
+  },
+  "icons": {
+    "library": "lucide"
   },
   "favicon": "/favicon.png",
   "logo": {
@@ -43,7 +46,7 @@
   },
   "api": {
     "examples": {
-      "languages": ["javascript", "python", "go", "java", "curl"]
+      "languages": ["javascript", "python", "go", "curl"]
     }
   },
   "redirects": [
@@ -78,6 +81,22 @@
     {
       "source": "/how-to-use-scorecard/ci-cd-with-github-actions",
       "destination": "/how-to-use-scorecard/trigger-run-with-github-actions"
+    },
+    {
+      "source": "/features/prompt-management",
+      "destination": "/features/prompts"
+    },
+    {
+      "source": "/features/testset-management",
+      "destination": "/features/testsets"
+    },
+    {
+      "source": "/features/run-inspection",
+      "destination": "/features/runs"
+    },
+    {
+      "source": "/features/logging",
+      "destination": "/features/tracing"
     }
   ],
   "navigation": {
@@ -89,11 +108,8 @@
             "group": "Introduction",
             "pages": [
               "intro/overview",
-              "intro/quickstart",
-              "intro/systems",
               "intro/what-is-scorecard",
-              "intro/the-llm-developers-journey",
-              "intro/technical-system-overview"
+              "intro/quickstart"
             ]
           },
           {
@@ -104,12 +120,18 @@
               "features/prompt-management",
               "features/tracing",
               "features/privacy-by-design",
+              "features/prompts",
+              "features/systems",
+              "features/testsets",
               "features/best-in-class-metrics",
-              "features/testset-management",
               "features/a-b-comparison",
               "features/ai-guardrails",
               "features/run-inspection",
-              "features/ai-proxy"
+              "features/custom-provider",
+              "features/runs",
+              "features/tracing",
+              "features/ai-proxy",
+              "features/privacy-by-design"
             ]
           },
           {

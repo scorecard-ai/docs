@@ -2,6 +2,8 @@
 title: "Trigger a Run with GitHub Actions"
 ---
 
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
 ## Why use GitHub Actions?
 
 GitHub Actions is a powerful, flexible automation platform for software development workflows.
@@ -173,7 +175,8 @@ You can trigger a run manually from the Scorecard UI using the **Trigger Run** p
 
 Just select a testset and some metrics, then click "Run tests"!
 
-<Frame caption="Triggering a run manually from the Scorecard UI." height="500">
-    <img className="block dark:hidden" height="100" src="/images/trigger-run-light.jpeg" alt="Screenshot of the trigger run page in the Scorecard UI." />
-    <img className="hidden dark:block" height="100" src="/images/trigger-run-dark.jpeg" alt="Screenshot of the trigger run page in the Scorecard UI." />
-</Frame>
+<DarkLightImage
+  lightSrc="/images/trigger-run-light.jpeg"
+  caption="Triggering a run manually from the Scorecard UI."
+  alt="Screenshot of the trigger run page in the Scorecard UI."
+/>
