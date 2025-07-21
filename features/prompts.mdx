@@ -1,0 +1,90 @@
+---
+title: "Prompts"
+description: "Create, version, test, and deploy prompts with integrated evaluation workflows."
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+Prompts in Scorecard are configurable templates that generate inputs for language models. They support dynamic variable substitution, multi-message conversations, and integrated testing workflows.
+
+<DarkLightImage
+  lightSrc="/images/prompt-details-light.png"
+  caption='Prompt management page for a "docs search" LLM system.'
+  alt="Screenshot of viewing prompt details in the UI."
+/>
+
+## Create a Prompt
+
+Go to the Prompts page in Scorecard and click the **"New Prompt +"** button. Provide a name and description for your prompt, then choose your AI model and configure parameters:
+
+- **Model**: Select from available models (e.g. `gpt-4.1-mini`, `opus-4`).
+    - If you don't see the LLM provider you want, add the provider API key in [organization settings](https://app.scorecard.io/settings).
+- **Temperature**: Control randomness (0.0 = deterministic, 1.0 = creative).
+- **Max Tokens**: Set maximum response length.
+- **Top-P**: Fine-tune token selection probability.
+  
+Then, write your prompt content using the built-in editor with Jinja template support.
+
+<DarkLightImage
+  lightSrc="/images/prompt-create-light.png"
+  caption="Prompt creation dialog with model settings."
+  alt="Screenshot of creating a prompt in the UI."
+/>
+
+## Prompt Templates & Jinja Syntax
+
+### Template Structure
+
+Scorecard prompts support multi-message conversations with different roles:
+
+- **System**: Instructions for the AI model's behavior
+- **User**: The main prompt or question
+- **Assistant**: Previous responses (for conversation context)
+
+### Variable substitution
+
+Scorecard supports Jinja template syntax for variable substitution.
+
+This lets you insert dynamic content from your testcases into your prompt by wrapping the Testcase's input's field name in `{{` and `}}`.
+
+For example, if your Testcase has a `customer_message` field, your prompt might be:
+
+```jinja wrap
+You are a helpful customer service assistant.
+
+Customer inquiry: {{customer_message}}
+Product: {{product_name}}
+Customer tier: {{customer_tier}}
+
+Please provide a helpful response addressing their concern.
+```
+
+Scorecard also has a special `{{allInputs}}` variable that contains all the testcase input fields as a formatted string.
+
+<Accordion title="Advanced Jinja features">
+  Scorecard supports [full Jinja functionality](https://maxbot.ai/design-reference/jinja/) including:
+
+  - Conditional logic: `{% if customer_tier == "premium" %} User is a premium customer. {% endif %}`
+  - Loops: `{% for item in product_list %} {{item.name}} {% endfor %}`
+  - Filters: `{{customer_message | upper}}`
+  - Comments: `{# This is a comment #}`
+</Accordion>
+
+## Version Management
+
+The prompt details page shows a version history of the prompt. You can create a new version of the prompt by modifying the existing prompt or parameters and clicking **"Save Changes"**. Selecting "Publish this version to production" will mark that version as the "production" version. Otherwise, it'll simply be an experimental version.
+
+You can mark any version as production by clicking the **"Publish"** button, but exactly one version is marked as production at any time.
+
+<DarkLightImage
+  lightSrc="/images/prompt-publish-light.png"
+  caption="Prompt version dropdown with publish button."
+  alt="Screenshot of the prompt dropdown in the UI."
+  width="400"
+/>
+
+Before publishing to production, test a new version in the playground to be confident that it behaves as expected and won't regress on any testcases.
+
+<Info>
+Ready to evaluate your prompts? Follow the [Playground guide](/features/playground) to test your prompts on Testsets.
+</Info>
