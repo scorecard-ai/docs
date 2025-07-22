@@ -1,0 +1,167 @@
+name: Check for unused images
+
+on:
+  pull_request:
+    paths:
+      - "images/**"
+      - "**/*.mdx"
+      - ".github/workflows/check-unused-images.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "images/**"
+      - "**/*.mdx"
+      - ".github/workflows/check-unused-images.yml"
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  check-unused-images:
+    runs-on: ubuntu-latest
+    name: Check for Unused Images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find unused images
+        id: check-images
+        run: |
+          echo "🔍 Scanning for unused images..."
+
+          # Create temporary files
+          TEMP_DIR=$(mktemp -d)
+          ALL_IMAGES_FILE="$TEMP_DIR/all_images.txt"
+          REFERENCED_IMAGES_FILE="$TEMP_DIR/referenced_images.txt"
+          UNUSED_IMAGES_FILE="$TEMP_DIR/unused_images.txt"
+
+          # Find all image files in the images directory
+          find images -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.gif" -o -iname "*.svg" -o -iname "*.webp" \) | sed 's|^|/|' | sort > "$ALL_IMAGES_FILE"
+
+          # Find all image references in MDX files
+          grep -r --include="*.mdx" -h -o '/images/[^)[:space:]"]*\.\(png\|jpg\|jpeg\|gif\|svg\|webp\)' . | sort | uniq > "$REFERENCED_IMAGES_FILE" || true
+
+          # Find DarkLightImage component usage and extract lightSrc/darkSrc values
+          echo "🔍 Checking DarkLightImage component usage..."
+          TEMP_DARK_LIGHT_FILE="$TEMP_DIR/dark_light_images.txt"
+
+          # Extract lightSrc values from DarkLightImage components
+          grep -r --include="*.mdx" -h -o 'lightSrc="[^"]*"' . | sed 's/lightSrc="//g' | sed 's/"//g' | sort | uniq > "$TEMP_DARK_LIGHT_FILE" || true
+
+          # Extract explicit darkSrc values from DarkLightImage components  
+          grep -r --include="*.mdx" -h -o 'darkSrc="[^"]*"' . | sed 's/darkSrc="//g' | sed 's/"//g' | sort | uniq >> "$TEMP_DARK_LIGHT_FILE" || true
+
+          # For each lightSrc, generate the corresponding dark image path (replace 'light' with 'dark')
+          while IFS= read -r light_src; do
+            if [[ "$light_src" == *"light"* ]]; then
+              dark_src=$(echo "$light_src" | sed 's/light/dark/g')
+              echo "$dark_src" >> "$TEMP_DARK_LIGHT_FILE"
+            fi
+          done < <(grep -r --include="*.mdx" -h -o 'lightSrc="[^"]*"' . | sed 's/lightSrc="//g' | sed 's/"//g')
+
+          # Add DarkLightImage referenced images to the main referenced images list
+          cat "$TEMP_DARK_LIGHT_FILE" >> "$REFERENCED_IMAGES_FILE"
+
+          # Re-sort and deduplicate the referenced images list
+          sort "$REFERENCED_IMAGES_FILE" | uniq > "$TEMP_DIR/referenced_images_final.txt"
+          mv "$TEMP_DIR/referenced_images_final.txt" "$REFERENCED_IMAGES_FILE"
+
+          # Find unused images
+          comm -23 "$ALL_IMAGES_FILE" "$REFERENCED_IMAGES_FILE" > "$UNUSED_IMAGES_FILE"
+
+          # Count total and unused images
+          TOTAL_IMAGES=$(wc -l < "$ALL_IMAGES_FILE")
+          UNUSED_COUNT=$(wc -l < "$UNUSED_IMAGES_FILE")
+          USED_COUNT=$((TOTAL_IMAGES - UNUSED_COUNT))
+
+          echo "📊 Image Statistics:"
+          echo "   Total images: $TOTAL_IMAGES"
+          echo "   Used images: $USED_COUNT"
+          echo "   Unused images: $UNUSED_COUNT"
+          echo ""
+
+          # Set outputs for use in other steps
+          echo "unused_count=$UNUSED_COUNT" >> $GITHUB_OUTPUT
+          echo "total_images=$TOTAL_IMAGES" >> $GITHUB_OUTPUT
+          echo "used_images=$USED_COUNT" >> $GITHUB_OUTPUT
+
+          if [ "$UNUSED_COUNT" -gt 0 ]; then
+            echo "⚠️ Found unused images:"
+            cat "$UNUSED_IMAGES_FILE"
+            echo ""
+            
+            # Create multiline output for unused images
+            {
+              echo 'unused_images<<EOF'
+              cat "$UNUSED_IMAGES_FILE"
+              echo 'EOF'
+            } >> $GITHUB_OUTPUT
+            
+            echo "has_unused=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ No unused images found!"
+            echo "has_unused=false" >> $GITHUB_OUTPUT
+            echo "unused_images=" >> $GITHUB_OUTPUT
+          fi
+
+          # Clean up
+          rm -rf "$TEMP_DIR"
+
+      - name: Create comment body
+        id: comment
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ "${{ steps.check-images.outputs.has_unused }}" == "true" ]; then
+            cat << 'EOF' > comment.md
+          ## 🖼️ Unused Images Found
+
+          This PR contains **${{ steps.check-images.outputs.unused_count }}** unused image(s) out of **${{ steps.check-images.outputs.total_images }}** total images.
+
+          ### Unused Images:
+          ```
+          ${{ steps.check-images.outputs.unused_images }}
+          ```
+
+          ### Recommendations:
+          - If these images are no longer needed, consider removing them to keep the repository clean
+          - If they should be used, make sure to reference them in the appropriate MDX files
+          - If they're for future use, consider moving them to a draft or staging directory
+
+          ### Statistics:
+          - 📁 Total images: **${{ steps.check-images.outputs.total_images }}**
+          - ✅ Used images: **${{ steps.check-images.outputs.used_images }}**
+          - ⚠️ Unused images: **${{ steps.check-images.outputs.unused_count }}**
+          EOF
+          else
+            cat << 'EOF' > comment.md
+          ## 🖼️ Image Usage Check ✅
+
+          All **${{ steps.check-images.outputs.total_images }}** images in the repository are being used! No unused images found.
+
+          Great job keeping the repository clean! 🎉
+          EOF
+          fi
+
+      - name: Find existing comment
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/find-comment@v3
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "🖼️ Image Usage Check"
+
+      - name: Create or update comment
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: comment.md
+          edit-mode: replace
+
+      - name: Fail if unused images found
+        if: steps.check-images.outputs.has_unused == 'true'
+        run: |
+          echo "::warning::Found ${{ steps.check-images.outputs.unused_count }} unused image(s). Consider removing them or adding references."
+          exit 1
