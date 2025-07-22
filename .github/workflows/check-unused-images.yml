@@ -15,6 +15,11 @@ on:
       - ".github/workflows/check-unused-images.yml"
   workflow_dispatch: # Allow manual triggering
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   check-unused-images:
     runs-on: ubuntu-latest
