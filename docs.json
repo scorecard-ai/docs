@@ -119,7 +119,6 @@
               "features/playground",
               "features/prompt-management",
               "features/tracing",
-              "features/privacy-by-design",
               "features/prompts",
               "features/systems",
               "features/testsets",
@@ -129,7 +128,6 @@
               "features/run-inspection",
               "features/custom-provider",
               "features/runs",
-              "features/tracing",
               "features/privacy-by-design"
             ]
           },
