@@ -119,7 +119,7 @@ jobs:
           if [ "${{ steps.check-images.outputs.has_unused }}" == "true" ]; then
             # Start building the comment
             cat << 'EOF' > comment.md
-          ## 🖼️ Unused Images Found
+          ## 🖼️ Image Usage Check ❌
 
           This PR contains **${{ steps.check-images.outputs.unused_count }}** unused image(s) out of **${{ steps.check-images.outputs.total_images }}** total images.
 
@@ -132,7 +132,7 @@ jobs:
                 # Remove leading slash and create filename from path
                 clean_path="${image_path#/}"
                 # Create markdown link to the file in the repository using full path
-                echo "- [$image_path](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$clean_path)" >> comment.md
+                echo "1. [$image_path](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$clean_path)" >> comment.md
               fi
             done
             
