@@ -128,7 +128,6 @@
               "features/run-inspection",
               "features/custom-provider",
               "features/runs",
-              "features/tracing",
               "features/privacy-by-design"
             ]
           },
