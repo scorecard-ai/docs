@@ -131,9 +131,8 @@ jobs:
               if [ -n "$image_path" ]; then
                 # Remove leading slash and create filename from path
                 clean_path="${image_path#/}"
-                filename=$(basename "$image_path")
-                # Create markdown link to the file in the repository
-                echo "- [$filename](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$clean_path)" >> comment.md
+                # Create markdown link to the file in the repository using full path
+                echo "- [$image_path](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$clean_path)" >> comment.md
               fi
             done
             
@@ -151,9 +150,9 @@ jobs:
                 # Remove leading slash and create filename from path
                 clean_path="${image_path#/}"
                 filename=$(basename "$image_path")
-                # Add image preview with filename label
+                # Add image preview with full path label
                 echo "<div style='margin-bottom: 15px; padding: 10px; border-left: 3px solid #f0f0f0;'>" >> comment.md
-                echo "<strong>$filename</strong><br/>" >> comment.md
+                echo "<strong>$image_path</strong><br/>" >> comment.md
                 echo "<img src='https://github.com/${{ github.repository }}/raw/${{ github.sha }}/$clean_path' alt='$filename' style='max-width: 300px; max-height: 200px; border: 1px solid #eee; margin-top: 5px;' />" >> comment.md
                 echo "</div>" >> comment.md
               fi
@@ -162,9 +161,6 @@ jobs:
             cat << 'EOF' >> comment.md
           </div>
           </details>
-
-            # Add the rest of the comment
-            cat << 'EOF' >> comment.md
 
           ### Recommendations:
           - If these images are no longer needed, consider removing them to keep the repository clean
