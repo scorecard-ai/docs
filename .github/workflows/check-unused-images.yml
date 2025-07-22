@@ -117,15 +117,54 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           if [ "${{ steps.check-images.outputs.has_unused }}" == "true" ]; then
+            # Start building the comment
             cat << 'EOF' > comment.md
           ## 🖼️ Unused Images Found
 
           This PR contains **${{ steps.check-images.outputs.unused_count }}** unused image(s) out of **${{ steps.check-images.outputs.total_images }}** total images.
 
           ### Unused Images:
-          ```
-          ${{ steps.check-images.outputs.unused_images }}
-          ```
+          EOF
+            
+            # Process each unused image and convert to a clickable link
+            echo "${{ steps.check-images.outputs.unused_images }}" | while IFS= read -r image_path; do
+              if [ -n "$image_path" ]; then
+                # Remove leading slash and create filename from path
+                clean_path="${image_path#/}"
+                filename=$(basename "$image_path")
+                # Create markdown link to the file in the repository
+                echo "- [$filename](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$clean_path)" >> comment.md
+              fi
+            done
+            
+            # Add image preview section
+            cat << 'EOF' >> comment.md
+
+          <details>
+          <summary>📷 Click to preview unused images</summary>
+          <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-top: 10px;">
+          EOF
+            
+            # Add each image as an inline preview
+            echo "${{ steps.check-images.outputs.unused_images }}" | while IFS= read -r image_path; do
+              if [ -n "$image_path" ]; then
+                # Remove leading slash and create filename from path
+                clean_path="${image_path#/}"
+                filename=$(basename "$image_path")
+                # Add image preview with filename label
+                echo "<div style='margin-bottom: 15px; padding: 10px; border-left: 3px solid #f0f0f0;'>" >> comment.md
+                echo "<strong>$filename</strong><br/>" >> comment.md
+                echo "<img src='https://github.com/${{ github.repository }}/raw/${{ github.sha }}/$clean_path' alt='$filename' style='max-width: 300px; max-height: 200px; border: 1px solid #eee; margin-top: 5px;' />" >> comment.md
+                echo "</div>" >> comment.md
+              fi
+            done
+            
+            cat << 'EOF' >> comment.md
+          </div>
+          </details>
+
+            # Add the rest of the comment
+            cat << 'EOF' >> comment.md
 
           ### Recommendations:
           - If these images are no longer needed, consider removing them to keep the repository clean
