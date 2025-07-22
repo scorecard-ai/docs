@@ -3,6 +3,26 @@ title: "Product Updates"
 description: "New updates and improvements"
 ---
 
+import { DarkLightImage } from "/snippets/dark-light-image.jsx";
+
+<Update label="July 18, 2025">
+  ### Separate Score Columns
+
+  On the run details page, each metric now has its own column of scores, rather than a single column for all metrics. This makes it easier to compare the scores across records for a particular metric. It also enables sorting records by a metric's score.
+
+  <DarkLightImage
+    lightSrc="/images/separate-score-columns-light.png"
+    caption="Separate score columns in the UI."
+    alt="Screenshot of the separate score columns in the UI."
+  />
+
+  ### 🛠️ Bug Fixes and Improvements
+
+  - **[Performance]** Improved loading time of the Runs list page.
+  - **[Runs]** Added a new "Run Again" button to the Run details page, allowing you to re-run the same testset/system combo with the same metrics and model parameters.
+  - **[Runs]** Added "System Version" link to the Run details page.
+</Update>
+
 <Update label="July 11, 2025">
   ### 🚀 Onboarding Improvements
 
@@ -24,7 +44,7 @@ description: "New updates and improvements"
   - **[Metrics]** Added search functionality for metrics  
   - **[Testsets]** Added search functionality for testsets
   - **[Systems]** All systems are now required to have a production version
-  - **[Quickstart]** Both [main](https://docs.scorecard.io/intro/quickstart) and [systems](https://docs.scorecard.io/intro/systems#your-turn-build-a-joke-bot-in-5-minutes) quickstarts now reflect the latest SDK with clearer steps and updated code, enabling new users to go from install to first run in minutes
+  - **[Quickstart]** Both [main](/intro/quickstart) and [systems](/features/systems) quickstarts now reflect the latest SDK with clearer steps and updated code, enabling new users to go from install to first run in minutes
   - **[API Keys]** Every member can view existing keys, but only admins can create or revoke them, providing teams with transparency while maintaining control
   - **[Docs Search]** Rebuilt documentation search pipeline reducing typical response times from ~15s to just 3s, helping you find answers more quickly
 </Update>
@@ -167,7 +187,7 @@ description: "New updates and improvements"
 
   We recently held our first Scorecard Evaluation Day with a cohort of inception-stage founders who are deeply invested in their AI agents' quality. During the event, we exchanged valuable ideas around evaluation goals and methodologies, had thoughtful discussions about defining meaningful metrics, and explored approaches to evaluation (including the Scorecard method) and integrating evaluation into CI/CD pipelines. Thanks to everyone who attended\! We greatly appreciate the insightful feedback from these teams and have already implemented several improvements to our UI flows and SDK integration patterns based on your input.
 
-  ![Scorecard Eval Day event poster](/images/eval_day.png)
+  <img src="/images/eval_day.png" alt="Scorecard Eval Day event poster" width="200" />
 
   ### 📚 In-App Documentation Search
 

@@ -1,6 +1,9 @@
 ---
-title: "Best In Class Metrics"
+title: "Metrics"
 ---
+
+import { DarkLightImage } from "/snippets/dark-light-image.jsx";
+
 <Note>
 Metrics serve as benchmarks for assessing the quality of LLM responses, while scoring is the process of applying these metrics to generate actionable insights about your LLM application.
 </Note>
@@ -17,7 +20,7 @@ Scorecard's metric system is organized into three main components:
 
 Scorecard assists you in several ways in defining and organizing these metrics for LLM evaluation. Let's check out some of the advantages that Scorecard offers!
 
-### Build on Scorecard's LLM Evaluation Expertise and Use Templates
+### Metric Templates
 
 The Scorecard team consists of experts in LLM evaluation, with extensive experience in assessing and deploying large-scale AI applications at some of the world's leading companies. Our Scorecard Core Metrics, validated by our team, represent industry-standard benchmarks for LLM performance. You can explore these Core Metrics in the Scoring Lab, under "Templates," to select the ones best suited for your LLM evaluation needs.
 <Frame caption="Overview of Scorecard Core Metrics in Templates">
@@ -27,6 +30,7 @@ If you would like to use a specific template, simply make a copy of it and, if n
 <Frame caption="Metric Template to Copy">
 ![Metric Template to Copy](/images/best-in-class/2.webp)
 </Frame>
+
 #### Second-Party Metrics from MLflow
 
 Scorecard provides support for running MLflow metrics directly within the Scorecard platform and provides complementary additional capabilities such as aggregation, A/B comparison, iteration and more. Several of MLflow's metrics of the `genai` package are available in the Scorecard metrics library. These metrics include:
@@ -105,7 +109,7 @@ Scorecard also offers the flexibility to define any customized metric unique to 
 ![New Custom Metric](/images/best-in-class/4.webp)
 </Frame>
 
-## Automated Scoring: Scale Your Evaluation Process
+## Automated Scoring
 
 ### Increasing Complexity When Manually Evaluating Large Testsets
 
@@ -155,14 +159,14 @@ Simply click the "Run Scoring" button and Scorecard will use AI to score all met
 ![Scoring in Progress](/images/automated-scoring/3.webp)
 </Frame>
 
-#### Understand the AI Scores With Transparent Explanations
+#### Score Explanations
 
 Scorecard not only automates the scoring process, it also provides explanations of why the AI model scored the metrics in a certain way. This helps you understand the reasons of the AI scores, allowing you to re-evaluate whether the evaluations make sense.
 <Frame caption="Score Explained by the Scorecard AI Model">
 ![Score Explained by the Scorecard AI Model](/images/automated-scoring/4.webp)
 </Frame>
 
-### Consistently Evaluate LLM Applications in Multiple Dimensions With Metric Groups
+### Metric Groups
 
 Once you have defined all metrics that you need to properly assess the quality of your LLM application, you can group them together to form a Metric Group. A Scorecard Metric Group is a collection of metrics that are used together to score an LLM application. This Metric Group can be routinely run against your LLM application to yield a consistent measure of the performance and quality of its responses. Instead of manually selecting multiple metrics to score an LLM application every time for a particular use case, defining this set of metrics makes it easy to repeatedly score in the same way with multiple metrics. Different Metric Groups can serve different purposes by ensuring consistency in testing, e.g. a Metric Group for RAG applications, a Metric Group for translation use cases, etc.
 <Frame caption="Overview of Metric Groups in Scoring Lab">

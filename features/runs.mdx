@@ -34,7 +34,15 @@ Every run consists of:
 
 ### Kickoff Run from the UI
 
-TODO
+You can kickoff a run from the Projects dashboard, Testsets list, or a Run ("Run again" button). The **Kickoff Run** modal lets you choose the Testset, Prompt, and Metrics for the run.
+
+The **Scorecard** tab lets you run using an LLM on Scorecard's servers, so you can specify the LLM parameters. The **GitHub** tab lets you trigger a run using GitHub Actions on your actual system.
+
+<DarkLightImage
+  lightSrc="/images/kickoff-run-light.png"
+  caption="Kickoff Run modal."
+  alt="Screenshot of the kickoff run modal in the UI."
+/>
 
 ### From the Playground
 
@@ -43,9 +51,9 @@ The [Playground](/features/playground) allows you to test prompts interactively.
 Click **Kickoff Run** to create a run with a specified testset, prompt version, and metrics. 
 
 <DarkLightImage
-  lightSrc="/images/playground/playground-1.png"
+  lightSrc="/images/playground-light.png"
   caption="Playground overview."
-  alt="Screenshot of playground in the UI."
+  alt="Screenshot of the playground in the UI."
 />
 
 ### Using the API
@@ -89,6 +97,12 @@ See the [SDK quickstart](/intro/quickstart) or [API reference](/api-reference/ov
 Using Scorecard's [GitHub integration](/how-to-use-scorecard/trigger-run-with-github-actions), you can trigger runs automatically (e.g. on pull request or a schedule).
 
 With the integration set up, you can also trigger runs of your real system from the Scorecard UI.
+
+<DarkLightImage
+  lightSrc="/images/trigger-run-light.png"
+  caption="Triggering a run through the Scorecard GitHub integration."
+  alt="Screenshot of the trigger run page in the Scorecard UI."
+/>
 
 ## Run status
 

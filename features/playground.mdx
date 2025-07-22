@@ -3,9 +3,13 @@ title: "Playground"
 description: "The Playground is where you test and refine your AI prompts using real data. It's a three-panel interface that lets you select test data, edit prompts with Jinja templating, configure AI models, and see results in real-time."
 ---
 
-<Frame caption="Playground overview">
-![Playground overview](/images/playground/playground-1.png)
-</Frame>
+import { DarkLightImage } from "/snippets/dark-light-image.jsx";
+
+<DarkLightImage
+  lightSrc="/images/playground-light.png"
+  caption="Playground overview."
+  alt="Screenshot of the playground in the UI."
+/>
 
 ## Getting Started
 
@@ -58,7 +62,6 @@ description: "The Playground is where you test and refine your AI prompts using 
 
 **Run Tests:**
 - Click "Try" to test your prompt on selected testcases
-- Click "Try All" to test on all testcases in the testset
 - Click "Kickoff Run" to create a full run for the entire testset, which will appear in your run history
 - Results appear in the "Results" tab automatically
 
@@ -103,15 +106,19 @@ Hello {{name}}, your order #{{order_id}} is {{status}}.
 ## Common Workflows
 
 **Quick Testing:**
-1. Select a testcase → Edit prompt → Preview → Try → Review results
+
+Select a testcase → Edit prompt → Preview → Try → Review results
 
 **Comprehensive Evaluation:**
-1. Select all testcases → Edit prompt → Try All → Analyze results modal
+
+Select all testcases → Edit prompt → Try All → Analyze results modal
 
 **Version Comparison:**
-1. Test Version A → Switch to Version B → Test → Compare results
+
+Test Version A → Switch to Version B → Test → Compare results
 
 **Full Run Creation:**
-1. Select testset → Edit prompt → Kickoff Run → Monitor in run history
+
+Select testset → Edit prompt → Kickoff Run → Monitor in run history
 
 The Playground makes prompt engineering intuitive by providing immediate feedback and real data testing in a single interface.
