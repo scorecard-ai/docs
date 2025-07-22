@@ -130,7 +130,6 @@
               "features/custom-provider",
               "features/runs",
               "features/tracing",
-              "features/ai-proxy",
               "features/privacy-by-design"
             ]
           },
