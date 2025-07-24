@@ -1,0 +1,244 @@
+---
+title: "Tracing Quickstart"
+description: "Automatically trace and monitor your LLM applications with OpenLLMetry and Scorecard in minutes."
+mode: "center"
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+This quickstart shows how to use [OpenLLMetry](https://github.com/traceloop/openllmetry) to automatically instrument and trace LLM calls for Scorecard monitoring. OpenLLMetry provides zero-code instrumentation for popular LLM libraries and structured tracing with workflows and tasks. 
+If you're using Python, you can follow along in [Google Colab](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb).
+
+You can also check out our complete [Node.js OpenLLMetry example](https://github.com/scorecard-ai/scorecard-examples/blob/main/nodejs-openllmetry-openai) for a full working implementation.
+
+## What is OpenLLMetry?
+
+OpenLLMetry is an open-source observability framework that automatically instruments LLM applications using OpenTelemetry standards. It provides:
+
+- **Automatic instrumentation** of popular LLM libraries (OpenAI, Anthropic, etc.)
+- **Structured tracing** with workflows and tasks  
+- **Seamless integration** with observability platforms like Scorecard
+- **Zero-code instrumentation** for basic use cases
+
+## Steps
+
+<Steps>
+  <Step title="Setup accounts">
+    Create a [Scorecard account](https://app.scorecard.io/dashboard), then get your tracing credentials:
+
+    1. Visit your [Scorecard Dashboard](https://app.scorecard.io/dashboard)
+    2. Navigate to your project's **Traces** section
+    3. Click **"Learn how to setup tracing"** to find your **Telemetry Key**
+    4. Set your environment variables:
+
+    ```sh
+    # For Scorecard tracing
+    export TRACELOOP_BASE_URL="https://telemetry.getscorecard.ai:4318"
+    export TRACELOOP_HEADERS="Authorization=Bearer <YOUR_SCORECARD_TELEMETRY_KEY>"
+
+    # For OpenAI (if using)
+    export OPENAI_API_KEY="your_openai_api_key"
+    ```
+
+    **Python users**: If setting environment variables programmatically, make sure to URL encode the headers:
+
+    ```py Python
+    import os
+    from urllib.parse import quote
+
+    SCORECARD_TELEMETRY_KEY = "<SCORECARD_TELEMETRY_KEY>"
+
+    os.environ['TRACELOOP_BASE_URL'] = "https://telemetry.getscorecard.ai:4318"
+    # URL encode the entire header value to comply with OpenTelemetry Protocol Exporter specification
+    os.environ['TRACELOOP_HEADERS'] = quote(f"Authorization=Bearer {SCORECARD_TELEMETRY_KEY}", safe='=')
+    os.environ['OPENAI_API_KEY'] = "<OPENAI_API_KEY>"
+    ```
+  </Step>
+
+  <Step title="Install OpenLLMetry SDK">
+    Install OpenLLMetry and your LLM library:
+
+    <CodeGroup>
+      ```sh Python (pip)
+      pip install traceloop-sdk openai
+      ```
+
+      ```sh JavaScript (npm)
+      npm install @traceloop/node-server-sdk openai dotenv
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Initialize OpenLLMetry">
+    Set up OpenLLMetry to automatically trace your LLM calls:
+
+    <CodeGroup>
+      ```py Python
+      from traceloop.sdk import Traceloop
+      from traceloop.sdk.decorators import workflow, task
+      from traceloop.sdk.instruments import Instruments
+      from openai import OpenAI
+
+      # Initialize OpenAI client
+      openai_client = OpenAI()
+
+      # Initialize OpenLLMetry (reads config from environment variables)
+      Traceloop.init(disable_batch=True, instruments={Instruments.OPENAI})
+      ```
+
+      ```js JavaScript
+      import * as traceloop from "@traceloop/node-server-sdk";
+      import OpenAI from "openai";
+      import dotenv from "dotenv";
+
+      dotenv.config();
+
+      // Initialize OpenAI client
+      const openai = new OpenAI();
+
+      // Initialize OpenLLMetry with automatic instrumentation
+      traceloop.initialize({ 
+        disableBatch: true,  // Ensures immediate trace sending
+        instrumentModules: { openAI: OpenAI },
+      });
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Create traced workflows">
+    Structure your LLM application using workflows and tasks. Here's a simple joke generator example:
+
+    <CodeGroup>
+      ```py Python
+      @task(name="joke_creation")
+      def create_joke():
+          """Create a joke using OpenAI"""
+          completion = openai_client.chat.completions.create(
+              model="gpt-4o-mini",
+              messages=[{"role": "user", "content": "Tell me a joke"}]
+          )
+          return completion.choices[0].message.content
+
+      @task(name="author_generation")
+      def generate_author(joke: str):
+          """Generate an author for the given joke"""
+          completion = openai_client.chat.completions.create(
+              model="gpt-3.5-turbo",
+              messages=[
+                  {"role": "user", "content": f"add an author to the joke:\n\n{joke}"}
+              ]
+          )
+          return completion.choices[0].message.content
+
+      @workflow(name="joke_generator")
+      def joke_workflow():
+          """Main workflow that creates a joke and generates an author for it"""
+          joke = create_joke()
+          print(f"Generated joke: {joke}")
+          
+          joke_with_author = generate_author(joke)
+          print(f"Joke with author: {joke_with_author}")
+          
+          return joke_with_author
+      ```
+
+      ```js JavaScript
+      // Create individual tasks for different operations
+      async function createJoke() {
+        return await traceloop.withTask({ name: "joke_creation" }, async () => {
+          const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: "Tell me a joke" }],
+          });
+          return completion.choices[0].message.content;
+        });
+      }
+
+      async function generateAuthor(joke) {
+        return await traceloop.withTask({ name: "author_generation" }, async () => {
+          const completion = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: [
+              { role: "user", content: `Add an author attribution to this joke:\n\n${joke}` },
+            ],
+          });
+          return completion.choices[0].message.content;
+        });
+      }
+
+      // Group related tasks into workflows
+      async function jokeWorkflow() {
+        return await traceloop.withWorkflow({ name: "joke_generator" }, async () => {
+          const joke = await createJoke();
+          const authoredJoke = await generateAuthor(joke);
+          return { joke, authoredJoke };
+        });
+      }
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Run your traced application">
+    Execute your workflow to generate traces:
+
+    <CodeGroup>
+      ```py Python
+      # Run the workflow - all LLM calls will be automatically traced
+      result = joke_workflow()
+      print("\nWorkflow completed!")
+      print("Check your Scorecard dashboard for traces!")
+      ```
+
+      ```js JavaScript
+      // Run the workflow - all LLM calls will be automatically traced
+      async function main() {
+        const result = await jokeWorkflow();
+        console.log("Generated content:", result);
+        console.log("Check your Scorecard dashboard for traces!");
+      }
+
+      main().catch(console.error);
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="View traces in Scorecard">
+    After running your application, view the traces in your Scorecard dashboard:
+
+    1. Visit [app.scorecard.io](https://app.scorecard.io)
+    2. Navigate to your project → **Traces** section
+    3. Explore your traced workflows
+
+    ### What You'll See
+
+    - **Workflow spans**: High-level operations (`joke_generator`)
+    - **Task spans**: Individual operations (`joke_creation`, `author_generation`)  
+    - **LLM spans**: Automatic OpenAI API call instrumentation
+    - **Timing data**: Duration of each operation
+    - **Token usage**: Input/output tokens for LLM calls
+    - **Model information**: Which models were used
+    - **Comprehensive data**: All trace information visible in the Scorecard dashboard
+
+    <DarkLightImage
+      lightSrc="/images/tracing-light.png"
+      darkSrc="/images/tracing-dark.png"
+      caption="Viewing traces in the Scorecard UI."
+      alt="Screenshot of viewing traces in the Scorecard UI."
+    />
+  </Step>
+</Steps>
+
+## Key Benefits
+
+- **Zero-code instrumentation**: LLM calls are automatically traced
+- **Structured observability**: Organize traces with workflows and tasks
+- **Performance monitoring**: Track latency, token usage, and costs
+- **User feedback integration**: Connect user satisfaction to specific traces
+- **Production debugging**: Understand exactly what happened in failed requests
+
+## Learn More
+
+- [OpenLLMetry Python Documentation](https://traceloop.com/docs/openllmetry/getting-started-python)
+- [OpenLLMetry JavaScript Documentation](https://traceloop.com/docs/openllmetry/getting-started-nodejs)  
+- [Scorecard Tracing Features](/features/tracing)
+- [OpenTelemetry Standards](https://opentelemetry.io/)
