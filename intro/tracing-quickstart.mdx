@@ -125,7 +125,7 @@ OpenLLMetry is an open-source observability framework that automatically instrum
           completion = openai_client.chat.completions.create(
               model="gpt-3.5-turbo",
               messages=[
-                  {"role": "user", "content": f"add a author to the joke:\n\n{joke}"}
+                  {"role": "user", "content": f"add an author to the joke:\n\n{joke}"}
               ]
           )
           return completion.choices[0].message.content
@@ -220,7 +220,8 @@ OpenLLMetry is an open-source observability framework that automatically instrum
     - **Comprehensive data**: All trace information visible in the Scorecard dashboard
 
     <DarkLightImage
-      lightSrc="/images/tracing.png"
+      lightSrc="/images/tracing-light.png"
+      darkSrc="/images/tracing-dark.png"
       caption="Viewing traces in the Scorecard UI."
       alt="Screenshot of viewing traces in the Scorecard UI."
     />
