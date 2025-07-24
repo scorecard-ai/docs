@@ -109,7 +109,8 @@
             "pages": [
               "intro/overview",
               "intro/what-is-scorecard",
-              "intro/quickstart"
+              "intro/quickstart",
+              "intro/tracing-quickstart"
             ]
           },
           {
