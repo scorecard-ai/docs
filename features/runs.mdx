@@ -9,26 +9,19 @@ A **Run** is an execution that evaluates your AI system against some Testcases u
 
 Runs generate **Records** (individual test executions) and **Scores** (evaluation results) for each Record that help you understand your system's performance across different scenarios.
 
-<DarkLightImage
-  lightSrc="/images/run-details-light.png"
-  caption="Run details page."
-  alt="Screenshot of viewing run details in the UI."
-/>
+<DarkLightImage lightSrc="/images/run-details-light.png" caption="Run details page." alt="Screenshot of viewing run details in the UI." />
 
 ## What is a Run?
 
 Every run consists of:
+
 - (Optional) **Testset**: Collection of test cases to evaluate against
 - (Optional) **Metrics**: Evaluation criteria that score system outputs
 - (Optional) **System Version**: Configuration defining your AI system's behavior
 - **Records**: Individual test executions, one per Testcase
 - **Scores**: Evaluation results for each record against each metric
 
-<DarkLightImage
-  lightSrc="/images/runs-list-light.png"
-  caption="List of recent runs with statuses."
-  alt="Screenshot of viewing runs list in the UI."
-/>
+<DarkLightImage lightSrc="/images/runs-list-light.png" caption="List of recent runs with statuses." alt="Screenshot of viewing runs list in the UI." />
 
 ## Creating Runs
 
@@ -38,29 +31,22 @@ You can kickoff a run from the Projects dashboard, Testsets list, or a Run ("Run
 
 The **Scorecard** tab lets you run using an LLM on Scorecard's servers, so you can specify the LLM parameters. The **GitHub** tab lets you trigger a run using GitHub Actions on your actual system.
 
-<DarkLightImage
-  lightSrc="/images/kickoff-run-light.png"
-  caption="Kickoff Run modal."
-  alt="Screenshot of the kickoff run modal in the UI."
-/>
+<DarkLightImage lightSrc="/images/kickoff-run-light.png" caption="Kickoff Run modal." alt="Screenshot of the kickoff run modal in the UI." />
 
 ### From the Playground
 
 The [Playground](/features/playground) allows you to test prompts interactively.
 
-Click **Kickoff Run** to create a run with a specified testset, prompt version, and metrics. 
+Click **Kickoff Run** to create a run with a specified testset, prompt version, and metrics.
 
-<DarkLightImage
-  lightSrc="/images/playground-light.png"
-  caption="Playground overview."
-  alt="Screenshot of the playground in the UI."
-/>
+<DarkLightImage lightSrc="/images/playground-light.png" caption="Playground overview." alt="Screenshot of the playground in the UI." />
 
 ### Using the API
 
 You can create runs and records programmatically using the Scorecard SDK.
 
 <CodeGroup>
+
 ```python Python
 from scorecard_ai import Scorecard
 from scorecard_ai.lib import run_and_evaluate
@@ -75,6 +61,7 @@ run = run_and_evaluate(
 print(f'Go to {run["url"]} to view your results.')
 ```
 
+
 ```JavaScript JavaScript
 import Scorecard, { runAndEvaluate } from 'scorecard-ai';
 
@@ -88,6 +75,7 @@ const run = await runAndEvaluate(scorecard, {
 });
 console.log(`Go to ${run.url} to view your results.`);
 ```
+
 </CodeGroup>
 
 See the [SDK quickstart](/intro/quickstart) or [API reference](/api-reference/overview) for more details.
@@ -98,30 +86,27 @@ Using Scorecard's [GitHub integration](/how-to-use-scorecard/trigger-run-with-gi
 
 With the integration set up, you can also trigger runs of your real system from the Scorecard UI.
 
-<DarkLightImage
-  lightSrc="/images/trigger-run-light.png"
-  caption="Triggering a run through the Scorecard GitHub integration."
-  alt="Screenshot of the trigger run page in the Scorecard UI."
-/>
+<DarkLightImage lightSrc="/images/trigger-run-light.png" caption="Triggering a run through the Scorecard GitHub integration." alt="Screenshot of the trigger run page in the Scorecard UI." />
 
 ## Run status
 
-- **🟡 Pending**: Run is created but execution hasn't finished.
-- **🔵 Scoring**: Execution has finished, and Records are being scored by metrics.
-- **🟢 Completed**: All Records have been scored successfully.
+- **🟡 Pending**: Run is created but there are no Records in the Run.
+- **🔵 Scoring**: Records are being scored by AI or heuristic metrics, or are awaiting human scoring. The Run may still be awaiting more Records.
+- **🟢 Completed**: All existing Records in the Run have been scored successfully.
 - **🔴 Error**: An error occurred during execution or scoring of one or more Records.
+
+<Note>
+  **Completed** only means that all _existing_ Records in the Run have been scored. If you add more Records, the status will become **Scoring** until those new Records are also scored.
+</Note>
 
 ## Inspect a Record
 
-<DarkLightImage 
-  lightSrc="/images/testrecord-score-explanation-light.png"
-  caption="Record score explanation."
-  alt="Screenshot of viewing testrecord score explanation in the UI."
-/>
+<DarkLightImage lightSrc="/images/testrecord-score-explanation-light.png" caption="Record score explanation." alt="Screenshot of viewing testrecord score explanation in the UI." />
 
 Drill down into specific test executions for detailed analysis:
 
 **Record Overview:**
+
 - **Inputs**: Original Testcase data sent to your system
 - **Outputs**: Generated responses from your AI system
 - **Expected Outputs**: Ideal responses for comparison
@@ -135,12 +120,8 @@ Click the **Export as CSV** button on the run details page.
 
 Click **Show Details** on a run page to view or edit the run notes and view the system/prompt version the run was executed with.
 
-<DarkLightImage
-  lightSrc="/images/run-notes-light.png"
-  caption="Run details with notes and system configuration."
-  alt="Screenshot of viewing run details with notes and system configuration in the UI."
-/>
+<DarkLightImage lightSrc="/images/run-notes-light.png" caption="Run details with notes and system configuration." alt="Screenshot of viewing run details with notes and system configuration in the UI." />
 
 <Note>
-Run data includes potentially sensitive information from your Testsets and system outputs. Follow your organization's data handling policies and avoid including PII or confidential data in test configurations.
+  Run data includes potentially sensitive information from your Testsets and system outputs. Follow your organization's data handling policies and avoid including PII or confidential data in test configurations.
 </Note>
