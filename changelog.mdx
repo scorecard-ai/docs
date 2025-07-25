@@ -5,6 +5,26 @@ description: "New updates and improvements"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="July 25, 2025">
+  ### 📊 Run History
+  
+  We've added a new Run History visualization to help you track evaluation performance over time. The chart displays aggregate scores per run, making it easy to spot trends and regressions across your metrics. You can view this directly on the run details page to see how your model's performance evolves with each iteration.
+
+  ### 🔍 Tracing improvements
+  
+  We've upgraded our tracing infrastructure to provide better observability into your AI systems:
+  
+  - **Open-source collector architecture**: Migrated to the upstream OpenTelemetry standard collector on Railway for improved reliability and performance
+  - **Unified API key authentication**: You can now use your existing Scorecard API key for tracing so you no longer need to manage separate authentication tokens
+  - **New tracing integration**: Published official integrations for Vercel AI SDK and OpenLLMetry with examples in both Python and Node.js. Our new step-by-step guide at docs.scorecard.io/intro/tracing-quickstart gets you from zero to traced LLM calls in minutes
+  
+  ### 🛠️ Bug Fixes and Improvements
+  
+  - **[Run kickoff]** Fixed an issue with models not scrolling correctly in Run Kickoff modal UI
+  - **[Run details]** Metrics cards and score columns are now consistently sorted alphabetically
+  - **[Run details]** Sorting a columns show shows direction sort
+</Update>
+
 <Update label="July 18, 2025">
   ### Separate Score Columns
 
@@ -44,7 +64,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   - **[Metrics]** Added search functionality for metrics  
   - **[Testsets]** Added search functionality for testsets
   - **[Systems]** All systems are now required to have a production version
-  - **[Quickstart]** Both [main](/intro/quickstart) and [systems](/features/systems) quickstarts now reflect the latest SDK with clearer steps and updated code, enabling new users to go from install to first run in minutes
+  - **[Quickstart]** Both [main](https://docs.scorecard.io/intro/quickstart) and [systems](https://docs.scorecard.io/intro/systems#your-turn-build-a-joke-bot-in-5-minutes) quickstarts now reflect the latest SDK with clearer steps and updated code, enabling new users to go from install to first run in minutes
   - **[API Keys]** Every member can view existing keys, but only admins can create or revoke them, providing teams with transparency while maintaining control
   - **[Docs Search]** Rebuilt documentation search pipeline reducing typical response times from ~15s to just 3s, helping you find answers more quickly
 </Update>
@@ -89,7 +109,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
   ### 🎯 Improved API key format
 
-  We switched to a new API key format, which supports having multiple API keys, revoking them, and setting expiry dates. Our new API keys are more concise (94% shorter\!) than the previously unwieldy API keys based on JWTs. We’ve deprecated the old API key format, but will continue to support them until July 20, 2025.
+  We switched to a new API key format, which supports having multiple API keys, revoking them, and setting expiry dates. Our new API keys are more concise (94% shorter\!) than the previously unwieldy API keys based on JWTs. We've deprecated the old API key format, but will continue to support them until July 20, 2025.
 
   ![New API key management interface showing multiple keys and expiry options](/images/api_key.png)
 
@@ -187,7 +207,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
   We recently held our first Scorecard Evaluation Day with a cohort of inception-stage founders who are deeply invested in their AI agents' quality. During the event, we exchanged valuable ideas around evaluation goals and methodologies, had thoughtful discussions about defining meaningful metrics, and explored approaches to evaluation (including the Scorecard method) and integrating evaluation into CI/CD pipelines. Thanks to everyone who attended\! We greatly appreciate the insightful feedback from these teams and have already implemented several improvements to our UI flows and SDK integration patterns based on your input.
 
-  <img src="/images/eval_day.png" alt="Scorecard Eval Day event poster" width="200" />
+  ![Scorecard Eval Day event poster](/images/eval_day.png)
 
   ### 📚 In-App Documentation Search
 
@@ -244,7 +264,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 <Update label="April 18, 2025">
   ### Run insights
 
-  We’ve added a new Run History chart on Runs & Results that visualises your performance trends over time to spot regressions or sustained improvements at a glance (up and to the right\!).  The x‑axis is the run date, the y‑axis is the mean score, and each metric gets its own colored line. You can view this by clicking on the ‘All Runs’ tab of Runs & Results.
+  We've added a new Run History chart on Runs & Results that visualises your performance trends over time to spot regressions or sustained improvements at a glance (up and to the right\!).  The x‑axis is the run date, the y‑axis is the mean score, and each metric gets its own colored line. You can view this by clicking on the 'All Runs' tab of Runs & Results.
 
   ![Run History](/images/run_history.png)
 
@@ -269,7 +289,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   - The schema editor has been redesigned, allowing teams to update schemas independently for each testset.
   - Schema changes now reflect immediately in the testcase table to help users see their impact in real time.
   - Users can view and copy raw schema JSON for integration with their own tools or SDKs.
-  - We’ve also improved messaging in the schema editor to clarify the distinction between inputs and labels.
+  - We've also improved messaging in the schema editor to clarify the distinction between inputs and labels.
 
   ![Testset Card](/images/testset_card.png)
 
