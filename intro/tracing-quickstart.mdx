@@ -23,7 +23,7 @@ You can also check out our complete [Node.js OpenLLMetry example](https://github
 
     ```sh
     # For Scorecard tracing
-    export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel/v1/traces"
+    export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel"
     export TRACELOOP_HEADERS="Authorization=Bearer <YOUR_SCORECARD_KEY>"
 
     # For OpenAI (if using)
@@ -33,7 +33,7 @@ You can also check out our complete [Node.js OpenLLMetry example](https://github
     **Python users**: If setting environment variables programmatically, make sure to replace whitespaces with `%20` in the headers:
 
     ```py Python
-    os.environ['TRACELOOP_BASE_URL'] = "https://tracing.scorecard.io/otel/v1/traces"
+    os.environ['TRACELOOP_BASE_URL'] = "https://tracing.scorecard.io/otel"
     # Replace whitespaces with `%20` in the header value to comply with OpenTelemetry Protocol Exporter specification
     os.environ['TRACELOOP_HEADERS'] = "Authorization=Bearer%20<YOUR_SCORECARD_KEY>"
     os.environ['OPENAI_API_KEY'] = "<OPENAI_API_KEY>"
