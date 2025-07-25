@@ -53,11 +53,11 @@ OpenLLMetry is an open-source observability framework that automatically instrum
     Install OpenLLMetry and your LLM library:
 
     <CodeGroup>
-      ```sh Python (pip)
+      ```sh Python
       pip install traceloop-sdk openai
       ```
 
-      ```sh JavaScript (npm)
+      ```sh JavaScript
       npm install @traceloop/node-server-sdk openai
       ```
     </CodeGroup>
@@ -96,7 +96,7 @@ OpenLLMetry is an open-source observability framework that automatically instrum
     </CodeGroup>
   </Step>
 
-  <Step title="Create a simple traced workflow">
+  <Step title="Create and run a simple traced workflow">
     Create a simple workflow that will be automatically traced. Here's a minimal example:
 
     <CodeGroup>
@@ -108,6 +108,10 @@ OpenLLMetry is an open-source observability framework that automatically instrum
               messages=[{"role": "user", "content": "Tell me a joke"}]
           )
           return completion.choices[0].message.content
+
+      # Run the workflow - all LLM calls will be automatically traced
+      simple_workflow()
+      print("Check Scorecard for traces!")
       ```
 
       ```js JavaScript
@@ -120,28 +124,10 @@ OpenLLMetry is an open-source observability framework that automatically instrum
           return completion.choices[0].message.content;
         });
       }
-      ```
-    </CodeGroup>
-  </Step>
 
-  <Step title="Run your traced application">
-    Execute your workflow to generate traces:
-
-    <CodeGroup>
-      ```py Python
       # Run the workflow - all LLM calls will be automatically traced
-      result = simple_workflow()
-      print("Check Scorecard for traces!")
-      ```
-
-      ```js JavaScript
-      // Run the workflow - all LLM calls will be automatically traced
-      async function main() {
-        const result = await simpleWorkflow();
-        console.log("Check Scorecard for traces!");
-      }
-
-      main().catch(console.error);
+      simpleWorkflow();
+      console.log("Check Scorecard for traces!");
       ```
     </CodeGroup>
   </Step>
