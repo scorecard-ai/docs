@@ -24,33 +24,27 @@ OpenLLMetry is an open-source observability framework that automatically instrum
 
 <Steps>
   <Step title="Setup accounts">
-    Create a [Scorecard account](https://app.scorecard.io/dashboard), then get your tracing credentials:
+    Create a [Scorecard account](https://app.scorecard.io), then get your tracing credentials:
 
-    1. Visit your [Scorecard Dashboard](https://app.scorecard.io/dashboard)
-    2. Navigate to your project's **Traces** section
-    3. Click **"Learn how to setup tracing"** to find your **Telemetry Key**
-    4. Set your environment variables:
+    1. Visit your [Settings](https://app.scorecard.io/settings)
+    2. Copy your Scorecard API Key
+    3. Set your environment variables:
 
     ```sh
     # For Scorecard tracing
-    export TRACELOOP_BASE_URL="https://telemetry.getscorecard.ai:4318"
-    export TRACELOOP_HEADERS="Authorization=Bearer <YOUR_SCORECARD_TELEMETRY_KEY>"
+    export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel/v1/traces"
+    export TRACELOOP_HEADERS="Authorization=Bearer <YOUR_SCORECARD_KEY>"
 
     # For OpenAI (if using)
     export OPENAI_API_KEY="your_openai_api_key"
     ```
 
-    **Python users**: If setting environment variables programmatically, make sure to URL encode the headers:
+    **Python users**: If setting environment variables programmatically, make sure to replace whitespaces with `%20` in the headers:
 
     ```py Python
-    import os
-    from urllib.parse import quote
-
-    SCORECARD_TELEMETRY_KEY = "<SCORECARD_TELEMETRY_KEY>"
-
-    os.environ['TRACELOOP_BASE_URL'] = "https://telemetry.getscorecard.ai:4318"
-    # URL encode the entire header value to comply with OpenTelemetry Protocol Exporter specification
-    os.environ['TRACELOOP_HEADERS'] = quote(f"Authorization=Bearer {SCORECARD_TELEMETRY_KEY}", safe='=')
+    os.environ['TRACELOOP_BASE_URL'] = "https://tracing.scorecard.io/otel/v1/traces"
+    # Replace whitespaces with `%20` in the header value to comply with OpenTelemetry Protocol Exporter specification
+    os.environ['TRACELOOP_HEADERS'] = "Authorization=Bearer%20<YOUR_SCORECARD_KEY>"
     os.environ['OPENAI_API_KEY'] = "<OPENAI_API_KEY>"
     ```
   </Step>
@@ -64,7 +58,7 @@ OpenLLMetry is an open-source observability framework that automatically instrum
       ```
 
       ```sh JavaScript (npm)
-      npm install @traceloop/node-server-sdk openai dotenv
+      npm install @traceloop/node-server-sdk openai
       ```
     </CodeGroup>
   </Step>
@@ -89,9 +83,6 @@ OpenLLMetry is an open-source observability framework that automatically instrum
       ```js JavaScript
       import * as traceloop from "@traceloop/node-server-sdk";
       import OpenAI from "openai";
-      import dotenv from "dotenv";
-
-      dotenv.config();
 
       // Initialize OpenAI client
       const openai = new OpenAI();
@@ -105,73 +96,28 @@ OpenLLMetry is an open-source observability framework that automatically instrum
     </CodeGroup>
   </Step>
 
-  <Step title="Create traced workflows">
-    Structure your LLM application using workflows and tasks. Here's a simple joke generator example:
+  <Step title="Create a simple traced workflow">
+    Create a simple workflow that will be automatically traced. Here's a minimal example:
 
     <CodeGroup>
       ```py Python
-      @task(name="joke_creation")
-      def create_joke():
-          """Create a joke using OpenAI"""
+      @workflow(name="simple_chat")
+      def simple_workflow():
           completion = openai_client.chat.completions.create(
               model="gpt-4o-mini",
               messages=[{"role": "user", "content": "Tell me a joke"}]
           )
           return completion.choices[0].message.content
-
-      @task(name="author_generation")
-      def generate_author(joke: str):
-          """Generate an author for the given joke"""
-          completion = openai_client.chat.completions.create(
-              model="gpt-3.5-turbo",
-              messages=[
-                  {"role": "user", "content": f"add an author to the joke:\n\n{joke}"}
-              ]
-          )
-          return completion.choices[0].message.content
-
-      @workflow(name="joke_generator")
-      def joke_workflow():
-          """Main workflow that creates a joke and generates an author for it"""
-          joke = create_joke()
-          print(f"Generated joke: {joke}")
-          
-          joke_with_author = generate_author(joke)
-          print(f"Joke with author: {joke_with_author}")
-          
-          return joke_with_author
       ```
 
       ```js JavaScript
-      // Create individual tasks for different operations
-      async function createJoke() {
-        return await traceloop.withTask({ name: "joke_creation" }, async () => {
+      async function simpleWorkflow() {
+        return await traceloop.withWorkflow({ name: "simple_chat" }, async () => {
           const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [{ role: "user", content: "Tell me a joke" }],
           });
           return completion.choices[0].message.content;
-        });
-      }
-
-      async function generateAuthor(joke) {
-        return await traceloop.withTask({ name: "author_generation" }, async () => {
-          const completion = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
-            messages: [
-              { role: "user", content: `Add an author attribution to this joke:\n\n${joke}` },
-            ],
-          });
-          return completion.choices[0].message.content;
-        });
-      }
-
-      // Group related tasks into workflows
-      async function jokeWorkflow() {
-        return await traceloop.withWorkflow({ name: "joke_generator" }, async () => {
-          const joke = await createJoke();
-          const authoredJoke = await generateAuthor(joke);
-          return { joke, authoredJoke };
         });
       }
       ```
@@ -184,17 +130,15 @@ OpenLLMetry is an open-source observability framework that automatically instrum
     <CodeGroup>
       ```py Python
       # Run the workflow - all LLM calls will be automatically traced
-      result = joke_workflow()
-      print("\nWorkflow completed!")
-      print("Check your Scorecard dashboard for traces!")
+      result = simple_workflow()
+      print("Check Scorecard for traces!")
       ```
 
       ```js JavaScript
       // Run the workflow - all LLM calls will be automatically traced
       async function main() {
-        const result = await jokeWorkflow();
-        console.log("Generated content:", result);
-        console.log("Check your Scorecard dashboard for traces!");
+        const result = await simpleWorkflow();
+        console.log("Check Scorecard for traces!");
       }
 
       main().catch(console.error);
@@ -203,7 +147,7 @@ OpenLLMetry is an open-source observability framework that automatically instrum
   </Step>
 
   <Step title="View traces in Scorecard">
-    After running your application, view the traces in your Scorecard dashboard:
+    After running your application, view the traces in your Scorecard account:
 
     1. Visit [app.scorecard.io](https://app.scorecard.io)
     2. Navigate to your project → **Traces** section
@@ -211,13 +155,12 @@ OpenLLMetry is an open-source observability framework that automatically instrum
 
     ### What You'll See
 
-    - **Workflow spans**: High-level operations (`joke_generator`)
-    - **Task spans**: Individual operations (`joke_creation`, `author_generation`)  
+    - **Workflow spans**: High-level operations (`simple_chat`)
     - **LLM spans**: Automatic OpenAI API call instrumentation
     - **Timing data**: Duration of each operation
     - **Token usage**: Input/output tokens for LLM calls
     - **Model information**: Which models were used
-    - **Comprehensive data**: All trace information visible in the Scorecard dashboard
+    - **Comprehensive data**: All trace information visible in your Scorecard account
 
     <DarkLightImage
       lightSrc="/images/tracing-light.png"
