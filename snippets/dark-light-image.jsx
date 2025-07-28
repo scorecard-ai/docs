@@ -29,10 +29,16 @@ export const DarkLightImage = ({ lightSrc, caption, alt, darkSrc = null, width =
     }
   };
 
-  return (
-    <Frame caption={caption}>
+  const content = (
+    <>
       <img className="block dark:hidden" width={width} src={getAbsoluteUrl(lightSrc)} alt={alt} />
       <img className="hidden dark:block" width={width} src={getAbsoluteUrl(darkSrc || lightSrc.replace('light', 'dark'))} alt={alt} />
-    </Frame>
-  )
+    </>
+  );
+
+  if (caption) {
+    return <Frame caption={caption}>{content}</Frame>
+  } else {
+    return content;
+  }
 }
