@@ -23,14 +23,14 @@ With Scorecard's GitHub action integration, you can test your code automatically
 Follow the steps on your Scorecard organization's [GitHub configuration page](https://app.scorecard.io/configure-github).
 
 1. Install the GitHub app.
-1. Choose which repository and branch to use.
-1. Configure when test runs should be triggered. For example:
-    * Nightly, or
-    * When a user kicks off a test run from the Scorecard UI, or
-    * When a pull request is opened, or
-    * When a pull request is merged.
-1. Add your Scorecard API key as a Github secret key named `SCORECARD_API_KEY`.
-1. Click "Create pull request" to create a PR in your repository to setup the Scorecard workflow.
+2. Choose which repository and branch to use.
+3. Configure when test runs should be triggered. For example:
+   - Nightly, or
+   - When a user kicks off a test run from the Scorecard UI, or
+   - When a pull request is opened, or
+   - When a pull request is merged.
+4. Add your Scorecard API key as a Github secret key named `SCORECARD_API_KEY`.
+5. Click "Create pull request" to create a PR in your repository to setup the Scorecard workflow.
 
 ### 2. Customize the workflow
 
@@ -39,12 +39,12 @@ When you click "Create pull request", a PR will be created in your repository wi
 <Tabs>
   <Tab title="scorecard-eval.yml">
     `.github/workflows/scorecard-eval.yml` is the GitHub Actions workflow file that will be used to run the tests.
-    
+
     You can update your testing parameters and triggering conditions here. For example, use environment variables to add any API keys you need to run your system.
 
     ```yaml scorecard-eval.yml expandable wrap
     name: Scorecard Evaluation Workflow
-
+    
     on:
     workflow_dispatch:
         inputs:
@@ -62,25 +62,25 @@ When you click "Create pull request", a PR will be created in your repository wi
             required: false
     repository_dispatch:
         types: start-evaluation
-
+    
     permissions:
     contents: read
-
+    
     jobs:
     evaluation-test:
         runs-on: ubuntu-latest
-
+    
         steps:
         - uses: actions/checkout@v4
         - uses: actions/setup-python@v5
             with:
             python-version: "3.12"
-
+    
         - name: Install dependencies
             run: |
             python -m pip install --upgrade pip
             pip install -r requirements.txt
-
+    
         - name: Run test
             env:
             SCORECARD_API_KEY: ${{ secrets.SCORECARD_API_KEY }}
@@ -97,18 +97,18 @@ When you click "Create pull request", a PR will be created in your repository wi
   </Tab>
   <Tab title="run_tests.py">
     This is the file that `scorecard-eval.yml` uses to run your system.
-    
+
     You should update the `run_system()` function to call your actual system.
 
     ```python run_tests.py expandable wrap
     import os
     import re
     from typing import Any
-
+    
     from scorecard_ai import Scorecard
     from scorecard_ai.lib import run_and_evaluate
-
-
+    
+    
     def run_system(
         system_input: dict[str, Any],
         system_config: dict[str, Any] | None = None
@@ -119,8 +119,8 @@ When you click "Create pull request", a PR will be created in your repository wi
         return {
             "response": f"Placeholder LLM response, got input: {system_input}",
         }
-
-
+    
+    
     def main(
         *,
         scorecard_api_key: str,
@@ -133,7 +133,7 @@ When you click "Create pull request", a PR will be created in your repository wi
         Run and score all Testcases in a given Testset
         """
         client = Scorecard(api_key=scorecard_api_key)
-
+    
         run = run_and_evaluate(
             client=client,
             project_id=project_id,
@@ -142,10 +142,10 @@ When you click "Create pull request", a PR will be created in your repository wi
             **({"system_version_id": system_version_id} if system_version_id else {}),
             system=run_system,
         )
-
+    
         print(run["url"])
-
-
+    
+    
     if __name__ == "__main__":
         main(
             scorecard_api_key=os.environ["SCORECARD_API_KEY"],
@@ -173,10 +173,6 @@ Depending on your configuration, every push or PR automatically triggers Scoreca
 
 You can trigger a run manually from the Scorecard UI using the **Trigger Run** page.
 
-Just select a testset and some metrics, then click "Run tests"!
+Just select a testset and some metrics, then click "Run tests"\!
 
-<DarkLightImage
-  lightSrc="/images/trigger-run-light.png"
-  caption="Triggering a run manually from the Scorecard UI."
-  alt="Screenshot of the trigger run page in the Scorecard UI."
-/>
+<DarkLightImage lightSrc="/images/trigger-run-light.png" caption="Triggering a run manually from the Scorecard UI." alt="Screenshot of the trigger run page in the Scorecard UI." />
