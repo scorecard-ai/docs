@@ -123,6 +123,7 @@
               "features/runs",
               "features/prompts",
               "features/systems",
+              "features/multi-turn-simulation",
               "features/tracing",
               "features/a-b-comparison",
               "features/ai-guardrails",

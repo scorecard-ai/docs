@@ -1,0 +1,302 @@
+---
+title: "Multi-turn simulation"
+description: "Evaluate multi-turn conversations with Scorecard."
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+Scorecard's multi-turn simulation feature allows you to evaluate the performance of an LLM system in a multi-turn conversation.
+
+Define instructions for your simulated user in Scorecard, then run a simulation on your system using the Scorecard SDK.
+
+<DarkLightImage lightSrc="/images/sim-agent-details-light.png" caption="Sim Agent configuration page." alt="Details of a Sim Agent." />
+
+## Create a Sim Agent
+
+Sim Agents are configurable AI personas that interact with your system during testing. Each agent has a prompt template, model settings, and can be versioned for reproducibility.
+
+<Tabs>
+<Tab title="Create using UI">
+
+Go to the Sim Agents page, then click "New Sim Agent". Fill in the instructions for the Sim Agent then click "Save Sim Agent".
+
+<Tip>
+We recommend using the model `Gpt-4.1` for better simulated behavior.
+</Tip>
+
+<DarkLightImage lightSrc="/images/sim-agent-create-light.png" caption="Modal to create a Sim Agent." alt="Modal showing options to create a Sim Agent." />
+
+</Tab>
+<Tab title="Create using Python SDK">
+
+You can create a Sim Agent through the API using the `scorecard.systems.upsert()` method.
+
+<Tip>
+We recommend using the model `gpt-4.1` for better simulated behavior.
+</Tip>
+
+```python
+from scorecard_ai import Scorecard
+from scorecard_ai.lib import ChatMessage
+
+
+sim_agent_prompt = """
+You are an angry customer talking to a customer service agent.
+
+You want to return a {{item_to_return}} and will not be satisfied until
+the return is accepted.
+Never mention you're a simulation or help the agent.
+"""
+
+scorecard = Scorecard()
+sim_agent = scorecard.systems.upsert(
+    project_id="203",
+    name="Angry Amazon customer",
+    config={
+        "modelName": "gpt-4.1", 
+        "promptTemplate": [
+            ChatMessage(role="system", content=sim_agent_prompt)
+        ],
+        "temperature": 0.1,
+        "maxTokens": 1024,
+        "topP": 0.9,
+        "isSimAgent": True,
+    },
+)
+SIM_AGENT_ID = sim_agent.id
+```
+
+</Tab>
+</Tabs>
+
+### Prompt template
+
+Sim Agent prompts support Jinja2 templating to inject testcase inputs dynamically:
+
+> You are an angry customer talking to customer service.
+>
+> Product: <span className="text-blue-500">\{\{product_name\}\}</span>  
+> Issue: <span className="text-blue-500">\{\{customer_complaint\}\}</span>  
+> Previous interactions: <span className="text-blue-500">\{\{interaction_count\}\}</span>
+>
+> You want to <span className="text-blue-500">\{\{customer_goal\}\}</span> and will not be satisfied until resolved.  
+> Never mention you're a simulation or help the agent.
+
+Variables like <span className="text-blue-500">\{\{product_name\}\}</span> are replaced with values from each testcase's input fields.
+
+<Tip>
+See [Prompts](/features/prompts#advanced-jinja-features) for information on referencing testcase inputs and using Jinja in your Sim Agent prompts.
+</Tip>
+
+## Run a simulation
+
+Multi-turn simulations execute conversations between your system and Sim Agents, capturing the full interaction for evaluation. Simulation runs are kicked off by calling `multi_turn_simulation()` from the Scorecard Python SDK.
+
+### System function
+
+The `system` parameter is your code under test. It must be a callable that handles conversation turns.
+
+**Function signature:**
+
+```python
+def your_system(
+    # Complete conversation history
+    chat_history: list[ChatMessage], 
+    # Input fields from the current testcase
+    testcase_inputs: dict[str, Any]
+# Returns a list of assistant messages as strings.
+# This will likely be a list containing a single string message.
+) -> Iterable[str | ChatMessage]
+```
+
+Here's an example of an LLM system under test:
+
+```python wrap expandable Example system function
+from openai import OpenAI
+from scorecard_ai.lib import ChatMessage
+
+system_prompt = """
+You are a customer support agent for Amazon. Help the customer and remain polite and very concise. Try to figure out what the customer's needs are first, then continue by providing information or links to actions as appropriate following realistic Amazon guidelines.
+"""
+
+def customer_service_system(
+    chat_history: list[ChatMessage],
+    testcase_inputs: dict,
+) -> list[str]:
+    client = OpenAI()
+    system_response = client.chat.completions.create(
+        model="gpt-4.1",
+        messages=chat_history,
+    ).choices[0].message.content
+    # Return a list containing the response content
+    return [system_response]
+
+    # Alternatively, return ChatMessage objects for more control.
+    # This is useful if you want to track tool calls, which will be ignored by the simulated user agent.
+    # return [ChatMessage(role="assistant", content=system_response)]
+```
+
+### Initial messages
+
+The `initial_messages` parameter seeds the conversation before simulation begins. It can be:
+- A list of `ChatMessage` objects (used for all testcases)
+- A function that takes testcase inputs and returns messages (for dynamic initialization)
+- Omitted (starts with an empty conversation)
+
+<CodeGroup>
+
+```python Static initial messages
+# Option 1: Static initial messages for all testcases
+initial_messages: list[ChatMessage] = [
+    # System messages are ignored by the simulated user agent
+    ChatMessage(role="system", content=system_prompt),
+    # Pre-seed with an assistant greeting
+    ChatMessage(
+        role="assistant",
+        content="Hello, how can I help you today?",
+    ),
+]
+```
+
+```python Dynamic initial messages
+# Option 2: Dynamic initial messages based on testcase inputs
+def get_initial_messages(testcase_inputs: dict) -> list[ChatMessage]:
+    product_name = testcase_inputs.get("product_name", "our products")
+    return [
+        ChatMessage(role="system", content=system_prompt),
+        # Pre-seed with an assistant greeting specific to the testcase
+        ChatMessage(
+            role="assistant",
+            content=f"Hello! I'm here to help with {product_name}.",
+        ),
+    ]
+```
+</CodeGroup>
+
+### Running the simulation
+
+Use `multi_turn_simulation()` to run the simulation across all testcases in a testset:
+
+```python
+from scorecard_ai import Scorecard
+from scorecard_ai.lib import ChatMessage, StopChecks, multi_turn_simulation
+
+scorecard = Scorecard()
+
+simulation_run = multi_turn_simulation(
+    client=scorecard,
+    project_id=PROJECT_ID, # e.g. "123"
+    metric_ids=METRIC_IDS,  # e.g. ["123", "456"]
+    testset_id=TESTSET_ID, # e.g. "456"
+    sim_agent_id=SIM_AGENT_ID, # e.g. "abcdefgh-1234-5678-90ab-cdefgh01"
+    system=customer_service_system,
+    initial_messages=initial_messages,  # Or use get_initial_messages for dynamic initialization
+    stop_check=StopChecks.max_turns(5),  # Optional: control the conversation stopping condition
+    start_with_system=False,  # Optional: explicitly control who starts the conversation
+)
+```
+
+<Note>
+The simulation automatically determines who starts the conversation based on `initial_messages`. If the last message is from the user, the system responds first. Use `start_with_system` to override this behavior.
+</Note>
+
+## Stop checks
+
+Stop checks control when conversations end. They are functions that receive a `ConversationInfo` object and return `True` to stop the simulation.
+
+By default, the simulation runs for 5 "turns", where a turn is the number of times the `system` function was called.
+
+<Warning>
+To prevent accidental infinite loops, simulations have a hard limit of 50 turns.
+If this limit is reached, the simulation ends automatically regardless of the stop check.
+</Warning>
+
+### Built-in stop checks
+
+Scorecard provides a few heuristic stop checks:
+
+| **Stop Check** | Description | Example usage |
+| :------------- | :---------- | :------------ |
+| **Max turns**  | Stop after `n` conversation turns | `StopChecks.max_turns(10)` |
+| **Content**    | Stop when any phrase appears<br />(case-insensitive) | `StopChecks.content(["goodbye", "thank you"])` |
+| **Max time**   | Stop after elapsed time (seconds) | `StopChecks.max_time(30.0)` |
+
+<Tip>
+**Combine stop checks** 
+
+You can create complex stopping conditions by combining stop checks using `StopChecks.any()` and `StopChecks.all()`.
+
+For example, `StopChecks.any([StopChecks.max_turns(5), StopChecks.max_time(10)])` will end the simulation after at most 5 turns or after at most 10 seconds.
+</Tip>
+
+### Custom stop checks
+
+For more advanced use cases, you can also define your own stop check.
+
+For example, this stop check ends the simulation when the user is satisfied with the conversation.
+
+```python wrap expandable Custom stop check for user satisfaction
+from scorecard_ai.lib import ConversationInfo
+
+def stop_check_user_is_satisfied(conversation_info: ConversationInfo) -> bool:
+    if conversation_info["turn_count"] < 1:
+        return False
+    last_message = conversation_info["messages"][-1]
+    if last_message["role"] != "user":
+        return False
+    # Evaluate the user's satisfaction with the conversation
+    client = OpenAI()
+    response = openai.responses.create(
+        model="gpt-4.1-mini",
+        instructions="You are given a conversation between a customer and an Amazon customer service agent. Determine if the customer is satisfied with the conversation. Say 'yes' if the conversation is over and the customer is satisfied, 'no' otherwise.",
+        input=last_message["content"],
+    )
+    return response.output_text.lower().contains("yes")
+```
+
+## Viewing simulation results
+
+Calling `multi_turn_simulation()` creates a [Scorecard Run](/features/runs).
+
+To view simulation results, go to the Run's details page. Then, click on a Record ID to go to the record details page. The conversation history between the Sim Agent ("User") and the system under test ("Assistant") will be shown.
+
+<DarkLightImage lightSrc="/images/testrecord-details-chat-history-light.png" caption="Conversation chat history in the record details page." alt="Chat history of a record." />
+
+## Common patterns
+
+<AccordionGroup>
+<Accordion title="Testing escalation paths">
+
+Escalation paths are common in customer service systems. This Sim Agent will gradually escalate the conversation until the user is satisfied.
+
+> You are a customer seeking help with `{{issue}}`.  
+> Start polite, but escalate if not satisfied:  
+> 1\. First request: Be polite  
+> 2\. Second request: Show frustration    
+> 3\. Third request: Ask for supervisor  
+> 4\. Fourth request: Threaten to cancel service  
+
+</Accordion>
+<Accordion title="Testing edge cases">
+
+This Sim Agent will test the system's handling of unusual requests.
+
+> You are testing the system's handling of `{{test_scenario}}`. 
+> Try unusual requests like:  
+> \- Very long product names  
+> \- Special characters in input  
+> \- Multiple issues at once  
+> \- Contradictory requests  
+
+</Accordion>
+<Accordion title="Testing conversation recovery">
+
+This Sim Agent will start by asking about the main issue, then suddenly change topic to a distraction topic after 2 turns. It will then return to the original issue.
+
+> Start by asking about `{{main_issue}}`.  
+> After 2 turns, suddenly change topic to `{{distraction_topic}}`.  
+> Then return to the original issue.  
+> Test if the assistant can handle context switches.  
+
+</Accordion>
+</AccordionGroup>
