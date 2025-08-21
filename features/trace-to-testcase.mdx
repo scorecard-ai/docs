@@ -1,11 +1,17 @@
 ---
 title: "Trace ➜ Testcase"
-description: "Turn real production traces into reusable testcases in one click."
+description: "Turn production traces into reusable testcases and build datasets from real traffic."
 ---
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-Live traffic uncovers edge-cases synthetic datasets rarely catch. **Trace ➜ Testcase** lets you capture those moments, convert them into structured testcases, and bake them into your regression suite—all without leaving the trace view.
+Live traffic uncovers edge-cases synthetic datasets rarely catch. **Trace ➜ Testcase** lets you capture those moments, convert them into structured testcases, and bake them into your regression suite—all without leaving the trace view. This is production-to-dataset in one click.
+
+## If you call it something else
+
+- **Traces → Testcases**: Similar to “snapshotting” production examples into a labeled dataset. Scorecard streamlines it in the trace UI and auto-maps prompt/completion fields.
+- **Where testcases live**: Saved into **Testsets** so you can re-run evaluations and compare **Runs & Results** over time.
+- **What’s extracted**: Prompt and completion are pulled from common keys (`openinference.*`, `ai.prompt`/`ai.response`, `gen_ai.*`).
 
 <DarkLightImage
   lightSrc="/images/tracing-light.png"
@@ -16,19 +22,17 @@ Live traffic uncovers edge-cases synthetic datasets rarely catch. **Trace ➜ Te
 
 ## Why it matters
 
-Production prompts and outputs are a goldmine for improving evaluations. By promoting a trace to a testcase you can:
-
-1. Reproduce tricky queries that surfaced in the wild.
-2. Track how model or prompt changes impact the exact same scenario over time.
-3. Grow your testsets organically as your users explore new corners of the problem space.
+- Grow testsets from real user prompts and outputs.
+- Reproduce tricky scenarios when evaluating new models or prompts.
+- Track quality over time with consistent, production-grounded inputs.
 
 ## How it works
 
-1. Open any trace in Scorecard and drill down to the span that contains the LLM call.
-2. Click **“Create Testcase”** (the <code>&lt;Icons.document/&gt;</code> button).
-3. Pick a target **Testset** or create a new one.
-4. Scorecard auto-extracts the prompt & completion using common telemetry keys (<code>openinference.*</code>, <code>ai.prompt</code>, <code>ai.response</code>, <code>gen_ai.*</code>). You can tweak the fields before saving.
-5. See the new testcase immediately in the selected testset.
+1. Open any trace and drill down to the span that contains the LLM call.
+2. Click **Create Testcase** (document icon).
+3. Pick a **Testset** or create a new one.
+4. Scorecard auto-extracts the prompt and completion from span attributes (`openinference.*`, `ai.prompt` / `ai.response`, `gen_ai.*`). Adjust fields before saving.
+5. The testcase appears immediately in the selected testset.
 
 <DarkLightImage
   lightSrc="/images/tracing-dark.png"
@@ -37,8 +41,8 @@ Production prompts and outputs are a goldmine for improving evaluations. By prom
   alt="Field mapping dialog screenshot."
 />
 
-That’s it—next time you run an evaluation, this real-world input becomes part of your scoring.
+Use cases: create gold-standard datasets from production data, run offline evaluations on real cases, and validate changes before deployment.
 
 <Info>
-Looking for an automated workflow? Use the <code>/testcases</code> API endpoint to create testcases programmatically from traces.
+Automating this flow? Use the `/testcases` API to create testcases programmatically from traces.
 </Info>

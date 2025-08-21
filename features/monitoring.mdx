@@ -1,11 +1,17 @@
 ---
 title: "Monitoring"
-description: "Continuously score production LLM traffic and get alerted when quality drifts."
+description: "Continuously score production LLM traffic and track quality over time."
 ---
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-Scorecard **Monitors** run your chosen evaluation metrics on every production trace and surface trends in an interactive dashboard.
+Scorecard **Monitors** periodically sample recent LLM spans, extract prompts and completions, and automatically score them with your selected metrics. The results appear in the Monitoring dashboard so you can track production quality and detect drift over time.
+
+## If you’re coming from other tools
+
+- **What it is**: Very similar to observability dashboards (metrics over time, traces, filtering) — with one key addition: Scorecard runs **evaluations/auto‑scoring** on sampled traces, so you get quality metrics over time, not just system metrics.
+- **Where scores live**: Aggregates are in the Monitoring dashboard; detailed scores are also visible on **Runs & Results** and linked from **Traces**.
+- **What’s evaluated**: Only spans that contain prompt and completion are scored; we support common keys (`openinference.*`, `ai.prompt`/`ai.response`, `gen_ai.*`).
 
 <DarkLightImage
   lightSrc="/images/tracing-light.png"
@@ -41,14 +47,32 @@ Inside the modal you can configure:
   alt="Sample and filter UI."
 />
 
+### Keyword filtering with SearchText
+
+Use **SearchText** to match any keywords or phrases embedded in your traces. It searches across span and resource attributes (including prompt/response fields), so you can:
+
+- Track sensitive topics (e.g., “refund policy”, “PCI”, “unsafe”) as dedicated monitors
+- Isolate incident-related traffic and watch the quality recover
+- Run targeted evaluations for specific features, intents, or cohorts
+
+This turns production monitoring into topic-level QA: you’re not just watching everything, you’re watching the parts that matter.
+
 Click **Create Monitor** and scoring starts on the next cycle.
 
-## Edit or Delete
+## How it works
 
-All monitors appear in the table. Use the **•••** menu to:
+- Scorecard samples recent AI spans using deterministic, hash-based sampling (stable slices).
+- It extracts prompt and completion from span attributes (supports `openinference.*`, `ai.prompt` / `ai.response`, and `gen_ai.*`).
+- The monitor creates a new **Run** and turns sampled spans into **Records** that are automatically scored with your selected metrics.
+- Results appear in the **Monitors** dashboard and are linked in **Runs & Results** for deeper analysis.
 
-* **Edit** – change metrics, sampling, filters or deactivate/reactivate.
-* **Delete** – remove the monitor entirely.
+## Reading the dashboard
+
+The monitor view updates in real-time and shows:
+
+- An aggregate score for each metric.
+- Time-series trends to spot drift.
+- A table of the latest spans with their individual scores—click any row to jump to the full trace.
 
 <DarkLightImage
   lightSrc="/images/tracing-light.png"
@@ -57,43 +81,24 @@ All monitors appear in the table. Use the **•••** menu to:
   alt="Edit monitor modal screenshot."
 />
 
-## Alert thresholds
+## Manage monitors
 
-Open the monitor detail page and add threshold rules per metric. When a rule is breached Scorecard triggers your configured notification channels (email, Slack, webhook → PagerDuty, Opsgenie).
+- **Edit** a monitor to change metrics, sampling, filters or toggle **Active**.
+- **Delete** a monitor to stop processing entirely.
 
 <DarkLightImage
   lightSrc="/images/tracing-dark.png"
   darkSrc="/images/tracing-light.png"
-  caption="Alert threshold setup."
-  alt="Alert threshold setup screenshot."
+  caption="Monitor management UI."
+  alt="Monitor management UI screenshot."
 />
 
-## Reading the dashboard
+## Best for
 
-The monitor view updates in real-time and shows:
-
-- An aggregate score for each metric.
-- Time-series sparkline to spot drifts.
-- A table of the latest spans with their individual scores—click any row to jump to the full trace.
-
-## Alerts
-
-When a threshold is breached Scorecard can:
-
-- Send an email to project members.
-- Post to Slack or Microsoft Teams.
-- Trigger a webhook for on-call rotations.
-
-Configure integrations under **Settings → Integrations**.
-
-## Best practices
-
-Keep monitors tight and actionable:
-
-- Start with 1-2 key metrics per project.
-- Add a **Latency** metric to keep an eye on model response times.
-- Review alerts; tune thresholds until you only get pings that matter.
+- Production monitoring of LLM quality and safety
+- Auto-scoring on real user traffic
+- Tracking model/prompt health over time
 
 <Note>
-Looking for a step-by-step setup? Follow the [Online Evaluation & Production Monitoring Quickstart](/intro/production-monitoring-quickstart).
+Ready to set one up? Follow the [Online Evaluation & Production Monitoring Quickstart](/intro/production-monitoring-quickstart).
 </Note>

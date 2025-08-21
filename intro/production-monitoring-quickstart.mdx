@@ -6,7 +6,11 @@ mode: "center"
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-Scorecard can evaluate live requests as they flow through your application. This guide shows how to stream spans to Scorecard, attach metrics, and watch dashboards light up.
+Scorecard can evaluate live requests as they flow through your application. This guide shows how to set up a Monitor, how sampling and filters work, where prompts/completions are taken from, and what to expect after enabling monitoring.
+
+<Info>
+Monitors work like observability dashboards, but with one key difference: Scorecard also runs **evaluations/auto‑scoring** on sampled traces so you see quality metrics over time, not just system metrics.
+</Info>
 
 ## Steps
 <Steps>
@@ -18,8 +22,11 @@ Scorecard can evaluate live requests as they flow through your application. This
     In the Scorecard UI open **Monitors → New Monitor**.
 
     1. Select the **project** that receives production traces.
-    2. Pick the **metrics** you would like to run continuously (for example *toxicity* or *factuality*).
-    3. Define **alert thresholds** (optional).
+    2. Pick the **metrics** you want to run continuously (toxicity, factuality, latency, etc.).
+    3. Set **frequency** (1m, 5m, 30m, 1h, 1d).
+    4. Choose a **sample rate** (1 %–100 %).
+    5. Add **filters** (by <code>spanName</code>, <code>serviceName</code>, or free-text **searchText**).
+    6. Toggle **Active** to start/stop without deleting.
 
     <DarkLightImage
       lightSrc="/images/tracing-light.png"
@@ -27,30 +34,32 @@ Scorecard can evaluate live requests as they flow through your application. This
       caption="Create monitor modal."
       alt="Create monitor modal screenshot."
     />
+
     **How sampling works**
 
-    - Scorecard evaluates **every span** that contains both a prompt and completion.
-    - Large projects are automatically down-sampled to keep latency low. Adjust the rate in **Monitor Settings**.
+    - Deterministic, hash-based sampling on `TraceId` gives stable slices across runs.
+    - Large projects are automatically down-sampled according to your rate.
 
-    <DarkLightImage
-      lightSrc="/images/tracing-dark.png"
-      darkSrc="/images/tracing.png"
-      caption="Monitor settings – sampling rate."
-      alt="Sampling rate UI screenshot."
-    />
+    **Filters**
 
-    **Filters & on/off switch**
-
-    - Narrow evaluation to a subset of spans by <code>spanName</code>, <code>serviceName</code> or free-text <em>searchText</em>.
-    - Toggle **Active** to pause/resume scoring without deleting the monitor.
+    - Narrow evaluation by span name, service name, or free-text search across span/resource attributes.
+    - Use **SearchText** to target keywords and phrases that appear anywhere in a trace (including prompts and responses). Examples: “refund policy”, “PCI”, “unsafe content”, “billing migration”. This lets you monitor a topic, incident, or cohort end-to-end and measure quality improvements precisely where they matter.
 
     **Where prompts & completions come from**
 
-    Scorecard looks at common OpenInference keys like `openinference.*`, `ai.prompt`, `ai.response`, and `gen_ai.*`. If you emit custom keys you can <em>map</em> them in the UI.
+    Scorecard looks for common attributes: `openinference.*`, `ai.prompt` / `ai.response`, and `gen_ai.*`. Custom keys can be mapped in the UI.
+
+    <Note>
+    Your traces should follow the same conventions used by OpenInference / gen_ai ecosystems (e.g., Traceloop, OpenLLMetry). If you don’t see monitoring or scoring results:
+
+    - Inspect a span in the **Traces** page and verify it contains prompt and completion under keys like `openinference.input` / `openinference.output`, `ai.prompt` / `ai.response.*`, or `gen_ai.prompt.*` / `gen_ai.completion.*`.
+    - Ensure those spans are within your monitor’s filters (service/span/searchText) and sampling window.
+    Once the attributes are present, Scorecard will automatically extract and score them.
+    </Note>
   </Step>
 
   <Step title="Watch live dashboards">
-    As soon as traces enter the monitor you’ll see scores, trends, and the latest spans.
+    Each cycle, Scorecard samples recent AI spans, extracts inputs/outputs, creates a **Run**, and auto-scores **Records** with your metrics.
 
     <DarkLightImage
       lightSrc="/images/tracing-light.png"
@@ -58,13 +67,19 @@ Scorecard can evaluate live requests as they flow through your application. This
       caption="Monitoring dashboard."
       alt="Monitoring dashboard screenshot."
     />
+
+    You’ll see:
+
+    - Aggregate scores per metric.
+    - Trends over time to spot drift.
+    - Recent spans with individual scores and links back to full traces.
   </Step>
 </Steps>
 
 ## What’s next?
 
-- Connect a pager or Slack channel to be notified when a metric drifts.
-- Use **Trace ➜ Testcase** to promote interesting spans into reusable testcases.
+- Promote interesting spans with **Trace ➜ Testcase** to build datasets from production usage.
+- Compare results in **Runs & Results** when iterating on models or prompts.
 
 <Note>
 Looking for an end-to-end example? Check the open-source <a href="https://github.com/scorecard-ai/scorecard-examples" target="_blank">production monitoring sample app</a>.
