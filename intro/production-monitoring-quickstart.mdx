@@ -6,11 +6,15 @@ mode: "center"
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-Scorecard can evaluate live requests as they flow through your application. This guide shows how to set up a Monitor, how sampling and filters work, where prompts/completions are taken from, and what to expect after enabling monitoring.
+Scorecard can evaluate live requests as they flow through your application. This guide picks up right after the **Tracing Quickstart** and shows how to enable continuous evaluation on your live traffic.
 
 <Info>
 Monitors work like observability dashboards, but with one key difference: Scorecard also runs **evaluations/auto‑scoring** on sampled traces so you see quality metrics over time, not just system metrics.
 </Info>
+
+<Tip>
+Already finished the <a href="/intro/tracing-quickstart">Tracing Quickstart</a>? Use the same project and skip to **Configure a Monitor** below.
+</Tip>
 
 ## Steps
 <Steps>
@@ -21,7 +25,7 @@ Monitors work like observability dashboards, but with one key difference: Scorec
   <Step title="Configure a Monitor">
     In the Scorecard UI open **Monitors → New Monitor**.
 
-    1. Select the **project** that receives production traces.
+    1. Select the **project** that receives production traces (same one used in the tracing quickstart).
     2. Pick the **metrics** you want to run continuously (toxicity, factuality, latency, etc.).
     3. Set **frequency** (1m, 5m, 30m, 1h, 1d).
     4. Choose a **sample rate** (1 %–100 %).
@@ -58,21 +62,18 @@ Monitors work like observability dashboards, but with one key difference: Scorec
     </Note>
   </Step>
 
-  <Step title="Watch live dashboards">
-    Each cycle, Scorecard samples recent AI spans, extracts inputs/outputs, creates a **Run**, and auto-scores **Records** with your metrics.
+  <Step title="Where results show up">
+    Each cycle, Scorecard samples recent AI spans, extracts inputs/outputs, creates a **Run**, and auto‑scores **Records** with your metrics.
+
+    - On **Traces**: you’ll see scored spans inline; click a row to view the full trace and follow the link to its run.
+    - On **Runs**: you’ll find run history and per‑run aggregates (plots and stats) for deeper analysis.
 
     <DarkLightImage
       lightSrc="/images/tracing-light.png"
       darkSrc="/images/tracing-dark.png"
-      caption="Monitoring dashboard."
-      alt="Monitoring dashboard screenshot."
+      caption="Browse scored traces and follow links to run details."
+      alt="Monitoring result locations screenshot."
     />
-
-    You’ll see:
-
-    - Aggregate scores per metric.
-    - Trends over time to spot drift.
-    - Recent spans with individual scores and links back to full traces.
   </Step>
 </Steps>
 

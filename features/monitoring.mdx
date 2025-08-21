@@ -5,12 +5,12 @@ description: "Continuously score production LLM traffic and track quality over t
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-Scorecard **Monitors** periodically sample recent LLM spans, extract prompts and completions, and automatically score them with your selected metrics. The results appear in the Monitoring dashboard so you can track production quality and detect drift over time.
+Scorecard **Monitors** periodically sample recent LLM spans, extract prompts and completions, and automatically score them with your selected metrics. The results appear where you work: on the **Traces** page (scored traces) and the **Runs** pages (history and per‑run aggregates).
 
 ## If you’re coming from other tools
 
 - **What it is**: Very similar to observability dashboards (metrics over time, traces, filtering) — with one key addition: Scorecard runs **evaluations/auto‑scoring** on sampled traces, so you get quality metrics over time, not just system metrics.
-- **Where scores live**: Aggregates are in the Monitoring dashboard; detailed scores are also visible on **Runs & Results** and linked from **Traces**.
+- **Where scores show up**: Inline on **Traces** for each scored span, and in **Runs** where you can analyze run‑level aggregates and trends.
 - **What’s evaluated**: Only spans that contain prompt and completion are scored; we support common keys (`openinference.*`, `ai.prompt`/`ai.response`, `gen_ai.*`).
 
 <DarkLightImage
@@ -59,20 +59,16 @@ This turns production monitoring into topic-level QA: you’re not just watching
 
 Click **Create Monitor** and scoring starts on the next cycle.
 
-## How it works
+## What happens after it runs
 
-- Scorecard samples recent AI spans using deterministic, hash-based sampling (stable slices).
-- It extracts prompt and completion from span attributes (supports `openinference.*`, `ai.prompt` / `ai.response`, and `gen_ai.*`).
-- The monitor creates a new **Run** and turns sampled spans into **Records** that are automatically scored with your selected metrics.
-- Results appear in the **Monitors** dashboard and are linked in **Runs & Results** for deeper analysis.
+- Monitors sample recent AI spans using deterministic, hash‑based sampling (stable slices) and create a **Run**.
+- Each sampled span is scored and appears inline on the **Traces** page with score chips; click any row to open the full trace.
+- From a scored trace you can follow the link to the corresponding **Run** to see run‑level details.
 
-## Reading the dashboard
+## Where to view results
 
-The monitor view updates in real-time and shows:
-
-- An aggregate score for each metric.
-- Time-series trends to spot drift.
-- A table of the latest spans with their individual scores—click any row to jump to the full trace.
+- **Traces**: Browse scored spans, filter by keywords with SearchText, and jump into details for debugging.
+- **Runs**: See run history and performance over time, plus per‑run aggregates and plots on the run details pages.
 
 <DarkLightImage
   lightSrc="/images/tracing-light.png"
