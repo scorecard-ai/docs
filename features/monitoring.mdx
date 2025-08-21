@@ -7,18 +7,24 @@ import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
 Scorecard **Monitors** run your chosen evaluation metrics on every production trace and surface trends in an interactive dashboard.
 
-<Frame caption="Monitor overview">
-  ![Monitor overview](/images/monitoring/overview-placeholder.png)
-</Frame>
+<DarkLightImage
+  lightSrc="/images/tracing-light.png"
+  darkSrc="/images/tracing-dark.png"
+  caption="Monitor overview list."
+  alt="Screenshot of monitor overview list."
+/>
 
 ## Create a Monitor
 
 1. In the project sidebar select **Monitors** (<code>&lt;Icons.clock/&gt;</code>). You’ll land on the monitor overview page.
 2. Click **“New Monitor +”** to open the Create Monitor modal.
 
-<Frame caption="Create monitor – modal">
-  ![Create monitor modal](/images/monitoring/create-monitor-modal-placeholder.png)
-</Frame>
+<DarkLightImage
+  lightSrc="/images/tracing-light.png"
+  darkSrc="/images/tracing-dark.png"
+  caption="Create monitor modal."
+  alt="Create monitor modal screenshot."
+/>
 
 Inside the modal you can configure:
 
@@ -28,9 +34,12 @@ Inside the modal you can configure:
 * **Filters** – hone in on traffic via <code>spanName</code>, <code>serviceName</code>, or full-text **searchText**.
 * **Active** – flip a switch to pause / resume without losing config.
 
-<Frame caption="Monitor options – sample & filter">
-  ![Sample and filter](/images/monitoring/options-placeholder.png)
-</Frame>
+<DarkLightImage
+  lightSrc="/images/tracing-dark.png"
+  darkSrc="/images/tracing-light.png"
+  caption="Monitor options – sample & filter."
+  alt="Sample and filter UI."
+/>
 
 Click **Create Monitor** and scoring starts on the next cycle.
 
@@ -41,17 +50,23 @@ All monitors appear in the table. Use the **•••** menu to:
 * **Edit** – change metrics, sampling, filters or deactivate/reactivate.
 * **Delete** – remove the monitor entirely.
 
-<Frame caption="Edit monitor modal">
-  ![Edit monitor modal](/images/monitoring/edit-monitor-modal-placeholder.png)
-</Frame>
+<DarkLightImage
+  lightSrc="/images/tracing-light.png"
+  darkSrc="/images/tracing-dark.png"
+  caption="Edit monitor modal."
+  alt="Edit monitor modal screenshot."
+/>
 
 ## Alert thresholds
 
 Open the monitor detail page and add threshold rules per metric. When a rule is breached Scorecard triggers your configured notification channels (email, Slack, webhook → PagerDuty, Opsgenie).
 
-<Frame caption="Alert threshold setup">
-  ![Alert threshold setup](/images/monitoring/threshold-placeholder.png)
-</Frame>
+<DarkLightImage
+  lightSrc="/images/tracing-dark.png"
+  darkSrc="/images/tracing-light.png"
+  caption="Alert threshold setup."
+  alt="Alert threshold setup screenshot."
+/>
 
 ## Reading the dashboard
 

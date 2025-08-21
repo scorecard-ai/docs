@@ -21,17 +21,23 @@ Scorecard can evaluate live requests as they flow through your application. This
     2. Pick the **metrics** you would like to run continuously (for example *toxicity* or *factuality*).
     3. Define **alert thresholds** (optional).
 
-    <Frame caption="Create monitor">
-      ![Create monitor](/images/monitoring/create-monitor-placeholder.png)
-    </Frame>
+    <DarkLightImage
+      lightSrc="/images/tracing-light.png"
+      darkSrc="/images/tracing-dark.png"
+      caption="Create monitor modal."
+      alt="Create monitor modal screenshot."
+    />
     **How sampling works**
 
     - Scorecard evaluates **every span** that contains both a prompt and completion.
     - Large projects are automatically down-sampled to keep latency low. Adjust the rate in **Monitor Settings**.
 
-    <Frame caption="Monitor settings – sampling rate">
-      ![Sampling settings](/images/monitoring/sampling-placeholder.png)
-    </Frame>
+    <DarkLightImage
+      lightSrc="/images/tracing-dark.png"
+      darkSrc="/images/tracing.png"
+      caption="Monitor settings – sampling rate."
+      alt="Sampling rate UI screenshot."
+    />
 
     **Filters & on/off switch**
 
@@ -46,9 +52,12 @@ Scorecard can evaluate live requests as they flow through your application. This
   <Step title="Watch live dashboards">
     As soon as traces enter the monitor you’ll see scores, trends, and the latest spans.
 
-    <Frame caption="Monitoring dashboard">
-      ![Monitoring dashboard](/images/monitoring/dashboard-placeholder.png)
-    </Frame>
+    <DarkLightImage
+      lightSrc="/images/tracing-light.png"
+      darkSrc="/images/tracing-dark.png"
+      caption="Monitoring dashboard."
+      alt="Monitoring dashboard screenshot."
+    />
   </Step>
 </Steps>
 

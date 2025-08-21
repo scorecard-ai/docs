@@ -7,9 +7,12 @@ import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
 Live traffic uncovers edge-cases synthetic datasets rarely catch. **Trace ➜ Testcase** lets you capture those moments, convert them into structured testcases, and bake them into your regression suite—all without leaving the trace view.
 
-<Frame caption="Create testcase from span">
-  ![Create testcase from span](/images/trace-to-testcase/create-placeholder.png)
-</Frame>
+<DarkLightImage
+  lightSrc="/images/tracing-light.png"
+  darkSrc="/images/tracing-dark.png"
+  caption="Create testcase from span."
+  alt="Create testcase from span screenshot."
+/>
 
 ## Why it matters
 
@@ -27,9 +30,12 @@ Production prompts and outputs are a goldmine for improving evaluations. By prom
 4. Scorecard auto-extracts the prompt & completion using common telemetry keys (<code>openinference.*</code>, <code>ai.prompt</code>, <code>ai.response</code>, <code>gen_ai.*</code>). You can tweak the fields before saving.
 5. See the new testcase immediately in the selected testset.
 
-<Frame caption="Field mapping dialog">
-  ![Field mapping dialog](/images/trace-to-testcase/field-mapping-placeholder.png)
-</Frame>
+<DarkLightImage
+  lightSrc="/images/tracing-dark.png"
+  darkSrc="/images/tracing-light.png"
+  caption="Field mapping dialog."
+  alt="Field mapping dialog screenshot."
+/>
 
 That’s it—next time you run an evaluation, this real-world input becomes part of your scoring.
 
