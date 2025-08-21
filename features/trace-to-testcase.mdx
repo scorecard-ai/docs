@@ -1,0 +1,38 @@
+---
+title: "Trace ➜ Testcase"
+description: "Turn real production traces into reusable testcases in one click."
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+Live traffic uncovers edge-cases synthetic datasets rarely catch. **Trace ➜ Testcase** lets you capture those moments, convert them into structured testcases, and bake them into your regression suite—all without leaving the trace view.
+
+<Frame caption="Create testcase from span">
+  ![Create testcase from span](/images/trace-to-testcase/create-placeholder.png)
+</Frame>
+
+## Why it matters
+
+Production prompts and outputs are a goldmine for improving evaluations. By promoting a trace to a testcase you can:
+
+1. Reproduce tricky queries that surfaced in the wild.
+2. Track how model or prompt changes impact the exact same scenario over time.
+3. Grow your testsets organically as your users explore new corners of the problem space.
+
+## How it works
+
+1. Open any trace in Scorecard and drill down to the span that contains the LLM call.
+2. Click **“Create Testcase”** (the <code>&lt;Icons.document/&gt;</code> button).
+3. Pick a target **Testset** or create a new one.
+4. Scorecard auto-extracts the prompt & completion using common telemetry keys (<code>openinference.*</code>, <code>ai.prompt</code>, <code>ai.response</code>, <code>gen_ai.*</code>). You can tweak the fields before saving.
+5. See the new testcase immediately in the selected testset.
+
+<Frame caption="Field mapping dialog">
+  ![Field mapping dialog](/images/trace-to-testcase/field-mapping-placeholder.png)
+</Frame>
+
+That’s it—next time you run an evaluation, this real-world input becomes part of your scoring.
+
+<Info>
+Looking for an automated workflow? Use the <code>/testcases</code> API endpoint to create testcases programmatically from traces.
+</Info>

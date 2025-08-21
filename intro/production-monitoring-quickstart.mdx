@@ -1,0 +1,62 @@
+---
+title: "Online Evaluation & Production Monitoring Quickstart"
+description: "Start scoring live production traffic with Scorecard in minutes."
+mode: "center"
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+Scorecard can evaluate live requests as they flow through your application. This guide shows how to stream spans to Scorecard, attach metrics, and watch dashboards light up.
+
+## Steps
+<Steps>
+  <Step title="Instrument tracing (one-time)">
+    Production monitoring relies on traces. Follow the <a href="/intro/tracing-quickstart">Tracing Quickstart</a> to connect your service and start sending spans. Once traces flow to your project, come back here to turn on continuous evaluation.
+  </Step>
+
+  <Step title="Configure a Monitor">
+    In the Scorecard UI open **Monitors → New Monitor**.
+
+    1. Select the **project** that receives production traces.
+    2. Pick the **metrics** you would like to run continuously (for example *toxicity* or *factuality*).
+    3. Define **alert thresholds** (optional).
+
+    <Frame caption="Create monitor">
+      ![Create monitor](/images/monitoring/create-monitor-placeholder.png)
+    </Frame>
+    **How sampling works**
+
+    - Scorecard evaluates **every span** that contains both a prompt and completion.
+    - Large projects are automatically down-sampled to keep latency low. Adjust the rate in **Monitor Settings**.
+
+    <Frame caption="Monitor settings – sampling rate">
+      ![Sampling settings](/images/monitoring/sampling-placeholder.png)
+    </Frame>
+
+    **Filters & on/off switch**
+
+    - Narrow evaluation to a subset of spans by <code>spanName</code>, <code>serviceName</code> or free-text <em>searchText</em>.
+    - Toggle **Active** to pause/resume scoring without deleting the monitor.
+
+    **Where prompts & completions come from**
+
+    Scorecard looks at common OpenInference keys like `openinference.*`, `ai.prompt`, `ai.response`, and `gen_ai.*`. If you emit custom keys you can <em>map</em> them in the UI.
+  </Step>
+
+  <Step title="Watch live dashboards">
+    As soon as traces enter the monitor you’ll see scores, trends, and the latest spans.
+
+    <Frame caption="Monitoring dashboard">
+      ![Monitoring dashboard](/images/monitoring/dashboard-placeholder.png)
+    </Frame>
+  </Step>
+</Steps>
+
+## What’s next?
+
+- Connect a pager or Slack channel to be notified when a metric drifts.
+- Use **Trace ➜ Testcase** to promote interesting spans into reusable testcases.
+
+<Note>
+Looking for an end-to-end example? Check the open-source <a href="https://github.com/scorecard-ai/scorecard-examples" target="_blank">production monitoring sample app</a>.
+</Note>
