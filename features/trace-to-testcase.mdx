@@ -5,6 +5,13 @@ description: "Turn production traces into reusable testcases and build datasets 
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
+<DarkLightImage
+  lightSrc="/images/monitors/trace-to-testcase-toast.png"
+  darkSrc="/images/monitors/trace-to-testcase-toast.png"
+  caption="Create testcase from span."
+  alt="Create testcase from span screenshot."
+/>
+
 Live traffic uncovers edge-cases synthetic datasets rarely catch. **Trace ➜ Testcase** lets you capture those moments, convert them into structured testcases, and bake them into your regression suite—all without leaving the trace view. This is production-to-dataset in one click.
 
 ## Why it matters
@@ -20,10 +27,10 @@ Live traffic uncovers edge-cases synthetic datasets rarely catch. **Trace ➜ Te
 - **What’s extracted**: Prompt and completion are pulled from common keys (`openinference.*`, `ai.prompt`/`ai.response`, `gen_ai.*`).
 
 <DarkLightImage
-  lightSrc="/images/tracing-light.png"
-  darkSrc="/images/tracing-dark.png"
-  caption="Create testcase from span."
-  alt="Create testcase from span screenshot."
+  lightSrc="/images/monitors/trace-to-testcase-create.png"
+  darkSrc="/images/monitors/trace-to-testcase-create.png"
+  caption="Create testcase modal."
+  alt="Create testcase modal screenshot."
 />
 
 ## How it works
@@ -35,10 +42,17 @@ Live traffic uncovers edge-cases synthetic datasets rarely catch. **Trace ➜ Te
 5. The testcase appears immediately in the selected testset.
 
 <DarkLightImage
-  lightSrc="/images/tracing-dark.png"
-  darkSrc="/images/tracing-light.png"
-  caption="Field mapping dialog."
-  alt="Field mapping dialog screenshot."
+  lightSrc="/images/monitors/trace-to-testcase-select.png"
+  darkSrc="/images/monitors/trace-to-testcase-select.png"
+  caption="Select Testset dialog."
+  alt="Select Testset dialog screenshot."
+/>
+
+<DarkLightImage
+  lightSrc="/images/monitors/trace-to-testcase-select.png"
+  darkSrc="/images/monitors/trace-to-testcase-select.png"
+  caption="Create testcase result ."
+  alt="Create testcase result screenshot."
 />
 
 ## Use cases
