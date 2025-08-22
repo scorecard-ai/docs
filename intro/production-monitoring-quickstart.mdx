@@ -32,22 +32,36 @@ Already finished the <a href="/intro/tracing-quickstart">Tracing Quickstart</a>?
     5. Add **filters** (by <code>spanName</code>, <code>serviceName</code>, or free-text **searchText**).
     6. Toggle **Active** to start/stop without deleting.
 
-    <DarkLightImage
-      lightSrc="/images/tracing-light.png"
-      darkSrc="/images/tracing-dark.png"
-      caption="Create monitor modal."
-      alt="Create monitor modal screenshot."
-    />
+<DarkLightImage
+  lightSrc="/images/monitors/monitor-filters.png"
+  darkSrc="/images/monitors/monitor-filters.png"
+  caption="Monitor options – sample & filter."
+  alt="Sample and filter UI."
+/>
 
     **How sampling works**
 
     - Deterministic, hash-based sampling on `TraceId` gives stable slices across runs.
     - Large projects are automatically down-sampled according to your rate.
 
+<DarkLightImage
+  lightSrc="/images/monitors/monitor-sample-rate.png"
+  darkSrc="/images/monitors/monitor-sample-rate.png"
+  caption="Monitor options – sample & filter."
+  alt="Sample and filter UI."
+/>
+
     **Filters**
 
     - Narrow evaluation by span name, service name, or free-text search across span/resource attributes.
     - Use **SearchText** to target keywords and phrases that appear anywhere in a trace (including prompts and responses). Examples: “refund policy”, “PCI”, “unsafe content”, “billing migration”. This lets you monitor a topic, incident, or cohort end-to-end and measure quality improvements precisely where they matter.
+
+<DarkLightImage
+  lightSrc="/images/monitors/monitor-filters-2.png"
+  darkSrc="/images/monitors/monitor-filters-2.png"
+  caption="Monitor options – sample & filter."
+  alt="Sample and filter UI."
+/>
 
     **Where prompts & completions come from**
 
@@ -68,12 +82,12 @@ Already finished the <a href="/intro/tracing-quickstart">Tracing Quickstart</a>?
     - On **Traces**: you’ll see scored spans inline; click a row to view the full trace and follow the link to its run.
     - On **Runs**: you’ll find run history and per‑run aggregates (plots and stats) for deeper analysis.
 
-    <DarkLightImage
-      lightSrc="/images/tracing-light.png"
-      darkSrc="/images/tracing-dark.png"
-      caption="Browse scored traces and follow links to run details."
-      alt="Monitoring result locations screenshot."
-    />
+  <DarkLightImage
+    lightSrc="/images/monitors/monitors-traces-search.png"
+    darkSrc="/images/monitors/monitors-traces-search.png"
+    caption="Traces search page with scores created by a 'monitor'."
+    alt="Screenshot of traces page."
+  />
   </Step>
 </Steps>
 
