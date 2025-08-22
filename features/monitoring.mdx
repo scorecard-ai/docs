@@ -6,10 +6,10 @@ description: "Continuously score production LLM traffic and track quality over t
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
 <DarkLightImage
-  lightSrc="/images/monitors/monitors-list.png"
-  darkSrc="/images/monitors/monitors-list.png"
-  caption="Monitor overview list."
-  alt="Screenshot of monitor overview list."
+  lightSrc="/images/monitors/monitors-traces-score.png"
+  darkSrc="/images/monitors/monitors-traces-score.png"
+  caption="Monitor results – production traces with scores."
+  alt="Monitor results - traces and score UI."
 />
 
 Scorecard **Monitors** periodically sample recent LLM spans, extract prompts and completions, and automatically score them with your selected metrics. The results appear where you work: on the **Traces** page (scored traces) and the **Runs** pages (history and per‑run aggregates).
@@ -91,8 +91,8 @@ This turns production monitoring into topic-level QA: you’re not just watching
 - **Runs**: See run history and performance over time, plus per‑run aggregates and plots on the run details pages.
 
 <DarkLightImage
-  lightSrc="/images/monitors/monitors-traces-score.png"
-  darkSrc="/images/monitors/monitors-traces-score.png"
+  lightSrc="/images/monitors/monitors-traces-search.png"
+  darkSrc="/images/monitors/monitors-traces-search.png"
   caption="Monitor results – Scores."
   alt="Monitor results - traces and score UI."
 />
@@ -101,6 +101,13 @@ This turns production monitoring into topic-level QA: you’re not just watching
 
 - **Edit** a monitor to change metrics, sampling, filters or toggle **Active**.
 - **Delete** a monitor to stop processing entirely.
+
+<DarkLightImage
+  lightSrc="/images/monitors/monitors-list.png"
+  darkSrc="/images/monitors/monitors-list.png"
+  caption="Monitor overview list."
+  alt="Screenshot of monitor overview list."
+/>
 
 <DarkLightImage
   lightSrc="/images/monitors/monitor-edit.png"
