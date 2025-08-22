@@ -110,7 +110,8 @@
               "intro/overview",
               "intro/what-is-scorecard",
               "intro/quickstart",
-              "intro/tracing-quickstart"
+              "intro/tracing-quickstart",
+              "intro/production-monitoring-quickstart",
             ]
           },
           {
@@ -125,6 +126,8 @@
               "features/systems",
               "features/multi-turn-simulation",
               "features/tracing",
+              "features/monitoring",
+              "features/trace-to-testcase",
               "features/a-b-comparison",
               "features/ai-guardrails",
               "features/custom-provider",
