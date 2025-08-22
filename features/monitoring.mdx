@@ -5,6 +5,13 @@ description: "Continuously score production LLM traffic and track quality over t
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
+<DarkLightImage
+  lightSrc="/images/monitors/monitors-list.png"
+  darkSrc="/images/monitors/monitors-list.png"
+  caption="Monitor overview list."
+  alt="Screenshot of monitor overview list."
+/>
+
 Scorecard **Monitors** periodically sample recent LLM spans, extract prompts and completions, and automatically score them with your selected metrics. The results appear where you work: on the **Traces** page (scored traces) and the **Runs** pages (history and per‑run aggregates).
 
 ## Why it matters
@@ -21,8 +28,8 @@ Scorecard **Monitors** periodically sample recent LLM spans, extract prompts and
 - **What’s evaluated**: Only spans that contain prompt and completion are scored; we support common keys (`openinference.*`, `ai.prompt`/`ai.response`, `gen_ai.*`).
 
 <DarkLightImage
-  lightSrc="/images/tracing-light.png"
-  darkSrc="/images/tracing-dark.png"
+  lightSrc="/images/monitors/monitors-traces-search.png"
+  darkSrc="/images/monitors/monitors-traces-search.png"
   caption="Monitor overview list."
   alt="Screenshot of monitor overview list."
 />
@@ -33,8 +40,8 @@ Scorecard **Monitors** periodically sample recent LLM spans, extract prompts and
 2. Click **“New Monitor +”** to open the Create Monitor modal.
 
 <DarkLightImage
-  lightSrc="/images/tracing-light.png"
-  darkSrc="/images/tracing-dark.png"
+  lightSrc="/images/monitors/monitor-create.png"
+  darkSrc="/images/monitors/monitor-create.png"
   caption="Create monitor modal."
   alt="Create monitor modal screenshot."
 />
@@ -48,10 +55,10 @@ Inside the modal you can configure:
 * **Active** – flip a switch to pause / resume without losing config.
 
 <DarkLightImage
-  lightSrc="/images/tracing-dark.png"
-  darkSrc="/images/tracing-light.png"
-  caption="Monitor options – sample & filter."
-  alt="Sample and filter UI."
+  lightSrc="/images/monitors/monitor-metrics.png"
+  darkSrc="/images/monitors/monitor-metrics.png"
+  caption="Monitor options – Metrics"
+  alt="Select metrics UI."
 />
 
 ### Keyword filtering with SearchText
@@ -63,6 +70,13 @@ Use **SearchText** to match any keywords or phrases embedded in your traces. It 
 - Run targeted evaluations for specific features, intents, or cohorts
 
 This turns production monitoring into topic-level QA: you’re not just watching everything, you’re watching the parts that matter.
+
+<DarkLightImage
+  lightSrc="/images/monitors/monitor-filters.png"
+  darkSrc="/images/monitors/monitor-filters.png"
+  caption="Monitor options – sample & filter."
+  alt="Sample and filter UI."
+/>
 
 Click **Create Monitor** and scoring starts on the next cycle.
 
@@ -78,10 +92,10 @@ Click **Create Monitor** and scoring starts on the next cycle.
 - **Runs**: See run history and performance over time, plus per‑run aggregates and plots on the run details pages.
 
 <DarkLightImage
-  lightSrc="/images/tracing-light.png"
-  darkSrc="/images/tracing-dark.png"
-  caption="Edit monitor modal."
-  alt="Edit monitor modal screenshot."
+  lightSrc="/images/monitors/monitors-traces-score.png"
+  darkSrc="/images/monitors/monitors-traces-score.png"
+  caption="Monitor results – Scores."
+  alt="Monitor results - traces and score UI."
 />
 
 ## Manage monitors
@@ -90,10 +104,10 @@ Click **Create Monitor** and scoring starts on the next cycle.
 - **Delete** a monitor to stop processing entirely.
 
 <DarkLightImage
-  lightSrc="/images/tracing-dark.png"
-  darkSrc="/images/tracing-light.png"
-  caption="Monitor management UI."
-  alt="Monitor management UI screenshot."
+  lightSrc="/images/monitors/monitor-edit.png"
+  darkSrc="/images/monitors/monitor-edit.png"
+  caption="Edit monitor modal."
+  alt="Edit monitor modal screenshot."
 />
 
 ## Use cases
