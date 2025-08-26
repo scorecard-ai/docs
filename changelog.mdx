@@ -79,6 +79,11 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   ### 📊 Online Evaluations (Preview)
   
   Monitor and evaluate your AI systems in production with our new online evaluation infrastructure. Configure monitoring rules per project, automatically score production traces, and get real-time insights into model performance.
+
+  <DarkLightImage
+    lightSrc="/images/monitors/online-evaluation-scores.png"
+    alt="Screenshot of online evaluation scores in trace details"
+  />
   
   - **Monitoring configuration**: Set up project-specific rules with selected metrics and scheduling
   - **Cost visibility**: View token costs per span and per evaluation directly in the UI
@@ -89,6 +94,11 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   
   - **[Performance]** Major Prisma upgrade delivering 2-5x faster load times - run lists now load in under 2 seconds (down from 3-4s)
   - **[Monitoring]** Added token cost tracking per span in traces page
+
+  <DarkLightImage
+    lightSrc="/images/monitors/trace-cost-tracking.png"
+    alt="Screenshot showing cost tracking in traces list"
+  />
   - **[Monitoring]** Display scoring costs for LLM-as-a-judge evaluations
   - **[UI]** Test records now render ChatML format as chat bubbles instead of raw JSON
   - **[SDK]** Added `multi_turn_simulation()` method for multi-turn simulations
