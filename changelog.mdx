@@ -5,44 +5,6 @@ description: "New updates and improvements"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
-<Update label="August 1, 2025">
-  ### 📊 Enhanced Tracing Experience
-  
-  We've completely reimagined our tracing interface to provide deeper insights into your AI system's performance. The new tracing UI features flame graph visualizations that make it instantly clear which operations take the longest, helping you identify and optimize bottlenecks in your LLM pipelines.
-
-  <DarkLightImage
-    lightSrc="/images/tracing-light.png"
-    caption={null}
-    alt="Screenshot of the new tracing UI with flame graph visualization"
-  />
-
-  Key improvements include:
-  - **Flame graph visualization**: See span durations at a glance to quickly identify performance bottlenecks
-  - **Smart defaults**: Tracing page now defaults to "All projects" view so you never miss traces
-  - **Improved time filtering**: Fixed chart data accuracy when selecting different time ranges
-  - **Simplified authentication**: Use your standard Scorecard API key for tracing - no more separate JWT tokens
-  
-  ### 🚀 Smarter Run Status Tracking
-  
-  We've significantly enhanced how run statuses are calculated and displayed throughout the platform. You can now see exactly why a run is in its current state with detailed hover explanations, making it easier to understand and debug your evaluation pipelines.
-
-  <DarkLightImage
-    lightSrc="/images/changelog-run-status-light.png"
-    caption={null}
-    alt="Screenshot of improved run status with hover explanations"
-  />
-  
-  - **Intelligent status calculation**: Database now tracks expected vs. actual test records for accurate progress reporting
-  - **Hover explanations**: See detailed progress like "0 testrecords created / 35 testcases from testset 1234" to understand exactly what's happening
-  - **Real-time updates**: Run status automatically updates as scoring progresses
-
-  ### 🛠️ Bug Fixes and Improvements
-  
-  - **[Tracing]** Fixed crash when navigating back to page 2 in traces list
-  - **[Tracing]** Time range filter now correctly updates chart data
-  - **[Documentation]** Published tracing quickstart guide with integrations for [Vercel AI SDK](https://ai-sdk.dev/providers/observability) and [OpenLLMetry](https://traceloop.com/docs/openllmetry/integrations/introduction)
-</Update>
-
 <Update label="July 25, 2025">
   ### 📊 Run History
   
