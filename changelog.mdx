@@ -11,9 +11,23 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   Create testcases directly from production traces with our new trace-to-testcase feature. Turn real user interactions into structured test data with a single click, making it easy to build datasets from production traffic that actually matter.
 
   <DarkLightImage
-    lightSrc="/images/monitors/trace-to-testcase-button.png"
-    caption={null}
-    alt="Screenshot of trace to testcase button in trace details"
+    lightSrc="/images/trace-overview-create-testcase.png"
+    caption="CREATE TESTCASE button in trace overview - convert any span into a testcase"
+    alt="Screenshot of trace overview with create testcase button"
+  />
+
+  The workflow is simple: select a span, choose your testset, and Scorecard auto-extracts the prompt and completion fields for you.
+
+  <DarkLightImage
+    lightSrc="/images/monitors/trace-to-testcase-select-testset.png"
+    caption="Select target testset for your new testcase"
+    alt="Screenshot of testset selection modal"
+  />
+
+  <DarkLightImage
+    lightSrc="/images/monitors/trace-to-testcase-fields.png"
+    caption="Auto-extracted fields ready for testcase creation"
+    alt="Screenshot of testcase fields auto-populated from trace"
   />
 
   Key capabilities:
@@ -27,6 +41,12 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   ### 🏷️ Metadata Fields in Testset Schemas
   
   You can now mark fields as "metadata" in your testset schema management UI. Metadata fields are stored with your testcases but won't be used during evaluation runs, giving you more flexibility to store contextual information alongside your test data.
+
+  <DarkLightImage
+    lightSrc="/images/testcase-metadata-field.png"
+    caption="Add testcase with metadata field marked as (Metadata)"
+    alt="Screenshot of add testcase modal showing metadata field"
+  />
   
   - **Flexible data storage**: Store additional context without affecting evaluation logic
   - **Schema management**: Easy toggle in the testset schema editor
