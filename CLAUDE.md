@@ -176,7 +176,7 @@ icon: "icon-name" # Optional, from Font Awesome or Lucide
 - **CodeGroup**: Each code block must have a filename
   - Wrap multiple code blocks with `<CodeGroup>` tags
   - Each code block needs a filename after the language identifier
-  - Example: ` ```js example.js ` for JavaScript files
+  - Example: ` ```js example.js` for JavaScript files
 
 ### Text Formatting
 - Headers: `##` for section titles, `###` for subsections
