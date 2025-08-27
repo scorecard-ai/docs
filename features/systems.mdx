@@ -5,78 +5,52 @@ description: "Evaluate a simple LLM system with Scorecard in minutes."
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
-_[→ Jump to code example](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-jokebot)_
+## Systems at a glance
 
-## You already know prompts
+A System brings together everything that shapes your AI’s behavior: prompts, model settings, and configuration. Instead of tweaking prompts in isolation, you version the full setup and test it as one unit.
 
-If you've used ChatGPT or any AI tool, you've written prompts:
+<DarkLightImage lightSrc="/images/systems/systems-overview-light.png" darkSrc="/images/systems/systems-overview-dark.png" caption="Systems list with latest configuration." alt="Screenshot of the Systems list in the UI." />
 
-> "Write a joke about programming"
+## Why use Systems?
 
-And when you want to improve results, you tweak the prompt:
+- **One place for configuration**: Keep prompts, parameters, and options together
+- **Versioned changes**: Create versions as you iterate and compare results
+- **Production clarity**: See which version is latest vs. production
 
-> "Write a **funny** joke about programming, **make it witty not cheesy**"
+## Create a System
 
-## But real AI Applications are more complex
+Click New System, give it a name and description, and paste configuration JSON for your app (whatever drives your model behavior, e.g., style, temperature, or other flags). Scorecard versions this for you.
 
-In production, your AI might:
+<DarkLightImage lightSrc="/images/systems/systems-new-light.png" darkSrc="/images/systems/systems-new-dark.png" caption="Create System modal." alt="Screenshot of creating a new System in the UI." />
 
-- Use multiple prompts working together
-- Call different models for different tasks
-- Adjust temperature, max tokens, and other parameters
-- Process inputs through several steps
-- Depend on context, rules, and configurations
+## Inspect a System
 
-Suddenly you're not managing one prompt—you're juggling an entire system of interconnected pieces.
+Open a System to view details, timestamps, and all versions. You can quickly scan configurations and see which version is latest or marked as production.
 
-## Enter: Systems
+<DarkLightImage lightSrc="/images/systems/systems-detail-light.png" darkSrc="/images/systems/systems-detail-dark.png" caption="System details with version history and configs." alt="Screenshot of System details and versions in the UI." />
 
-A System captures **all the moving parts** that affect your AI's behavior:
+## Test the full setup
 
-- Your prompts (yes, plural!)
-- Model selection and parameters
-- Processing steps and logic
-- Any configuration that changes the output
+Systems work hand-in-hand with Testsets, Metrics, and Runs so you evaluate realistic changes—not just prompt text. Try it with our quickstart and see how different configurations impact results.
 
-Instead of tracking these pieces separately, a System bundles them into one testable unit.
+## Why it matters
 
-## A simple example
+- Ship changes with confidence by comparing full-system versions, not one-off prompts.
+- Reduce prompt drift by keeping parameters and context under version control.
+- Create a clear audit trail of what’s in production and why.
+- Improve evaluation quality by testing the exact configuration users will experience.
 
-Even a basic joke bot has multiple variables:
+## If you call it something else
 
-```
-SYSTEM: Joke Bot
+- **Prompt pipeline / agent configuration / workflow config**: Systems capture the whole thing.
+- **Where versions live**: Each System has multiple versions; you can label one as production and compare to latest.
+- **What’s captured**: Prompts, model ids/params, tools or routing settings, and custom flags that change outputs.
 
-Inputs:
-└── topic: "programming"
+## Use cases
 
-Configurations:
-├── Model: "gpt-3.5" or "gpt-4"
-├── Style: "dad-joke" or "witty"
-├── Temperature: 0.5 to 1.0
-└── (and any other settings that matter)
+- A/B prompts or model choices across the same testset.
+- Tune temperature, system messages, or tool settings and measure impact.
+- Promote the best-performing version to production, with rollback safety.
+- Track regressions across releases by re-running previous versions.
 
-Output:
-└── joke: "Why do programmers prefer dark mode?..."
-```
-
-Change any configuration, and you get different results. Systems let you test these variations systematically instead of guessing.
-
-## Why this matters
-
-- **Everything in one place**: No more scattered prompts and configs
-- **Test combinations**: See how different settings work together
-- **Track what works**: Know exactly which configuration is in production
-- **Scale confidently**: From single prompts to multi-step workflows
-
-## Your turn: build a joke bot in 5 minutes
-
-The best way to understand Systems is to build one. We've created a simple example that shows the concept in action:
-
-**[→ Try the Joke Bot Quickstart](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-jokebot)**
-
-In just 5 minutes, you'll see how even a simple AI task benefits from thinking in Systems rather than individual prompts.
-
----
-
-_Ready to level up from copy-pasting prompts? Systems are how teams build AI that's reliable, testable, and scalable. Start small with the Joke Bot—the concepts will click immediately._
+_[→ Try the Joke Bot Quickstart](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-jokebot)_
