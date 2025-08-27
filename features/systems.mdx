@@ -15,9 +15,15 @@ A System brings together everything that shapes your AI’s behavior: prompts, m
 
 Each System has versioned configurations. You can mark any version as production and keep iterating on latest; if production isn’t set, the latest is used until you choose one. New versions are auto‑named ("Version N"), identical configs collapse to the existing version, and deleting from the UI archives the System safely for history.
 
-## Why use Systems?
+## Why it matters
 
-Systems keep prompts, parameters, and options together, give you versioned changes you can compare, and make it clear which version is in production.
+Systems keep prompts, parameters, and options together, give you versioned changes you can compare, and make it clear which version is in production. For teams moving beyond single prompts, this helps control prompt drift, preserves an audit trail of what’s live, and ensures you evaluate exactly what users experience.
+
+## If you call it something else
+
+- **Prompt pipeline / agent configuration / workflow config**: Systems capture the whole thing.
+- **Where versions live**: Each System has multiple versions; you can label one as production and compare to latest.
+- **What’s captured**: Prompts, model ids/params, tools or routing settings, and custom flags that change outputs.
 
 ## Create a System
 
@@ -35,15 +41,7 @@ Open a System to view details, timestamps, and all versions. You can quickly sca
 
 Systems work hand-in-hand with Testsets, Metrics, and Runs so you evaluate realistic changes—not just prompt text. Try it with our quickstart and see how different configurations impact results.
 
-## Why it matters
-
-For teams moving beyond single prompts, Systems let you compare full‑system versions, control prompt drift by keeping parameters and context under version control, and maintain a clear audit trail of what’s in production—so you evaluate exactly what users experience.
-
-## If you call it something else
-
-- **Prompt pipeline / agent configuration / workflow config**: Systems capture the whole thing.
-- **Where versions live**: Each System has multiple versions; you can label one as production and compare to latest.
-- **What’s captured**: Prompts, model ids/params, tools or routing settings, and custom flags that change outputs.
+_[→ Try the Joke Bot Quickstart](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-jokebot)_
 
 ## Use cases
 
@@ -52,4 +50,3 @@ For teams moving beyond single prompts, Systems let you compare full‑system ve
 - Promote the best-performing version to production, with rollback safety.
 - Track regressions across releases by re-running previous versions.
 
-_[→ Try the Joke Bot Quickstart](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-jokebot)_
