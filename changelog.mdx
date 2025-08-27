@@ -77,7 +77,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   - **Conversation control**: Set stop conditions, max turns, and timeout limits for realistic testing
   - **Chat visualization**: View full conversation history in beautiful chat bubble format
   
-  ### 📊 Online Evaluations (Preview)
+  ### 📊 Online Evaluations (Beta)
   
   Monitor and evaluate your AI systems in production with our new online evaluation infrastructure. Configure monitoring rules per project, automatically score production traces, and get real-time insights into model performance.
 
@@ -89,7 +89,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   - **Monitoring configuration**: Set up project-specific rules with selected metrics and scheduling
   - **Cost visibility**: View token costs per span and per evaluation directly in the UI
   - **Trace integration**: Link test records to their source traces for full observability
-  - **Automated scoring**: Queue and execute scoring jobs on production traces using PGBoss scheduler
+  - **Real-time scoring**: Automatically score production traces as they are ingested
 
   ### 🛠️ Bug Fixes and Improvements
   
@@ -101,7 +101,6 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
     alt="Screenshot showing cost tracking in traces list"
   />
   - **[Monitoring]** Display scoring costs for LLM-as-a-judge evaluations
-  - **[UI]** Test records now render ChatML format as chat bubbles instead of raw JSON
   - **[SDK]** Added `multi_turn_simulation()` method for multi-turn simulations
   - **[Infrastructure]** Increased collector object size limit for larger traces
 </Update>
