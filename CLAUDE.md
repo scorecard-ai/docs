@@ -82,7 +82,8 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 1. **Date Format**: Use "Month DD, YYYY" (e.g., "July 25, 2025")
 
 2. **Section Headers**: 
-   - Use emojis consistently: 📊 for major features, 🔍 for improvements, 🛠️ for bug fixes
+   - Use emojis to make sections visually distinct and engaging
+   - Common examples: 📊 for analytics, 🔍 for search/discovery, 🛠️ for bug fixes, 🚀 for performance, 🎨 for UI/design, 🤖 for AI features
    - Keep titles concise and action-oriented
    - Use ### for main sections within each update
 
@@ -173,17 +174,10 @@ icon: "icon-name" # Optional, from Font Awesome or Lucide
   ```
 - **Inline code**: Use single backticks `code`
 - **CodeGroup**: Each code block must have a filename
-  ```mdx
-  <CodeGroup>
-    ```js example.js
-    // JavaScript code
-    ```
-
-    ```py example.py
-    # Python code
-    ```
-  </CodeGroup>
-  ```
+  - Wrap multiple code blocks with `<CodeGroup>` tags
+  - Each code block needs a filename after the language identifier
+  - Example: ` ```js example.js` for JavaScript files
+  - Structure: Opening `<CodeGroup>`, multiple code blocks with filenames, closing tag
 
 ### Text Formatting
 - Headers: `##` for section titles, `###` for subsections

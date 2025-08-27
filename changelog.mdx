@@ -5,6 +5,105 @@ description: "New updates and improvements"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="August 22, 2025">
+  ### 📋 Trace to Testcase Creation
+  
+  Create testcases directly from production traces with our new trace-to-testcase feature. Turn real user interactions into structured test data with a single click, making it easy to build datasets from production traffic that actually matter.
+
+  <DarkLightImage
+    lightSrc="/images/trace-overview-create-testcase.png"
+    caption={null}
+    alt="Screenshot of trace overview with create testcase button"
+  />
+
+  The workflow is simple: select a span, choose your testset, and Scorecard auto-extracts the prompt and completion fields for you.
+
+  <DarkLightImage
+    lightSrc="/images/monitors/trace-to-testcase-select-testset.png"
+    caption={null}
+    alt="Screenshot of testset selection modal"
+  />
+
+  <DarkLightImage
+    lightSrc="/images/monitors/trace-to-testcase-fields.png"
+    alt="Screenshot of testcase fields auto-populated from trace"
+  />
+
+  Key capabilities:
+  - **One-click creation**: Convert any trace into a testcase directly from the trace details page
+  - **Smart field detection**: Automatically populate prompt and completion values from trace data
+  - **Schema compatibility**: Automatically detects target testset schema and maps fields correctly
+  - **Production-grounded datasets**: Build testsets from real user interactions instead of synthetic data
+
+  Perfect for creating "golden datasets" from your best production examples and edge cases you want to regression test.
+  
+  ### 🏷️ Metadata Fields in Testset Schemas
+  
+  You can now mark fields as "metadata" in your testset schema management UI. Metadata fields are stored with your testcases but won't be used during evaluation runs, giving you more flexibility to store contextual information alongside your test data.
+
+  <DarkLightImage
+    lightSrc="/images/testcase-metadata-field.png"
+    alt="Screenshot of add testcase modal showing metadata field"
+  />
+  
+  - **Flexible data storage**: Store additional context without affecting evaluation logic
+  - **Schema management**: Easy toggle in the testset schema editor
+  - **Future SDK support**: Full SDK integration coming soon for programmatic access
+
+  ### 🛠️ Bug Fixes and Improvements
+  
+  - **[Tracing]** Fixed pagination issues with traces containing many spans - improved parent span detection
+  - **[Testcases]** Fixed refresh bug where editing a field could overwrite with old data
+  - **[Projects]** Fixed refresh issue after creating new projects - list now updates immediately
+  - **[Scoring]** Better error messages when OpenAI API keys are missing instead of generic "Internal service error"
+  - **[UI]** Improved copy testcase, move metric, and move testset dialogs with better scrollability and selection
+  - **[Documentation]** Added comprehensive guides for [monitoring quickstart](/intro/monitoring-quickstart), [monitoring features](/features/monitoring), and [trace-to-testcase](/features/trace-to-testcase)
+</Update>
+
+<Update label="August 8, 2025">
+  ### 🤖 Sim Agents for Multi-Turn Conversation Testing
+  
+  We've launched [Sim Agents](/features/multi-turn-simulation), a powerful new capability for testing multi-turn conversations with your AI systems. Create configurable AI personas that interact with your system during testing, simulating real user behaviors from polite customers to escalation scenarios.
+
+  <DarkLightImage
+    lightSrc="/images/sim-agent-details-light.png"
+    caption={null}
+    alt="Screenshot of Sim Agent configuration"
+  />
+
+  Key capabilities:
+  - **Persona configuration**: Define user behaviors, goals, and interaction patterns with Jinja2 templating
+  - **SDK integration**: Run simulations programmatically with `multi_turn_simulation()` method
+  - **Conversation control**: Set stop conditions, max turns, and timeout limits for realistic testing
+  - **Chat visualization**: View full conversation history in beautiful chat bubble format
+  
+  ### 📊 Online Evaluations (Beta)
+  
+  Monitor and evaluate your AI systems in production with our new online evaluation infrastructure. Configure monitoring rules per project, automatically score production traces, and get real-time insights into model performance.
+
+  <DarkLightImage
+    lightSrc="/images/monitors/online-evaluation-scores.png"
+    alt="Screenshot of online evaluation scores in trace details"
+  />
+  
+  - **Monitoring configuration**: Set up project-specific rules with selected metrics and scheduling
+  - **Cost visibility**: View token costs per span and per evaluation directly in the UI
+  - **Trace integration**: Link test records to their source traces for full observability
+  - **Real-time scoring**: Automatically score production traces as they are ingested
+
+  ### 🛠️ Bug Fixes and Improvements
+  
+  - **[Performance]** Major Prisma upgrade delivering 2-5x faster load times - run lists now load in under 2 seconds (down from 3-4s)
+  - **[Monitoring]** Added token cost tracking per span in traces page
+
+  <DarkLightImage
+    lightSrc="/images/monitors/trace-cost-tracking.png"
+    alt="Screenshot showing cost tracking in traces list"
+  />
+  - **[Monitoring]** Display scoring costs for LLM-as-a-judge evaluations
+  - **[Infrastructure]** Increased collector object size limit for larger traces
+</Update>
+
 <Update label="August 1, 2025">
   ### 📊 Enhanced Tracing Experience
   
@@ -19,7 +118,6 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   Key improvements include:
   - **Flame graph visualization**: See span durations at a glance to quickly identify performance bottlenecks
   - **Smart defaults**: Tracing page now defaults to "All projects" view so you never miss traces
-  - **Improved time filtering**: Fixed chart data accuracy when selecting different time ranges
   - **Simplified authentication**: Use your standard Scorecard API key for tracing - no more separate JWT tokens
   
   ### 🚀 Smarter Run Status Tracking
@@ -153,7 +251,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
   ### 🎯 Improved API key format
 
-  We switched to a new API key format, which supports having multiple API keys, revoking them, and setting expiry dates. Our new API keys are more concise (94% shorter\!) than the previously unwieldy API keys based on JWTs. We’ve deprecated the old API key format, but will continue to support them until July 20, 2025.
+  We switched to a new API key format, which supports having multiple API keys, revoking them, and setting expiry dates. Our new API keys are more concise (94% shorter\!) than the previously unwieldy API keys based on JWTs. We've deprecated the old API key format, but will continue to support them until July 20, 2025.
 
   ![New API key management interface showing multiple keys and expiry options](/images/api_key.png)
 
@@ -308,7 +406,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 <Update label="April 18, 2025">
   ### Run insights
 
-  We’ve added a new Run History chart on Runs & Results that visualises your performance trends over time to spot regressions or sustained improvements at a glance (up and to the right\!).  The x‑axis is the run date, the y‑axis is the mean score, and each metric gets its own colored line. You can view this by clicking on the ‘All Runs’ tab of Runs & Results.
+  We've added a new Run History chart on Runs & Results that visualizes your performance trends over time to spot regressions or sustained improvements at a glance (up and to the right\!).  The x‑axis is the run date, the y‑axis is the mean score, and each metric gets its own colored line. You can view this by clicking on the 'All Runs' tab of Runs & Results.
 
   ![Run History](/images/run_history.png)
 
@@ -333,7 +431,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   - The schema editor has been redesigned, allowing teams to update schemas independently for each testset.
   - Schema changes now reflect immediately in the testcase table to help users see their impact in real time.
   - Users can view and copy raw schema JSON for integration with their own tools or SDKs.
-  - We’ve also improved messaging in the schema editor to clarify the distinction between inputs and labels.
+  - We've also improved messaging in the schema editor to clarify the distinction between inputs and labels.
 
   ![Testset Card](/images/testset_card.png)
 
