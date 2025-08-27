@@ -6,14 +6,13 @@ mode: "center"
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-<Info>
-OpenAI is used in the examples below, but it’s not a requirement. Scorecard works with all major providers (OpenAI, Anthropic/Claude, Google Gemini, Groq, AWS Bedrock, and more). You can swap the OpenAI client and model for your preferred provider. See <a href="/features/custom-provider">Custom Providers</a> for details.
-</Info>
-
-This quickstart shows how to use [OpenLLMetry](https://github.com/traceloop/openllmetry) to automatically instrument and trace LLM calls for Scorecard monitoring. OpenLLMetry provides zero-code instrumentation for popular LLM libraries and structured tracing with workflows and tasks. 
-If you're using Python, you can follow along in [Google Colab](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb).
+This quickstart shows how to use [OpenLLMetry](https://github.com/traceloop/openllmetry) to automatically instrument and trace LLM calls for Scorecard monitoring. OpenLLMetry provides zero-code instrumentation for popular LLM libraries and structured tracing with workflows and tasks.
 
 You can also check out our complete [Node.js OpenLLMetry example](https://github.com/scorecard-ai/scorecard-examples/blob/main/nodejs-openllmetry-openai) for a full working implementation.
+
+<Info>
+  Prefer a hands-on demo? Skip the manual setup and launch this quickstart in Google Colab. [Run in Google Colab →](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb)
+</Info>
 
 ## Steps
 
@@ -25,108 +24,124 @@ You can also check out our complete [Node.js OpenLLMetry example](https://github
     2. Copy your Scorecard API Key
     3. Set your environment variables:
 
-    ```sh
+    <CodeGroup>
+
+    ```py Python
+    # Replace whitespaces with `%20` in the header value to comply with OpenTelemetry Protocol Exporter specification
+    
+    # For Scorecard tracing
+    os.environ['TRACELOOP_BASE_URL'] = "https://tracing.scorecard.io/otel"
+    os.environ['TRACELOOP_HEADERS'] = "Authorization=Bearer%20<YOUR_SCORECARD_KEY>"
+    
+    # For OpenAI (if using)
+    os.environ['OPENAI_API_KEY'] = "<OPENAI_API_KEY>"
+    ```
+
+    
+    ```sh JavaScript
     # For Scorecard tracing
     export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel"
     export TRACELOOP_HEADERS="Authorization=Bearer <YOUR_SCORECARD_KEY>"
-
+    
     # For OpenAI (if using)
     export OPENAI_API_KEY="your_openai_api_key"
     ```
 
-    **Python users**: If setting environment variables programmatically, make sure to replace whitespaces with `%20` in the headers:
-
-    ```py Python
-    os.environ['TRACELOOP_BASE_URL'] = "https://tracing.scorecard.io/otel"
-    # Replace whitespaces with `%20` in the header value to comply with OpenTelemetry Protocol Exporter specification
-    os.environ['TRACELOOP_HEADERS'] = "Authorization=Bearer%20<YOUR_SCORECARD_KEY>"
-    os.environ['OPENAI_API_KEY'] = "<OPENAI_API_KEY>"
-    ```
+    </CodeGroup>
   </Step>
-
   <Step title="Install OpenLLMetry SDK">
     Install OpenLLMetry and your LLM library:
 
     <CodeGroup>
-      ```sh Python
-      pip install traceloop-sdk openai
-      ```
 
-      ```sh JavaScript
-      npm install @traceloop/node-server-sdk openai
-      ```
+    ```sh Python
+    pip install traceloop-sdk openai
+    ```
+
+    
+    ```sh JavaScript
+    npm install @traceloop/node-server-sdk openai
+    ```
+
     </CodeGroup>
-  </Step>
 
+    <Info>
+      This example uses OpenAI. Scorecard works with all major providers (OpenAI, Anthropic/Claude, Google Gemini, Groq, AWS Bedrock, and more).
+    </Info>
+  </Step>
   <Step title="Initialize OpenLLMetry">
     Set up OpenLLMetry to automatically trace your LLM calls:
 
     <CodeGroup>
-      ```py Python
-      from traceloop.sdk import Traceloop
-      from traceloop.sdk.decorators import workflow, task
-      from traceloop.sdk.instruments import Instruments
-      from openai import OpenAI
 
-      # Initialize OpenAI client
-      openai_client = OpenAI()
+    ```py Python
+    from traceloop.sdk import Traceloop
+    from traceloop.sdk.decorators import workflow, task
+    from traceloop.sdk.instruments import Instruments
+    from openai import OpenAI
+    
+    # Initialize OpenAI client
+    openai_client = OpenAI()
+    
+    # Initialize OpenLLMetry (reads config from environment variables)
+    Traceloop.init(disable_batch=True, instruments={Instruments.OPENAI})
+    ```
 
-      # Initialize OpenLLMetry (reads config from environment variables)
-      Traceloop.init(disable_batch=True, instruments={Instruments.OPENAI})
-      ```
+    
+    ```js JavaScript
+    import * as traceloop from "@traceloop/node-server-sdk";
+    import OpenAI from "openai";
+    
+    // Initialize OpenAI client
+    const openai = new OpenAI();
+    
+    // Initialize OpenLLMetry with automatic instrumentation
+    traceloop.initialize({ 
+      disableBatch: true,  // Ensures immediate trace sending
+      instrumentModules: { openAI: OpenAI },
+    });
+    ```
 
-      ```js JavaScript
-      import * as traceloop from "@traceloop/node-server-sdk";
-      import OpenAI from "openai";
-
-      // Initialize OpenAI client
-      const openai = new OpenAI();
-
-      // Initialize OpenLLMetry with automatic instrumentation
-      traceloop.initialize({ 
-        disableBatch: true,  // Ensures immediate trace sending
-        instrumentModules: { openAI: OpenAI },
-      });
-      ```
     </CodeGroup>
   </Step>
-
   <Step title="Create and run a simple traced workflow">
     Create a simple workflow that will be automatically traced. Here's a minimal example:
 
     <CodeGroup>
-      ```py Python
-      @workflow(name="simple_chat")
-      def simple_workflow():
-          completion = openai_client.chat.completions.create(
-              model="gpt-4o-mini",
-              messages=[{"role": "user", "content": "Tell me a joke"}]
-          )
-          return completion.choices[0].message.content
 
-      # Run the workflow - all LLM calls will be automatically traced
-      simple_workflow()
-      print("Check Scorecard for traces!")
-      ```
+    ```py Python
+    @workflow(name="simple_chat")
+    def simple_workflow():
+        completion = openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": "Tell me a joke"}]
+        )
+        return completion.choices[0].message.content
+    
+    # Run the workflow - all LLM calls will be automatically traced
+    simple_workflow()
+    print("Check Scorecard for traces!")
+    ```
 
-      ```js JavaScript
-      async function simpleWorkflow() {
-        return await traceloop.withWorkflow({ name: "simple_chat" }, async () => {
-          const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: [{ role: "user", content: "Tell me a joke" }],
-          });
-          return completion.choices[0].message.content;
+    
+    ```js JavaScript
+    async function simpleWorkflow() {
+      return await traceloop.withWorkflow({ name: "simple_chat" }, async () => {
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [{ role: "user", content: "Tell me a joke" }],
         });
-      }
+        return completion.choices[0].message.content;
+      });
+    }
+    
+    # Run the workflow - all LLM calls will be automatically traced
+    simpleWorkflow();
+    console.log("Check Scorecard for traces!");
+    ```
 
-      # Run the workflow - all LLM calls will be automatically traced
-      simpleWorkflow();
-      console.log("Check Scorecard for traces!");
-      ```
     </CodeGroup>
   </Step>
-
   <Step title="View traces in Scorecard">
     After running your application, view the traces in your Scorecard account:
 
@@ -143,12 +158,7 @@ You can also check out our complete [Node.js OpenLLMetry example](https://github
     - **Model information**: Which models were used
     - **Comprehensive data**: All trace information visible in your Scorecard account
 
-    <DarkLightImage
-      lightSrc="/images/tracing-light.png"
-      darkSrc="/images/tracing-dark.png"
-      caption="Viewing traces in the Scorecard UI."
-      alt="Screenshot of viewing traces in the Scorecard UI."
-    />
+    <DarkLightImage lightSrc="/images/tracing-light.png" darkSrc="/images/tracing-dark.png" caption="Viewing traces in the Scorecard UI." alt="Screenshot of viewing traces in the Scorecard UI." />
   </Step>
 </Steps>
 
@@ -163,6 +173,6 @@ You can also check out our complete [Node.js OpenLLMetry example](https://github
 ## Learn More
 
 - [OpenLLMetry Python Documentation](https://traceloop.com/docs/openllmetry/getting-started-python)
-- [OpenLLMetry JavaScript Documentation](https://traceloop.com/docs/openllmetry/getting-started-nodejs)  
+- [OpenLLMetry JavaScript Documentation](https://traceloop.com/docs/openllmetry/getting-started-nodejs)
 - [Scorecard Tracing Features](/features/tracing)
 - [OpenTelemetry Standards](https://opentelemetry.io/)
