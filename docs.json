@@ -51,12 +51,16 @@
   },
   "redirects": [
     {
+      "source": "/quickstart",
+      "destination": "/intro/sdk-quickstart"
+    },
+    {
       "source": "/quickstart/python",
-      "destination": "/intro/quickstart"
+      "destination": "/intro/sdk-quickstart"
     },
     {
       "source": "/quickstart/node-js",
-      "destination": "/intro/quickstart"
+      "destination": "/intro/sdk-quickstart"
     },
     {
       "source": "/docs/documentation/introduction/:slug*",
@@ -64,7 +68,7 @@
     },
     {
       "source": "/docs/documentation/how-to-use-scorecard/quickstart/:slug*",
-      "destination": "/intro/quickstart"
+      "destination": "/intro/sdk-quickstart"
     },
     {
       "source": "/docs/changelog/product-updates",
@@ -109,7 +113,7 @@
             "pages": [
               "intro/overview",
               "intro/what-is-scorecard",
-              "intro/quickstart",
+              "intro/sdk-quickstart",
               "intro/tracing-quickstart",
               "intro/monitoring-quickstart"
             ]
