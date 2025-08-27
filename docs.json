@@ -119,7 +119,8 @@
               "intro/what-is-scorecard",
               "intro/sdk-quickstart",
               "intro/tracing-quickstart",
-              "intro/monitoring-quickstart"
+              "intro/monitoring-quickstart",
+              "intro/rag-quickstart"
             ]
           },
           {
@@ -145,7 +146,6 @@
           {
             "group": "How To Use Scorecard",
             "pages": [
-              "how-to-use-scorecard/rag-retrieval-augmented-generation",
               "how-to-use-scorecard/trigger-run-with-github-actions"
             ]
           }
