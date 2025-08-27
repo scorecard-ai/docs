@@ -11,11 +11,13 @@ A System brings together everything that shapes your AI’s behavior: prompts, m
 
 <DarkLightImage lightSrc="/images/systems/systems-overview-light.png" darkSrc="/images/systems/systems-overview-dark.png" caption="Systems list with latest configuration." alt="Screenshot of the Systems list in the UI." />
 
+## How versions work
+
+Each System has versioned configurations. You can mark any version as production and keep iterating on latest; if production isn’t set, the latest is used until you choose one. New versions are auto‑named ("Version N"), identical configs collapse to the existing version, and deleting from the UI archives the System safely for history.
+
 ## Why use Systems?
 
-- **One place for configuration**: Keep prompts, parameters, and options together
-- **Versioned changes**: Create versions as you iterate and compare results
-- **Production clarity**: See which version is latest vs. production
+Systems keep prompts, parameters, and options together, give you versioned changes you can compare, and make it clear which version is in production.
 
 ## Create a System
 
@@ -35,10 +37,7 @@ Systems work hand-in-hand with Testsets, Metrics, and Runs so you evaluate reali
 
 ## Why it matters
 
-- Ship changes with confidence by comparing full-system versions, not one-off prompts.
-- Reduce prompt drift by keeping parameters and context under version control.
-- Create a clear audit trail of what’s in production and why.
-- Improve evaluation quality by testing the exact configuration users will experience.
+For teams moving beyond single prompts, Systems let you compare full‑system versions, control prompt drift by keeping parameters and context under version control, and maintain a clear audit trail of what’s in production—so you evaluate exactly what users experience.
 
 ## If you call it something else
 
