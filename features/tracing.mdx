@@ -1,76 +1,170 @@
 ---
 title: "Tracing: Overview"
-description: Learn what is the Tracing feature
+description: "Instrument, inspect and monitor every LLM request in minutes."
 ---
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
-Imagine these scenarios: The performance of your LLM application drops suddenly, you lose track of which LLM calls you have made, or you do not notice potential security leaks. We know that dealing with LLMs can become challenging and introducing LLMOps practices is crucial. That is why we offer tracing with Scorecard!
+<Info>
+  New to Scorecard? Head straight to the [Tracing Quickstart](/intro/tracing-quickstart) or jump into our ready-to-run [Google Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) to see traces in under 5 minutes
 
-## Trace Your LLM Application With Scorecard
+  .
+</Info>
 
-<Frame caption="Traces View in the Scorecard UI">
-  ![Traces View in the Scorecard UI](/images/tracing/1.webp)
-</Frame>
+LLM observability means knowing exactly what happened in every generation—latency, token usage, prompts, completions, cost, errors and more. Scorecard’s **Tracing** collects this data automatically via the open-source [OpenLLMetry](https://github.com/traceloop/openllmetry) SDK (Python & Node.js) and displays rich visualisations in the Scorecard UI.
 
-LLM observability refers to the ability to gain insight into the behavior and performance of Large Language Models (LLMs) across their entire lifecycle. This LLMOps practice is essential for ensuring the reliability, performance, and security of LLM applications, especially given their complexity and the challenges associated with debugging and troubleshooting. To properly monitor an LLM application, tracing various aspects is important. But what is Tracing?
+## Why Tracing matters
 
-Tracing records the flow and path of a single invocation of a LLM system across the different components of such an LLM system. Relevant events, errors, and activities are documented with traces.
+- Debug long or failing requests in seconds.
+- Audit prompts & completions for compliance and safety.
+- Attribute quality and cost back to specific services or users.
+- Feed production traffic into evaluations and monitoring.
 
-Traces are ultimately a hierarchical collection of records that contain information about the function calls made, variables used, and messages exchanged between different LLM components. Traces provide a detailed record of what happened during the entire execution of the LLM system (from user input to LLM output), aiding in debugging, troubleshooting, and auditing. For example, this helps to identify where potential delays occur and how services interact with each other.
+### If you call it something else
 
-A single trace consists of a series of time intervals known as spans. Spans are the building blocks of traces and represent a specific operation or sub-activity of a trace, such as sending the user input as a request to a LLM. Each span contains metadata such as timestamps, duration, and contextual information. In summary, a trace represents an overall record of the activity of a LLM system, while a span is a more focused view of a specific portion of that LLM system activity.
+- **Observability / AI spans / request logs**: We capture standard OpenTelemetry traces and spans for LLM calls and related operations.
+- **Agent runs / tools / function calls**: These appear as nested spans in the trace tree, with inputs/outputs when available.
+- **Prompt/Completion pairs**: Extracted from common keys (`openinference.*`, `ai.prompt` / `ai.response`, `gen_ai.*`) so they can be turned into testcases and scored.
 
-### Inspect a LLM Trace and Its Individual Spans
+---
 
-Inspect the metadata of a trace, such as its duration and overall token count. This can help in quickly identifying anomalies and very long durations or very low/high token counts, which could be indicators that something went wrong. Additionally, get an overview of each individual span that belongs to a trace and dive into further details!
+## Instrument once, capture everything
 
-<Frame caption="Trace Details with Individual Spans">
-  ![Trace Details with Individual Spans](/images/tracing/2.webp)
-</Frame>
+<CodeGroup>
 
-### Access Span Details on a Granular Level
-
-Besides metadata, spans can provide details about requests sent to the LLM, such as a request to the `ChatCompletion` endpoint of OpenAI. In this case, it shows the individual prompt messages that were sent as input, the LLM’s response as output, and further details that can help in debugging and inspecting your LLM application.
-
-<Frame caption="Span Details in a Trace">
-  ![Span Details in a Trace](/images/tracing/3.webp)
-</Frame>
-
-## OpenAI Agents SDK Integration
-
-Scorecard supports the OpenAI Agents SDK, allowing you to trace your agent-based applications with minimal setup and leverage your trace data in Scorecard
-
-### Quick Start
-
-Connect your OpenAI Agents to Scorecard with just a few lines of code:
-
-```python
-from scorecard import Tracer
-from agents import Agent, Runner
-
-# Create a Scorecard tracer for OpenAI Agents
-tracer = Tracer(api_key="your_api_key")
-tracer.instrument_agents()
-
-# Your existing OpenAI Agents code works unchanged
-agent = Agent(name="Assistant", instructions="You are a helpful assistant")
-result = Runner.run_sync(agent, "Write a haiku about recursion in programming.")
-print(result.final_output)
+```bash Python (pip)
+pip install traceloop-sdk
 ```
 
-Every agent run is now automatically traced and available in your Scorecard AI dashboard.
 
-### What Gets Traced
+```bash TypeScript/Node (npm)
+npm install @traceloop/node-server-sdk
+```
 
-Scorecard's OpenAI Agents integration captures the complete execution flow:
+</CodeGroup>
 
-* Agent instructions and configurations
+Scorecard also supports standard OpenTelemetry (OTLP/HTTP) exporters across languages (Python, TypeScript/JS, Java, Go, .NET, Rust)—point your exporter at your Scorecard project and include your API key.
 
-* Input/output messages
+<CodeGroup>
 
-* Tool/function calls
+```python Python
+from traceloop.sdk import Traceloop
+from traceloop.sdk.instruments import Instruments
 
-* Agent handoffs
+# Initialize OpenLLMetry. Works with any supported provider (OpenAI, Anthropic, Gemini, Bedrock, etc.)
+Traceloop.init(disable_batch=True, instruments={Instruments.OPENAI})
 
-* Complete execution timeline
+# Make any LLM/provider call with your client – it will be traced automatically
+```
+
+
+```ts TypeScript/Node
+import { Traceloop, Instruments } from '@traceloop/node-server-sdk'
+
+// Initialize OpenLLMetry. Works with any supported provider or HTTP instrumentation
+Traceloop.init({ disableBatch: true, instruments: new Set([Instruments.OPENAI]) })
+
+// Make any LLM/provider call with your client – it will be traced automatically
+```
+
+</CodeGroup>
+
+See the [Quickstart](/intro/tracing-quickstart) for full environment variable setup, examples and best practices.
+
+---
+
+## Explore traces in Scorecard
+
+<Frame caption="Traces dashboard – search, filters, cost & scores">
+  ![Traces View](/images/monitors/monitors-traces-search.png)
+</Frame>
+
+Scorecard automatically groups spans into traces and surfaces:
+
+- **Timestamp & duration** – when and how long the request ran.
+- **Service & span tree** – navigate nested function/tool calls (see code reference in `trace-table.tsx`).
+- **Token & cost breakdown** – estimate spend per trace via model pricing.
+- **Scores column** – if a trace links to an evaluation run the results appear inline (`TraceScoresCell`).
+- **Full-text search & filters** – search any span attribute (`searchText`) or limit to a specific project/time-range.
+- **Copyable Trace ID** – quickly copy and share trace identifiers.
+
+All table controls map to URL parameters so you can share filtered trace views.
+
+### Search & filters
+
+- **Time ranges**: 30m, 24h, 3d, 7d, 30d, All.
+- **Project scope**: toggle between Current project and All projects.
+- **SearchText**: full‑text across span/resource attributes (including prompt/response fields).
+- **Match previews**: quick context snippets with deep links to traces.
+- **Cursor pagination**: efficient browsing with shareable URLs.
+
+---
+
+## Turn traces to testcases
+
+Live traffic exposes edge-cases synthetic datasets miss. From any span that contains prompt/response attributes click **Create Testcase** and Scorecard will:
+
+1. Extract `openinference.*`, `ai.prompt` / `ai.response`, or `gen_ai.*` fields.
+2. Save the pair into a chosen **Testset**.
+3. Make it immediately available for offline evaluation runs.
+
+Read more in [Trace to Testcase](/features/trace-to-testcase).
+
+---
+
+## Continuous Monitoring
+
+Tracing is the foundation for production quality tracking. **Monitors** periodically sample recent LLM spans, score them with your chosen metrics and surface trends right back in the traces view.
+
+<Frame caption="Monitor results – production traces with scores">
+  ![Monitor results – production traces with scores](/images/monitors/monitors-traces-score.png)
+</Frame>
+
+<Frame caption="Traces search with monitor scores">
+  ![Traces search page with scores created by a monitor](/images/monitors/monitors-traces-search.png)
+</Frame>
+
+- Select metrics, frequency, sample rate & filters (including full-text `searchText`).
+- Scores appear inline on the Traces page and aggregate in the **Runs** section.
+- Detect drift and regressions without extra instrumentation.
+
+Deep-dive in [Monitoring](/features/monitoring) or follow the [Production Monitoring Quickstart](/intro/production-monitoring-quickstart).
+
+---
+
+## OpenAI Agents & custom providers
+
+Scorecard works with any provider adhering to OpenTelemetry semantics. Out-of-the-box integrations:
+
+- OpenAI (ChatCompletion, Assistants/Agents)
+- Anthropic Claude
+- Google Gemini
+- Groq LPU
+- AWS Bedrock
+
+For other libraries use OpenLLMetry’s <code>
+instrument_http</code>
+
+ or emit spans manually—see [Custom Providers](/features/custom-provider).
+
+---
+
+## Use cases
+
+- **Production monitoring of LLM quality and safety**
+- **Debugging slow/failed requests with full span context**
+- **Auditing prompts/completions for compliance**
+- **Attributing token cost and latency to services/cohorts**
+- **Building evaluation datasets from real traffic (Trace to Testcase)**
+- **Closing the loop with auto-scoring Monitors and linked Runs**
+
+---
+
+## Next steps
+
+1. Follow the [Quickstart](/intro/tracing-quickstart) to send your first trace.
+2. Open the [Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) for an interactive tour.
+3. Convert live traffic to evaluations with [Trace to Testcase](/features/trace-to-testcase).
+4. Add a [Monitor](/features/monitoring) to keep an eye on production quality.
+
+Happy tracing\! 🚀
