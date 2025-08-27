@@ -54,6 +54,10 @@
       "source": "/quickstart",
       "destination": "/intro/sdk-quickstart"
     },
+        {
+      "source": "/intro/quickstart",
+      "destination": "/intro/sdk-quickstart"
+    },
     {
       "source": "/quickstart/python",
       "destination": "/intro/sdk-quickstart"
