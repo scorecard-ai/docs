@@ -7,19 +7,94 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
 Both tools make it possible to program guardrails that safeguard conversations with the LLM system. Guardrails are specific ways of controlling the response of a LLM to a user input, such as using a particular language style, following a predefined conversation flow, not talking about certain topics, and more.
 
+## Integrate guardrails with Scorecard
+
+Use Scorecard to track how often guardrails trigger and whether conversations comply with your policies.
+
+- Create a boolean, heuristic Metric (e.g., "PII blocked").
+- When a rail triggers, send a boolean Score for the current interaction.
+
+See SDK setup in the [Quickstart](/intro/quickstart) and endpoint details in [API Reference](/api-reference/overview) (e.g., [Create Metric](/api-reference/create-metric), [Create Record](/api-reference/create-record), [Upsert Score](/api-reference/upsert-score)).
+
+### Minimal example (SDK)
+
+Below, assume you already created a Metric with `evalType = heuristic` and `outputType = boolean` in your Project, and you have a `RUN_ID` for grouping related interactions. When your guardrail fires (in NeMo Guardrails or Guardrails AI), create a Record for the event and upsert a boolean Score.
+
+<CodeGroup>
+
+```py Python wrap
+from scorecard_ai import Scorecard
+
+scorecard = Scorecard()  # uses SCORECARD_API_KEY from environment by default
+
+RUN_ID = "123"  # your Run id
+METRIC_CONFIG_ID = "a1b2c3d4-e5f6-7890-1234-567890abcdef"  # the metric config to score
+
+# Create a Record for the interaction where your guardrail triggered
+record = scorecard.records.create(
+    run_id=RUN_ID,
+    inputs={"userMessage": "please send my SSN 123-45-6789"},
+    outputs={"response": "[REDACTED]"},
+)
+
+# Upsert a boolean score indicating the guardrail fired
+scorecard.scores.upsert(
+    metric_config_id=METRIC_CONFIG_ID,
+    record_id=record.id,
+    score={"binaryScore": True, "reasoning": "PII blocked by output rail"},
+)
+```
+
+
+```js JavaScript wrap
+import Scorecard from 'scorecard-ai';
+
+const scorecard = new Scorecard(); // uses SCORECARD_API_KEY from env by default
+
+const RUN_ID = '123'; // your Run id
+const METRIC_CONFIG_ID = 'a1b2c3d4-e5f6-7890-1234-567890abcdef'; // the metric config to score
+
+// Create a Record for the interaction where your guardrail triggered
+const record = await scorecard.records.create(RUN_ID, {
+  inputs: { userMessage: 'please send my SSN 123-45-6789' },
+  outputs: { response: '[REDACTED]' },
+});
+
+// Upsert a boolean score indicating the guardrail fired
+await scorecard.scores.upsert(METRIC_CONFIG_ID, {
+  recordId: record.id,
+  score: { binaryScore: true, reasoning: 'PII blocked by output rail' },
+});
+```
+
+</CodeGroup>
+
+Tips:
+
+- Create the guardrail Metric once per Project (e.g., "PII blocked"). Use it across systems and environments.
+- Attach additional attributes to your Records (e.g., model name, environment) so you can slice in Scorecard.
+- If you already created a Record for the same interaction, reuse that `record.id` and only call `scores.upsert`. A `Score` is uniquely keyed by `(recordId, metricConfigId)` and is safe to upsert repeatedly.
+- Prefer one `Testrecord` per interaction and multiple Metrics/Scores per record (one per guardrail), instead of creating multiple records for the same interaction.
+
+### How it works under the hood
+
+- A `Run` groups many `Testrecords` (each interaction you log creates one record).
+- For each `Testrecord`, you can have multiple `Scores` — one per Metric attached to the Run.
+- For AI Metrics, Scorecard enqueues background scoring jobs that generate `Scores` automatically.
+- For heuristic/guardrail checks, you can directly upsert a `Score` yourself, like in the example above.
+- Boolean metrics should use `{ binaryScore: true|false, reasoning: string }`; integer metrics should use `{ intScore: number, reasoning: string }` so pass/fail and aggregations work out of the box.
+
 ## Benefits of Using AI Guardrails
 
 Key benefits of adding programmable guardrails include:
 
-* *Trustworthiness and Reliability:*
+- _Trustworthiness and Reliability:_
 
   Guardrails can be used to guide and safeguard conversations between your users and your LLM system. You can choose to define the behavior of your LLM system on specific topics and prevent it from engaging in discussions on unwanted topics.
-
-* *Controllable Dialog:*
+- _Controllable Dialog:_
 
   Use guardrails to steer the LLM to follow pre-defined conversational flows, making sure the LLM follows best practices in conversation design and enforces standard procedures, such as authentication.
-
-* *Protection against Vulnerabilities:*
+- _Protection against Vulnerabilities:_
 
   Guardrails can be specified in a way that they can help increase the security of your LLM application by checking for LLM vulnerabilities, such as checking for secrets in user inputs or LLM responses or detecting prompt injections.
 
@@ -29,9 +104,8 @@ In the following, we give a brief overview of the types of guardrails that can b
 
 ### NeMo Guardrails
 
-* Technical Documentation: [https://docs.nvidia.com/nemo/guardrails](https://docs.nvidia.com/nemo/guardrails)
-
-* GitHub Repository: [https://github.com/NVIDIA/NeMo-Guardrails](https://github.com/NVIDIA/NeMo-Guardrails)
+- Technical Documentation: https://docs.nvidia.com/nemo/guardrails
+- GitHub Repository: https://github.com/NVIDIA/NeMo-Guardrails
 
 NeMo Guardrails supports five main types of guardrails (short: rails):
 
@@ -39,38 +113,33 @@ NeMo Guardrails supports five main types of guardrails (short: rails):
   ![Type of AI Guardrails with NeMo Guardrails](/images/guardrails/1.webp)
 </Frame>
 
-* *Input Rails:*
+- _Input Rails:_
 
   Checking the user input, an input rail can reject, change (e.g., to rephrase or mask sensitive data), or stop processing the input.
-
-* *Dialog Rails:*
+- _Dialog Rails:_
 
   Dialog rails influence how the LLM is prompted and determine if an action should be executed, if the LLM should be invoked to generate the next step or a response, if a predefined response should be used instead, etc.
-
-* *Retrieval Rails:*
+- _Retrieval Rails:_
 
   When using a RAG (Retrieval Augmented Generation) LLM system, retrieval rails check the retrieved documents and can reject, change (e.g., to rephrase or mask sensitive data), or stop processing specific chunks.
-
-* *Execution Rails:*
+- _Execution Rails:_
 
   Execution rails use mechanisms to check and verify the inputs and/or outputs of custom actions that are being evoked by the LLM (e.g., the LLM triggering actions in other tools).
-
-* *Output Rails:*
+- _Output Rails:_
 
   Checking the response of a LLM, an output rail can reject, change (e.g., remove sensitive data), or remove a LLM’s response.
 
 ### Guardrails AI
 
-* Technical Documentation:
+- Technical Documentation:
 
-  [https://www.guardrailsai.com/docs](https://www.guardrailsai.com/docs)
+  https://www.guardrailsai.com/docs
+- GitHub Repository:
 
-* GitHub Repository:
-
-  [https://github.com/guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails)
+  https://github.com/guardrails-ai/guardrails
 
 Guardrails AI offers Guardrails Hub, a collection of pre-built checks for specific types of LLM risks (called “validators”). Multiple validators can be combined together into Guardrail AI’s Input and Output Guards (guardrail object) that intercept the inputs and outputs of LLMs. Visit [Guardrails Hub](https://hub.guardrailsai.com/) to see the full list of validators and their documentation.
 
 <Frame caption="Examples of AI Guardrails with Guardrails AI (Guardrails AI, 2024)">
-  ![Examples of AI Guardrails with Guardrails AI (Guardrails AI, 2024)](https://res.cloudinary.com/dmt4itwit/image/upload/mintlify%20docs/btw8g8edziv83cj4gih2 "Examples of AI Guardrails with Guardrails AI (Guardrails AI, 2024)")
+  ![Examples of AI Guardrails with Guardrails AI (Guardrails AI, 2024)](https://res.cloudinary.com/dmt4itwit/image/upload/mintlify%20docs/btw8g8edziv83cj4gih2)
 </Frame>
