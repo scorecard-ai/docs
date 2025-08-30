@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/Users/dare/Downloads/**)",
+      "Read(/Users/dare/Downloads/**)",
+      "Read(/Users/dare/Downloads/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
