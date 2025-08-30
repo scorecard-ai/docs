@@ -120,7 +120,8 @@
               "intro/sdk-quickstart",
               "intro/tracing-quickstart",
               "intro/monitoring-quickstart",
-              "intro/rag-quickstart"
+              "intro/rag-quickstart",
+              "intro/faq"
             ]
           },
           {
