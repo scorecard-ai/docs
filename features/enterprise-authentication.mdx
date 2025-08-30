@@ -1,0 +1,377 @@
+---
+title: "Enterprise Authentication"
+sidebarTitle: "Enterprise Auth"
+description: "Secure enterprise-grade authentication with SAML SSO and advanced security features"
+---
+
+import { Tabs, Tab, CodeGroup, Note, Warning, Info, Tip } from "@mintlify/components";
+
+## Enterprise-Grade Security
+
+Scorecard provides enterprise-grade authentication powered by Clerk, supporting SAML SSO, OIDC, and advanced security features for organizations of all sizes.
+
+<Note>
+  Enterprise authentication features are available on Scorecard's Pro and Enterprise plans, ensuring your organization meets compliance and security requirements.
+</Note>
+
+## SAML SSO Integration
+
+### Supported Identity Providers
+
+Scorecard supports all major enterprise identity providers:
+
+<Tabs>
+  <Tab title="Prebuilt Integrations">
+    - **Microsoft Azure Active Directory**
+    - **Google Workspace** 
+    - **Okta Workforce**
+    - **OneLogin**
+    - **Auth0**
+  </Tab>
+  
+  <Tab title="Custom SAML">
+    Any SAML 2.0 compliant identity provider including:
+    - **PingIdentity**
+    - **ForgeRock**
+    - **ADFS (Active Directory Federation Services)**
+    - **Shibboleth**
+    - **Custom enterprise solutions**
+  </Tab>
+</Tabs>
+
+### Authentication Flows
+
+<Info>
+  Scorecard supports both SP-initiated and IdP-initiated SSO flows for maximum flexibility with your existing infrastructure.
+</Info>
+
+**Service Provider-Initiated (Recommended)**
+- Users start authentication from Scorecard
+- Enhanced security through controlled flow
+- Better user experience with clear redirects
+
+**Identity Provider-Initiated**
+- Users start from your company portal
+- Seamless integration with existing workflows
+- Automatic redirect to Scorecard dashboard
+
+## Organization Management
+
+### Multi-Tenant Architecture
+
+Scorecard's organization structure supports complex enterprise hierarchies:
+
+<CodeGroup>
+```javascript User Management
+// Automatic organization assignment based on email domain
+const user = {
+  email: "user@company.com",
+  organization: "company-org", // Auto-assigned
+  role: "member" // or "admin"
+}
+
+// Users inherit organization permissions
+// Projects and data are isolated by organization
+```
+
+```json SAML Configuration
+{
+  "entityId": "https://app.scorecard.io",
+  "acsUrl": "https://app.scorecard.io/sso/saml/callback",
+  "sloUrl": "https://app.scorecard.io/sso/saml/logout",
+  "nameIdFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+  "signatureAlgorithm": "RSA-SHA256"
+}
+```
+</CodeGroup>
+
+### Domain Management
+
+Configure domain-based access control:
+
+- **Verified Domains**: Only users with verified email domains can join
+- **Subdomain Support**: Configure whether subdomains are allowed
+- **Domain Restriction**: Prevent unauthorized domain access
+
+### Just-in-Time (JIT) Provisioning
+
+<Tip>
+  JIT provisioning automatically creates user accounts during first-time SSO authentication, reducing administrative overhead.
+</Tip>
+
+**Automatic Account Creation**:
+- Users are provisioned on first successful SSO login
+- Account attributes populated from SAML assertions
+- Organization membership assigned automatically
+- Role mapping based on SAML attributes
+
+**Attribute Mapping**:
+```xml
+<!-- Standard SAML attributes automatically mapped -->
+<saml:Attribute Name="email">
+  <saml:AttributeValue>user@company.com</saml:AttributeValue>
+</saml:Attribute>
+<saml:Attribute Name="firstName">
+  <saml:AttributeValue>John</saml:AttributeValue>
+</saml:Attribute>
+<saml:Attribute Name="lastName">
+  <saml:AttributeValue>Doe</saml:AttributeValue>
+</saml:Attribute>
+<saml:Attribute Name="role">
+  <saml:AttributeValue>admin</saml:AttributeValue>
+</saml:Attribute>
+```
+
+## Security Features
+
+### Enterprise Security Standards
+
+<Warning>
+  Scorecard implements industry-standard security practices to protect your data and comply with enterprise security requirements.
+</Warning>
+
+**Built-in Protections**:
+- **CSRF Protection**: Cross-site request forgery prevention
+- **XSS Protection**: Cross-site scripting mitigation
+- **Session Security**: Secure session management and rotation
+- **Password Safety**: Industry-standard password policies and storage
+- **Rate Limiting**: Prevent brute force and abuse attempts
+
+### Compliance & Auditing
+
+**SOC 2 Type II Compliance**:
+- Regular security audits and assessments
+- Data encryption in transit and at rest
+- Access logging and audit trails
+- Incident response procedures
+
+**User Activity Monitoring**:
+- Login/logout tracking
+- API access logging
+- Project and data access auditing
+- Failed authentication attempt monitoring
+
+## Setup Guide
+
+### Configure SAML SSO
+
+<Steps>
+  <Step title="Contact Scorecard Support">
+    Reach out to enable enterprise authentication for your organization:
+    - Email: support@scorecard.io
+    - Include: Organization name, desired SSO provider, estimated user count
+  </Step>
+  
+  <Step title="Provide SAML Metadata">
+    Share your IdP's SAML metadata with Scorecard:
+    ```xml
+    <!-- Example metadata structure -->
+    <EntityDescriptor entityID="https://your-idp.com">
+      <IDPSSODescriptor>
+        <SingleSignOnService 
+          Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+          Location="https://your-idp.com/sso" />
+        <KeyDescriptor use="signing">
+          <KeyInfo><X509Data>...</X509Data></KeyInfo>
+        </KeyDescriptor>
+      </IDPSSODescriptor>
+    </EntityDescriptor>
+    ```
+  </Step>
+  
+  <Step title="Configure Your IdP">
+    Add Scorecard as a service provider in your IdP:
+    - **Entity ID**: `https://app.scorecard.io`
+    - **ACS URL**: `https://app.scorecard.io/sso/saml/callback`
+    - **SLO URL**: `https://app.scorecard.io/sso/saml/logout`
+    - **Name ID Format**: Email address
+  </Step>
+  
+  <Step title="Test and Activate">
+    Scorecard team will configure and test the integration before activation
+  </Step>
+</Steps>
+
+### User Experience
+
+Once SAML SSO is configured:
+
+1. **Login Flow**: Users visit app.scorecard.io and click "Sign in with SSO"
+2. **Domain Detection**: Enter email domain to redirect to appropriate IdP
+3. **IdP Authentication**: Complete authentication with your organization's IdP
+4. **Automatic Provisioning**: Account created automatically on first login
+5. **Organization Access**: Immediate access to organization's Scorecard projects
+
+## Advanced Features
+
+### Multi-Organization Support
+
+<Info>
+  Enterprise customers can manage multiple organizations with separate SSO configurations and isolated data.
+</Info>
+
+**Organization Isolation**:
+- Separate SAML configurations per organization
+- Independent user management
+- Isolated project and data access
+- Cross-organization reporting for parent companies
+
+### Custom Attribute Mapping
+
+Map additional SAML attributes to user profiles:
+
+```xml
+<!-- Custom attributes for role-based access -->
+<saml:Attribute Name="department">
+  <saml:AttributeValue>Engineering</saml:AttributeValue>
+</saml:Attribute>
+<saml:Attribute Name="team">
+  <saml:AttributeValue>ML Platform</saml:AttributeValue>
+</saml:Attribute>
+<saml:Attribute Name="accessLevel">
+  <saml:AttributeValue>admin</saml:AttributeValue>
+</saml:Attribute>
+```
+
+### Session Management
+
+**Enterprise Session Controls**:
+- Configurable session timeouts
+- Forced re-authentication policies
+- Concurrent session limits
+- Device-based access controls
+
+## API Access with SSO
+
+### API Key Management
+
+Enterprise users can manage API keys through the dashboard:
+
+<CodeGroup>
+```python Python
+import scorecard
+
+# Use organization API key for programmatic access
+client = scorecard.Client(
+    api_key="sk_live_org_abc123...",  # Organization API key
+    base_url="https://api.scorecard.io"
+)
+
+# All API calls inherit organization context
+projects = client.projects.list()
+```
+
+```javascript JavaScript
+import Scorecard from '@scorecard/client';
+
+// Initialize with organization API key
+const client = new Scorecard({
+  apiKey: 'sk_live_org_abc123...',  // Organization API key
+  baseUrl: 'https://api.scorecard.io'
+});
+
+// Organization context automatically applied
+const projects = await client.projects.list();
+```
+
+```bash cURL
+# Use organization API key in requests
+curl -X GET https://api.scorecard.io/v2/projects \
+  -H "Authorization: Bearer sk_live_org_abc123..." \
+  -H "Content-Type: application/json"
+```
+</CodeGroup>
+
+### Service Accounts
+
+Create service accounts for automated workflows:
+
+- **CI/CD Integration**: Dedicated keys for deployment pipelines
+- **Monitoring Systems**: Automated health checks and alerting
+- **Data Sync**: Integration with internal analytics platforms
+- **Audit Compliance**: Separate keys for compliance reporting
+
+## Troubleshooting
+
+### Common SSO Issues
+
+**Login Failures**:
+- Verify SAML metadata is correctly configured
+- Check that user email domain matches configured domain
+- Ensure IdP is sending required attributes
+- Validate certificate hasn't expired
+
+**Permission Errors**:
+- Confirm user is assigned to Scorecard application in IdP
+- Check organization membership in Scorecard dashboard
+- Verify role mapping from SAML attributes
+
+**Session Problems**:
+- Clear browser cookies and try again
+- Check if user has multiple active sessions
+- Verify session timeout settings
+
+### Getting Support
+
+For enterprise authentication setup and troubleshooting:
+
+- **Technical Support**: support@scorecard.io
+- **Enterprise Sales**: enterprise@scorecard.io
+- **Documentation**: [Enterprise SSO Setup Guide](#setup-guide)
+- **Status Page**: status.scorecard.io
+
+## Pricing
+
+### Enterprise Plans
+
+<Tabs>
+  <Tab title="Pro Plan">
+    **Features Included**:
+    - SAML SSO for up to 25 users
+    - Basic organization management
+    - Standard security features
+    - Email support
+    
+    **Perfect for**: Growing teams and mid-size companies
+  </Tab>
+  
+  <Tab title="Enterprise Plan">
+    **Features Included**:
+    - Unlimited SAML SSO users
+    - Advanced organization management
+    - Custom attribute mapping
+    - Priority support and CSM
+    - SLA guarantees
+    - Custom compliance features
+    
+    **Perfect for**: Large enterprises with complex requirements
+  </Tab>
+</Tabs>
+
+### Migration Support
+
+Scorecard provides white-glove migration assistance:
+
+- **Architecture Review**: Assessment of current authentication setup
+- **Migration Planning**: Step-by-step transition strategy
+- **Testing Environment**: Sandbox for validation before production
+- **Training Sessions**: Team onboarding and best practices
+- **Ongoing Support**: Dedicated customer success manager
+
+## Related Resources
+
+<Card title="API Keys" href="/features/api-keys">
+  Manage API keys and programmatic access
+</Card>
+
+<Card title="Organizations" href="/features/organizations">
+  Learn about organization structure and permissions
+</Card>
+
+<Card title="Security" href="/features/privacy-by-design">
+  Understand Scorecard's security and privacy practices
+</Card>
+
+<Card title="Contact Sales" href="https://www.scorecard.io/book-a-demo">
+  Get started with enterprise authentication
+</Card>

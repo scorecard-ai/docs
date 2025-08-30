@@ -139,6 +139,7 @@
               "features/traces",
               "features/tracing",
               "features/monitoring",
+              "features/enterprise-authentication",
               "features/trace-to-testcase",
               "features/a-b-comparison",
               "features/ai-guardrails",
