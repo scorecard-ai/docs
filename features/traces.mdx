@@ -211,18 +211,79 @@ Click on any trace to view detailed information:
 
 ## Error Tracking
 
-Scorecard automatically captures and categorizes errors in your traces:
+Scorecard provides comprehensive error tracking that goes beyond simple technical failures to detect AI-specific issues and behavioral problems in your applications.
 
-### Error Types
+### AI-Specific Error Detection
 
 <Info>
-  Errors are automatically detected and classified to help you quickly identify and resolve issues.
+  Scorecard acts as an always-on watchdog, monitoring every AI interaction to catch both technical errors and subtle behavioral issues.
 </Info>
 
-- **Model Errors**: Rate limits, timeouts, invalid requests
-- **Application Errors**: Exceptions, crashes, logic errors
-- **Validation Errors**: Schema mismatches, type errors
-- **Integration Errors**: API failures, network issues
+**Behavioral Errors** (Silent Failures):
+- **Off-topic Responses**: AI responds but goes outside intended scope
+- **Workflow Interruptions**: Breaking conversation flows or task sequences  
+- **Safety Violations**: Responses that violate safety guidelines or policies
+- **Hallucinations**: Factually incorrect information presented confidently
+- **Context Loss**: Losing track of conversation history or user intent
+
+**Technical Errors**:
+- **Model Errors**: Rate limits, timeouts, invalid requests, API failures
+- **Application Errors**: Exceptions, crashes, logic errors in your code
+- **Validation Errors**: Schema mismatches, type errors, format issues
+- **Integration Errors**: Downstream API failures, network connectivity issues
+- **Configuration Errors**: Invalid parameters, missing credentials, model misconfigurations
+
+### Silent Failure Detection
+
+The most dangerous errors in AI systems are "silent failures" - when your AI responds but incorrectly. Scorecard automatically detects these through:
+
+```python
+# Scorecard automatically analyzes responses for:
+# - Semantic drift from expected behavior
+# - Safety policy violations  
+# - Factual accuracy issues
+# - Task completion failures
+
+# Example: Detecting off-topic responses
+from scorecard import Client
+
+client = Client(api_key="your-key")
+
+# Custom error detection metric
+safety_metric = client.metrics.create(
+    name="Off-Topic Detection",
+    description="Detect when AI goes off-topic",
+    config={
+        "type": "ai_binary",
+        "prompt": """
+        Does the assistant's response stay on-topic and address the user's question?
+        
+        User Question: {{input}}
+        Assistant Response: {{output}}
+        
+        Answer YES if response is on-topic, NO if off-topic.
+        """,
+        "scoring": {"pass_threshold": 0.8}
+    }
+)
+```
+
+### Error Analytics Dashboard
+
+**Real-Time Monitoring**:
+- Live error rate tracking across all AI interactions
+- Immediate alerts for error spikes or new failure patterns
+- Error distribution by type, severity, and affected users
+
+**Failure Pattern Detection**:
+- Identify recurring behavioral issues across conversations
+- Detect systematic problems with specific prompts or model configurations
+- Track error trends over time and deployments
+
+**Root Cause Analysis**:
+- Full reasoning chain replay for any failed interaction
+- Contextual error explanations with user intent analysis
+- Impact assessment showing affected users and conversations
 
 ### Error Details
 
