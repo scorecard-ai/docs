@@ -45,15 +45,9 @@ Scorecard supports all major enterprise identity providers:
   Scorecard supports both SP-initiated and IdP-initiated SSO flows for maximum flexibility with your existing infrastructure.
 </Info>
 
-**Service Provider-Initiated (Recommended)**
-- Users start authentication from Scorecard
-- Enhanced security through controlled flow
-- Better user experience with clear redirects
+**Service Provider-Initiated (Recommended)**: Users begin their authentication journey from Scorecard, which provides enhanced security through a controlled authentication flow and delivers a better user experience with clear redirect paths.
 
-**Identity Provider-Initiated**
-- Users start from your company portal
-- Seamless integration with existing workflows
-- Automatic redirect to Scorecard dashboard
+**Identity Provider-Initiated**: Alternatively, users can start from your company portal, providing seamless integration with existing enterprise workflows and automatic redirection to the Scorecard dashboard after authentication.
 
 ## Organization Management
 
@@ -87,11 +81,7 @@ const user = {
 
 ### Domain Management
 
-Configure domain-based access control:
-
-- **Verified Domains**: Only users with verified email domains can join
-- **Subdomain Support**: Configure whether subdomains are allowed
-- **Domain Restriction**: Prevent unauthorized domain access
+Domain-based access control ensures only authorized users can access your organization. Scorecard verifies email domains before allowing users to join, and you can configure whether subdomains are allowed or restricted. This domain restriction mechanism prevents unauthorized access and maintains organizational boundaries.
 
 ### Just-in-Time (JIT) Provisioning
 
@@ -99,11 +89,7 @@ Configure domain-based access control:
   JIT provisioning automatically creates user accounts during first-time SSO authentication, reducing administrative overhead.
 </Tip>
 
-**Automatic Account Creation**:
-- Users are provisioned on first successful SSO login
-- Account attributes populated from SAML assertions
-- Organization membership assigned automatically
-- Role mapping based on SAML attributes
+When users authenticate via SSO for the first time, Scorecard automatically provisions their accounts. The system populates account attributes directly from SAML assertions, assigns organization membership based on domain rules, and maps roles according to SAML attributes provided by your identity provider.
 
 **Attribute Mapping**:
 ```xml
@@ -130,26 +116,11 @@ Configure domain-based access control:
   Scorecard implements industry-standard security practices to protect your data and comply with enterprise security requirements.
 </Warning>
 
-**Built-in Protections**:
-- **CSRF Protection**: Cross-site request forgery prevention
-- **XSS Protection**: Cross-site scripting mitigation
-- **Session Security**: Secure session management and rotation
-- **Password Safety**: Industry-standard password policies and storage
-- **Rate Limiting**: Prevent brute force and abuse attempts
+Scorecard implements comprehensive security protections including CSRF (Cross-site request forgery) prevention, XSS (Cross-site scripting) mitigation, and secure session management with automatic rotation. The platform enforces industry-standard password policies and secure storage mechanisms, while rate limiting prevents brute force attacks and abuse attempts.
 
 ### Compliance & Auditing
 
-**SOC 2 Type II Compliance**:
-- Regular security audits and assessments
-- Data encryption in transit and at rest
-- Access logging and audit trails
-- Incident response procedures
-
-**User Activity Monitoring**:
-- Login/logout tracking
-- API access logging
-- Project and data access auditing
-- Failed authentication attempt monitoring
+Scorecard maintains SOC 2 Type II compliance through regular security audits and comprehensive data protection measures. All data is encrypted both in transit and at rest, with complete access logging and audit trails for compliance reporting. The platform includes robust incident response procedures and continuously monitors user activity, tracking login events, API access, project interactions, and failed authentication attempts to ensure security and compliance.
 
 ## Setup Guide
 
@@ -194,13 +165,7 @@ Configure domain-based access control:
 
 ### User Experience
 
-Once SAML SSO is configured:
-
-1. **Login Flow**: Users visit app.scorecard.io and click "Sign in with SSO"
-2. **Domain Detection**: Enter email domain to redirect to appropriate IdP
-3. **IdP Authentication**: Complete authentication with your organization's IdP
-4. **Automatic Provisioning**: Account created automatically on first login
-5. **Organization Access**: Immediate access to organization's Scorecard projects
+Once SAML SSO is configured, users experience a streamlined authentication process. They begin by visiting app.scorecard.io and clicking "Sign in with SSO", then enter their email domain which automatically redirects them to the appropriate identity provider. After completing authentication with your organization's IdP, their account is automatically provisioned on first login, granting immediate access to your organization's Scorecard projects.
 
 ## Advanced Features
 
@@ -210,11 +175,7 @@ Once SAML SSO is configured:
   Enterprise customers can manage multiple organizations with separate SSO configurations and isolated data.
 </Info>
 
-**Organization Isolation**:
-- Separate SAML configurations per organization
-- Independent user management
-- Isolated project and data access
-- Cross-organization reporting for parent companies
+Each organization operates in complete isolation with its own SAML configuration and independent user management. Projects and data remain strictly separated between organizations, while parent companies can still access cross-organization reporting for comprehensive oversight.
 
 ### Custom Attribute Mapping
 
@@ -235,11 +196,7 @@ Map additional SAML attributes to user profiles:
 
 ### Session Management
 
-**Enterprise Session Controls**:
-- Configurable session timeouts
-- Forced re-authentication policies
-- Concurrent session limits
-- Device-based access controls
+Enterprise session controls provide granular security management through configurable session timeouts and forced re-authentication policies. Organizations can set concurrent session limits to prevent account sharing and implement device-based access controls for additional security layers.
 
 ## API Access with SSO
 

@@ -8,12 +8,7 @@ import { Tabs, Tab, CodeGroup, Note, Warning, Info, Tip } from "@mintlify/compon
 
 ## What are Traces?
 
-Traces in Scorecard provide detailed visibility into your AI application's execution flow, capturing every step from user input to final output. This powerful observability feature helps you:
-
-- **Debug issues**: Pinpoint exactly where errors occur in complex AI pipelines
-- **Monitor performance**: Track latency at each step of your application
-- **Analyze costs**: Understand token usage and API costs across different models
-- **Improve quality**: Identify bottlenecks and optimization opportunities
+Traces in Scorecard provide detailed visibility into your AI application's execution flow, capturing every step from user input to final output. This powerful observability feature enables you to pinpoint exactly where errors occur in complex AI pipelines, track latency at each step of your application, and understand token usage and API costs across different models. By identifying bottlenecks and optimization opportunities, traces become essential for improving your application's quality and performance.
 
 <Note>
   Traces automatically capture errors, making it easy to track and resolve issues in production.
@@ -35,11 +30,7 @@ graph LR
     style C fill:#fff3e0
 ```
 
-Each span contains:
-- **Timing information**: Start time, duration, and latency
-- **Metadata**: Model used, parameters, token counts
-- **Errors**: Exception details and stack traces
-- **Relationships**: Parent-child span connections
+Each span contains comprehensive timing information including start time, duration, and latency measurements. The metadata captures the model used, parameters, and token counts, while any errors are recorded with full exception details and stack traces. Parent-child relationships between spans help you understand the complete execution flow.
 
 ## Setting Up Tracing
 
@@ -219,19 +210,9 @@ Scorecard provides comprehensive error tracking that goes beyond simple technica
   Scorecard acts as an always-on watchdog, monitoring every AI interaction to catch both technical errors and subtle behavioral issues.
 </Info>
 
-**Behavioral Errors** (Silent Failures):
-- **Off-topic Responses**: AI responds but goes outside intended scope
-- **Workflow Interruptions**: Breaking conversation flows or task sequences  
-- **Safety Violations**: Responses that violate safety guidelines or policies
-- **Hallucinations**: Factually incorrect information presented confidently
-- **Context Loss**: Losing track of conversation history or user intent
+**Behavioral Errors (Silent Failures)** represent the most dangerous category of AI errors. These include off-topic responses where the AI ventures outside its intended scope, workflow interruptions that break conversation flows or task sequences, and safety violations where responses breach established guidelines or policies. The system also detects hallucinations when factually incorrect information is presented confidently, and context loss when the AI loses track of conversation history or user intent.
 
-**Technical Errors**:
-- **Model Errors**: Rate limits, timeouts, invalid requests, API failures
-- **Application Errors**: Exceptions, crashes, logic errors in your code
-- **Validation Errors**: Schema mismatches, type errors, format issues
-- **Integration Errors**: Downstream API failures, network connectivity issues
-- **Configuration Errors**: Invalid parameters, missing credentials, model misconfigurations
+**Technical Errors** encompass traditional system failures including model errors such as rate limits, timeouts, invalid requests, and API failures. Application errors cover exceptions, crashes, and logic errors in your code, while validation errors catch schema mismatches, type errors, and format issues. Integration errors arise from downstream API failures or network connectivity issues, and configuration errors result from invalid parameters, missing credentials, or model misconfigurations.
 
 ### Silent Failure Detection
 
@@ -270,20 +251,7 @@ safety_metric = client.metrics.create(
 
 ### Error Analytics Dashboard
 
-**Real-Time Monitoring**:
-- Live error rate tracking across all AI interactions
-- Immediate alerts for error spikes or new failure patterns
-- Error distribution by type, severity, and affected users
-
-**Failure Pattern Detection**:
-- Identify recurring behavioral issues across conversations
-- Detect systematic problems with specific prompts or model configurations
-- Track error trends over time and deployments
-
-**Root Cause Analysis**:
-- Full reasoning chain replay for any failed interaction
-- Contextual error explanations with user intent analysis
-- Impact assessment showing affected users and conversations
+The error analytics dashboard provides **real-time monitoring** with live error rate tracking across all AI interactions, immediate alerts for error spikes or new failure patterns, and error distribution analysis by type, severity, and affected users. **Failure pattern detection** helps identify recurring behavioral issues across conversations, detect systematic problems with specific prompts or model configurations, and track error trends over time and deployments. **Root cause analysis** capabilities include full reasoning chain replay for any failed interaction, contextual error explanations with user intent analysis, and impact assessments showing affected users and conversations.
 
 ### Error Details
 
