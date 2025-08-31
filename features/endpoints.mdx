@@ -8,11 +8,9 @@ import { Tabs, Tab, CodeGroup, Note, Tip, Warning } from "@mintlify/components";
 
 ## What are Custom Endpoints?
 
-Custom Endpoints in Scorecard allow you to test and evaluate any HTTP API endpoint, whether it's your production API, a staging environment, or a local development server. You can test REST APIs, GraphQL endpoints, webhooks, or any HTTP-accessible service while validating that your endpoints return expected data structures and values. The feature also helps you monitor performance by tracking response times and reliability across deployments, and seamlessly integrates with CI/CD pipelines to automate endpoint testing as part of your deployment process.
+Custom Endpoints enable no-code testing of any HTTP API through Scorecard's evaluation interface. Unlike SDK integration that requires code changes, Custom Endpoints let you point Scorecard directly at your existing APIs for immediate testing and monitoring. This approach is particularly valuable for teams who want to evaluate deployed services without modifying application code, test third-party APIs they don't control, or quickly validate endpoints during development cycles.
 
-<Note>
-  Custom Endpoints are perfect for testing RAG pipelines, tool-calling agents, chatbots, and traditional APIs that power your AI applications.
-</Note>
+The feature transforms any HTTP endpoint into a testable system within Scorecard's evaluation framework. You can test REST APIs, GraphQL endpoints, webhooks, or any HTTP-accessible service while leveraging Scorecard's full suite of metrics and monitoring capabilities. This bridges the gap between your deployed APIs and Scorecard's evaluation platform, enabling comprehensive testing without development overhead.
 
 ## Creating an Endpoint
 
@@ -25,73 +23,17 @@ Navigate to your project's **Endpoints** section to create and manage custom end
   alt="Screenshot of the Edit Endpoint configuration modal"
 />
 
-### Configuration Options
+### Configuration Benefits
 
-Each endpoint requires the following configuration:
+Setting up a Custom Endpoint is straightforward and requires minimal technical overhead. You provide basic details like the endpoint name, HTTP method, and URL, then configure authentication headers and request structure through Scorecard's intuitive interface. The system handles complex aspects like request formatting, response parsing, and error handling automatically.
 
-<Tabs>
-  <Tab title="Basic Settings">
-    **Name**: A descriptive name for your endpoint
-    
-    **Description**: Document what this endpoint does and when to use it
-    
-    **Method**: HTTP method (GET, POST, PUT, DELETE, PATCH)
-    
-    **URL**: The full endpoint URL including protocol
-    ```
-    https://api.example.com/v1/chat/completions
-    ```
-  </Tab>
-  
-  <Tab title="Headers">
-    Configure request headers including authentication:
-    
-    ```json
-    {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer YOUR_API_KEY",
-      "X-Custom-Header": "value"
-    }
-    ```
-    
-    <Tip>
-      Store sensitive values like API keys as environment variables for security.
-    </Tip>
-  </Tab>
-  
-  <Tab title="Request Body">
-    For POST/PUT/PATCH requests, define your request body:
-    
-    ```json
-    {
-      "model": "gpt-4",
-      "messages": [
-        {
-          "role": "user",
-          "content": "{{input}}"
-        }
-      ],
-      "temperature": 0.7
-    }
-    ```
-    
-    Use `{{variable}}` syntax to inject dynamic values from your test cases.
-  </Tab>
-  
-  <Tab title="Response Path">
-    Extract specific values from the response using JSONPath:
-    
-    ```
-    $.choices[0].message.content
-    ```
-    
-    This allows you to focus evaluation on the relevant part of the response.
-  </Tab>
-</Tabs>
+Dynamic variable injection makes endpoints incredibly flexible for testing. Using simple template syntax, you can inject values from your test cases directly into request bodies or headers. This means a single endpoint configuration can handle diverse test scenarios without requiring separate configurations for each variation.
 
-## Using Endpoints in Test Runs
+Response path extraction ensures you're evaluating the right data from complex API responses. Instead of evaluating entire JSON payloads, you can focus metrics on specific response fields using JSONPath expressions. This precision makes evaluations more meaningful and reduces noise from irrelevant response data.
 
-Once configured, endpoints can be used as systems in your test runs. Access them through the Kickoff Run modal's Endpoint tab:
+## Running Endpoint Evaluations
+
+Custom Endpoints integrate seamlessly into Scorecard's evaluation workflow. Once configured, they appear as selectable systems in the Kickoff Run modal, making it simple to choose between testing your SDK-integrated applications or HTTP endpoints. This unified interface means teams can evaluate both code-integrated and standalone APIs using the same metrics and testsets.
 
 <DarkLightImage
   lightSrc="/images/endpoints/kickoff-endpoint-light.png"
@@ -100,192 +42,50 @@ Once configured, endpoints can be used as systems in your test runs. Access them
   alt="Screenshot of Kickoff Run modal with Endpoint tab selected"
 />
 
-Run evaluations against your configured endpoints:
+The evaluation process runs identically to SDK-based systems, applying your selected metrics to endpoint responses and generating comprehensive performance reports. Teams benefit from consistent evaluation standards whether testing prototype APIs, production services, or third-party integrations.
 
-<CodeGroup>
-```python Python
-import scorecard
+## Dynamic Testing Capabilities
 
-client = scorecard.Client(api_key="YOUR_API_KEY")
+Custom Endpoints excel at dynamic testing through variable injection from your test cases. This powerful feature allows a single endpoint configuration to handle diverse test scenarios by automatically substituting testcase values into request bodies and headers. Teams can test hundreds of variations without creating separate endpoint configurations for each scenario.
 
-# Run tests against your endpoint
-run = client.runs.create(
-    project_id="your-project-id",
-    testset_id="your-testset-id",
-    system_id="your-endpoint-id",  # Your custom endpoint
-    metrics=["accuracy", "latency"]
-)
+The system automatically maps testcase fields to endpoint variables using simple template syntax. When you run evaluations, Scorecard iterates through your testset and dynamically generates unique requests for each test case. This approach dramatically reduces setup time while ensuring comprehensive test coverage across your API's functionality.
 
-# Get results
-results = client.runs.get(run.id)
-print(f"Average latency: {results.metrics['latency'].mean}ms")
-```
+## Key Benefits
 
-```javascript JavaScript
-import Scorecard from '@scorecard/client';
+### No-Code Testing
+Custom Endpoints eliminate the need for code integration when you want to test existing APIs. Teams can immediately start evaluating deployed services without modifying application code or adding SDK dependencies. This is particularly valuable for testing legacy systems, third-party APIs, or services owned by different teams.
 
-const client = new Scorecard({ apiKey: 'YOUR_API_KEY' });
+### Flexible Testing Strategies
+The platform supports various testing approaches from quick smoke tests to comprehensive regression testing. Teams can rapidly validate endpoint health with minimal test cases or conduct thorough evaluations using extensive testsets. The same endpoint configuration adapts to different testing intensities based on your current needs.
 
-// Run tests against your endpoint
-const run = await client.runs.create({
-  projectId: 'your-project-id',
-  testsetId: 'your-testset-id',
-  systemId: 'your-endpoint-id',  // Your custom endpoint
-  metrics: ['accuracy', 'latency']
-});
+### Production Monitoring
+Beyond one-time evaluations, Custom Endpoints enable continuous monitoring of deployed APIs. Set up automated testing schedules to catch performance degradations or functionality changes before they impact users. This proactive approach helps maintain service quality across deployments and infrastructure changes.
 
-// Get results
-const results = await client.runs.get(run.id);
-console.log(`Average latency: ${results.metrics.latency.mean}ms`);
-```
+## Continuous Monitoring
 
-```bash cURL
-curl -X POST https://api.scorecard.com/v2/runs \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "project_id": "your-project-id",
-    "testset_id": "your-testset-id",
-    "system_id": "your-endpoint-id",
-    "metrics": ["accuracy", "latency"]
-  }'
-```
-</CodeGroup>
-
-## Dynamic Variables
-
-Endpoints support dynamic variable injection from your test cases:
-
-### Variable Syntax
-Use double curly braces to reference testcase fields:
-- `{{input}}` - The input field from your testcase
-- `{{context}}` - Additional context data
-- `{{user_id}}` - Any custom field in your testcase
-
-### Example Workflow
-
-<Steps>
-  <Step title="Define Testset Schema">
-    Create a testset with fields that match your endpoint needs:
-    ```json
-    {
-      "input": "string",
-      "context": "string",
-      "expected_output": "string"
-    }
-    ```
-  </Step>
-  
-  <Step title="Configure Endpoint">
-    Reference testcase fields in your endpoint configuration:
-    ```json
-    {
-      "query": "{{input}}",
-      "context": "{{context}}",
-      "max_tokens": 100
-    }
-    ```
-  </Step>
-  
-  <Step title="Run Evaluation">
-    Scorecard automatically injects values from each testcase when calling your endpoint.
-  </Step>
-</Steps>
-
-## Best Practices
-
-### Security
-<Warning>
-  Never hardcode API keys or secrets directly in endpoint configurations. Use environment variables or secure credential storage.
-</Warning>
-
-### Error Handling
-- Configure appropriate timeout values for slow endpoints
-- Set up retry logic for transient failures
-- Monitor error rates to identify endpoint issues
-
-### Performance Optimization
-- Use connection pooling for high-volume testing
-- Implement rate limiting to avoid overwhelming your endpoints
-- Cache responses when testing deterministic endpoints
-
-### Testing Strategies
-
-<Tabs>
-  <Tab title="Smoke Testing">
-    Quick validation that endpoints are responding:
-    - Single test case per endpoint
-    - Basic response validation
-    - Fast feedback loop
-  </Tab>
-  
-  <Tab title="Load Testing">
-    Evaluate endpoint performance under load:
-    - Multiple concurrent requests
-    - Response time percentiles
-    - Error rate monitoring
-  </Tab>
-  
-  <Tab title="Regression Testing">
-    Ensure changes don't break existing functionality:
-    - Comprehensive test coverage
-    - Compare against baseline metrics
-    - Automated CI/CD integration
-  </Tab>
-</Tabs>
-
-## Monitoring Endpoints
-
-Set up monitors to continuously test your endpoints:
-
-```python
-# Create a monitor for your endpoint
-monitor = client.monitors.create(
-    project_id="your-project-id",
-    name="API Health Check",
-    system_id="your-endpoint-id",
-    testset_id="health-check-testset",
-    schedule="*/5 * * * *",  # Every 5 minutes
-    alert_threshold=0.95  # Alert if success rate < 95%
-)
-```
+Custom Endpoints support automated monitoring schedules that continuously validate your APIs without manual intervention. Configure monitoring frequency based on your service criticality, from every few minutes for mission-critical APIs to daily checks for internal tools. The system automatically tracks performance trends and alerts your team when metrics fall below acceptable thresholds.
 
 ## Common Use Cases
 
-### RAG Pipeline Testing
-Test retrieval-augmented generation endpoints to ensure:
-- Correct context retrieval
-- Accurate response generation
-- Acceptable latency
+### API Testing Without Code Changes
+Teams frequently use Custom Endpoints to test APIs they cannot or prefer not to instrument with SDKs. This includes legacy systems where code changes are risky, third-party APIs where integration isn't possible, and microservices owned by other teams. The no-code approach enables immediate testing without coordination overhead or deployment cycles.
 
-### Chatbot Evaluation
-Validate conversational AI endpoints for:
-- Response relevance
-- Conversation flow
-- Error handling
+### Multi-Environment Validation
+Custom Endpoints excel at testing the same API across different environments. Configure separate endpoints for development, staging, and production versions of your API, then run identical testsets against each environment. This approach quickly identifies environment-specific issues and validates deployment consistency.
 
-### API Regression Testing
-Ensure API changes don't break existing functionality:
-- Response format validation
-- Backward compatibility checks
-- Performance regression detection
+### External API Integration
+Custom Endpoints enable testing of external APIs and third-party services within your evaluation framework. Teams can validate external dependencies, monitor service level agreements, and ensure consistent performance from vendors and partners. This capability helps maintain application reliability when depending on external services.
 
 ## Troubleshooting
 
-### Connection Errors
-- Verify the endpoint URL is accessible
-- Check firewall and network settings
-- Ensure SSL certificates are valid
+### Connection Issues
+Most connection problems stem from network accessibility or SSL configuration issues. Verify your endpoint URLs are publicly accessible and that SSL certificates are valid and current. Firewall restrictions often block testing traffic, so ensure Scorecard's IP ranges can reach your endpoints.
 
-### Authentication Issues
-- Confirm API keys are correct and active
-- Check token expiration
-- Verify authentication header format
+### Authentication Problems
+Authentication failures typically occur when API keys expire or header formats are incorrect. Double-check that your credentials are active and properly formatted in the headers configuration. Many APIs require specific authentication schemes or token prefixes that must match exactly.
 
-### Response Parsing
-- Validate JSONPath expressions
-- Ensure response format matches expectations
-- Handle nullable fields appropriately
+### Response Processing
+Response parsing issues usually indicate mismatched expectations between your endpoint's actual response format and your JSONPath configuration. Validate that your response path expressions correctly navigate your API's response structure and handle nullable or optional fields appropriately.
 
 ## Related Resources
 
