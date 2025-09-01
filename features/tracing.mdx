@@ -144,27 +144,7 @@ Technical errors like rate limits, timeouts, and API failures are captured autom
 
 ### Custom Error Detection
 
-Create custom metrics to detect application-specific behavioral issues:
-
-```python
-# Example: Detecting off-topic responses
-safety_metric = client.metrics.create(
-    name="Off-Topic Detection",
-    description="Detect when AI goes off-topic",
-    config={
-        "type": "ai_binary",
-        "prompt": """
-        Does the assistant's response stay on-topic and address the user's question?
-        
-        User Question: {{input}}
-        Assistant Response: {{output}}
-        
-        Answer YES if response is on-topic, NO if off-topic.
-        """,
-        "scoring": {"pass_threshold": 0.8}
-    }
-)
-```
+Create custom metrics through Scorecard's UI to detect application-specific behavioral issues. Design AI-powered metrics that analyze trace data for off-topic responses, safety violations, or task completion failures. These custom metrics automatically evaluate your traces and surface problematic interactions that would otherwise go unnoticed in production.
 
 ---
 
