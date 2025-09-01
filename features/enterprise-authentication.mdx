@@ -8,312 +8,61 @@ import { Tabs, Tab, CodeGroup, Note, Warning, Info, Tip } from "@mintlify/compon
 
 ## Enterprise-Grade Security
 
-Scorecard provides enterprise-grade authentication powered by Clerk, supporting SAML SSO, OIDC, and advanced security features for organizations of all sizes.
+Scorecard delivers enterprise authentication through Clerk's proven SAML SSO platform, supporting major identity providers and advanced security features. Organizations gain streamlined user management, automated provisioning, and comprehensive security controls that meet enterprise compliance standards.
 
 <Note>
-  Enterprise authentication features are available on Scorecard's Pro and Enterprise plans, ensuring your organization meets compliance and security requirements.
+  Enterprise authentication requires Scorecard's Pro plan with Enhanced Authentication add-on.
 </Note>
 
 ## SAML SSO Integration
 
 ### Supported Identity Providers
 
-Scorecard supports all major enterprise identity providers:
-
-<Tabs>
-  <Tab title="Prebuilt Integrations">
-    - **Microsoft Azure Active Directory**
-    - **Google Workspace** 
-    - **Okta Workforce**
-    - **OneLogin**
-    - **Auth0**
-  </Tab>
-  
-  <Tab title="Custom SAML">
-    Any SAML 2.0 compliant identity provider including:
-    - **PingIdentity**
-    - **ForgeRock**
-    - **ADFS (Active Directory Federation Services)**
-    - **Shibboleth**
-    - **Custom enterprise solutions**
-  </Tab>
-</Tabs>
+Scorecard integrates with major enterprise identity providers through Clerk's SAML platform. Direct integrations are available for Microsoft Azure Active Directory, Google Workspace, and Okta Workforce, while any SAML 2.0 compliant provider can be configured through custom SAML connections. This flexibility ensures compatibility with existing enterprise infrastructure regardless of your current identity management solution.
 
 ### Authentication Flows
 
-<Info>
-  Scorecard supports both SP-initiated and IdP-initiated SSO flows for maximum flexibility with your existing infrastructure.
-</Info>
-
-**Service Provider-Initiated (Recommended)**: Users begin their authentication journey from Scorecard, which provides enhanced security through a controlled authentication flow and delivers a better user experience with clear redirect paths.
-
-**Identity Provider-Initiated**: Alternatively, users can start from your company portal, providing seamless integration with existing enterprise workflows and automatic redirection to the Scorecard dashboard after authentication.
+Scorecard supports both service provider-initiated and identity provider-initiated SSO flows for maximum infrastructure flexibility. The recommended SP-initiated flow begins from Scorecard and provides enhanced security through controlled authentication paths. Alternatively, IdP-initiated flows allow users to start from your company portal for seamless integration with existing enterprise workflows.
 
 ## Organization Management
 
-### Multi-Tenant Architecture
-
-Scorecard's organization structure supports complex enterprise hierarchies:
-
-<CodeGroup>
-```javascript User Management
-// Automatic organization assignment based on email domain
-const user = {
-  email: "user@company.com",
-  organization: "company-org", // Auto-assigned
-  role: "member" // or "admin"
-}
-
-// Users inherit organization permissions
-// Projects and data are isolated by organization
-```
-
-```json SAML Configuration
-{
-  "entityId": "https://app.scorecard.io",
-  "acsUrl": "https://app.scorecard.io/sso/saml/callback",
-  "sloUrl": "https://app.scorecard.io/sso/saml/logout",
-  "nameIdFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
-  "signatureAlgorithm": "RSA-SHA256"
-}
-```
-</CodeGroup>
-
-### Domain Management
-
-Domain-based access control ensures only authorized users can access your organization. Scorecard verifies email domains before allowing users to join, and you can configure whether subdomains are allowed or restricted. This domain restriction mechanism prevents unauthorized access and maintains organizational boundaries.
+Scorecard's organization structure provides secure multi-tenant architecture where each organization operates with complete data isolation. Users are automatically assigned to organizations based on their email domain, with configurable subdomain support and strict access controls. This domain-based approach ensures only authorized personnel can access your organization's projects and evaluation data.
 
 ### Just-in-Time (JIT) Provisioning
 
-<Tip>
-  JIT provisioning automatically creates user accounts during first-time SSO authentication, reducing administrative overhead.
-</Tip>
-
-When users authenticate via SSO for the first time, Scorecard automatically provisions their accounts. The system populates account attributes directly from SAML assertions, assigns organization membership based on domain rules, and maps roles according to SAML attributes provided by your identity provider.
-
-**Attribute Mapping**:
-```xml
-<!-- Standard SAML attributes automatically mapped -->
-<saml:Attribute Name="email">
-  <saml:AttributeValue>user@company.com</saml:AttributeValue>
-</saml:Attribute>
-<saml:Attribute Name="firstName">
-  <saml:AttributeValue>John</saml:AttributeValue>
-</saml:Attribute>
-<saml:Attribute Name="lastName">
-  <saml:AttributeValue>Doe</saml:AttributeValue>
-</saml:Attribute>
-<saml:Attribute Name="role">
-  <saml:AttributeValue>admin</saml:AttributeValue>
-</saml:Attribute>
-```
+JIT provisioning automatically creates user accounts during first-time SSO authentication, eliminating manual account creation overhead. When users authenticate via SAML for the first time, Scorecard provisions their accounts using data from SAML assertions, assigns organization membership based on domain rules, and maps roles according to identity provider attributes. This seamless onboarding ensures new team members gain immediate access without administrative delays.
 
 ## Security Features
 
-### Enterprise Security Standards
+Scorecard implements enterprise-grade security through Clerk's proven authentication platform. The system provides comprehensive protection against CSRF and XSS attacks, secure session management with automatic rotation, and industry-standard password policies. Rate limiting prevents brute force attacks while maintaining smooth user experiences for legitimate access.
 
-<Warning>
-  Scorecard implements industry-standard security practices to protect your data and comply with enterprise security requirements.
-</Warning>
+SOC 2 Type II compliance ensures enterprise-grade data protection through regular security audits and comprehensive monitoring. All data remains encrypted in transit and at rest, with complete access logging and audit trails supporting compliance reporting requirements.
 
-Scorecard implements comprehensive security protections including CSRF (Cross-site request forgery) prevention, XSS (Cross-site scripting) mitigation, and secure session management with automatic rotation. The platform enforces industry-standard password policies and secure storage mechanisms, while rate limiting prevents brute force attacks and abuse attempts.
+## Setup Process
 
-### Compliance & Auditing
+SAML SSO setup requires coordination between your IT team and Scorecard support to ensure proper configuration and testing. The process begins by contacting support with your organization details and preferred identity provider, followed by exchanging SAML metadata and configuring service provider settings in your IdP. Scorecard's team handles the technical configuration and conducts thorough testing before activating SSO for your organization.
 
-Scorecard maintains SOC 2 Type II compliance through regular security audits and comprehensive data protection measures. All data is encrypted both in transit and at rest, with complete access logging and audit trails for compliance reporting. The platform includes robust incident response procedures and continuously monitors user activity, tracking login events, API access, project interactions, and failed authentication attempts to ensure security and compliance.
-
-## Setup Guide
-
-### Configure SAML SSO
-
-<Steps>
-  <Step title="Contact Scorecard Support">
-    Reach out to enable enterprise authentication for your organization:
-    - Email: support@scorecard.io
-    - Include: Organization name, desired SSO provider, estimated user count
-  </Step>
-  
-  <Step title="Provide SAML Metadata">
-    Share your IdP's SAML metadata with Scorecard:
-    ```xml
-    <!-- Example metadata structure -->
-    <EntityDescriptor entityID="https://your-idp.com">
-      <IDPSSODescriptor>
-        <SingleSignOnService 
-          Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-          Location="https://your-idp.com/sso" />
-        <KeyDescriptor use="signing">
-          <KeyInfo><X509Data>...</X509Data></KeyInfo>
-        </KeyDescriptor>
-      </IDPSSODescriptor>
-    </EntityDescriptor>
-    ```
-  </Step>
-  
-  <Step title="Configure Your IdP">
-    Add Scorecard as a service provider in your IdP:
-    - **Entity ID**: `https://app.scorecard.io`
-    - **ACS URL**: `https://app.scorecard.io/sso/saml/callback`
-    - **SLO URL**: `https://app.scorecard.io/sso/saml/logout`
-    - **Name ID Format**: Email address
-  </Step>
-  
-  <Step title="Test and Activate">
-    Scorecard team will configure and test the integration before activation
-  </Step>
-</Steps>
+<Note>
+  Contact support@scorecard.io to begin enterprise authentication setup for your organization.
+</Note>
 
 ### User Experience
 
-Once SAML SSO is configured, users experience a streamlined authentication process. They begin by visiting app.scorecard.io and clicking "Sign in with SSO", then enter their email domain which automatically redirects them to the appropriate identity provider. After completing authentication with your organization's IdP, their account is automatically provisioned on first login, granting immediate access to your organization's Scorecard projects.
+SAML SSO provides a seamless authentication experience where users simply visit Scorecard, enter their email domain, and get automatically redirected to their organization's identity provider. First-time users have accounts automatically provisioned upon successful authentication, granting immediate access to organizational projects without manual account creation.
 
-## Advanced Features
+## Advanced Enterprise Features
 
 ### Multi-Organization Support
+Enterprise customers can manage multiple organizations with separate SSO configurations and completely isolated data. Each organization operates independently with its own SAML settings and user management, while parent companies retain cross-organization reporting capabilities for comprehensive oversight.
 
-<Info>
-  Enterprise customers can manage multiple organizations with separate SSO configurations and isolated data.
-</Info>
+### Attribute Mapping and Session Controls
+Custom SAML attribute mapping enables advanced role-based access control by synchronizing department, team, and permission data from your identity provider. Enterprise session management provides configurable timeouts, concurrent session limits, and device-based access controls to prevent unauthorized access and account sharing.
 
-Each organization operates in complete isolation with its own SAML configuration and independent user management. Projects and data remain strictly separated between organizations, while parent companies can still access cross-organization reporting for comprehensive oversight.
+## Support and Troubleshooting
 
-### Custom Attribute Mapping
+Common SSO issues typically involve SAML metadata configuration, domain matching, or IdP attribute requirements. Most authentication problems resolve by verifying that user email domains match configured domains and ensuring required attributes are being sent by your identity provider. Session-related issues often require clearing browser cookies or checking session timeout configurations.
 
-Map additional SAML attributes to user profiles:
-
-```xml
-<!-- Custom attributes for role-based access -->
-<saml:Attribute Name="department">
-  <saml:AttributeValue>Engineering</saml:AttributeValue>
-</saml:Attribute>
-<saml:Attribute Name="team">
-  <saml:AttributeValue>ML Platform</saml:AttributeValue>
-</saml:Attribute>
-<saml:Attribute Name="accessLevel">
-  <saml:AttributeValue>admin</saml:AttributeValue>
-</saml:Attribute>
-```
-
-### Session Management
-
-Enterprise session controls provide granular security management through configurable session timeouts and forced re-authentication policies. Organizations can set concurrent session limits to prevent account sharing and implement device-based access controls for additional security layers.
-
-## API Access with SSO
-
-### API Key Management
-
-Enterprise users can manage API keys through the dashboard:
-
-<CodeGroup>
-```python Python
-import scorecard
-
-# Use organization API key for programmatic access
-client = scorecard.Client(
-    api_key="sk_live_org_abc123...",  # Organization API key
-    base_url="https://api.scorecard.io"
-)
-
-# All API calls inherit organization context
-projects = client.projects.list()
-```
-
-```javascript JavaScript
-import Scorecard from '@scorecard/client';
-
-// Initialize with organization API key
-const client = new Scorecard({
-  apiKey: 'sk_live_org_abc123...',  // Organization API key
-  baseUrl: 'https://api.scorecard.io'
-});
-
-// Organization context automatically applied
-const projects = await client.projects.list();
-```
-
-```bash cURL
-# Use organization API key in requests
-curl -X GET https://api.scorecard.io/v2/projects \
-  -H "Authorization: Bearer sk_live_org_abc123..." \
-  -H "Content-Type: application/json"
-```
-</CodeGroup>
-
-### Service Accounts
-
-Create service accounts for automated workflows:
-
-- **CI/CD Integration**: Dedicated keys for deployment pipelines
-- **Monitoring Systems**: Automated health checks and alerting
-- **Data Sync**: Integration with internal analytics platforms
-- **Audit Compliance**: Separate keys for compliance reporting
-
-## Troubleshooting
-
-### Common SSO Issues
-
-**Login Failures**:
-- Verify SAML metadata is correctly configured
-- Check that user email domain matches configured domain
-- Ensure IdP is sending required attributes
-- Validate certificate hasn't expired
-
-**Permission Errors**:
-- Confirm user is assigned to Scorecard application in IdP
-- Check organization membership in Scorecard dashboard
-- Verify role mapping from SAML attributes
-
-**Session Problems**:
-- Clear browser cookies and try again
-- Check if user has multiple active sessions
-- Verify session timeout settings
-
-### Getting Support
-
-For enterprise authentication setup and troubleshooting:
-
-- **Technical Support**: support@scorecard.io
-- **Enterprise Sales**: enterprise@scorecard.io
-- **Documentation**: [Enterprise SSO Setup Guide](#setup-guide)
-- **Status Page**: status.scorecard.io
-
-## Pricing
-
-### Enterprise Plans
-
-<Tabs>
-  <Tab title="Pro Plan">
-    **Features Included**:
-    - SAML SSO for up to 25 users
-    - Basic organization management
-    - Standard security features
-    - Email support
-    
-    **Perfect for**: Growing teams and mid-size companies
-  </Tab>
-  
-  <Tab title="Enterprise Plan">
-    **Features Included**:
-    - Unlimited SAML SSO users
-    - Advanced organization management
-    - Custom attribute mapping
-    - Priority support and CSM
-    - SLA guarantees
-    - Custom compliance features
-    
-    **Perfect for**: Large enterprises with complex requirements
-  </Tab>
-</Tabs>
-
-### Migration Support
-
-Scorecard provides white-glove migration assistance:
-
-- **Architecture Review**: Assessment of current authentication setup
-- **Migration Planning**: Step-by-step transition strategy
-- **Testing Environment**: Sandbox for validation before production
-- **Training Sessions**: Team onboarding and best practices
-- **Ongoing Support**: Dedicated customer success manager
+For enterprise authentication setup, technical troubleshooting, or advanced configuration requirements, contact support@scorecard.io with your organization details and specific requirements.
 
 ## Related Resources
 
