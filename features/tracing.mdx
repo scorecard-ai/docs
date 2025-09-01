@@ -132,6 +132,42 @@ Deep-dive in [Monitoring](/features/monitoring) or follow the [Monitoring Quicks
 
 ---
 
+## AI-Specific Error Detection
+
+Scorecard's tracing goes beyond technical failures to detect AI-specific behavioral issues that traditional monitoring misses. The system acts as an always-on watchdog, analyzing every AI interaction to catch both obvious technical errors and subtle behavioral problems that could impact user experience.
+
+### Silent Failure Detection
+
+The most dangerous errors in AI systems are "silent failures" where your AI responds but incorrectly. Scorecard automatically detects behavioral errors including off-topic responses, workflow interruptions, safety violations, hallucinations, and context loss. These silent failures often go unnoticed without specialized AI monitoring but can severely impact user trust and application effectiveness.
+
+Technical errors like rate limits, timeouts, and API failures are captured automatically through standard trace error recording. However, AI applications also face unique challenges like semantic drift, safety policy violations, factual accuracy issues, and task completion failures that require intelligent analysis beyond traditional error logging.
+
+### Custom Error Detection
+
+Create custom metrics to detect application-specific behavioral issues:
+
+```python
+# Example: Detecting off-topic responses
+safety_metric = client.metrics.create(
+    name="Off-Topic Detection",
+    description="Detect when AI goes off-topic",
+    config={
+        "type": "ai_binary",
+        "prompt": """
+        Does the assistant's response stay on-topic and address the user's question?
+        
+        User Question: {{input}}
+        Assistant Response: {{output}}
+        
+        Answer YES if response is on-topic, NO if off-topic.
+        """,
+        "scoring": {"pass_threshold": 0.8}
+    }
+)
+```
+
+---
+
 ## OpenAI Agents & custom providers
 
 Scorecard works with any provider adhering to OpenTelemetry semantics. Out-of-the-box integrations:

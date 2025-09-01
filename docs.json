@@ -137,7 +137,6 @@
               "features/systems",
               "features/endpoints",
               "features/multi-turn-simulation",
-              "features/error-tracking",
               "features/tracing",
               "features/monitoring",
               "features/enterprise-authentication",
