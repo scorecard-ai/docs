@@ -44,45 +44,16 @@ import { Accordion, AccordionGroup, Note, Warning, Info } from "@mintlify/compon
 ## Limits and Constraints
 
 <AccordionGroup>
-  <Accordion title="What are the document and text limits in Scorecard?">
-    Scorecard handles large-scale AI evaluation with the following limits:
+  <Accordion title="What are the text limits in Scorecard?">
+    Scorecard is designed to handle extensive text inputs and outputs for AI evaluation. While there are no strict character limits for individual testcase fields, practical limits depend on your evaluation models' context windows and processing capabilities.
     
-    **Input/Output Text**:
-    - **Maximum input size**: 1MB per test case input
-    - **Maximum output size**: 1MB per test case output  
-    - **Prompt length**: Up to 500KB per prompt version
-    - **Context length**: Limited by your chosen model's context window
-    
-    **Documents and Files**:
-    - **File upload**: Up to 100MB per file for testset imports
-    - **Batch processing**: Up to 10,000 test cases per evaluation run
-    - **API requests**: 50MB maximum payload size
-    
-    **Evaluation Runs**:
-    - **Concurrent runs**: 10 simultaneous runs per organization
-    - **Run duration**: 24-hour maximum execution time
-    - **Test cases per run**: Up to 50,000 test cases
-    
-    <Note>
-      For larger datasets or custom limits, contact enterprise support at enterprise@scorecard.io
-    </Note>
+    For bulk imports and large datasets, file uploads support CSV, JSON, and JSONL formats. If you encounter limitations with particularly large datasets or need custom configurations, contact support@scorecard.io for assistance.
   </Accordion>
 
   <Accordion title="Are there rate limits for API usage?">
-    Yes, Scorecard implements rate limits to ensure platform stability:
+    Scorecard implements rate limiting to ensure platform stability and fair usage across all customers. Rate limits vary by plan tier, with enterprise customers receiving custom limits based on their specific requirements.
     
-    **API Rate Limits**:
-    - **Standard Plan**: 1,000 requests per minute
-    - **Pro Plan**: 5,000 requests per minute  
-    - **Enterprise Plan**: Custom limits based on requirements
-    
-    **Evaluation Limits**:
-    - **Free Plan**: 100 evaluations per month
-    - **Standard Plan**: 1,000 evaluations per month
-    - **Pro Plan**: 10,000 evaluations per month
-    - **Enterprise Plan**: Unlimited evaluations
-    
-    Rate limit headers are included in all API responses for monitoring usage.
+    Rate limit information is included in API response headers for monitoring usage. If you need higher limits for your use case, contact support to discuss your requirements.
   </Accordion>
 
   <Accordion title="What is the playbook text limit?">
