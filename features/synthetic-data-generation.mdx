@@ -1,0 +1,56 @@
+---
+title: "Synthetic Data Generation"
+sidebarTitle: "Synthetic Data Generation"
+description: "Generate high-quality synthetic test data for comprehensive AI evaluation"
+---
+
+import { Note, Card } from "@mintlify/components";
+
+## What is Synthetic Data Generation?
+
+Scorecard's AI-powered testcase generation helps you quickly create realistic test data for your evaluations. Using advanced AI models, the system generates testcases that match your testset schema, drawing from optional examples you provide to ensure quality and consistency. This feature significantly reduces the manual effort required to build comprehensive evaluation datasets.
+
+<Note>
+  Generate testcases through Scorecard's UI, with enterprise plans supporting larger batch generation. You can also import datasets from external tools.
+</Note>
+
+## How Generation Works
+
+Scorecard uses advanced AI models to generate testcases that automatically match your testset's JSON schema. The system supports few-shot learning by using existing testcases as examples, ensuring generated data follows established patterns and maintains quality consistency. You can optionally provide keywords or descriptions to guide generation toward specific topics or scenarios.
+
+## Generating Test Data
+
+Navigate to your testset and select existing testcases to use as examples, then click **Generate** from the actions toolbar. Provide optional keywords or descriptions to guide generation, specify how many testcases to create, and review the generated results before adding them to your testset. The system automatically ensures all generated testcases match your testset's schema and field requirements.
+
+For larger-scale synthetic data generation, you can create datasets using external tools and import them via CSV, JSON, or JSONL upload through Scorecard's bulk import feature.
+
+## External Generation Tools
+
+For large-scale synthetic data generation beyond Scorecard's built-in capabilities, you can use external tools and import the results:
+
+**Popular Options**:
+- **OpenAI API**: Generate custom datasets programmatically
+- **Anthropic Claude**: Create diverse conversational test cases  
+- **Open source tools**: Use libraries like Faker or custom scripts
+- **Domain-specific generators**: Industry-specific test data tools
+
+## Best Practices
+
+Use existing testcases as examples whenever possible to guide generation quality and ensure consistency with your evaluation patterns. Start with small batches to validate output quality before generating larger sets. Provide specific keywords or descriptions to focus generation on relevant scenarios for your use case.
+
+Review generated testcases before adding them to your testset to maintain data quality and remove any irrelevant or problematic examples. For comprehensive test coverage, combine AI generation with manual testcase creation and external data imports.
+
+## Related Resources
+
+<Card title="Testsets" icon="database" href="/features/testsets">
+  Learn more about managing test data in Scorecard
+</Card>
+
+<Card title="Metrics" icon="chart-line" href="/features/best-in-class-metrics">
+  Define metrics to evaluate generated test data quality
+</Card>
+
+
+<Card title="API Reference" icon="code" href="/api-reference/overview">
+  Complete API documentation for data generation
+</Card>

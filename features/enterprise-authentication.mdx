@@ -1,0 +1,83 @@
+---
+title: "Enterprise Authentication"
+sidebarTitle: "Enterprise Auth"
+description: "Secure enterprise-grade authentication with SAML SSO and advanced security features"
+---
+
+import { Note, Card } from "@mintlify/components";
+
+## Enterprise-Grade Security
+
+Scorecard delivers enterprise authentication through Clerk's proven SAML SSO platform, supporting major identity providers and advanced security features. Organizations gain streamlined user management, automated provisioning, and comprehensive security controls that meet enterprise compliance standards.
+
+<Note>
+  Enterprise authentication is included with Scorecard's Enterprise plan.
+</Note>
+
+## SAML SSO Integration
+
+### Supported Identity Providers
+
+Scorecard integrates with major enterprise identity providers through Clerk's SAML platform. Direct integrations are available for Microsoft Azure Active Directory, Google Workspace, and Okta Workforce, while any SAML 2.0 compliant provider can be configured through custom SAML connections. This flexibility ensures compatibility with existing enterprise infrastructure regardless of your current identity management solution.
+
+### Authentication Flows
+
+Scorecard supports both service provider-initiated and identity provider-initiated SSO flows for maximum infrastructure flexibility. The recommended SP-initiated flow begins from Scorecard and provides enhanced security through controlled authentication paths. Alternatively, IdP-initiated flows allow users to start from your company portal for seamless integration with existing enterprise workflows.
+
+## Organization Management
+
+Scorecard's organization structure provides secure multi-tenant architecture where each organization operates with complete data isolation. Users are automatically assigned to organizations based on their email domain, with configurable subdomain support and strict access controls. This domain-based approach ensures only authorized personnel can access your organization's projects and evaluation data.
+
+### Just-in-Time (JIT) Provisioning
+
+JIT provisioning automatically creates user accounts during first-time SSO authentication, eliminating manual account creation overhead. When users authenticate via SAML for the first time, Scorecard provisions their accounts using data from SAML assertions, assigns organization membership based on domain rules, and maps roles according to identity provider attributes. This seamless onboarding ensures new team members gain immediate access without administrative delays.
+
+## Security Features
+
+Scorecard implements enterprise-grade security through Clerk's proven authentication platform. The system provides comprehensive protection against CSRF and XSS attacks, secure session management with automatic rotation, and industry-standard password policies. Rate limiting prevents brute force attacks while maintaining smooth user experiences for legitimate access.
+
+SOC 2 Type II compliance ensures enterprise-grade data protection through regular security audits and comprehensive monitoring. All data remains encrypted in transit and at rest, with complete access logging and audit trails supporting compliance reporting requirements.
+
+## Setup Process
+
+SAML SSO setup requires coordination between your IT team and Scorecard support to ensure proper configuration and testing. The process begins by contacting support with your organization details and preferred identity provider, followed by exchanging SAML metadata and configuring service provider settings in your IdP. Scorecard's team handles the technical configuration and conducts thorough testing before activating SSO for your organization.
+
+<Note>
+  Contact support@scorecard.io to begin enterprise authentication setup for your organization.
+</Note>
+
+### User Experience
+
+SAML SSO provides a seamless authentication experience where users simply visit Scorecard, enter their email domain, and get automatically redirected to their organization's identity provider. First-time users have accounts automatically provisioned upon successful authentication, granting immediate access to organizational projects without manual account creation.
+
+## Advanced Enterprise Features
+
+### Multi-Organization Support
+Enterprise customers can manage multiple organizations with separate SSO configurations and completely isolated data. Each organization operates independently with its own SAML settings and user management, while parent companies retain cross-organization reporting capabilities for comprehensive oversight.
+
+### Attribute Mapping and Session Controls
+Custom SAML attribute mapping enables advanced role-based access control by synchronizing department, team, and permission data from your identity provider. Enterprise session management provides configurable timeouts, concurrent session limits, and device-based access controls to prevent unauthorized access and account sharing.
+
+## Support and Troubleshooting
+
+Common SSO issues typically involve SAML metadata configuration, domain matching, or IdP attribute requirements. Most authentication problems resolve by verifying that user email domains match configured domains and ensuring required attributes are being sent by your identity provider. Session-related issues often require clearing browser cookies or checking session timeout configurations.
+
+For enterprise authentication setup, technical troubleshooting, or advanced configuration requirements, contact support@scorecard.io with your organization details and specific requirements.
+
+## Related Resources
+
+<Card title="Projects" href="/features/projects">
+  Learn about project structure and permissions
+</Card>
+
+<Card title="Custom Provider" href="/features/custom-provider">
+  Configure custom model providers and integrations
+</Card>
+
+<Card title="Security" href="/features/privacy-by-design">
+  Understand Scorecard's security and privacy practices
+</Card>
+
+<Card title="Contact Sales" href="https://www.scorecard.io/book-a-demo">
+  Get started with enterprise authentication
+</Card>
