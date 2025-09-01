@@ -45,7 +45,7 @@ import { Accordion, AccordionGroup, Note, Warning, Info } from "@mintlify/compon
 
 <AccordionGroup>
   <Accordion title="What are the text limits in Scorecard?">
-    Scorecard is designed to handle extensive text inputs and outputs for AI evaluation. While there are no strict character limits for individual testcase fields, practical limits depend on your evaluation models' context windows and processing capabilities.
+    Scorecard uses PostgreSQL which supports up to 1GB per text field - essentially unlimited for evaluation use cases. Practical limits are more likely to come from your AI model's context window than database constraints.
     
     For bulk imports and large datasets, file uploads support CSV, JSON, and JSONL formats. If you encounter limitations with particularly large datasets or need custom configurations, contact support@scorecard.io for assistance.
   </Accordion>
