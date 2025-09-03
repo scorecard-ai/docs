@@ -85,6 +85,148 @@ You can mark any version as production by clicking the **"Publish"** button, but
 
 Before publishing to production, test a new version in the playground to be confident that it behaves as expected and won't regress on any testcases.
 
+## SDK Integration
+
+You can programmatically manage prompts and their versions using the Scorecard SDK. Since prompts are implemented as systems in Scorecard, you'll use the systems API methods.
+
+### Creating or Updating Prompts
+
+Use the `systems.upsert()` method to create a new prompt or update an existing one. For complete API details, see the [Create (upsert) system API reference](/api-reference/create-upsert-system).
+
+<CodeGroup>
+
+```javascript JavaScript
+import Scorecard from 'scorecard-ai';
+
+const client = new Scorecard({
+  apiKey: process.env['SCORECARD_API_KEY'],
+});
+
+// Create or update a prompt (system)
+const prompt = await client.systems.upsert('your-project-id', {
+  name: 'Customer Service Assistant',
+  description: 'AI assistant for handling customer inquiries',
+  config: {
+    modelName: 'gpt-4-turbo',
+    temperature: 0.7,
+    maxTokens: 1024,
+    topP: 0.9,
+    promptTemplate: [
+      {
+        role: 'user',
+        content: `You are a helpful assistant.
+
+{{allInputs}}`
+      }
+    ]
+  }
+});
+
+console.log('Prompt created with ID:', prompt.id);
+```
+
+```python Python
+from scorecard import Scorecard
+import os
+
+client = Scorecard(
+    api_key=os.environ.get("SCORECARD_API_KEY")
+)
+
+# Create or update a prompt (system)
+prompt = client.systems.upsert(
+    project_id="your-project-id",
+    name="Customer Service Assistant",
+    description="AI assistant for handling customer inquiries",
+    config={
+        "modelName": "gpt-4-turbo",
+        "temperature": 0.7,
+        "maxTokens": 1024,
+        "topP": 0.9,
+        "promptTemplate": [
+            {
+                "role": "user",
+                "content": """You are a helpful assistant.
+
+{{allInputs}}"""
+            }
+        ]
+    }
+)
+
+print(f"Prompt created with ID: {prompt.id}")
+```
+
+</CodeGroup>
+
+The `config` object contains your prompt's model parameters and template:
+- **modelName**: The LLM model to use (e.g., `gpt-4-turbo`, `claude-3-opus`)
+- **temperature**: Controls randomness (0.0-1.0)
+- **maxTokens**: Maximum response length
+- **topP**: Token selection probability
+- **promptTemplate**: Array of message objects defining the conversation structure. Each message has a `role` (`system`, `user`, or `assistant`) and `content` with your prompt text and Jinja variables.
+
+<Info>
+For a system to be flagged as a prompt in Scorecard, it must include the `promptTemplate` configuration in its config object. Without this field, the system will not be recognized as a prompt.
+</Info>
+
+### Creating Prompt Versions
+
+Use the `systems.versions.upsert()` method to create new versions of your prompt. For complete API details, see the [Upsert system version API reference](/api-reference/upsert-system-version).
+
+<CodeGroup>
+
+```javascript JavaScript
+// Create a new version of the prompt
+const promptVersion = await client.systems.versions.upsert('your-system-id', {
+  name: 'v2.0 - Improved tone',
+  config: {
+    modelName: 'gpt-4-turbo',
+    temperature: 0.5,
+    maxTokens: 1024,
+    topP: 0.8,
+    promptTemplate: [
+      {
+        role: 'user',
+        content: `You are a helpful assistant.
+
+{# You can replace this with the specific inputs from your testcase #}
+{{allInputs}}`
+      }
+    ]
+  }
+});
+
+console.log('New prompt version created:', promptVersion.id);
+```
+
+```python Python
+# Create a new version of the prompt
+prompt_version = client.systems.versions.upsert(
+    system_id="your-system-id",
+    name="v2.0 - Improved tone",
+    config={
+        "modelName": "gpt-4-turbo",
+        "temperature": 0.5,
+        "maxTokens": 1024,
+        "topP": 0.8,
+        "promptTemplate": [
+            {
+                "role": "user",
+                "content": """You are a helpful assistant.
+
+{# You can replace this with the specific inputs from your testcase #}
+{{allInputs}}"""
+            }
+        ]
+    }
+)
+
+print(f"New prompt version created: {prompt_version.id}")
+```
+
+</CodeGroup>
+
 <Info>
 Ready to evaluate your prompts? Follow the [Playground guide](/features/playground) to test your prompts on Testsets.
 </Info>
