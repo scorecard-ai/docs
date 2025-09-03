@@ -128,7 +128,23 @@ Tracing is the foundation for production quality tracking. **Monitors** periodic
 - Scores appear inline on the Traces page and aggregate in the **Runs** section.
 - Detect drift and regressions without extra instrumentation.
 
-Deep-dive in [Monitoring](/features/monitoring) or follow the [Production Monitoring Quickstart](/intro/production-monitoring-quickstart).
+Deep-dive in [Monitoring](/features/monitoring) or follow the [Monitoring Quickstart](/intro/monitoring-quickstart).
+
+---
+
+## AI-Specific Error Detection
+
+Scorecard's tracing goes beyond technical failures to detect AI-specific behavioral issues that traditional monitoring misses. The system acts as an always-on watchdog, analyzing every AI interaction to catch both obvious technical errors and subtle behavioral problems that could impact user experience.
+
+### Silent Failure Detection
+
+The most dangerous errors in AI systems are "silent failures" where your AI responds but incorrectly. Scorecard automatically detects behavioral errors including off-topic responses, workflow interruptions, safety violations, hallucinations, and context loss. These silent failures often go unnoticed without specialized AI monitoring but can severely impact user trust and application effectiveness.
+
+Technical errors like rate limits, timeouts, and API failures are captured automatically through standard trace error recording. However, AI applications also face unique challenges like semantic drift, safety policy violations, factual accuracy issues, and task completion failures that require intelligent analysis beyond traditional error logging.
+
+### Custom Error Detection
+
+Create custom metrics through Scorecard's UI to detect application-specific behavioral issues. Design AI-powered metrics that analyze trace data for off-topic responses, safety violations, or task completion failures. These custom metrics automatically evaluate your traces and surface problematic interactions that would otherwise go unnoticed in production.
 
 ---
 

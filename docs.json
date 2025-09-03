@@ -120,7 +120,8 @@
               "intro/sdk-quickstart",
               "intro/tracing-quickstart",
               "intro/monitoring-quickstart",
-              "intro/rag-quickstart"
+              "intro/rag-quickstart",
+              "intro/faq"
             ]
           },
           {
@@ -129,13 +130,16 @@
               "features/projects",
               "features/playground",
               "features/testsets",
+              "features/synthetic-data-generation",
               "features/best-in-class-metrics",
               "features/runs",
               "features/prompts",
               "features/systems",
+              "features/endpoints",
               "features/multi-turn-simulation",
               "features/tracing",
               "features/monitoring",
+              "features/enterprise-authentication",
               "features/trace-to-testcase",
               "features/a-b-comparison",
               "features/ai-guardrails",

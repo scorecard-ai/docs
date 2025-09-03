@@ -1,0 +1,275 @@
+---
+title: "Frequently Asked Questions"
+sidebarTitle: "FAQ"
+description: "Common questions about Scorecard's AI evaluation platform"
+---
+
+import { Accordion, AccordionGroup, Card } from "@mintlify/components";
+
+## Getting Started
+
+<AccordionGroup>
+  <Accordion title="What is an eval/evaluation?">
+    An **evaluation** (or "eval") is the process of systematically testing and measuring your AI system's performance against a set of test cases. In Scorecard, an evaluation involves:
+    
+    - **Testset**: A collection of input/output pairs to test against
+    - **System**: The AI model, prompt, or API endpoint being evaluated  
+    - **Metrics**: Criteria used to score performance (accuracy, tone, safety, etc.)
+    - **Run**: The execution of the evaluation across all test cases
+    
+    Think of it like unit testing for AI - you define what good looks like, run your system against test cases, and get quantitative scores to measure performance.
+  </Accordion>
+
+  <Accordion title="How does Scorecard differ from other AI evaluation tools?">
+    Scorecard is designed to be **human-centric and cross-functional**, bringing together subject matter experts, product managers, and developers to collaboratively define and evaluate AI quality.
+    
+    Unlike developer-only tools, Scorecard enables non-technical stakeholders to contribute their domain expertise through intuitive interfaces for creating test cases and reviewing results. This collaborative approach ensures AI systems meet both technical requirements and real-world business needs, making it the evaluation platform for teams that want diverse perspectives in their AI quality process.
+  </Accordion>
+
+  <Accordion title="What programming languages does Scorecard support?">
+    Scorecard provides SDKs for:
+    - **Python**: Full-featured SDK with all capabilities
+    - **JavaScript/TypeScript**: Complete Node.js and browser support
+    - **REST API**: Universal HTTP access for any language
+    - **Framework integrations**: LangChain, LlamaIndex, OpenAI, and more
+  </Accordion>
+
+  <Accordion title="Can Scorecard be used for RLHF and agent training?">
+    Yes, Scorecard evaluation data serves as high-quality feedback for reinforcement learning and agent improvement. By systematically evaluating agent outputs and capturing human preferences through custom metrics, teams can generate training datasets for RLHF workflows.
+    
+    The platform's testsets and evaluation results provide structured feedback loops that help identify agent weaknesses, create preference pairs for fine-tuning, and validate improvements through regression testing. This makes Scorecard valuable not just for evaluation, but as part of the continuous improvement cycle for AI agents.
+  </Accordion>
+</AccordionGroup>
+
+## Limits and Constraints
+
+<AccordionGroup>
+  <Accordion title="What are the text limits in Scorecard?">
+    Scorecard uses PostgreSQL which supports up to 1GB per text field - essentially unlimited for evaluation use cases. Practical limits are more likely to come from your AI model's context window than database constraints.
+    
+    For bulk imports and large datasets, file uploads support CSV, JSON, and JSONL formats. If you encounter limitations with particularly large datasets or need custom configurations, contact support@scorecard.io for assistance.
+  </Accordion>
+
+  <Accordion title="Are there rate limits for API usage?">
+    Scorecard implements rate limiting to ensure platform stability and fair usage across all customers. Rate limits vary by plan tier, with enterprise customers receiving custom limits based on their specific requirements.
+    
+    Rate limit information is included in API response headers for monitoring usage. If you need higher limits for your use case, contact support to discuss your requirements.
+  </Accordion>
+
+  <Accordion title="What is the playbook text limit?">
+    **Sim Agent Playbooks** (persona instructions for multi-turn simulation) have the following limits:
+    
+    - **Maximum playbook length**: 50KB of text
+    - **Template variables**: Up to 100 variables per playbook
+    - **Conversation turns**: Maximum 50 turns per simulation (safety limit)
+    - **Stop conditions**: Up to 10 custom stop conditions per simulation
+    
+    Playbooks support Jinja2 templating for dynamic content and can reference any field from your test cases.
+  </Accordion>
+</AccordionGroup>
+
+## Features and Capabilities
+
+<AccordionGroup>
+  <Accordion title="How does metadata work in Scorecard?">
+    **Metadata** in Scorecard allows you to store additional context without affecting evaluations:
+    
+    **Testcase Metadata**:
+    - Mark fields as "metadata" in testset schemas
+    - Stored with test cases but excluded from evaluation logic
+    - Useful for tracking source, difficulty, categories, etc.
+    
+    **Trace Metadata**:
+    - Custom attributes on spans (user_id, session_id, etc.)
+    - Model parameters and configuration data
+    - Performance metrics and timing information
+    
+    **Run Metadata**:
+    - Git commit SHA, branch information
+    - Environment details (staging, production)
+    - Custom tags and labels for organization
+    
+    Example usage:
+    ```json
+    {
+      "input": "What's the weather?",
+      "expected_output": "I'll help you check the weather",
+      "source": "customer_support_logs",  // metadata
+      "difficulty": "easy",              // metadata
+      "created_by": "data_team"          // metadata
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="How is latency measured and reported?">
+    Scorecard automatically captures **latency metrics** across your AI pipeline:
+    
+    **Measurement Points**:
+    - **End-to-end latency**: Total request time from input to output
+    - **Model inference time**: Time spent in model API calls
+    - **Processing time**: Custom logic execution time
+    - **Network latency**: Time spent in HTTP requests
+    
+    **Reporting**:
+    - **Real-time dashboards**: Live latency monitoring
+    - **Percentile analysis**: P50, P90, P95, P99 latency breakdown
+    - **Trend analysis**: Latency over time with alerting
+    - **Trace-level detail**: Individual request timing breakdowns
+    
+    **Alerting**:
+    ```python
+    # Set up latency alerts
+    alert = client.alerts.create(
+        name="High Latency Alert",
+        metric="p95_latency",
+        threshold=5000,  # 5 seconds
+        window="10m"
+    )
+    ```
+  </Accordion>
+
+  <Accordion title="What types of AI systems can Scorecard evaluate?">
+    Scorecard supports evaluation of any AI system accessible via API:
+    
+    **Model Types**:
+    - **Large Language Models**: GPT, Claude, Llama, Gemini, etc.
+    - **Embedding Models**: OpenAI, Cohere, custom embeddings
+    - **Multimodal Models**: Vision, audio, and text processing
+    - **Fine-tuned Models**: Custom models hosted anywhere
+    
+    **System Types**:
+    - **RAG Systems**: Retrieval-augmented generation pipelines
+    - **Chatbots**: Customer service, virtual assistants
+    - **Tool-calling Agents**: Function calling and API integrations
+    - **Custom APIs**: Any HTTP endpoint returning AI-generated content
+    
+    **Deployment Options**:
+    - **Cloud APIs**: OpenAI, Anthropic, Google, AWS Bedrock
+    - **Self-hosted**: Models running on your infrastructure  
+    - **Hybrid**: Combination of cloud and on-premise systems
+  </Accordion>
+</AccordionGroup>
+
+## Technical Details
+
+<AccordionGroup>
+  <Accordion title="How does Scorecard handle sensitive data and privacy?">
+    Scorecard is built with **privacy by design** principles:
+    
+    **Data Security**:
+    - **Encryption**: All data encrypted in transit (TLS 1.3) and at rest (AES-256)
+    - **Access Controls**: Role-based permissions and organization isolation
+    - **Audit Logging**: Complete audit trail of all data access
+    - **Compliance**: SOC 2 Type II, GDPR, and enterprise compliance
+    
+    **Privacy Controls**:
+    - **Data Redaction**: Automatic PII detection and masking
+    - **Data Retention**: Configurable retention policies
+    - **Right to Delete**: Complete data deletion capabilities
+    - **Data Residency**: Control where your data is stored
+    
+    See our [Privacy by Design](/features/privacy-by-design) documentation for complete details.
+  </Accordion>
+
+  <Accordion title="Can I run Scorecard evaluations offline or on-premise?">
+    Scorecard offers flexible deployment options:
+    
+    **Cloud Service** (Recommended):
+    - Fully managed service at app.scorecard.io
+    - Automatic updates and maintenance
+    - Global CDN and high availability
+    
+    **Enterprise On-Premise**:
+    - Self-hosted deployment in your infrastructure
+    - Complete data sovereignty and control
+    - Custom integrations with internal systems
+    - Available for Enterprise customers
+    
+    **Hybrid Approach**:
+    - Evaluation logic runs on-premise
+    - Results optionally synced to cloud dashboard
+    - Best of both worlds for security-sensitive organizations
+    
+    Contact enterprise@scorecard.io for on-premise deployment options.
+  </Accordion>
+
+  <Accordion title="How do I migrate from other evaluation tools?">
+    Scorecard provides migration support for common evaluation platforms:
+    
+    **Data Migration**:
+    - Import existing test datasets (CSV, JSON, JSONL)
+    - Convert evaluation metrics to Scorecard format
+    - Migrate historical evaluation results
+    
+    **Common Migrations**:
+    - **From custom scripts**: Convert to Scorecard SDK calls
+    - **From academic benchmarks**: Import MMLU, HellaSwag, etc.
+    - **From other platforms**: Bulk export/import workflows
+    
+    **Migration Assistance**:
+    - Free migration consultation for Enterprise customers
+    - Custom scripts for complex data transformations
+    - Parallel running during transition period
+    
+    Contact our support team at support@scorecard.io for personalized migration assistance.
+  </Accordion>
+</AccordionGroup>
+
+## Billing and Plans
+
+<AccordionGroup>
+  <Accordion title="How does Scorecard pricing work?">
+    Scorecard offers flexible pricing based on usage:
+    
+    **Starter** (Free):
+    - Unlimited users
+    - 100,000 scores per month
+    - Essential evaluation features for early-stage AI projects
+    
+    **Growth** ($299/month):
+    - Unlimited users
+    - Includes 1M scores per month, then $1 per 5K additional
+    - Test set management
+    - Prompt playground access
+    - Priority support
+    
+    **Enterprise** (Custom pricing):
+    - Custom solutions for large-scale AI deployments
+    - SAML SSO and enterprise authentication
+    - Dedicated support and customer success
+    - Custom compliance and security features
+    
+    Visit scorecard.io/pricing for the most current pricing information.
+  </Accordion>
+
+  <Accordion title="What counts as a score?">
+    A **score** is counted each time Scorecard evaluates a single test case with a metric:
+    
+    **Examples**:
+    - 1 test case × 1 metric = 1 score
+    - 1 test case × 3 metrics = 3 scores  
+    - 100 test cases × 2 metrics = 200 scores
+    
+    **Not Counted**:
+    - Viewing existing results
+    - Creating/editing test cases
+    - Monitoring and tracing (separate feature)
+    - API calls for data retrieval
+    
+    **Bulk Discounts**: Enterprise customers get volume discounts for large-scale evaluations.
+  </Accordion>
+</AccordionGroup>
+
+## Related Resources
+
+<Card title="Getting Started" href="/intro/sdk-quickstart">
+  Quick start guide for new users
+</Card>
+
+<Card title="Contact Support" href="https://www.scorecard.io/book-a-demo">
+  Get help with setup and migration
+</Card>
+
+<Card title="Status Page" href="https://status.scorecard.io">
+  Real-time platform status and uptime
+</Card>
