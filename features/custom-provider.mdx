@@ -15,24 +15,46 @@ Configure your provider API keys in [organization settings](https://app.scorecar
 
 Choose from our comprehensive selection of AI providers, each offering unique strengths and model capabilities:
 
+<style>
+{`
+.provider-card .card-icon {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  width: 32px !important;
+  height: 32px !important;
+}
+.provider-card .card-icon img {
+  object-fit: contain !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.dark .provider-card[data-provider="openai"] .card-icon img,
+.dark .provider-card[data-provider="anthropic"] .card-icon img,
+.dark .provider-card[data-provider="groq"] .card-icon img {
+  filter: brightness(0) invert(1) !important;
+}
+`}
+</style>
+
 <CardGroup cols={2}>
-  <Card title="OpenAI" href="https://openai.com" icon="/images/providers/openai.png">
+  <Card className="provider-card" data-provider="openai" title="OpenAI" href="https://openai.com" icon="/images/providers/openai.png">
     Access GPT-4, GPT-4 Turbo, GPT-3.5, and other OpenAI language models for various use cases.
   </Card>
   
-  <Card title="Anthropic" href="https://www.anthropic.com" icon="/images/providers/anthropic.png">
+  <Card className="provider-card" data-provider="anthropic" title="Anthropic" href="https://www.anthropic.com" icon="/images/providers/anthropic.png">
     Integrate Claude 3 (Opus, Sonnet, Haiku) for advanced reasoning, analysis, and creative tasks.
   </Card>
   
-  <Card title="Google" href="https://ai.google.dev" icon="/images/providers/google.png">
+  <Card className="provider-card" data-provider="google" title="Google" href="https://ai.google.dev" icon="/images/providers/google.png">
     Utilize Gemini Pro, Gemini Ultra, and other Google AI services for multimodal capabilities.
   </Card>
   
-  <Card title="Groq" href="https://groq.com" icon="/images/providers/groq.png">
+  <Card className="provider-card" data-provider="groq" title="Groq" href="https://groq.com" icon="/images/providers/groq.png">
     Ultra-high-speed inference for supported models with exceptional performance and low latency.
   </Card>
   
-  <Card title="AWS Bedrock" href="https://aws.amazon.com/bedrock/" icon="/images/providers/aws.png">
+  <Card className="provider-card" data-provider="aws" title="AWS Bedrock" href="https://aws.amazon.com/bedrock/" icon="/images/providers/aws.png">
     Access Amazon's managed AI services with enterprise-grade security and compliance.
   </Card>
 </CardGroup>
