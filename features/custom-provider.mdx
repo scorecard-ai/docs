@@ -17,21 +17,34 @@ Choose from our comprehensive selection of AI providers, each offering unique st
 
 <style>
 {`
-.provider-card .card-icon {
+.provider-card [data-component-part="card-icon"] {
   background: transparent !important;
+  background-color: transparent !important;
   border-radius: 0 !important;
   padding: 0 !important;
   width: 32px !important;
   height: 32px !important;
 }
-.provider-card .card-icon img {
+.dark .provider-card [data-component-part="card-icon"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  --tw-bg-opacity: 0 !important;
+}
+.provider-card [data-component-part="card-icon"] img {
   object-fit: contain !important;
   width: 100% !important;
   height: 100% !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
-.dark .provider-card[data-provider="openai"] .card-icon img,
-.dark .provider-card[data-provider="anthropic"] .card-icon img,
-.dark .provider-card[data-provider="groq"] .card-icon img {
+.dark .provider-card [data-component-part="card-icon"] img {
+  background: transparent !important;
+  background-color: transparent !important;
+  --tw-bg-opacity: 0 !important;
+}
+.dark .provider-card[data-provider="openai"] [data-component-part="card-icon"] img,
+.dark .provider-card[data-provider="anthropic"] [data-component-part="card-icon"] img,
+.dark .provider-card[data-provider="groq"] [data-component-part="card-icon"] img {
   filter: brightness(0) invert(1) !important;
 }
 `}
