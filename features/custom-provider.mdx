@@ -18,53 +18,22 @@ Configure your provider API keys in [organization settings](https://app.scorecar
 Choose from our comprehensive selection of AI providers, each offering unique strengths and model capabilities:
 
 <CardGroup cols={2}>
-  <Card title="OpenAI" icon="openai">
-    <div className="flex items-center mb-2">
-      <img className="block dark:hidden w-6 h-6 mr-2" src="/images/providers/openai.png" alt="OpenAI logo" />
-      <img className="hidden dark:block w-6 h-6 mr-2" src="/images/providers/openai.png" alt="OpenAI logo" style={{filter: 'invert(1)'}} />
-      <a href="https://openai.com" target="_blank" className="font-semibold hover:underline">GPT Models</a>
-    </div>
+  <Card title="OpenAI - GPT Models" href="https://openai.com" icon="/images/providers/openai.png">
     Access GPT-4, GPT-4 Turbo, GPT-3.5, and other OpenAI language models for various use cases.
   </Card>
   
-  <Card title="Anthropic" icon="anthropic">
-    <div className="flex items-center mb-2">
-      <img className="block dark:hidden w-6 h-6 mr-2" src="/images/providers/anthropic.png" alt="Anthropic logo" />
-      <img className="hidden dark:block w-6 h-6 mr-2" src="/images/providers/anthropic.png" alt="Anthropic logo" style={{filter: 'invert(1)'}} />
-      <a href="https://www.anthropic.com" target="_blank" className="font-semibold hover:underline">Claude Models</a>
-    </div>
+  <Card title="Anthropic - Claude Models" href="https://www.anthropic.com" icon="/images/providers/anthropic.png">
     Integrate Claude 3 (Opus, Sonnet, Haiku) for advanced reasoning, analysis, and creative tasks.
   </Card>
   
-  <Card title="Google" icon="google">
-    <div className="flex items-center mb-2">
-      <img className="block dark:hidden w-6 h-6 mr-2" src="/images/providers/google.png" alt="Google logo" />
-      <img className="hidden dark:block w-6 h-6 mr-2" src="/images/providers/google.png" alt="Google logo" />
-      <a href="https://ai.google.dev" target="_blank" className="font-semibold hover:underline">Gemini Models</a>
-    </div>
+  <Card title="Google - Gemini Models" href="https://ai.google.dev" icon="/images/providers/google.png">
     Utilize Gemini Pro, Gemini Ultra, and other Google AI services for multimodal capabilities.
   </Card>
   
-  <Card title="AWS Bedrock" icon="aws">
-    <div className="flex items-center mb-2">
-      <img className="block dark:hidden w-6 h-6 mr-2" src="/images/providers/aws.png" alt="AWS logo" />
-      <img className="hidden dark:block w-6 h-6 mr-2" src="/images/providers/aws.png" alt="AWS logo" />
-      <a href="https://aws.amazon.com/bedrock/" target="_blank" className="font-semibold hover:underline">Managed AI Services</a>
-    </div>
+  <Card title="AWS Bedrock - Managed AI Services" href="https://aws.amazon.com/bedrock/" icon="/images/providers/aws.png">
     Access Amazon's managed AI services with enterprise-grade security and compliance.
   </Card>
 </CardGroup>
-
-### High-Performance Inference
-
-<Card title="Groq" icon="groq">
-  <div className="flex items-center mb-2">
-    <img className="block dark:hidden w-6 h-6 mr-2" src="/images/providers/groq.png" alt="Groq logo" />
-    <img className="hidden dark:block w-6 h-6 mr-2" src="/images/providers/groq.png" alt="Groq logo" style={{filter: 'invert(1)'}} />
-    <a href="https://groq.com" target="_blank" className="font-semibold hover:underline">Lightning-Fast Inference</a>
-  </div>
-  Ultra-high-speed inference for supported models with exceptional performance and low latency.
-</Card>
 
 ## Extended Model Access
 
@@ -80,6 +49,7 @@ Through our integrated providers, you gain access to an even broader ecosystem o
           <img className="w-5 h-5 mr-2" src="/images/providers/mistral.png" alt="Mistral logo" />
           <a href="https://mistral.ai" target="_blank" className="font-medium hover:underline">Mistral AI</a>
         </div>
+        <p className="text-sm mt-1">Efficient multilingual models</p>
       </Card>
       
       <Card>
@@ -87,6 +57,7 @@ Through our integrated providers, you gain access to an even broader ecosystem o
           <img className="w-5 h-5 mr-2" src="/images/providers/meta.png" alt="Meta logo" />
           <a href="https://ai.meta.com" target="_blank" className="font-medium hover:underline">Meta</a>
         </div>
+        <p className="text-sm mt-1">Open-source language models</p>
       </Card>
       
       <Card>
@@ -94,6 +65,7 @@ Through our integrated providers, you gain access to an even broader ecosystem o
           <img className="w-5 h-5 mr-2" src="/images/providers/cohere.jpeg" alt="Cohere logo" />
           <a href="https://cohere.com" target="_blank" className="font-medium hover:underline">Cohere</a>
         </div>
+        <p className="text-sm mt-1">Text generation and embeddings</p>
       </Card>
     </CardGroup>
   </Tab>
@@ -108,7 +80,7 @@ Through our integrated providers, you gain access to an even broader ecosystem o
           <img className="hidden dark:block w-5 h-5 mr-2" src="/images/providers/anthropic.png" alt="Anthropic logo" style={{filter: 'invert(1)'}} />
           <a href="https://www.anthropic.com" target="_blank" className="font-medium hover:underline">Anthropic</a>
         </div>
-        <p className="text-sm text-gray-600 mt-1">Advanced reasoning and analysis models</p>
+        <p className="text-sm mt-1">Advanced reasoning and analysis models</p>
       </Card>
       
       <Card>
@@ -116,7 +88,7 @@ Through our integrated providers, you gain access to an even broader ecosystem o
           <img className="w-5 h-5 mr-2" src="/images/providers/cohere.jpeg" alt="Cohere logo" />
           <a href="https://cohere.com" target="_blank" className="font-medium hover:underline">Cohere</a>
         </div>
-        <p className="text-sm text-gray-600 mt-1">Text generation and embeddings</p>
+        <p className="text-sm mt-1">Text generation and embeddings</p>
       </Card>
       
       <Card>
@@ -124,7 +96,7 @@ Through our integrated providers, you gain access to an even broader ecosystem o
           <img className="w-5 h-5 mr-2" src="/images/providers/meta.png" alt="Meta logo" />
           <a href="https://ai.meta.com" target="_blank" className="font-medium hover:underline">Meta</a>
         </div>
-        <p className="text-sm text-gray-600 mt-1">Open-source language models</p>
+        <p className="text-sm mt-1">Open-source language models</p>
       </Card>
       
       <Card>
@@ -132,7 +104,7 @@ Through our integrated providers, you gain access to an even broader ecosystem o
           <img className="w-5 h-5 mr-2" src="/images/providers/mistral.png" alt="Mistral logo" />
           <a href="https://mistral.ai" target="_blank" className="font-medium hover:underline">Mistral AI</a>
         </div>
-        <p className="text-sm text-gray-600 mt-1">Efficient multilingual models</p>
+        <p className="text-sm mt-1">Efficient multilingual models</p>
       </Card>
     </CardGroup>
   </Tab>
@@ -141,19 +113,19 @@ Through our integrated providers, you gain access to an even broader ecosystem o
 ## Key Benefits
 
 <AccordionGroup>
-  <Accordion title="Easy Provider Management" icon="gear">
+  <Accordion title="Easy Provider Management">
     Configure multiple AI providers from a single interface using standardized API key management. No need to handle different authentication methods or API formats.
   </Accordion>
   
-  <Accordion title="Seamless Model Switching" icon="arrows-rotate">
+  <Accordion title="Seamless Model Switching">
     Switch between different AI models and providers without changing your implementation. Test and compare models effortlessly to find the best fit for your use case.
   </Accordion>
   
-  <Accordion title="Unified Integration" icon="link">
+  <Accordion title="Unified Integration">
     Use consistent API calls regardless of the underlying AI provider through our proxy layer. Your code remains clean and provider-agnostic.
   </Accordion>
   
-  <Accordion title="Cost Optimization" icon="dollar-sign">
+  <Accordion title="Cost Optimization">
     Compare costs across providers and models to optimize your AI spend. Easily switch to more cost-effective options as they become available.
   </Accordion>
 </AccordionGroup>
