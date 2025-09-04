@@ -15,42 +15,8 @@ Configure your provider API keys in [organization settings](https://app.scorecar
 
 Choose from our comprehensive selection of AI providers, each offering unique strengths and model capabilities:
 
-<style>
-{`
-.provider-cards [data-component-part="card-icon"] {
-  background: transparent !important;
-  background-color: transparent !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-  width: 32px !important;
-  height: 32px !important;
-}
-.dark .provider-cards [data-component-part="card-icon"] {
-  background: transparent !important;
-  background-color: transparent !important;
-  --tw-bg-opacity: 0 !important;
-}
-.provider-cards [data-component-part="card-icon"] img {
-  object-fit: contain !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: transparent !important;
-  background-color: transparent !important;
-}
-.dark .provider-cards [data-component-part="card-icon"] img {
-  background: transparent !important;
-  background-color: transparent !important;
-  --tw-bg-opacity: 0 !important;
-}
-.dark .provider-cards [data-component-part="card-icon"] img[src*="openai"],
-.dark .provider-cards [data-component-part="card-icon"] img[src*="anthropic"],
-.dark .provider-cards [data-component-part="card-icon"] img[src*="groq"] {
-  filter: brightness(0) invert(1) !important;
-}
-`}
-</style>
 
-<div className="provider-cards">
+<div className="provider-cards [&_[data-component-part='card-icon']]:!bg-transparent [&_[data-component-part='card-icon']]:!w-8 [&_[data-component-part='card-icon']]:!h-8 [&_[data-component-part='card-icon']]:!p-0 [&_[data-component-part='card-icon']]:!rounded-none [&_img]:!object-contain [&_img]:!bg-transparent dark:[&_img]:!bg-transparent dark:[&_[data-component-part='card-icon']]:!bg-transparent">
   <CardGroup cols={2}>
     <Card title="OpenAI" href="https://openai.com" icon="/images/providers/openai.png">
       Access GPT-4, GPT-4 Turbo, GPT-3.5, and other OpenAI language models for various use cases.
