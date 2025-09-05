@@ -16,29 +16,55 @@ Configure your provider API keys in [organization settings](https://app.scorecar
 Choose from our comprehensive selection of AI providers, each offering unique strengths and model capabilities:
 
 
-<div className="provider-cards [&_[data-component-part='card-icon']]:!bg-transparent [&_[data-component-part='card-icon']]:!w-8 [&_[data-component-part='card-icon']]:!h-8 [&_[data-component-part='card-icon']]:!p-0 [&_[data-component-part='card-icon']]:!rounded-none [&_img]:!object-contain [&_img]:!bg-transparent dark:[&_img]:!bg-transparent dark:[&_[data-component-part='card-icon']]:!bg-transparent">
-  <CardGroup cols={2}>
-    <Card title="OpenAI" href="https://openai.com" icon="/images/providers/openai.png">
-      Access GPT-4, GPT-4 Turbo, GPT-3.5, and other OpenAI language models for various use cases.
-    </Card>
-    
-    <Card title="Anthropic" href="https://www.anthropic.com" icon="/images/providers/anthropic.png">
-      Integrate Claude 3 (Opus, Sonnet, Haiku) for advanced reasoning, analysis, and creative tasks.
-    </Card>
-    
-    <Card title="Google" href="https://ai.google.dev" icon="/images/providers/google.png">
-      Utilize Gemini Pro, Gemini Ultra, and other Google AI services for multimodal capabilities.
-    </Card>
-    
-    <Card title="Groq" href="https://groq.com" icon="/images/providers/groq.png">
-      Ultra-high-speed inference for supported models with exceptional performance and low latency.
-    </Card>
-    
-    <Card title="AWS Bedrock" href="https://aws.amazon.com/bedrock/" icon="/images/providers/aws.png">
-      Access Amazon's managed AI services with enterprise-grade security and compliance.
-    </Card>
-  </CardGroup>
-</div>
+<CardGroup cols={2}>
+  <Card title="OpenAI" href="https://openai.com">
+    <div className="flex flex-col items-center -mt-4">
+      <div className="mb-4">
+        <img className="hidden dark:block w-8 h-8 object-contain" src="/images/providers/openai.png" alt="OpenAI logo" style={{filter: 'brightness(0) invert(1)'}} />
+        <img className="block dark:hidden w-8 h-8 object-contain" src="/images/providers/openai.png" alt="OpenAI logo" />
+      </div>
+      <p className="text-center">Access OpenAI language models for various use cases.</p>
+    </div>
+  </Card>
+  
+  <Card title="Anthropic" href="https://www.anthropic.com">
+    <div className="flex flex-col items-center -mt-4">
+      <div className="mb-4">
+        <img className="hidden dark:block w-8 h-8 object-contain" src="/images/providers/anthropic.png" alt="Anthropic logo" style={{filter: 'brightness(0) invert(1)'}} />
+        <img className="block dark:hidden w-8 h-8 object-contain" src="/images/providers/anthropic.png" alt="Anthropic logo" />
+      </div>
+      <p className="text-center">Integrate Claude models for advanced reasoning, analysis, and creative tasks.</p>
+    </div>
+  </Card>
+  
+  <Card title="Google" href="https://ai.google.dev">
+    <div className="flex flex-col items-center -mt-4">
+      <div className="mb-4">
+        <img className="w-8 h-8 object-contain" src="/images/providers/google.png" alt="Google logo" />
+      </div>
+      <p className="text-center">Utilize Gemini models and other Google AI services.</p>
+    </div>
+  </Card>
+  
+  <Card title="Groq" href="https://groq.com">
+    <div className="flex flex-col items-center -mt-4">
+      <div className="mb-4">
+        <img className="hidden dark:block w-8 h-8 object-contain" src="/images/providers/groq.png" alt="Groq logo" style={{filter: 'brightness(0) invert(1)'}} />
+        <img className="block dark:hidden w-8 h-8 object-contain" src="/images/providers/groq.png" alt="Groq logo" />
+      </div>
+      <p className="text-center">Ultra-high-speed inference for supported models with exceptional performance and low latency.</p>
+    </div>
+  </Card>
+  
+  <Card title="AWS Bedrock" href="https://aws.amazon.com/bedrock/">
+    <div className="flex flex-col items-center -mt-4">
+      <div className="mb-4">
+        <img className="w-8 h-8 object-contain" src="/images/providers/aws.png" alt="AWS logo" />
+      </div>
+      <p className="text-center">Access Amazon's managed AI services with enterprise-grade security and compliance.</p>
+    </div>
+  </Card>
+</CardGroup>
 
 ## Extended Model Access
 
