@@ -4,6 +4,7 @@ description: 'Evaluate a simple LLM system with Scorecard in minutes.'
 ---
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+import { Note } from '@mintlify/components';
 
 Kick off your first run in minutes using the Example Project that’s created automatically when you sign up. You can also browse the run that was kicked off for you and explore how testsets, prompts, and metrics fit together.
 
@@ -29,6 +30,8 @@ Kick off your first run in minutes using the Example Project that’s created au
       caption="Pick a Testset (pre‑selected)."
       alt="Kickoff modal testset picker"
     />
+
+    Next, choose one or more <strong>Metrics</strong>, or pick a <strong>Metric Group</strong> for consistency.
 
     <DarkLightImage
       lightSrc="/images/example-project/kickoff-modal-select-multiple-metrics-light.png"
@@ -57,6 +60,8 @@ Kick off your first run in minutes using the Example Project that’s created au
       alt="Run details page"
     />
 
+    Tip: Click <strong>Run Again</strong> to iterate with a different prompt version, model, or metric set.
+
     <DarkLightImage
       lightSrc="/images/example-project/run-detail-run-again-button-light.png"
       darkSrc="/images/example-project/run-detail-run-again-button-dark.png"
@@ -76,6 +81,17 @@ Kick off your first run in minutes using the Example Project that’s created au
 
   <Step title="Browse the Example Project">
     Learn how the sample data is organized:
+    
+    <Note>
+      <strong>Quick tour of the data</strong>
+      <ul>
+        <li><strong>Emoji Testset</strong>: inputs <code>userQuery</code> → expected <code>ideal</code> (emojis).</li>
+        <li><strong>Tone Testset</strong>: inputs <code>original</code>, <code>tone</code> → expected <code>idealRewritten</code>.</li>
+        <li><strong>Prompt versions</strong> for Emoji and Tone — already set to Scorecard Cloud with low temperature for consistency.</li>
+        <li><strong>Metrics</strong>: Correctness (AI, 1–5), Emoji Format (AI, Boolean), Human Emoji Preference (Human, 1–5), Human Tone Check (Human, Boolean).</li>
+        <li><strong>Metric Group</strong>: Emoji Metrics = Emoji Format + Human Emoji Preference.</li>
+      </ul>
+    </Note>
     
     <DarkLightImage
       lightSrc="/images/example-project/example-project-testsets-overview-light.png"

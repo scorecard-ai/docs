@@ -117,6 +117,7 @@
             "pages": [
               "intro/overview",
               "intro/what-is-scorecard",
+              "intro/ui-quickstart",
               "intro/sdk-quickstart",
               "intro/metrics-quickstart",
               "intro/tracing-quickstart",
