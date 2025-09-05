@@ -1,274 +1,190 @@
-
 ---
-
-title: "Custom Metrics"
-
+title: "Metrics Quickstart"
 sidebarTitle: "Metrics"
-
-description: "Define, organize, and apply metrics that score LLM quality."
-
+description: "Create metrics, group them, run evaluations, and read scores."
 ---
 
 import { Note, Card } from "@mintlify/components";
-
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
-## What are Metrics?
+Metrics define what “good” looks like for your LLM. You describe the criteria (e.g., helpfulness, groundedness, safety), and Scorecard turns that into repeatable scores you can track across runs and over time.
 
-Metrics are how Scorecard evaluates the quality of model outputs. You choose what "good" means for your use case (e.g., helpfulness, factuality, safety, tone), and Scorecard turns those definitions into consistent, repeatable scores you can track over time.
+<Steps>
+  <Step title="Open Metrics and explore templates">
+    Go to your project’s **Metrics** page. Start fast by copying a proven template, then tailor the guidelines to your domain.
 
-Metrics work across your evaluation workflow — in the Playground, in Runs, in A/B comparisons, and in production monitoring.
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-overview-light.png"
+      darkSrc="/images/metrics/metrics-overview-dark.png"
+      caption="Metrics page with Metrics, Groups, and Templates tabs."
+      alt="Metrics page overview"
+    />
 
-## Creating a Metric
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-templates-light.png"
+      darkSrc="/images/metrics/metrics-templates-dark.png"
+      caption="Templates list with Create from Template."
+      alt="Metric templates list"
+    />
 
-Go to your project's **Metrics** to create and manage metrics and groups.
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-template-light.png"
+      darkSrc="/images/metrics/metrics-template-dark.png"
+      caption="Template details with description and output type."
+      alt="Template details panel"
+    />
+  </Step>
 
-\<DarkLightImage
+  <Step title="Create your first metric (AI‑scored)">
+    You can also create a metric from scratch. Provide a name, description, clear <strong>guidelines</strong>, and choose an <strong>Evaluation Type</strong> and <strong>Output Type</strong>.
 
-  lightSrc="/images/endpoints/endpoint-edit-light.png"
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-create-a-light.png"
+      darkSrc="/images/metrics/metrics-create-a-dark.png"
+      caption="New Metric modal – name, description, evaluation type, and guidelines."
+      alt="New metric configuration modal"
+    />
 
-  darkSrc="/images/endpoints/endpoint-edit-dark.png"
+    For AI‑scored metrics, pick the evaluator model and keep temperature low for repeatability.
 
-  caption="Create or edit a metric (placeholder screenshot)."
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-create-b-light.png"
+      darkSrc="/images/metrics/metrics-create-b-dark.png"
+      caption="AI evaluator settings and output type."
+      alt="AI evaluation settings"
+    />
 
-  alt="Create or edit a metric configuration modal"
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-outputtype-light.png"
+      darkSrc="/images/metrics/metrics-outputtype-dark.png"
+      caption="Choose Boolean (pass/fail) or Integer (1–5)."
+      alt="Output type options"
+    />
 
-/\>
+    <Note>
+      <strong>Guidelines matter.</strong> Describe what to reward and what to penalize, and include 1–2 concise examples if helpful. These instructions become the core of the evaluator prompt.
+    </Note>
+  </Step>
 
-### Configuration basics
+  <Step title="Optional: Human‑scored metric">
+    Some criteria are best judged by humans. Select <strong>Human</strong> as the evaluation type and write clear instructions for reviewers.
 
-When creating a metric, you'll provide:
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-create-human-light.png"
+      darkSrc="/images/metrics/metrics-create-human-dark.png"
+      caption="Human evaluation – provide instructions for reviewers."
+      alt="Human evaluation configuration"
+    />
+  </Step>
 
-- **Name**: What the metric measures (e.g., "Toxicity", "Groundedness").
+  <Step title="Create a Metric Group">
+    Group related metrics (e.g., Groundedness + Relevance + Safety) so you can select them together during a run.
 
-- **Metric guidelines**: Plain‑English instructions that define how to score the output.
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-create-group-light.png"
+      darkSrc="/images/metrics/metrics-create-group-dark.png"
+      caption="Create a Metric Group and select metrics to include."
+      alt="Create metric group modal"
+    />
 
-- **Evaluation type**: How the score is produced (AI, Human, or Heuristic).
+    After saving, you’ll see your groups alongside individual metrics.
 
-- **Output type**: The score's format (Boolean or Integer 1–5).
+    <DarkLightImage
+      lightSrc="/images/metrics/metric-groups-light.png"
+      darkSrc="/images/metrics/metrics-groups-dark.png"
+      caption="Metric Groups overview."
+      alt="Metric groups list"
+    />
+  </Step>
 
-The guidelines tell either an AI evaluator or a human reviewer what "good" looks like for each testcase. For AI metrics, these guidelines power the evaluation prompt.
+  <Step title="Kick off a Run and pick metrics">
+    Start a run from your project dashboard, Playground, or Runs list. In the <strong>Kickoff Run</strong> modal, choose a Testset, select your System or Endpoint, and add one or more <strong>Metrics</strong> or a <strong>Metric Group</strong>.
 
-#### AI scoring modes
+    <ul>
+      <li>Pick individual metrics by name, or select a Metric Group for consistency.</li>
+      <li>Integer metrics show an average on the run; Boolean metrics show pass‑rate.</li>
+      <li>Runs with human‑scored metrics will show status <em>Scoring</em> until reviewers submit results.</li>
+    </ul>
 
-- **Basic**: Provide natural‑language guidelines and let Scorecard handle the prompt template.
+    See <a className="underline" href="/features/runs">Runs & Results</a> for a deeper walkthrough of the kickoff modal and options.
 
-- **Advanced**: Edit the full prompt template for maximum control over evaluator behavior.
+    When the run executes and scoring completes, open the run to review results.
 
-#### AI evaluation settings
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-run-light.png"
+      darkSrc="/images/metrics/metrics-run-dark.png"
+      caption="Run results with per‑record scores."
+      alt="Run results table"
+    />
+  </Step>
 
-- **Model**: Choose an evaluator model (e.g., GPT‑4‑class) for consistency.
+  <Step title="Inspect scores and explanations">
+    Hover over or click a score to view the evaluator’s reasoning and properties. This helps validate and tune your guidelines.
 
-- **Temperature**: Use a low value (≈ 0) for repeatable scoring.
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-scores-detail-light.png"
+      darkSrc="/images/metrics/metrics-scores-detail-dark.png"
+      caption="Score explanation with reasoning and model details."
+      alt="Score explanation panel"
+    />
 
-- **Other params**: Adjust max tokens and top‑p as needed.
+    Drill into any record to see inputs, outputs, expected outputs, and all scores together.
 
-Scorecard also provides **score explanations** so you can understand why a response received its score and refine your guidelines over time.
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-testrecord-light.png"
+      darkSrc="/images/metrics/metrics-testrecord-dark.png"
+      caption="Record view showing inputs/outputs and metric results."
+      alt="Test record details"
+    />
+  </Step>
+</Steps>
 
 ## Metric types
 
-Scorecard supports multiple ways to compute a score, so you can start simple and grow sophistication over time:
-
 - **AI‑scored**: Uses a model to apply your guidelines consistently and at scale.
-
 - **Human‑scored**: Great for nuanced judgments or gold‑standard baselines.
-
 - **Heuristic (SDK)**: Deterministic, code‑based checks via the SDK (e.g., latency, regex, policy flags).
+- **Output types**: Choose <strong>Boolean</strong> (pass/fail) or <strong>Integer (1–5)</strong>.
 
-Each metric produces either a **Boolean** (pass/fail) or an **Integer (1–5)** score. Use Booleans for hard requirements (e.g., "No PII leaked") and 1–5 for qualitative criteria (e.g., relevance, helpfulness).
-
-## Templates and Metric Groups
-
-Speed up setup with battle‑tested templates and organize related metrics into reusable groups.
-
-### Templates
-
-Browse the **Templates** tab to copy proven metrics for relevance, faithfulness, answer correctness, and more. Templates include curated guidelines and sensible defaults — copy them and tweak to your context.
-
-\<Tip\>
-
-  Start with \<strong\>Templates\</strong\> whenever possible. Copy a proven metric,
-
-  run it on a small testset, and then tailor the guidelines to match your
-
-  product voice, compliance rules, and success criteria.
-
-\</Tip\>
-
-\<DarkLightImage
-
-  lightSrc="/images/endpoints/endpoint-edit-light.png"
-
-  darkSrc="/images/endpoints/endpoint-edit-dark.png"
-
-  caption="Templates list and Create from Template (placeholder screenshot)."
-
-  alt="Metric Templates UI with Create from Template button"
-
-/\>
-
-\<Note\>
-
-  Explore industry‑validated options in \<a href="/features/best-in-class-metrics" className="underline"\>Best‑in‑Class Metrics\</a\>.
-
-  You can also bring second‑party metrics (e.g., MLflow, RAGAS) and still benefit from Scorecard's aggregation and analysis.
-
-\</Note\>
-
-#### Second‑party metrics (optional)
+## Second‑party metrics (optional)
 
 If you already use established evaluation libraries, you can mirror those metrics in Scorecard:
 
 - **MLflow genai**: Relevance, Answer Relevance, Faithfulness, Answer Correctness, Answer Similarity
-
 - **RAGAS**: Faithfulness, Answer Relevancy, Context Recall, Context Precision, Context Relevancy, Answer Semantic Similarity
 
 Copy a matching template, then tailor the guidelines to your product domain.
 
-### Metric Groups
+## Best practices for strong metrics
 
-Group metrics that should run together (e.g., "RAG Quality", "Safety", "Customer Support"). Metric Groups make it easy to select a set of metrics consistently across runs.
+- **Be specific.** Minimize ambiguity in guidelines; include “what not to do.”
+- **Pick the right output type.** Use Boolean for hard requirements; 1–5 for nuance.
+- **Keep temperature low.** Use ≈0 for repeatable AI scoring.
+- **Pilot and tighten.** Run on 10–20 cases, then refine wording to reduce false positives.
+- **Bundle into groups.** Combine complementary checks (e.g., Relevance + Faithfulness + Safety) to keep evaluations consistent.
 
-## Using metrics in a Run
-
-Metrics are applied when you create a **Run**. From the Kickoff Run modal, pick a Testset, select your System or Endpoint, and choose one or more Metrics or a Metric Group.
-
-\<DarkLightImage
-
-  lightSrc="/images/endpoints/kickoff-endpoint-light.png"
-
-  darkSrc="/images/endpoints/kickoff-endpoint-dark.png"
-
-  caption="Kickoff Run modal with Metrics selection (placeholder screenshot)."
-
-  alt="Kickoff Run modal showing metrics selection"
-
-/\>
-
-Once the run completes, view scores per record and aggregated across the run. Use **A/B Comparison** to compare runs side‑by‑side and **Run History** to track trends.
-
-## Multi‑turn and Endpoints
-
-You can apply the same metrics when evaluating:
-
-- **Custom Endpoints**: Test any HTTP API. Variables from testcases can be injected into requests, and response fields can be targeted for evaluation.
-
-- **Multi‑turn simulations**: Evaluate full conversations between a Sim Agent and your system with the same metrics you use elsewhere.
-
-## How to define good metrics (3–5 quick steps)
-
-1. **State the outcome you want**: Write a one‑sentence goal (e.g., "Answer must be grounded in provided context and cite sources.")
-
-2. **Specify pass/fail vs. graded**: Use Boolean for absolute rules; use 1–5 for quality shades.
-
-3. **Write clear guidelines**: Describe what to reward and what to penalize; add 2–3 concrete examples if helpful.
-
-4. **Pilot on 10–20 cases**: Review early scores; tighten wording to remove ambiguity and reduce false positives.
-
-5. **Bundle into a group**: Combine complementary metrics (e.g., Relevance \+ Faithfulness \+ Safety) so evaluations stay consistent.
-
-\<Note\>
-
-  For AI‑scored metrics, keep guidelines specific and unambiguous. For repeatability, set model temperature low (near 0) in the evaluation settings.
-
-\</Note\>
-
-### Examples of great guidelines
-
-These illustrate what our templates evaluate. Add them from the Templates tab in the UI — no need to copy from this doc.
-
-#### Boolean example: Groundedness (Pass/Fail)
-
-- The answer must only include information present in the provided context.
-
-- If a claim cannot be supported by the context, it is considered ungrounded.
-
-- Ignore minor rephrasings and formatting. Focus on factual alignment.
-
-- Pass if no ungrounded claims are present; otherwise, Fail.
-
-Helpful hints for evaluators: Treat speculation, external knowledge, or hallucinated citations as ungrounded. Neutral tone is acceptable.
-
-#### 1–5 example: Answer Relevance (Rubric)
-
-- 5: Direct, comprehensive, and precisely addresses the user question with no irrelevant content.
-
-- 4: Addresses the question well with minor omissions or small amounts of extra content.
-
-- 3: Partially addresses the question; noticeable gaps or distracting extraneous content.
-
-- 2: Barely addresses the question; mostly off‑topic or superficial.
-
-- 1: Not relevant to the question at all.
-
-Tip: Combine this with a separate Safety Boolean or a Faithfulness Boolean in a Metric Group.
-
-To use in your project: Go to Metrics → Templates, select a template (e.g., Factuality), then click "Create from Template".
-
-## Continuous monitoring
-
-Move beyond one‑off evaluations by scheduling metrics on production traffic. Monitors sample recent LLM spans and auto‑score them with your selected metrics. Results appear on **Traces** (per‑span) and **Runs** (aggregates and trends).
-
-\<DarkLightImage
-
-  lightSrc="/images/monitors/monitors-traces-score.png"
-
-  darkSrc="/images/monitors/monitors-traces-score.png"
-
-  caption="Production traces with metric scores."
-
-  alt="Monitor results showing traces with scores"
-
-/\>
-
-## Troubleshooting
-
-### Scores feel noisy
-
-- Tighten the metric guidelines; add "what not to do" examples.
-
-- Switch a borderline Boolean to an Integer (1–5) for nuance.
-
-### Inconsistent AI scores
-
-- Lower evaluation temperature and ensure guidelines are explicit.
-
-- Use a Metric Group and increase testset size for stability.
-
-### Not seeing scores
-
-- Confirm the run includes at least one metric or group.
-
-- Check that your system or endpoint returns the fields your metrics evaluate.
+<Note>
+  Looking for vetted, ready‑to‑use metrics? Explore <a href="/features/best-in-class-metrics" className="underline">Best‑in‑Class Metrics</a> and copy templates (including MLflow and RAGAS). You can also create deterministic checks via the SDK using <strong>Heuristic</strong> metrics.
+</Note>
 
 ## Related resources
 
-\<Card title="Runs" icon="play" href="/features/runs"\>
-
+<Card title="Runs" icon="play" href="/features/runs">
   Create and analyze evaluations
+</Card>
 
-\</Card\>
-
-\<Card title="A/B Comparison" icon="git-merge" href="/features/a-b-comparison"\>
-
+<Card title="A/B Comparison" icon="git-merge" href="/features/a-b-comparison">
   Compare two runs side‑by‑side
+</Card>
 
-\</Card\>
-
-\<Card title="Monitoring" icon="activity" href="/features/monitoring"\>
-
+<Card title="Monitoring" icon="activity" href="/features/monitoring">
   Continuously score production traffic
+</Card>
 
-\</Card\>
-
-\<Card title="Best‑in‑Class Metrics" icon="star" href="/features/best-in-class-metrics"\>
-
+<Card title="Best‑in‑Class Metrics" icon="star" href="/features/best-in-class-metrics">
   Explore curated, proven metrics
+</Card>
 
-\</Card\>
-
-\<Card title="API Reference" icon="code" href="/api-reference/create-metric"\>
-
+<Card title="API Reference" icon="code" href="/api-reference/create-metric">
   Create metrics via API
-
-\</Card\>
+</Card>
