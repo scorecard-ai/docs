@@ -3,3 +3,131 @@ title: 'UI Quickstart'
 description: 'Evaluate a simple LLM system with Scorecard in minutes.'
 ---
 
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+Kick off your first run in minutes using the Example Project that’s created automatically when you sign up. You can also browse the run that was kicked off for you and explore how testsets, prompts, and metrics fit together.
+
+<Steps>
+  <Step title="Find the Example Project">
+    On the Projects overview page, you’ll see a banner welcoming you and a card for the Example Project. Click the banner’s button or the project card’s "Kickoff run" to begin.
+
+    <DarkLightImage
+      lightSrc="/images/example-project/projects-overview-with-example-project-light.png"
+      darkSrc="/images/example-project/projects-overview-with-example-project-dark.png"
+      caption="Welcome banner and Example Project."
+      alt="Projects overview with Example Project and kickoff banner"
+    />
+
+    Banner text:
+    “Welcome! Your first project is ready. We set up an example project with metrics and a testset and already kicked off a run for you! View the results or browse metrics and testsets — or kick off a new run.”
+  </Step>
+
+  <Step title="Kick off your first run">
+    The Kickoff Run modal is pre‑filled with a Testset, Prompt, and Metrics using Scorecard Cloud. You can change selections or keep defaults.
+
+    <DarkLightImage
+      lightSrc="/images/example-project/kickoff-modal-pick-testset-light.png"
+      darkSrc="/images/example-project/kickoff-modal-pick-testset-dark.png"
+      caption="Pick a Testset (pre‑selected)."
+      alt="Kickoff modal testset picker"
+    />
+
+    <DarkLightImage
+      lightSrc="/images/example-project/kickoff-modal-pre-filled-light.png"
+      darkSrc="/images/example-project/kickoff-modal-pre-filled-dark.png"
+      caption="Modal pre‑filled with a prompt and metric(s)."
+      alt="Kickoff modal with prefilled selections"
+    />
+
+    <DarkLightImage
+      lightSrc="/images/example-project/kickoff-modal-select-multiple-metrics-light.png"
+      darkSrc="/images/example-project/kickoff-modal-select-multiple-metrics-dark.png"
+      caption="Optionally select multiple metrics or a metric group."
+      alt="Kickoff modal metric selector"
+    />
+
+    Click “Kickoff run”. A toast confirms creation and links directly to results.
+
+    <DarkLightImage
+      lightSrc="/images/example-project/kickoff-modal-success-toast-light.png"
+      darkSrc="/images/example-project/kickoff-modal-success-toast-dark.png"
+      caption="Run created — follow the link to results."
+      alt="Success toast with link to run"
+    />
+  </Step>
+
+  <Step title="View results (or open the sample run)">
+    After your run starts and scoring completes, open the results to see per‑record scores, distributions, and explanations. You can also click “Run again” to rerun with new settings.
+
+    <DarkLightImage
+      lightSrc="/images/example-project/run-detail-with-example-run-scores-light.png"
+      darkSrc="/images/example-project/run-detail-with-example-run-scores-dark.png"
+      caption="Run details with scores and aggregates."
+      alt="Run details page"
+    />
+
+    <DarkLightImage
+      lightSrc="/images/example-project/run-detail-run-again-button-light.png"
+      darkSrc="/images/example-project/run-detail-run-again-button-dark.png"
+      caption="Run Again lets you quickly iterate."
+      alt="Run Again button on run details"
+    />
+
+    Prefer to just explore? Visit Runs & Results to open the example run that was created for you automatically.
+
+    <DarkLightImage
+      lightSrc="/images/example-project/runs-list-with-first-example-run-light.png"
+      darkSrc="/images/example-project/runs-list-with-first-example-run-dark.png"
+      caption="Runs list with your first example run."
+      alt="Runs list with example run"
+    />
+  </Step>
+
+  <Step title="Browse the Example Project">
+    Learn how the sample data is organized:
+    
+    <DarkLightImage
+      lightSrc="/images/example-project/example-project-testsets-overview-light.png"
+      darkSrc="/images/example-project/example-project-testsets-overview-dark.png"
+      caption="Testsets overview."
+      alt="Testsets overview"
+    />
+
+    <DarkLightImage
+      lightSrc="/images/example-project/example-project-testset-light.png"
+      darkSrc="/images/example-project/example-project-testset-dark.png"
+      caption="A sample Testset with Testcases."
+      alt="Testset details"
+    />
+
+    <DarkLightImage
+      lightSrc="/images/example-project/example-prompts-light.png"
+      darkSrc="/images/example-project/example-prompts-dark.png"
+      caption="Prompts list."
+      alt="Prompts list"
+    />
+
+    <DarkLightImage
+      lightSrc="/images/example-project/example-project-prompt-light.png"
+      darkSrc="/images/example-project/example-project-prompt-dark.png"
+      caption="Prompt version with template and model settings."
+      alt="Prompt version editor"
+    />
+
+    <DarkLightImage
+      lightSrc="/images/example-project/metrics-from-example-project-light.png"
+      darkSrc="/images/example-project/metrics-from-example-project-dark.png"
+      caption="Metrics configured for the Example Project."
+      alt="Metrics list"
+    />
+  </Step>
+</Steps>
+
+## Where to go next
+
+- Read about creating and managing Testsets in [Testsets](/features/testsets)
+- Dive deeper into running evaluations in [Runs & Results](/features/runs)
+- Explore interactive prompt iteration in the [Playground](/features/playground)
+- Define and reuse evaluation criteria with [Metrics](/intro/metrics-quickstart)
+
+That’s it — you’ve seen Scorecard in action and how example data flows through prompts, runs, and metrics. Have fun iterating!
