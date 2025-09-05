@@ -24,15 +24,21 @@ Scorecard assists you in several ways in defining and organizing these metrics f
 
 The Scorecard team consists of experts in LLM evaluation, with extensive experience in assessing and deploying large-scale AI applications at some of the world's leading companies. Our Scorecard Core Metrics, validated by our team, represent industry-standard benchmarks for LLM performance. You can explore these Core Metrics in the Scoring Lab, under "Templates," to select the ones best suited for your LLM evaluation needs.
 
-<Frame caption="Overview of Scorecard Core Metrics in Templates">
-  ![Overview of Scorecard Core Metrics in Templates](/images/best-in-class/1.webp)
-</Frame>
+<DarkLightImage
+  caption="Overview of Scorecard Core Metrics in Templates"
+  alt="Overview of Scorecard Core Metrics in Templates"
+  lightSrc="/images/metrics/metrics-templates-light.png"
+  darkSrc="/images/metrics/metrics-templates-dark.png"
+/>
 
 If you would like to use a specific template, simply make a copy of it and, if needed, edit its details before importing it into your metrics section.
 
-<Frame caption="Metric Template to Copy">
-  ![Metric Template to Copy](/images/best-in-class/2.webp)
-</Frame>
+<DarkLightImage
+  caption="Metric Template to Copy"
+  alt="Metric Template to Copy"
+  lightSrc="/images/metrics/metrics-template-light.png"
+  darkSrc="/images/metrics/metrics-template-dark.png"
+/>
 
 #### Second-Party Metrics from MLflow
 
@@ -98,9 +104,12 @@ For additional context on RAG‑focused evaluations and dataset setup, see the R
 
 ### Define Custom Metrics for Your LLM Use Case
 
-<Frame caption="Adding a New Custom Metric in Scoring Lab">
-  ![Adding a New Custom Metric in Scoring Lab](/images/best-in-class/3.webp)
-</Frame>
+<DarkLightImage
+  caption="Adding a New Custom Metric in Scoring Lab"
+  alt="Adding a New Custom Metric in Scoring Lab"
+  lightSrc="/images/metrics/metrics-overview-light.png"
+  darkSrc="/images/metrics/metrics-overview-dark.png"
+/>
 
 Scorecard also offers the flexibility to define any customized metric unique to your LLM application. At the top of the metrics section in the Scoring Lab, click the "\+ New Metric" button and fill out the details of your metric. Information needed includes:
 
@@ -114,9 +123,12 @@ Scorecard also offers the flexibility to define any customized metric unique to 
   - Boolean
   - Integer (1-5)
 
-<Frame caption="New Custom Metric">
-  ![New Custom Metric](/images/best-in-class/4.webp)
-</Frame>
+<DarkLightImage
+  caption="New Custom Metric"
+  alt="New Custom Metric"
+  lightSrc="/images/metrics/metrics-create-a-light.png"
+  darkSrc="/images/metrics/metrics-create-a-dark.png"
+/>
 
 ## Automated Scoring
 
@@ -132,9 +144,12 @@ Scorecard offers a solution to this problem by outsourcing the evaluation part t
 
 When defining a new metric to be used for your LLM evaluation, you can specify the evaluation type. Choose the evaluation type "AI" to have a metric automatically scored by an AI model.
 
-<Frame caption="New Metric With AI-Scoring">
-  ![New Metric With AI-Scoring](/images/automated-scoring/1.webp)
-</Frame>
+<DarkLightImage
+  caption="New Metric With AI-Scoring"
+  alt="New Metric With AI-Scoring"
+  lightSrc="/images/metrics/metrics-create-b-light.png"
+  darkSrc="/images/metrics/metrics-create-b-dark.png"
+/>
 
 ##### Basic and Advanced AI Metric Configuration
 
@@ -161,9 +176,12 @@ This flexibility allows you to optimize the evaluation process for different typ
 
 After you have run a Testset against your LLM and the model has generated responses for each Testcase, the Scorecard UI displays the status of "Awaiting Scoring".
 
-<Frame caption="Run Scoring in the Scorecard UI">
-  ![Run Scoring in the Scorecard UI](/images/automated-scoring/2.webp)
-</Frame>
+<DarkLightImage
+  caption="Run Scoring in the Scorecard UI"
+  alt="Run Scoring in the Scorecard UI"
+  lightSrc="/images/metrics/metrics-run-light.png"
+  darkSrc="/images/metrics/metrics-run-dark.png"
+/>
 
 Simply click the "Run Scoring" button and Scorecard will use AI to score all metrics that have AI scoring enabled.
 
@@ -175,26 +193,35 @@ Simply click the "Run Scoring" button and Scorecard will use AI to score all met
 
 Scorecard not only automates the scoring process, it also provides explanations of why the AI model scored the metrics in a certain way. This helps you understand the reasons of the AI scores, allowing you to re-evaluate whether the evaluations make sense.
 
-<Frame caption="Score Explained by the Scorecard AI Model">
-  ![Score Explained by the Scorecard AI Model](/images/automated-scoring/4.webp)
-</Frame>
+<DarkLightImage
+  caption="Score Explained by the Scorecard AI Model"
+  alt="Score Explained by the Scorecard AI Model"
+  lightSrc="/images/metrics/metrics-scores-detail-light.png"
+  darkSrc="/images/metrics/metrics-scores-detail-dark.png"
+/>
 
 ### Metric Groups
 
 Once you have defined all metrics that you need to properly assess the quality of your LLM application, you can group them together to form a Metric Group. A Scorecard Metric Group is a collection of metrics that are used together to score an LLM application. This Metric Group can be routinely run against your LLM application to yield a consistent measure of the performance and quality of its responses. Instead of manually selecting multiple metrics to score an LLM application every time for a particular use case, defining this set of metrics makes it easy to repeatedly score in the same way with multiple metrics. Different Metric Groups can serve different purposes by ensuring consistency in testing, e.g. a Metric Group for RAG applications, a Metric Group for translation use cases, etc.
 
-<Frame caption="Overview of Metric Groups in Scoring Lab">
-  ![Overview of Metric Groups in Scoring Lab](/images/best-in-class/5.webp)
-</Frame>
+<DarkLightImage
+  caption="Overview of Metric Groups in Scoring Lab"
+  alt="Overview of Metric Groups in Scoring Lab"
+  lightSrc="/images/metrics/metric-groups-light.png"
+  darkSrc="/images/metrics/metrics-groups-dark.png"
+/>
 
 Have an overview of your existing Metric Groups in the Scoring Lab under "Metric Groups". In this tab, you can also define a new Metric Group by providing the following information:
 
 - Name: a human-readable name of your Metric Group.
 - Description: a short description of your Metric Group.
 
-<Frame caption="Defining a New Metric Group">
-  ![Defining a New Metric Group](/images/best-in-class/6.webp)
-</Frame>
+<DarkLightImage
+  caption="Defining a New Metric Group"
+  alt="Defining a New Metric Group"
+  lightSrc="/images/metrics/metrics-create-group-light.png"
+  darkSrc="/images/metrics/metrics-create-group-dark.png"
+/>
 
 After specifying a name and description, select metrics by clicking on "Select Metrics". On the next page, select one or multiple metrics to use for the Metric Group.
 
