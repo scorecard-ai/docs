@@ -129,7 +129,7 @@
               "how-to-use-scorecard/trigger-run-with-github-actions",
               "intro/metrics-quickstart",
               "intro/monitoring-quickstart",
-              "intro/rag-quickstart",
+              "intro/rag-quickstart"
             ]
           },
           {
