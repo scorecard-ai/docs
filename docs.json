@@ -54,7 +54,7 @@
       "source": "/quickstart",
       "destination": "/intro/sdk-quickstart"
     },
-        {
+    {
       "source": "/intro/quickstart",
       "destination": "/intro/sdk-quickstart"
     },
@@ -146,14 +146,13 @@
               "features/a-b-comparison",
               "features/ai-guardrails",
               "features/custom-provider",
-              "features/privacy-by-design"
+              "features/privacy-by-design",
+              "features/mcp"
             ]
           },
           {
             "group": "How To Use Scorecard",
-            "pages": [
-              "how-to-use-scorecard/trigger-run-with-github-actions"
-            ]
+            "pages": ["how-to-use-scorecard/trigger-run-with-github-actions"]
           }
         ]
       },
