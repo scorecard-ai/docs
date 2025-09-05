@@ -118,6 +118,7 @@
               "intro/overview",
               "intro/what-is-scorecard",
               "intro/sdk-quickstart",
+              "intro/metrics-quickstart",
               "intro/tracing-quickstart",
               "intro/monitoring-quickstart",
               "intro/rag-quickstart",
