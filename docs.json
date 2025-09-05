@@ -119,11 +119,17 @@
               "intro/what-is-scorecard",
               "intro/ui-quickstart",
               "intro/sdk-quickstart",
-              "intro/metrics-quickstart",
               "intro/tracing-quickstart",
+              "intro/faq"
+            ]
+          },
+          {
+            "group": "How To Use Scorecard",
+            "pages": [
+              "how-to-use-scorecard/trigger-run-with-github-actions",
+              "intro/metrics-quickstart",
               "intro/monitoring-quickstart",
               "intro/rag-quickstart",
-              "intro/faq"
             ]
           },
           {
@@ -149,10 +155,6 @@
               "features/privacy-by-design",
               "features/mcp"
             ]
-          },
-          {
-            "group": "How To Use Scorecard",
-            "pages": ["how-to-use-scorecard/trigger-run-with-github-actions"]
           }
         ]
       },
