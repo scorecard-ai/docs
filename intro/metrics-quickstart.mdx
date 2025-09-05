@@ -1,0 +1,274 @@
+
+---
+
+title: "Custom Metrics"
+
+sidebarTitle: "Metrics"
+
+description: "Define, organize, and apply metrics that score LLM quality."
+
+---
+
+import { Note, Card } from "@mintlify/components";
+
+import { DarkLightImage } from "/snippets/dark-light-image.jsx";
+
+## What are Metrics?
+
+Metrics are how Scorecard evaluates the quality of model outputs. You choose what "good" means for your use case (e.g., helpfulness, factuality, safety, tone), and Scorecard turns those definitions into consistent, repeatable scores you can track over time.
+
+Metrics work across your evaluation workflow — in the Playground, in Runs, in A/B comparisons, and in production monitoring.
+
+## Creating a Metric
+
+Go to your project's **Metrics** to create and manage metrics and groups.
+
+\<DarkLightImage
+
+  lightSrc="/images/endpoints/endpoint-edit-light.png"
+
+  darkSrc="/images/endpoints/endpoint-edit-dark.png"
+
+  caption="Create or edit a metric (placeholder screenshot)."
+
+  alt="Create or edit a metric configuration modal"
+
+/\>
+
+### Configuration basics
+
+When creating a metric, you'll provide:
+
+- **Name**: What the metric measures (e.g., "Toxicity", "Groundedness").
+
+- **Metric guidelines**: Plain‑English instructions that define how to score the output.
+
+- **Evaluation type**: How the score is produced (AI, Human, or Heuristic).
+
+- **Output type**: The score's format (Boolean or Integer 1–5).
+
+The guidelines tell either an AI evaluator or a human reviewer what "good" looks like for each testcase. For AI metrics, these guidelines power the evaluation prompt.
+
+#### AI scoring modes
+
+- **Basic**: Provide natural‑language guidelines and let Scorecard handle the prompt template.
+
+- **Advanced**: Edit the full prompt template for maximum control over evaluator behavior.
+
+#### AI evaluation settings
+
+- **Model**: Choose an evaluator model (e.g., GPT‑4‑class) for consistency.
+
+- **Temperature**: Use a low value (≈ 0) for repeatable scoring.
+
+- **Other params**: Adjust max tokens and top‑p as needed.
+
+Scorecard also provides **score explanations** so you can understand why a response received its score and refine your guidelines over time.
+
+## Metric types
+
+Scorecard supports multiple ways to compute a score, so you can start simple and grow sophistication over time:
+
+- **AI‑scored**: Uses a model to apply your guidelines consistently and at scale.
+
+- **Human‑scored**: Great for nuanced judgments or gold‑standard baselines.
+
+- **Heuristic (SDK)**: Deterministic, code‑based checks via the SDK (e.g., latency, regex, policy flags).
+
+Each metric produces either a **Boolean** (pass/fail) or an **Integer (1–5)** score. Use Booleans for hard requirements (e.g., "No PII leaked") and 1–5 for qualitative criteria (e.g., relevance, helpfulness).
+
+## Templates and Metric Groups
+
+Speed up setup with battle‑tested templates and organize related metrics into reusable groups.
+
+### Templates
+
+Browse the **Templates** tab to copy proven metrics for relevance, faithfulness, answer correctness, and more. Templates include curated guidelines and sensible defaults — copy them and tweak to your context.
+
+\<Tip\>
+
+  Start with \<strong\>Templates\</strong\> whenever possible. Copy a proven metric,
+
+  run it on a small testset, and then tailor the guidelines to match your
+
+  product voice, compliance rules, and success criteria.
+
+\</Tip\>
+
+\<DarkLightImage
+
+  lightSrc="/images/endpoints/endpoint-edit-light.png"
+
+  darkSrc="/images/endpoints/endpoint-edit-dark.png"
+
+  caption="Templates list and Create from Template (placeholder screenshot)."
+
+  alt="Metric Templates UI with Create from Template button"
+
+/\>
+
+\<Note\>
+
+  Explore industry‑validated options in \<a href="/features/best-in-class-metrics" className="underline"\>Best‑in‑Class Metrics\</a\>.
+
+  You can also bring second‑party metrics (e.g., MLflow, RAGAS) and still benefit from Scorecard's aggregation and analysis.
+
+\</Note\>
+
+#### Second‑party metrics (optional)
+
+If you already use established evaluation libraries, you can mirror those metrics in Scorecard:
+
+- **MLflow genai**: Relevance, Answer Relevance, Faithfulness, Answer Correctness, Answer Similarity
+
+- **RAGAS**: Faithfulness, Answer Relevancy, Context Recall, Context Precision, Context Relevancy, Answer Semantic Similarity
+
+Copy a matching template, then tailor the guidelines to your product domain.
+
+### Metric Groups
+
+Group metrics that should run together (e.g., "RAG Quality", "Safety", "Customer Support"). Metric Groups make it easy to select a set of metrics consistently across runs.
+
+## Using metrics in a Run
+
+Metrics are applied when you create a **Run**. From the Kickoff Run modal, pick a Testset, select your System or Endpoint, and choose one or more Metrics or a Metric Group.
+
+\<DarkLightImage
+
+  lightSrc="/images/endpoints/kickoff-endpoint-light.png"
+
+  darkSrc="/images/endpoints/kickoff-endpoint-dark.png"
+
+  caption="Kickoff Run modal with Metrics selection (placeholder screenshot)."
+
+  alt="Kickoff Run modal showing metrics selection"
+
+/\>
+
+Once the run completes, view scores per record and aggregated across the run. Use **A/B Comparison** to compare runs side‑by‑side and **Run History** to track trends.
+
+## Multi‑turn and Endpoints
+
+You can apply the same metrics when evaluating:
+
+- **Custom Endpoints**: Test any HTTP API. Variables from testcases can be injected into requests, and response fields can be targeted for evaluation.
+
+- **Multi‑turn simulations**: Evaluate full conversations between a Sim Agent and your system with the same metrics you use elsewhere.
+
+## How to define good metrics (3–5 quick steps)
+
+1. **State the outcome you want**: Write a one‑sentence goal (e.g., "Answer must be grounded in provided context and cite sources.")
+
+2. **Specify pass/fail vs. graded**: Use Boolean for absolute rules; use 1–5 for quality shades.
+
+3. **Write clear guidelines**: Describe what to reward and what to penalize; add 2–3 concrete examples if helpful.
+
+4. **Pilot on 10–20 cases**: Review early scores; tighten wording to remove ambiguity and reduce false positives.
+
+5. **Bundle into a group**: Combine complementary metrics (e.g., Relevance \+ Faithfulness \+ Safety) so evaluations stay consistent.
+
+\<Note\>
+
+  For AI‑scored metrics, keep guidelines specific and unambiguous. For repeatability, set model temperature low (near 0) in the evaluation settings.
+
+\</Note\>
+
+### Examples of great guidelines
+
+These illustrate what our templates evaluate. Add them from the Templates tab in the UI — no need to copy from this doc.
+
+#### Boolean example: Groundedness (Pass/Fail)
+
+- The answer must only include information present in the provided context.
+
+- If a claim cannot be supported by the context, it is considered ungrounded.
+
+- Ignore minor rephrasings and formatting. Focus on factual alignment.
+
+- Pass if no ungrounded claims are present; otherwise, Fail.
+
+Helpful hints for evaluators: Treat speculation, external knowledge, or hallucinated citations as ungrounded. Neutral tone is acceptable.
+
+#### 1–5 example: Answer Relevance (Rubric)
+
+- 5: Direct, comprehensive, and precisely addresses the user question with no irrelevant content.
+
+- 4: Addresses the question well with minor omissions or small amounts of extra content.
+
+- 3: Partially addresses the question; noticeable gaps or distracting extraneous content.
+
+- 2: Barely addresses the question; mostly off‑topic or superficial.
+
+- 1: Not relevant to the question at all.
+
+Tip: Combine this with a separate Safety Boolean or a Faithfulness Boolean in a Metric Group.
+
+To use in your project: Go to Metrics → Templates, select a template (e.g., Factuality), then click "Create from Template".
+
+## Continuous monitoring
+
+Move beyond one‑off evaluations by scheduling metrics on production traffic. Monitors sample recent LLM spans and auto‑score them with your selected metrics. Results appear on **Traces** (per‑span) and **Runs** (aggregates and trends).
+
+\<DarkLightImage
+
+  lightSrc="/images/monitors/monitors-traces-score.png"
+
+  darkSrc="/images/monitors/monitors-traces-score.png"
+
+  caption="Production traces with metric scores."
+
+  alt="Monitor results showing traces with scores"
+
+/\>
+
+## Troubleshooting
+
+### Scores feel noisy
+
+- Tighten the metric guidelines; add "what not to do" examples.
+
+- Switch a borderline Boolean to an Integer (1–5) for nuance.
+
+### Inconsistent AI scores
+
+- Lower evaluation temperature and ensure guidelines are explicit.
+
+- Use a Metric Group and increase testset size for stability.
+
+### Not seeing scores
+
+- Confirm the run includes at least one metric or group.
+
+- Check that your system or endpoint returns the fields your metrics evaluate.
+
+## Related resources
+
+\<Card title="Runs" icon="play" href="/features/runs"\>
+
+  Create and analyze evaluations
+
+\</Card\>
+
+\<Card title="A/B Comparison" icon="git-merge" href="/features/a-b-comparison"\>
+
+  Compare two runs side‑by‑side
+
+\</Card\>
+
+\<Card title="Monitoring" icon="activity" href="/features/monitoring"\>
+
+  Continuously score production traffic
+
+\</Card\>
+
+\<Card title="Best‑in‑Class Metrics" icon="star" href="/features/best-in-class-metrics"\>
+
+  Explore curated, proven metrics
+
+\</Card\>
+
+\<Card title="API Reference" icon="code" href="/api-reference/create-metric"\>
+
+  Create metrics via API
+
+\</Card\>
