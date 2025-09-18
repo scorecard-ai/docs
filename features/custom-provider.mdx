@@ -46,6 +46,15 @@ Choose from our comprehensive selection of AI providers, each offering unique st
     </div>
   </Card>
   
+  <Card title="Google Vertex AI" href="https://cloud.google.com/vertex-ai">
+    <div className="flex flex-col items-center -mt-4">
+      <div className="mb-4">
+        <img className="w-8 h-8 object-contain" src="/images/providers/google.png" alt="Google logo" />
+      </div>
+      <p className="text-center">Access enterprise-grade AI models through Google Cloud's Vertex AI platform.</p>
+    </div>
+  </Card>
+  
   <Card title="Groq" href="https://groq.com">
     <div className="flex flex-col items-center -mt-4">
       <div className="mb-4">
@@ -136,6 +145,45 @@ Through our integrated providers, you gain access to an even broader ecosystem o
           <a href="https://mistral.ai" target="_blank" className="font-medium hover:underline">Mistral AI</a>
         </div>
         <p className="text-sm mt-1">Efficient multilingual models</p>
+      </Card>
+    </CardGroup>
+  </Tab>
+  
+  <Tab title="Via Google Vertex AI">
+    Google Vertex AI provides enterprise-grade access to Google's AI models and third-party models:
+    
+    <CardGroup cols={2}>
+      <Card>
+        <div className="flex items-center">
+          <img className="w-5 h-5 mr-2" src="/images/providers/google.png" alt="Google logo" />
+          <a href="https://ai.google.dev" target="_blank" className="font-medium hover:underline">Google AI</a>
+        </div>
+        <p className="text-sm mt-1">Gemini and PaLM models</p>
+      </Card>
+      
+      <Card>
+        <div className="flex items-center">
+          <img className="block dark:hidden w-5 h-5 mr-2" src="/images/providers/anthropic.png" alt="Anthropic logo" />
+          <img className="hidden dark:block w-5 h-5 mr-2" src="/images/providers/anthropic.png" alt="Anthropic logo" style={{filter: 'invert(1)'}} />
+          <a href="https://www.anthropic.com" target="_blank" className="font-medium hover:underline">Anthropic</a>
+        </div>
+        <p className="text-sm mt-1">Claude models via Vertex AI</p>
+      </Card>
+      
+      <Card>
+        <div className="flex items-center">
+          <img className="w-5 h-5 mr-2" src="/images/providers/meta.png" alt="Meta logo" />
+          <a href="https://ai.meta.com" target="_blank" className="font-medium hover:underline">Meta</a>
+        </div>
+        <p className="text-sm mt-1">Llama models via Vertex AI</p>
+      </Card>
+      
+      <Card>
+        <div className="flex items-center">
+          <img className="w-5 h-5 mr-2" src="/images/providers/mistral.png" alt="Mistral logo" />
+          <a href="https://mistral.ai" target="_blank" className="font-medium hover:underline">Mistral AI</a>
+        </div>
+        <p className="text-sm mt-1">Mistral models via Vertex AI</p>
       </Card>
     </CardGroup>
   </Tab>
