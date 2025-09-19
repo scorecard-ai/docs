@@ -16,18 +16,42 @@ Scorecard's MCP (Model Context Protocol) server transforms AI assistants like Cl
 
 - An MCP-compatible client (Claude Desktop, Cursor, or other MCP clients)
 - A Scorecard account with API access
-- Node.js installed (for running the MCP server)
 
-### Configuration
+### Remote configuration (recommended)
 
-Add the following configuration to your MCP client settings:
+You can install the Scorecard remote MCP server without any dependencies.
+
+#### Claude Desktop
+
+Go to Claude Desktop settings page and click on the "Connectors" tab. Click "Add custom connector" and paste the following URL: `https://mcp.scorecard.io/mcp`.
+
+<DarkLightImage
+  lightSrc="/images/claude-desktop-mcp-light.png"
+  caption="Screenshot of the Claude Desktop MCP connector"
+/>
+
+### Local configuration
+
+You can directly run the MCP Server locally via npx:
+
+```sh
+export SCORECARD_API_KEY="My API Key"
+npx -y scorecard-ai-mcp@latest
+```
+
+If you already have a client, consult their documentation to install the MCP server.
+
+For clients with a configuration JSON, it might look something like this:
 
 ```json
 {
   "mcpServers": {
-    "scorecard": {
+    "scorecard_ai": {
       "command": "npx",
-      "args": ["mcp-remote", "https://mcp.scorecard.io"]
+      "args": ["-y", "scorecard-ai-mcp", "--client=claude", "--tools=dynamic"],
+      "env": {
+        "SCORECARD_API_KEY": "ak_MyAPIKey",
+      }
     }
   }
 }
