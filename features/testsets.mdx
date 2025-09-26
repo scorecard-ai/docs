@@ -180,85 +180,90 @@ Your input fields should mirror your production system's interface. If your syst
 
 The following examples show complete testcase schemas with both input and expected fields. The field mapping below each schema identifies which fields are inputs vs expected outputs.
 
-**Basic Chatbot**
-```json
-{
-  "type": "object",
-  "properties": {
-    "user_message": {
-      "type": "string",
-      "description": "What the user types in the chat box"
-    },
-    "expected_response": {
-      "type": "string",
-      "description": "What the bot should say back"
+<Tabs>
+  <Tab title="Basic Chatbot">
+    ```json
+    {
+      "type": "object",
+      "properties": {
+        "user_message": {
+          "type": "string",
+          "description": "What the user types in the chat box"
+        },
+        "expected_response": {
+          "type": "string",
+          "description": "What the bot should say back"
+        }
+      }
     }
-  }
-}
-```
-Field mapping:
-```json
-{
-  "inputs": ["user_message"],
-  "expected": ["expected_response"]
-}
-```
+    ```
+    **Field mapping:**
+    ```json
+    {
+      "inputs": ["user_message"],
+      "expected": ["expected_response"]
+    }
+    ```
+  </Tab>
 
-**Document Q&A System**
-```json
-{
-  "type": "object",
-  "properties": {
-    "question": {
-      "type": "string",
-      "description": "The question about the document"
-    },
-    "document": {
-      "type": "string",
-      "description": "The document text to search through"
-    },
-    "expected_answer": {
-      "type": "string",
-      "description": "The correct answer from the document"
+  <Tab title="Document Q&A System">
+    ```json
+    {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "The question about the document"
+        },
+        "document": {
+          "type": "string",
+          "description": "The document text to search through"
+        },
+        "expected_answer": {
+          "type": "string",
+          "description": "The correct answer from the document"
+        }
+      }
     }
-  }
-}
-```
-Field mapping:
-```json
-{
-  "inputs": ["question", "document"],
-  "expected": ["expected_answer"]
-}
-```
+    ```
+    **Field mapping:**
+    ```json
+    {
+      "inputs": ["question", "document"],
+      "expected": ["expected_answer"]
+    }
+    ```
+  </Tab>
 
-**AI Workflow/Agent**
-```json
-{
-  "type": "object",
-  "properties": {
-    "task_description": {
-      "type": "string",
-      "description": "What you want the AI agent to do"
-    },
-    "input_data": {
-      "type": "string",
-      "description": "Any data the agent needs to complete the task"
-    },
-    "expected_output": {
-      "type": "string",
-      "description": "What the agent should produce"
+  <Tab title="AI Agent/Workflow">
+    ```json
+    {
+      "type": "object",
+      "properties": {
+        "task_description": {
+          "type": "string",
+          "description": "What you want the AI agent to do"
+        },
+        "input_data": {
+          "type": "string",
+          "description": "Any data the agent needs to complete the task"
+        },
+        "expected_output": {
+          "type": "string",
+          "description": "What the agent should produce"
+        }
+      }
     }
-  }
-}
-```
-Field mapping:
-```json
-{
-  "inputs": ["task_description", "input_data"],
-  "expected": ["expected_output"]
-}
-```
+    ```
+    **Field mapping:**
+    ```json
+    {
+      "inputs": ["task_description", "input_data"],
+      "expected": ["expected_output"]
+    }
+    ```
+  </Tab>
+</Tabs>
 
 <Note>
 The key is matching your test inputs to your actual system. If your system takes a single text field, use a single text field. If it takes multiple parameters, include those as separate fields.
