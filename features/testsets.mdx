@@ -183,6 +183,7 @@ The following examples show complete testcase schemas with both input and expect
 **Basic Chatbot**
 ```json
 {
+  "type": "object",
   "properties": {
     "user_message": {
       "type": "string",
@@ -195,11 +196,18 @@ The following examples show complete testcase schemas with both input and expect
   }
 }
 ```
-Field mapping: `"inputs": ["user_message"], "expected": ["expected_response"]`
+Field mapping:
+```json
+{
+  "inputs": ["user_message"],
+  "expected": ["expected_response"]
+}
+```
 
 **Document Q&A System**
 ```json
 {
+  "type": "object",
   "properties": {
     "question": {
       "type": "string",
@@ -216,11 +224,18 @@ Field mapping: `"inputs": ["user_message"], "expected": ["expected_response"]`
   }
 }
 ```
-Field mapping: `"inputs": ["question", "document"], "expected": ["expected_answer"]`
+Field mapping:
+```json
+{
+  "inputs": ["question", "document"],
+  "expected": ["expected_answer"]
+}
+```
 
 **AI Workflow/Agent**
 ```json
 {
+  "type": "object",
   "properties": {
     "task": {
       "type": "string",
@@ -237,7 +252,13 @@ Field mapping: `"inputs": ["question", "document"], "expected": ["expected_answe
   }
 }
 ```
-Field mapping: `"inputs": ["task", "input_data"], "expected": ["expected_output"]`
+Field mapping:
+```json
+{
+  "inputs": ["task", "input_data"],
+  "expected": ["expected_output"]
+}
+```
 
 <Note>
 The key is matching your test inputs to your actual system. If your system takes a single text field, use a single text field. If it takes multiple parameters, include those as separate fields.
