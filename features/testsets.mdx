@@ -153,11 +153,9 @@ If you're unsure, ask an engineer on your team: "What JSON/data do we send to ou
     For AI-powered API endpoints:
     ```json
     {
-      "request_body": {
-        "query": "Find similar products",
-        "filters": {"category": "electronics"}
-      },
-      "headers": {"api_key": "test_key"}
+      "query": "Find similar products",
+      "filters": {"category": "electronics"},
+      "max_results": 10
     }
     ```
   </Tab>
