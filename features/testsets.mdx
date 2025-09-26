@@ -103,10 +103,166 @@ For example, here's a field mapping for the customer support schema above:
 ```json
 {
   "inputs": ["userQuery", "context"],
-  "expected": ["ideal", "expectedSentiment"], 
+  "expected": ["ideal", "expectedSentiment"],
   "metadata": ["difficulty"]
 }
 ```
+
+### Understanding Input Fields
+
+**Input fields** contain the actual data that gets sent to your AI system, workflow, or agent during testing. These should match exactly what your system expects to receive in production.
+
+<Tip>
+**Quick tip**: Your input fields should match what goes INTO your AI system. Think about:
+- What do users type into your UI?
+- What data does your API receive?
+- What would a user or another system send to trigger your workflow?
+
+If you're unsure, ask an engineer on your team: "What JSON/data do we send to our AI system?"
+</Tip>
+
+#### Common patterns for structuring inputs
+
+<Tabs>
+  <Tab title="Chatbot/LLM">
+    For conversational AI systems:
+    ```json
+    {
+      "user_message": "How do I reset my password?",
+      "conversation_history": [...],
+      "system_prompt": "You are a helpful assistant"
+    }
+    ```
+  </Tab>
+
+  <Tab title="AI Agent/Workflow">
+    For multi-step AI workflows or agents:
+    ```json
+    {
+      "task_description": "Analyze this document and extract key points",
+      "input_data": "Document content or reference",
+      "workflow_parameters": {
+        "mode": "detailed",
+        "output_format": "bullet_points"
+      }
+    }
+    ```
+  </Tab>
+
+  <Tab title="API Endpoint">
+    For AI-powered API endpoints:
+    ```json
+    {
+      "query": "Find similar products",
+      "filters": {"category": "electronics"},
+      "max_results": 10
+    }
+    ```
+  </Tab>
+
+  <Tab title="Document Processing">
+    For document analysis systems:
+    ```json
+    {
+      "document_content": "Full text or path to document",
+      "extraction_query": "What are the payment terms?",
+      "document_type": "contract"
+    }
+    ```
+  </Tab>
+</Tabs>
+
+<Tip>
+Your input fields should mirror your production system's interface. If your system expects a single prompt string, use a single string field. If it expects structured JSON with multiple parameters, reflect that structure in your schema.
+</Tip>
+
+#### Simple Testcase Schema Examples
+
+The following examples show complete testcase schemas with both input and expected fields. The field mapping below each schema identifies which fields are inputs vs expected outputs.
+
+**Basic Chatbot**
+```json
+{
+  "type": "object",
+  "properties": {
+    "user_message": {
+      "type": "string",
+      "description": "What the user types in the chat box"
+    },
+    "expected_response": {
+      "type": "string",
+      "description": "What the bot should say back"
+    }
+  }
+}
+```
+Field mapping:
+```json
+{
+  "inputs": ["user_message"],
+  "expected": ["expected_response"]
+}
+```
+
+**Document Q&A System**
+```json
+{
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "description": "The question about the document"
+    },
+    "document": {
+      "type": "string",
+      "description": "The document text to search through"
+    },
+    "expected_answer": {
+      "type": "string",
+      "description": "The correct answer from the document"
+    }
+  }
+}
+```
+Field mapping:
+```json
+{
+  "inputs": ["question", "document"],
+  "expected": ["expected_answer"]
+}
+```
+
+**AI Workflow/Agent**
+```json
+{
+  "type": "object",
+  "properties": {
+    "task_description": {
+      "type": "string",
+      "description": "What you want the AI agent to do"
+    },
+    "input_data": {
+      "type": "string",
+      "description": "Any data the agent needs to complete the task"
+    },
+    "expected_output": {
+      "type": "string",
+      "description": "What the agent should produce"
+    }
+  }
+}
+```
+Field mapping:
+```json
+{
+  "inputs": ["task_description", "input_data"],
+  "expected": ["expected_output"]
+}
+```
+
+<Note>
+The key is matching your test inputs to your actual system. If your system takes a single text field, use a single text field. If it takes multiple parameters, include those as separate fields.
+</Note>
 
 ## Create and edit Testcases
 
