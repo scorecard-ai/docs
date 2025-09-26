@@ -38,67 +38,6 @@ Each Testset has a _schema_, which defines which fields a Testcase has, the type
 - <span className="text-green-500 font-bold">Expected fields</span> are expected or ideal outputs, which metrics compare your AI system's output to.
 - <span className="dark:text-gray-400 text-gray-600 font-bold">Metadata fields</span> are additional context for analysis, not used by evaluation or your system.
 
-#### Understanding Input Fields
-
-**Input fields** contain the actual data that gets sent to your AI system, workflow, or agent during testing. These should match exactly what your system expects to receive in production.
-
-Common patterns for structuring inputs:
-
-<Tabs>
-  <Tab title="Chatbot/LLM">
-    For conversational AI systems:
-    ```json
-    {
-      "user_message": "How do I reset my password?",
-      "conversation_history": [...],
-      "system_prompt": "You are a helpful assistant"
-    }
-    ```
-  </Tab>
-
-  <Tab title="AI Agent/Workflow">
-    For multi-step AI workflows or agents:
-    ```json
-    {
-      "task_description": "Analyze this document and extract key points",
-      "input_data": "Document content or reference",
-      "workflow_parameters": {
-        "mode": "detailed",
-        "output_format": "bullet_points"
-      }
-    }
-    ```
-  </Tab>
-
-  <Tab title="API Endpoint">
-    For AI-powered API endpoints:
-    ```json
-    {
-      "request_body": {
-        "query": "Find similar products",
-        "filters": {"category": "electronics"}
-      },
-      "headers": {"api_key": "test_key"}
-    }
-    ```
-  </Tab>
-
-  <Tab title="Document Processing">
-    For document analysis systems:
-    ```json
-    {
-      "document_content": "Full text or path to document",
-      "extraction_query": "What are the payment terms?",
-      "document_type": "contract"
-    }
-    ```
-  </Tab>
-</Tabs>
-
-<Tip>
-Your input fields should mirror your production system's interface. If your system expects a single prompt string, use a single string field. If it expects structured JSON with multiple parameters, reflect that structure in your schema.
-</Tip>
-
 You can update the schema of a Testset by clicking the **"Edit Schema"** button in the Testset actions menu.
 
 This allows you to add or remove fields, modify field types, and update field descriptions. Existing Testcases are not modified, but are validated against the new schema.
@@ -171,6 +110,8 @@ For example, here's a field mapping for the customer support schema above:
 
 ### Understanding Input Fields
 
+**Input fields** contain the actual data that gets sent to your AI system, workflow, or agent during testing. These should match exactly what your system expects to receive in production.
+
 <Tip>
 **Quick tip**: Your input fields should match what goes INTO your AI system. Think about:
 - What do users type into your UI?
@@ -180,7 +121,66 @@ For example, here's a field mapping for the customer support schema above:
 If you're unsure, ask an engineer on your team: "What JSON/data do we send to our AI system?"
 </Tip>
 
-#### Simple Examples
+#### Common patterns for structuring inputs
+
+<Tabs>
+  <Tab title="Chatbot/LLM">
+    For conversational AI systems:
+    ```json
+    {
+      "user_message": "How do I reset my password?",
+      "conversation_history": [...],
+      "system_prompt": "You are a helpful assistant"
+    }
+    ```
+  </Tab>
+
+  <Tab title="AI Agent/Workflow">
+    For multi-step AI workflows or agents:
+    ```json
+    {
+      "task_description": "Analyze this document and extract key points",
+      "input_data": "Document content or reference",
+      "workflow_parameters": {
+        "mode": "detailed",
+        "output_format": "bullet_points"
+      }
+    }
+    ```
+  </Tab>
+
+  <Tab title="API Endpoint">
+    For AI-powered API endpoints:
+    ```json
+    {
+      "request_body": {
+        "query": "Find similar products",
+        "filters": {"category": "electronics"}
+      },
+      "headers": {"api_key": "test_key"}
+    }
+    ```
+  </Tab>
+
+  <Tab title="Document Processing">
+    For document analysis systems:
+    ```json
+    {
+      "document_content": "Full text or path to document",
+      "extraction_query": "What are the payment terms?",
+      "document_type": "contract"
+    }
+    ```
+  </Tab>
+</Tabs>
+
+<Tip>
+Your input fields should mirror your production system's interface. If your system expects a single prompt string, use a single string field. If it expects structured JSON with multiple parameters, reflect that structure in your schema.
+</Tip>
+
+#### Simple Testcase Schema Examples
+
+The following examples show complete testcase schemas with both input and expected fields. The field mapping below each schema identifies which fields are inputs vs expected outputs.
 
 **Basic Chatbot**
 ```json
