@@ -10,33 +10,44 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
   Introducing **MCP Evals** - a dedicated platform for evaluating Model Context Protocol servers! Test and benchmark MCP servers with standardized evaluation workflows at [mcpevals.ai](https://mcpevals.ai).
 
-  <Frame caption="MCP Evals results page showing performance metrics and evaluation scores">
-    <img src="/images/mcp-evals-results-light.png" alt="Screenshot of the MCP Evals platform results page" />
-  </Frame>
+  <DarkLightImage
+    lightSrc="/images/mcp-evals-results-light.png"
+    darkSrc="/images/mcp-evals-results-dark.png"
+    caption="MCP Evals results page showing performance metrics and evaluation scores"
+    alt="Screenshot of the MCP Evals platform results page"
+  />
 
   Key features:
-  - **Dynamic Testing**: AI-generated evaluation tests tailored to each server's capabilities with results in seconds
-  - **Performance Metrics**: View detailed server response times and capability assessments
-  - **Open Source**: Evaluation tools and methodologies available at our [GitHub repository](https://github.com/scorecard-ai/mcp-eval)
+  - **Dynamic Testing**: AI-generated evaluation tests tailored to each server's capabilities with results in seconds.
+  - **Performance Metrics**: Detailed capability assessments and server response times.
+  - **Open Source**: Evaluation tools and methodologies available at our [GitHub repository](https://github.com/scorecard-ai/mcp-eval).
 
   ### 🎨 Enhanced Card Design
 
-  We've refreshed our card design throughout the platform for improved readability and modern aesthetics. The new design provides better visual hierarchy and cleaner information organization across all dashboard views.
+  We've refreshed our card design throughout the platform for better visual hierarchy, improved readability, and modern aesthetics.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-new-card-design-light.png"
+    darkSrc="/images/changelog-new-card-design-dark.png"
+    caption="New metric card design"
+    alt="Screenshot of the new metric card design"
+  />
 
   ### 📊 Float Output Type Support
 
-  Scorecard now supports float output types for more precise numerical evaluations. This enhancement enables better measurement of continuous metrics and scoring systems that require decimal precision.
+  Scorecard now supports float output types. This enhancement enables more precise measurement of continuous metrics and scoring systems that require decimal precision.
 
   <DarkLightImage
-    lightSrc="/images/float-output-type-light.png"
-    darkSrc="/images/float-output-type-dark.png"
-    caption="New float output type option (0.0 - 1.0) alongside Boolean and Integer types"
-    alt="Screenshot showing the float output type selection in metric configuration"
+    lightSrc="/images/changelog-float-score-light.png"
+    darkSrc="/images/changelog-float-score-dark.png"
+    caption="New float output score of 0.90 along with an explanation."
+    alt="Screenshot showing a float score of 0.90 along with an explanation."
   />
 
   ### 🛠️ Bug Fixes and Improvements
 
-  - **[Documentation]** Enhanced testset documentation with clearer guidance on structuring input fields and practical examples
+  - **[Exports]** Fixed encoding in CSVs when exporting testcases or records with accented characters like "è".
+  - **[Documentation]** Enhanced [testset documentation](/features/testsets#understanding-input-fields) with clearer guidance on structuring input fields and practical examples.
 </Update>
 
 <Update label="September 19, 2025">
@@ -72,7 +83,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
   Connect to our MCP server: `https://mcp.scorecard.io`
 
-  <img src="/images/mcp-ecosystem-diagram.svg" alt="MCP Ecosystem Diagram showing how MCP servers connect AI assistants with external tools and services" />
+  <img src="/images/mcp-ecosystem-diagram.svg" alt="MCP Ecosystem Diagram showing how MCP servers connect AI assistants with external tools and services" className="bg-white" />
 
   We'd love your feedback! As one of the first official MCP servers, your experience and suggestions help shape the future of AI evaluation. [Learn more](/features/mcp) or [share your feedback](https://github.com/scorecard-ai/scorecard-mcp).
 
