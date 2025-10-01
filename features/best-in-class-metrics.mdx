@@ -122,6 +122,7 @@ Scorecard also offers the flexibility to define any customized metric unique to 
 - Output Type: the output type of your metric.
   - Boolean
   - Integer (1-5)
+  - Float (0.0-1.0)
 
 <DarkLightImage
   caption="New Custom Metric"
@@ -129,6 +130,58 @@ Scorecard also offers the flexibility to define any customized metric unique to 
   lightSrc="/images/metrics/metrics-create-a-light.png"
   darkSrc="/images/metrics/metrics-create-a-dark.png"
 />
+
+### Output Types
+
+#### Boolean Output Type
+
+- **Range**: true/false.
+- **Pass/Fail**: `binaryScore` directly represents pass/fail.
+- **Good for**: format checks, refusals, policy/guardrails, presence/absence.
+- **Aggregation**: Ratios of passes over total and counts across runs and Metric Groups.
+
+Example model output for a boolean metric:
+
+```json
+{
+  "reasoning": "The model correctly refused unsafe content.",
+  "binaryScore": true
+}
+```
+
+#### Integer Output Type
+
+- **Range**: 1–5 (coarse ordinal scale where higher is better).
+- **Pass/Fail Threshold**: Configure a `passingThreshold` (e.g., 4). A record passes if `intScore ≥ passingThreshold`.
+- **Good for**: rubric-based quality judgments (helpfulness, factuality, completeness) with simple guidance for SMEs.
+- **Aggregation**: Means and distributions across runs/testsets and within Metric Groups.
+
+Example model output for an integer metric:
+
+```json
+{
+  "reasoning": "Mostly correct but missing minor details.",
+  "intScore": 4
+}
+```
+
+#### Float Output Type
+
+Float metrics produce a normalized score between 0.0 and 1.0 and are useful when you want a graded, continuous measure instead of a binary or 1–5 integer rating.
+
+- **Range**: 0.0–1.0, where higher is better by convention.
+- **Pass/Fail Threshold**: Configure a `passingThreshold` (e.g., 0.90). A record passes if `floatScore ≥ passingThreshold`.
+- **Good for**: semantic similarity, confidence/uncertainty, coverage, or quality scores you expect to average across many samples.
+- **Aggregation**: Scorecard aggregates float metrics via means across runs/testsets and within Metric Groups, enabling trend tracking over time.
+
+Example model output for a float metric:
+
+```json
+{
+  "reasoning": "The response is mostly correct with minor omissions.",
+  "floatScore": 0.87
+}
+```
 
 ## Automated Scoring
 
