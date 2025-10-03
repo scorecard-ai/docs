@@ -1,25 +1,25 @@
 ---
 title: "Systems: Beyond Prompts"
-description: "Evaluate a simple LLM system with Scorecard in minutes."
+description: "Version and test complete AI agent configurations including prompts, models, tools, and workflows."
 ---
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
 ## Systems at a glance
 
-A System brings together everything that shapes your AI’s behavior: prompts, model settings, and configuration. Instead of tweaking prompts in isolation, you version the full setup and test it as one unit.
+A System brings together everything that shapes your AI agent's behavior: prompts, model settings, tools, and configuration. Instead of tweaking prompts in isolation, you version the complete agent setup and test it as one unit.
 
 <DarkLightImage lightSrc="/images/systems/systems-overview-light.png" darkSrc="/images/systems/systems-overview-dark.png" caption="Systems list with latest configuration." alt="Screenshot of the Systems list in the UI." />
 
 ## Why it matters
 
-Systems keep prompts, parameters, and options together, give you versioned changes you can compare, and make it clear which version is in production. For teams moving beyond single prompts, this helps control prompt drift, preserves an audit trail of what’s live, and ensures you evaluate exactly what users experience.
+Systems keep prompts, parameters, tools, and configuration together, give you versioned changes you can compare, and make it clear which version is in production. For teams building AI agents and complex workflows, this helps control configuration drift, preserves an audit trail of what's live, and ensures you evaluate exactly what users experience.
 
 ## If you call it something else
 
-- **Prompt pipeline / agent configuration / workflow config**: Systems capture the whole thing.
+- **Agent configuration / prompt pipeline / workflow config**: Systems capture the whole thing.
 - **Where versions live**: Each System has multiple versions; you can label one as production and compare to latest.
-- **What’s captured**: Prompts, model ids/params, tools or routing settings, and custom flags that change outputs.
+- **What's captured**: Prompts, model ids/params, tool definitions, routing settings, and custom flags that change agent behavior.
 
 ## How versions work
 
@@ -27,7 +27,7 @@ Each System has versioned configurations. You can mark any version as production
 
 ## Create a System
 
-Click New System, give it a name and description, and paste configuration JSON for your app (whatever drives your model behavior, e.g., style, temperature, or other flags). Scorecard versions this for you.
+Click New System, give it a name and description, and paste configuration JSON for your agent (whatever drives your agent's behavior, e.g., tools, temperature, routing logic, or custom flags). Scorecard versions this for you.
 
 <DarkLightImage lightSrc="/images/systems/systems-new-light.png" darkSrc="/images/systems/systems-new-dark.png" caption="Create System modal." alt="Screenshot of creating a new System in the UI." />
 
@@ -39,13 +39,13 @@ Open a System to view details, timestamps, and all versions. You can quickly sca
 
 ## Test the full setup
 
-Systems work hand-in-hand with Testsets, Metrics, and Runs so you evaluate realistic changes—not just prompt text. Try it with our quickstart and see how different configurations impact results.
+Systems work hand-in-hand with Testsets, Metrics, and Runs so you evaluate realistic agent changes—not just prompt text. Try it with our quickstart and see how different configurations impact agent performance.
 
 _[→ Try the Joke Bot Quickstart](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-jokebot)_
 
 ## Use cases
 
-- A/B prompts or model choices across the same testset.
-- Tune temperature, system messages, or tool settings and measure impact.
-- Promote the best-performing version to production, with rollback safety.
-- Track regressions across releases by re-running previous versions.
+- A/B test different agent configurations across the same testset.
+- Tune temperature, system messages, tools, or routing logic and measure impact.
+- Promote the best-performing agent version to production, with rollback safety.
+- Track regressions across agent releases by re-running previous versions.
