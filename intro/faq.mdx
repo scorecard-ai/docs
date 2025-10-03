@@ -128,24 +128,43 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     ```
   </Accordion>
 
+  <Accordion title="Can Scorecard test agentic workflows and multi-step AI agents?">
+    Yes! Scorecard is designed to test complex AI agents, not just simple prompts. Our platform supports:
+
+    **Agentic Capabilities**:
+    - **Multi-turn conversations**: Test agents across realistic conversation flows using Sim Agents
+    - **Tool-calling agents**: Evaluate agents that use function calling and API integrations
+    - **Multi-step workflows**: Version complete agent configurations including prompts, tools, and routing logic
+    - **Agent APIs**: Test deployed agent endpoints without code changes
+
+    **How It Works**:
+    - Use **Systems** to version your complete agent configuration (prompts + tools + settings)
+    - Use **Multi-turn Simulation** to test conversational agents with automated user personas
+    - Use **Custom Endpoints** to evaluate agent APIs and HTTP endpoints
+    - Apply metrics to agent outputs just like any other evaluation
+
+    See our [Multi-turn Simulation](/features/multi-turn-simulation) and [Systems](/features/systems) documentation for agent-specific features.
+  </Accordion>
+
   <Accordion title="What types of AI systems can Scorecard evaluate?">
-    Scorecard supports evaluation of any AI system accessible via API:
-    
+    Scorecard supports evaluation of any AI agent or system accessible via API:
+
     **Model Types**:
     - **Large Language Models**: GPT, Claude, Llama, Gemini, etc.
     - **Embedding Models**: OpenAI, Cohere, custom embeddings
     - **Multimodal Models**: Vision, audio, and text processing
     - **Fine-tuned Models**: Custom models hosted anywhere
-    
-    **System Types**:
-    - **RAG Systems**: Retrieval-augmented generation pipelines
-    - **Chatbots**: Customer service, virtual assistants
+
+    **Agent & System Types**:
+    - **Conversational Agents**: Multi-turn chatbots and virtual assistants
     - **Tool-calling Agents**: Function calling and API integrations
+    - **RAG Agents**: Retrieval-augmented generation pipelines
+    - **Agentic Workflows**: Multi-step reasoning and planning agents
     - **Custom APIs**: Any HTTP endpoint returning AI-generated content
-    
+
     **Deployment Options**:
     - **Cloud APIs**: OpenAI, Anthropic, Google, AWS Bedrock
-    - **Self-hosted**: Models running on your infrastructure  
+    - **Self-hosted**: Models and agents running on your infrastructure
     - **Hybrid**: Combination of cloud and on-premise systems
   </Accordion>
 </AccordionGroup>

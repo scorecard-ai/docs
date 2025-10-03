@@ -1,17 +1,17 @@
 ---
 title: "Testsets"
-description: "Use Testsets to create curated datasets for evaluating your AI systems"
+description: "Use Testsets to create curated datasets for evaluating your AI agents"
 ---
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-A **Testset** is a collection of **Testcases** used to evaluate the performance of an AI system across various inputs and scenarios. Think of it as a curated dataset specifically designed for testing AI systems. Testsets belong to a central theme like "Core Functionality", "Edge Cases", or "Customer Support Queries".
+A **Testset** is a collection of **Testcases** used to evaluate the performance of an AI agent across various inputs and scenarios. Think of it as a curated dataset specifically designed for testing AI agents. Testsets belong to a central theme like "Core Functionality", "Edge Cases", or "Customer Support Queries".
 
 A **Testcase** is an individual test data point containing inputs, expected outputs, and metadata used for evaluation.
 
 <DarkLightImage
   lightSrc="/images/testset-details-light.png"
-  caption='Testset details page showing eight Testcases for a "Message tone rewriter" LLM system.'
+  caption='Testset details page showing eight Testcases for a "Message tone rewriter" AI agent.'
   alt="Screenshot of the testset details page in the UI."
 />
 
@@ -34,9 +34,9 @@ Checking "Add example Testcases" will automatically generate 3 sample Testcases 
 
 Each Testset has a _schema_, which defines which fields a Testcase has, the type of each field, and the role each field plays in evaluation.
 
-- <span className="text-blue-500 font-bold">Input fields</span> are sent to your AI system.
-- <span className="text-green-500 font-bold">Expected fields</span> are expected or ideal outputs, which metrics compare your AI system's output to.
-- <span className="dark:text-gray-400 text-gray-600 font-bold">Metadata fields</span> are additional context for analysis, not used by evaluation or your system.
+- <span className="text-blue-500 font-bold">Input fields</span> are sent to your AI agent.
+- <span className="text-green-500 font-bold">Expected fields</span> are expected or ideal outputs, which metrics compare your agent's output to.
+- <span className="dark:text-gray-400 text-gray-600 font-bold">Metadata fields</span> are additional context for analysis, not used by evaluation or your agent.
 
 You can update the schema of a Testset by clicking the **"Edit Schema"** button in the Testset actions menu.
 

@@ -1,19 +1,19 @@
 ---
 title: "Multi-turn simulation"
-description: "Evaluate multi-turn conversations with Scorecard."
+description: "Test conversational AI agents with realistic multi-turn simulations and automated user personas."
 ---
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-Scorecard's multi-turn simulation feature allows you to evaluate the performance of an LLM system in a multi-turn conversation.
+Scorecard's multi-turn simulation feature allows you to evaluate the performance of conversational AI agents in realistic multi-turn conversations.
 
-Define instructions for your simulated user in Scorecard, then run a simulation on your system using the Scorecard SDK.
+Define instructions for your simulated user in Scorecard, then run a simulation on your agent using the Scorecard SDK.
 
 <DarkLightImage lightSrc="/images/sim-agent-details-light.png" caption="Sim Agent configuration page." alt="Details of a Sim Agent." />
 
 ## Create a Sim Agent
 
-Sim Agents are configurable AI personas that interact with your system during testing. Each agent has a prompt template, model settings, and can be versioned for reproducibility.
+Sim Agents are configurable AI personas that interact with your agent during testing. Each Sim Agent has a prompt template, model settings, and can be versioned for reproducibility.
 
 <Tabs>
 <Tab title="Create using UI">
@@ -90,11 +90,11 @@ See [Prompts](/features/prompts#advanced-jinja-features) for information on refe
 
 ## Run a simulation
 
-Multi-turn simulations execute conversations between your system and Sim Agents, capturing the full interaction for evaluation. Simulation runs are kicked off by calling `multi_turn_simulation()` from the Scorecard Python SDK.
+Multi-turn simulations execute conversations between your AI agent and Sim Agents, capturing the full interaction for evaluation. Simulation runs are kicked off by calling `multi_turn_simulation()` from the Scorecard Python SDK.
 
 ### System function
 
-The `system` parameter is your code under test. It must be a callable that handles conversation turns.
+The `system` parameter is your agent code under test. It must be a callable that handles conversation turns.
 
 **Function signature:**
 
@@ -109,9 +109,9 @@ def your_system(
 ) -> Iterable[str | ChatMessage]
 ```
 
-Here's an example of an LLM system under test:
+Here's an example of an AI agent under test:
 
-```python wrap expandable Example system function
+```python wrap expandable Example agent function
 from openai import OpenAI
 from scorecard_ai.lib import ChatMessage
 
@@ -197,7 +197,7 @@ simulation_run = multi_turn_simulation(
 ```
 
 <Note>
-The simulation automatically determines who starts the conversation based on `initial_messages`. If the last message is from the user, the system responds first. Use `start_with_system` to override this behavior.
+The simulation automatically determines who starts the conversation based on `initial_messages`. If the last message is from the user, the agent responds first. Use `start_with_system` to override this behavior.
 </Note>
 
 ## Stop checks
@@ -258,7 +258,7 @@ def stop_check_user_is_satisfied(conversation_info: ConversationInfo) -> bool:
 
 Calling `multi_turn_simulation()` creates a [Scorecard Run](/features/runs).
 
-To view simulation results, go to the Run's details page. Then, click on a Record ID to go to the record details page. The conversation history between the Sim Agent ("User") and the system under test ("Assistant") will be shown.
+To view simulation results, go to the Run's details page. Then, click on a Record ID to go to the record details page. The conversation history between the Sim Agent ("User") and the agent under test ("Assistant") will be shown.
 
 <DarkLightImage lightSrc="/images/testrecord-details-chat-history-light.png" caption="Conversation chat history in the record details page." alt="Chat history of a record." />
 
@@ -279,13 +279,13 @@ Escalation paths are common in customer service systems. This Sim Agent will gra
 </Accordion>
 <Accordion title="Testing edge cases">
 
-This Sim Agent will test the system's handling of unusual requests.
+This Sim Agent will test the agent's handling of unusual requests.
 
-> You are testing the system's handling of `{{test_scenario}}`. 
-> Try unusual requests like:  
-> \- Very long product names  
-> \- Special characters in input  
-> \- Multiple issues at once  
+> You are testing the agent's handling of `{{test_scenario}}`.
+> Try unusual requests like:
+> \- Very long product names
+> \- Special characters in input
+> \- Multiple issues at once
 > \- Contradictory requests  
 
 </Accordion>
@@ -293,9 +293,9 @@ This Sim Agent will test the system's handling of unusual requests.
 
 This Sim Agent will start by asking about the main issue, then suddenly change topic to a distraction topic after 2 turns. It will then return to the original issue.
 
-> Start by asking about `{{main_issue}}`.  
-> After 2 turns, suddenly change topic to `{{distraction_topic}}`.  
-> Then return to the original issue.  
+> Start by asking about `{{main_issue}}`.
+> After 2 turns, suddenly change topic to `{{distraction_topic}}`.
+> Then return to the original issue.
 > Test if the assistant can handle context switches.  
 
 </Accordion>
