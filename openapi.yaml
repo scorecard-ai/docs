@@ -61,7 +61,7 @@ paths:
 
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
 
@@ -72,17 +72,25 @@ paths:
             console.log(project.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             project = client.projects.create(
                 description="This is a test project",
                 name="My Project",
             )
             print(project.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "description": "This is a test project",
+                      "name": "My Project"
+                    }'
     get:
       operationId: listProjects
       summary: List Projects
@@ -155,7 +163,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             // Automatically fetches more pages as needed.
@@ -164,15 +172,18 @@ paths:
             }
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             page = client.projects.list()
             page = page.data[0]
             print(page.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /projects/{projectId}/testsets:
     get:
       operationId: listTestsets
@@ -269,7 +280,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             // Automatically fetches more pages as needed.
@@ -278,17 +289,20 @@ paths:
             }
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             page = client.testsets.list(
                 project_id="314",
             )
             page = page.data[0]
             print(page.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects/$PROJECT_ID/testsets \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     post:
       operationId: createTestset
       summary: Create Testset
@@ -419,7 +433,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const testset = await client.testsets.create('314', {
@@ -440,11 +454,10 @@ paths:
             console.log(testset.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             testset = client.testsets.create(
                 project_id="314",
@@ -474,6 +487,30 @@ paths:
                 name="Long Context Q&A",
             )
             print(testset.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects/$PROJECT_ID/testsets \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "description": "Testset for long context Q&A chatbot.",
+                      "fieldMapping": {
+                        "expected": [
+                          "idealAnswer"
+                        ],
+                        "inputs": [
+                          "question"
+                        ],
+                        "metadata": [
+                          "string"
+                        ]
+                      },
+                      "jsonSchema": {
+                        "type": "bar",
+                        "properties": "bar"
+                      },
+                      "name": "Long Context Q&A"
+                    }'
   /testsets/{testsetId}:
     get:
       operationId: getTestset
@@ -532,7 +569,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const testset = await client.testsets.get('246');
@@ -540,16 +577,19 @@ paths:
             console.log(testset.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             testset = client.testsets.get(
                 "246",
             )
             print(testset.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/testsets/$TESTSET_ID \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     patch:
       operationId: updateTestset
       summary: Update Testset
@@ -760,7 +800,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const testset = await client.testsets.update('246', {
@@ -771,11 +811,10 @@ paths:
             console.log(testset.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             testset = client.testsets.update(
                 testset_id="246",
@@ -783,6 +822,12 @@ paths:
                 name="Updated Q&A Testset",
             )
             print(testset.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/testsets/$TESTSET_ID \
+                -X PATCH \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     delete:
       operationId: deleteTestset
       summary: Delete Testset
@@ -817,7 +862,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const testset = await client.testsets.delete('246');
@@ -825,16 +870,20 @@ paths:
             console.log(testset.success);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             testset = client.testsets.delete(
                 "246",
             )
             print(testset.success)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/testsets/$TESTSET_ID \
+                -X DELETE \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /testsets/{testsetId}/testcases:
     get:
       operationId: listTestcases
@@ -938,7 +987,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             // Automatically fetches more pages as needed.
@@ -947,17 +996,20 @@ paths:
             }
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             page = client.testcases.list(
                 testset_id="246",
             )
             page = page.data[0]
             print(page.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/testsets/$TESTSET_ID/testcases \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     post:
       operationId: createTestcases
       summary: Create multiple Testcases
@@ -1073,7 +1125,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const testcase = await client.testcases.create('246', {
@@ -1105,11 +1157,10 @@ paths:
             console.log(testcase.items);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             testcase = client.testcases.create(
                 testset_id="246",
@@ -1134,6 +1185,36 @@ paths:
                 }],
             )
             print(testcase.items)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/testsets/$TESTSET_ID/testcases \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "items": [
+                        {
+                          "jsonData": {
+                            "question": "bar",
+                            "idealAnswer": "bar",
+                            "provenance": "bar"
+                          }
+                        },
+                        {
+                          "jsonData": {
+                            "question": "bar",
+                            "idealAnswer": "bar",
+                            "provenance": "bar"
+                          }
+                        },
+                        {
+                          "jsonData": {
+                            "question": "bar",
+                            "idealAnswer": "bar",
+                            "provenance": "bar"
+                          }
+                        }
+                      ]
+                    }'
   /testcases/{testcaseId}:
     get:
       operationId: getTestcase
@@ -1179,7 +1260,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const testcase = await client.testcases.get('248');
@@ -1187,16 +1268,19 @@ paths:
             console.log(testcase.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             testcase = client.testcases.get(
                 "248",
             )
             print(testcase.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/testcases/$TESTCASE_ID \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     put:
       operationId: updateTestcase
       summary: Update Testcase
@@ -1262,7 +1346,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const testcase = await client.testcases.update('248', {
@@ -1276,11 +1360,10 @@ paths:
             console.log(testcase.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             testcase = client.testcases.update(
                 testcase_id="248",
@@ -1291,6 +1374,19 @@ paths:
                 },
             )
             print(testcase.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/testcases/$TESTCASE_ID \
+                -X PUT \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "jsonData": {
+                        "question": "bar",
+                        "idealAnswer": "bar",
+                        "provenance": "bar"
+                      }
+                    }'
   /testcases/bulk-delete:
     post:
       operationId: deleteTestcases
@@ -1343,7 +1439,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const testcase = await client.testcases.delete({ ids: ['123', '124', '125'] });
@@ -1351,16 +1447,27 @@ paths:
             console.log(testcase.success);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             testcase = client.testcases.delete(
                 ids=["123", "124", "125"],
             )
             print(testcase.success)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/testcases/bulk-delete \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "ids": [
+                        "123",
+                        "124",
+                        "125"
+                      ]
+                    }'
   /projects/{projectId}/metrics:
     post:
       operationId: createMetric
@@ -1540,6 +1647,127 @@ paths:
                       description: The temperature for AI evaluation (0-2).
                     outputType:
                       type: string
+                      const: float
+                      description: Float output type (0-1).
+                    passingThreshold:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      default: 0.9
+                      description: Threshold for determining pass/fail from float scores (0.0-1.0).
+                  required:
+                    - name
+                    - evalType
+                    - promptTemplate
+                    - outputType
+                  description: A Metric with AI evaluation and float output.
+                  title: AI float metric
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: human
+                      description: Human-based evaluation type.
+                    guidelines:
+                      type: string
+                      description: Guidelines for human evaluators.
+                    outputType:
+                      type: string
+                      const: float
+                      description: Float output type (0-1).
+                    passingThreshold:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      default: 0.9
+                      description: Threshold for determining pass/fail from float scores (0.0-1.0).
+                  required:
+                    - name
+                    - evalType
+                    - outputType
+                  description: A Metric with human evaluation and float output.
+                  title: Human float metric
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: heuristic
+                      description: Heuristic-based evaluation type.
+                    guidelines:
+                      type: string
+                      description: Optional guidelines for heuristic evaluation logic.
+                    outputType:
+                      type: string
+                      const: float
+                      description: Float output type (0-1).
+                    passingThreshold:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      default: 0.9
+                      description: Threshold for determining pass/fail from float scores (0.0-1.0).
+                  required:
+                    - name
+                    - evalType
+                    - outputType
+                  description: A Metric with heuristic evaluation and float output.
+                  title: Heuristic float metric
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: ai
+                      description: AI-based evaluation type.
+                    guidelines:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: Guidelines for AI evaluation on how to score the metric.
+                    promptTemplate:
+                      type: string
+                      description: >-
+                        The complete prompt template for AI evaluation. Should include placeholders for
+                        dynamic content.
+                    evalModelName:
+                      type: string
+                      default: gpt-4o
+                      description: The AI model to use for evaluation.
+                    temperature:
+                      type: number
+                      minimum: 0
+                      maximum: 2
+                      default: 0
+                      description: The temperature for AI evaluation (0-2).
+                    outputType:
+                      type: string
                       const: boolean
                       description: Boolean output type.
                   required:
@@ -1676,7 +1904,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const metric = await client.metrics.create('314', {
@@ -1693,11 +1921,10 @@ paths:
             console.log(metric);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             metric = client.metrics.create(
                 project_id="314",
@@ -1711,6 +1938,11 @@ paths:
                 temperature=0.1,
             )
             print(metric)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects/$PROJECT_ID/metrics \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /metrics/{metricId}:
     patch:
       operationId: updateMetric
@@ -1886,6 +2118,123 @@ paths:
                       description: The temperature for AI evaluation (0-2).
                     outputType:
                       type: string
+                      const: float
+                      description: Float output type (0-1).
+                    passingThreshold:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      default: 0.9
+                      description: Threshold for determining pass/fail from float scores (0.0-1.0).
+                  required:
+                    - evalType
+                    - outputType
+                  description: A Metric with AI evaluation and float output.
+                  title: AI float metric
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: human
+                      description: Human-based evaluation type.
+                    guidelines:
+                      type: string
+                      description: Guidelines for human evaluators.
+                    outputType:
+                      type: string
+                      const: float
+                      description: Float output type (0-1).
+                    passingThreshold:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      default: 0.9
+                      description: Threshold for determining pass/fail from float scores (0.0-1.0).
+                  required:
+                    - evalType
+                    - outputType
+                  description: A Metric with human evaluation and float output.
+                  title: Human float metric
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: heuristic
+                      description: Heuristic-based evaluation type.
+                    guidelines:
+                      type: string
+                      description: Optional guidelines for heuristic evaluation logic.
+                    outputType:
+                      type: string
+                      const: float
+                      description: Float output type (0-1).
+                    passingThreshold:
+                      type: number
+                      minimum: 0
+                      maximum: 1
+                      default: 0.9
+                      description: Threshold for determining pass/fail from float scores (0.0-1.0).
+                  required:
+                    - evalType
+                    - outputType
+                  description: A Metric with heuristic evaluation and float output.
+                  title: Heuristic float metric
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the Metric.
+                    description:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: The description of the Metric.
+                    evalType:
+                      type: string
+                      const: ai
+                      description: AI-based evaluation type.
+                    guidelines:
+                      type:
+                        - string
+                        - "null"
+                      default: null
+                      description: Guidelines for AI evaluation on how to score the metric.
+                    promptTemplate:
+                      type: string
+                      description: >-
+                        The complete prompt template for AI evaluation. Should include placeholders for
+                        dynamic content.
+                    evalModelName:
+                      type: string
+                      default: gpt-4o
+                      description: The AI model to use for evaluation.
+                    temperature:
+                      type: number
+                      minimum: 0
+                      maximum: 2
+                      default: 0
+                      description: The temperature for AI evaluation (0-2).
+                    outputType:
+                      type: string
                       const: boolean
                       description: Boolean output type.
                   required:
@@ -2009,7 +2358,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const metric = await client.metrics.update('321', {
@@ -2022,11 +2371,10 @@ paths:
             console.log(metric);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             metric = client.metrics.update(
                 metric_id="321",
@@ -2035,7 +2383,133 @@ paths:
                 prompt_template="Using the following guidelines, evaluate the response: {{ guidelines }}\n\nResponse: {{ outputs.response }}\n\nIdeal answer: {{ expected.idealResponse }}",
             )
             print(metric)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/metrics/$METRIC_ID \
+                -X PATCH \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /projects/{projectId}/runs:
+    get:
+      operationId: listRuns
+      summary: List Runs
+      description: >-
+        Retrieve a paginated list of all Runs for a Project. Runs are ordered by creation date, most recent
+        first.
+      parameters:
+        - in: path
+          name: projectId
+          description: The ID of the Run's Project.
+          schema:
+            type: string
+            example: "314"
+          required: true
+        - in: query
+          name: limit
+          description: Maximum number of items to return (1-100). Use with `cursor` for pagination through large sets.
+          schema:
+            type: integer
+            exclusiveMinimum: 0
+            default: 20
+            example: 20
+        - in: query
+          name: cursor
+          description: >-
+            Cursor for pagination. Pass the `nextCursor` from the previous response to get the next page of
+            results.
+          schema:
+            type: string
+            example: "123"
+      responses:
+        "200":
+          description: Successfully retrieved list of runs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Run"
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                  hasMore:
+                    type: boolean
+                  total:
+                    type: integer
+                    minimum: 0
+                required:
+                  - data
+                  - nextCursor
+                  - hasMore
+              examples:
+                Run list with pagination:
+                  value:
+                    data:
+                      - id: "135"
+                        testsetId: "246"
+                        systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                        systemVersionId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                        metricIds:
+                          - "789"
+                          - "101"
+                        metricVersionIds:
+                          - 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                          - 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf1
+                        numRecords: 10
+                        numExpectedRecords: 10
+                        numScores: 20
+                        status: completed
+                      - id: "136"
+                        testsetId: null
+                        systemId: null
+                        systemVersionId: null
+                        metricIds:
+                          - "789"
+                        metricVersionIds:
+                          - 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                        numRecords: 5
+                        numExpectedRecords: null
+                        numScores: 3
+                        status: running_scoring
+                    nextCursor: 8fb15f74-2918-4982-a4fc-9c157f77dca8
+                    hasMore: true
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: 'My API Key',
+            });
+
+            // Automatically fetches more pages as needed.
+            for await (const run of client.runs.list('314')) {
+              console.log(run.id);
+            }
+        - lang: Python
+          source: |-
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key="My API Key",
+            )
+            page = client.runs.list(
+                project_id="314",
+            )
+            page = page.data[0]
+            print(page.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects/$PROJECT_ID/runs \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     post:
       operationId: createRun
       summary: Create Run
@@ -2061,7 +2535,9 @@ paths:
                   default: null
                   description: The ID of the Testset this Run is testing.
                 systemVersionId:
-                  type: string
+                  type:
+                    - string
+                    - "null"
                   format: uuid
                   description: The ID of the system version this Run is using.
                 metricIds:
@@ -2100,18 +2576,33 @@ paths:
                   value:
                     id: "135"
                     testsetId: "246"
+                    systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
                     systemVersionId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
                     metricIds:
                       - "789"
                       - "101"
+                    metricVersionIds:
+                      - 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                      - 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf1
+                    numRecords: 0
+                    numExpectedRecords: 10
+                    numScores: 0
+                    status: awaiting_execution
                   summary: Created Run with Testset
                   description: Response after successfully creating a Run with a Testset.
                 Created Run without Testset:
                   value:
                     id: "135"
+                    systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
                     systemVersionId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
                     metricIds:
                       - "789"
+                    metricVersionIds:
+                      - 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                    numRecords: 0
+                    numExpectedRecords: 0
+                    numScores: 0
+                    status: awaiting_execution
                   summary: Created Run without Testset
                   description: Response after successfully creating a Run without a Testset.
         "401":
@@ -2124,7 +2615,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const run = await client.runs.create('314', {
@@ -2136,11 +2627,10 @@ paths:
             console.log(run.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             run = client.runs.create(
                 project_id="314",
@@ -2149,6 +2639,103 @@ paths:
                 testset_id="246",
             )
             print(run.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects/$PROJECT_ID/runs \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "metricIds": [
+                        "789",
+                        "101"
+                      ]
+                    }'
+  /runs/{runId}:
+    get:
+      operationId: getRun
+      summary: Get Run
+      description: Retrieve a specific Run by ID.
+      parameters:
+        - in: path
+          name: runId
+          description: The ID of the Run to retrieve.
+          schema:
+            type: string
+            example: "135"
+          required: true
+      responses:
+        "200":
+          description: Successfully retrieved Run.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Run"
+              examples:
+                Run with Testset:
+                  value:
+                    id: "135"
+                    testsetId: "246"
+                    systemId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    systemVersionId: 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                    metricIds:
+                      - "789"
+                      - "101"
+                    metricVersionIds:
+                      - 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                      - 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf1
+                    numRecords: 10
+                    numExpectedRecords: 10
+                    numScores: 20
+                    status: completed
+                  summary: Run with Testset
+                  description: Example response showing a completed Run with a Testset.
+                Run without Testset:
+                  value:
+                    id: "136"
+                    testsetId: null
+                    systemId: null
+                    systemVersionId: null
+                    metricIds:
+                      - "789"
+                    metricVersionIds:
+                      - 87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0
+                    numRecords: 5
+                    numExpectedRecords: null
+                    numScores: 3
+                    status: running_scoring
+                  summary: Run without Testset
+                  description: Example response showing a Run without a Testset that's currently running scoring.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: 'My API Key',
+            });
+
+            const run = await client.runs.get('135');
+
+            console.log(run.id);
+        - lang: Python
+          source: |-
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key="My API Key",
+            )
+            run = client.runs.get(
+                "135",
+            )
+            print(run.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/runs/$RUN_ID \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /runs/{runId}/records:
     post:
       operationId: createRecord
@@ -2229,7 +2816,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const record = await client.records.create('135', {
@@ -2242,11 +2829,10 @@ paths:
             console.log(record.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             record = client.records.create(
                 run_id="135",
@@ -2262,6 +2848,22 @@ paths:
                 testcase_id="248",
             )
             print(record.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/runs/$RUN_ID/records \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "expected": {
+                        "idealAnswer": "bar"
+                      },
+                      "inputs": {
+                        "question": "bar"
+                      },
+                      "outputs": {
+                        "response": "bar"
+                      }
+                    }'
   /projects/{projectId}/systems:
     get:
       operationId: listSystems
@@ -2362,7 +2964,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             // Automatically fetches more pages as needed.
@@ -2371,17 +2973,20 @@ paths:
             }
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             page = client.systems.list(
                 project_id="314",
             )
             page = page.data[0]
             print(page.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects/$PROJECT_ID/systems \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     post:
       operationId: upsertSystem
       summary: Create (upsert) system
@@ -2468,7 +3073,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const system = await client.systems.upsert('314', {
@@ -2480,11 +3085,10 @@ paths:
             console.log(system.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             system = client.systems.upsert(
                 project_id="314",
@@ -2496,6 +3100,17 @@ paths:
                 name="GPT-4 Chatbot",
             )
             print(system.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects/$PROJECT_ID/systems \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "config": {
+                        "temperature": "bar",
+                        "maxTokens": "bar"
+                      }
+                    }'
   /systems/{systemId}:
     get:
       operationId: getSystem
@@ -2547,7 +3162,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const system = await client.systems.get('12345678-0a8b-4f66-b6f3-2ddcfa097257');
@@ -2555,16 +3170,19 @@ paths:
             console.log(system.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             system = client.systems.get(
                 "12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             print(system.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/systems/$SYSTEM_ID \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     patch:
       operationId: updateSystem
       summary: Update system
@@ -2652,7 +3270,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const system = await client.systems.update('12345678-0a8b-4f66-b6f3-2ddcfa097257', {
@@ -2662,17 +3280,22 @@ paths:
             console.log(system.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             system = client.systems.update(
                 system_id="12345678-0a8b-4f66-b6f3-2ddcfa097257",
                 production_version_id="87654321-4d3b-4ae4-8c7a-4b6e2a19ccf3",
             )
             print(system.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/systems/$SYSTEM_ID \
+                -X PATCH \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     delete:
       operationId: deleteSystem
       summary: Delete system
@@ -2715,7 +3338,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const system = await client.systems.delete('12345678-0a8b-4f66-b6f3-2ddcfa097257');
@@ -2723,16 +3346,20 @@ paths:
             console.log(system.success);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             system = client.systems.delete(
                 "12345678-0a8b-4f66-b6f3-2ddcfa097257",
             )
             print(system.success)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/systems/$SYSTEM_ID \
+                -X DELETE \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /systems/versions/{systemVersionId}:
     get:
       operationId: getSystemVersion
@@ -2776,7 +3403,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const systemVersion = await client.systems.versions.get('87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0');
@@ -2784,16 +3411,19 @@ paths:
             console.log(systemVersion.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             system_version = client.systems.versions.get(
                 "87654321-4d3b-4ae4-8c7a-4b6e2a19ccf0",
             )
             print(system_version.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/systems/versions/$SYSTEM_VERSION_ID \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /systems/{systemId}/versions:
     post:
       operationId: upsertSystemVersion
@@ -2870,7 +3500,7 @@ paths:
 
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
 
@@ -2884,11 +3514,10 @@ paths:
             console.log(systemVersion.id);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             system_version = client.systems.versions.upsert(
                 system_id="12345678-0a8b-4f66-b6f3-2ddcfa097257",
@@ -2900,6 +3529,18 @@ paths:
                 name="Test model: Gemini",
             )
             print(system_version.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/systems/$SYSTEM_ID/versions \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "config": {
+                        "temperature": "bar",
+                        "maxTokens": "bar",
+                        "model": "bar"
+                      }
+                    }'
   /records/{recordId}/scores/{metricConfigId}:
     put:
       operationId: upsertScore
@@ -3008,7 +3649,7 @@ paths:
             import Scorecard from 'scorecard-ai';
 
             const client = new Scorecard({
-              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+              apiKey: 'My API Key',
             });
 
             const score = await client.scores.upsert('a1b2c3d4-e5f6-7890-1234-567890abcdef', {
@@ -3019,11 +3660,10 @@ paths:
             console.log(score.validationErrors);
         - lang: Python
           source: |-
-            import os
             from scorecard_ai import Scorecard
 
             client = Scorecard(
-                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+                api_key="My API Key",
             )
             score = client.scores.upsert(
                 metric_config_id="a1b2c3d4-e5f6-7890-1234-567890abcdef",
@@ -3034,6 +3674,18 @@ paths:
                 },
             )
             print(score.validation_errors)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/records/$RECORD_ID/scores/$METRIC_CONFIG_ID \
+                -X PUT \
+                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY" \
+                -d '{
+                      "score": {
+                        "value": "bar",
+                        "reasoning": "bar"
+                      }
+                    }'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -3402,6 +4054,148 @@ components:
               description: The temperature for AI evaluation (0-2).
             outputType:
               type: string
+              const: float
+              description: Float output type (0-1).
+            passingThreshold:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 0.9
+              description: Threshold for determining pass/fail from float scores (0.0-1.0).
+          required:
+            - id
+            - name
+            - description
+            - evalType
+            - guidelines
+            - promptTemplate
+            - evalModelName
+            - temperature
+            - outputType
+            - passingThreshold
+          description: A Metric with AI evaluation and float output.
+          title: AI float metric
+        - type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the Metric.
+            name:
+              type: string
+              description: The name of the Metric.
+            description:
+              type:
+                - string
+                - "null"
+              default: null
+              description: The description of the Metric.
+            evalType:
+              type: string
+              const: human
+              description: Human-based evaluation type.
+            guidelines:
+              type: string
+              description: Guidelines for human evaluators.
+            outputType:
+              type: string
+              const: float
+              description: Float output type (0-1).
+            passingThreshold:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 0.9
+              description: Threshold for determining pass/fail from float scores (0.0-1.0).
+          required:
+            - id
+            - name
+            - description
+            - evalType
+            - outputType
+            - passingThreshold
+          description: A Metric with human evaluation and float output.
+          title: Human float metric
+        - type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the Metric.
+            name:
+              type: string
+              description: The name of the Metric.
+            description:
+              type:
+                - string
+                - "null"
+              default: null
+              description: The description of the Metric.
+            evalType:
+              type: string
+              const: heuristic
+              description: Heuristic-based evaluation type.
+            guidelines:
+              type: string
+              description: Optional guidelines for heuristic evaluation logic.
+            outputType:
+              type: string
+              const: float
+              description: Float output type (0-1).
+            passingThreshold:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 0.9
+              description: Threshold for determining pass/fail from float scores (0.0-1.0).
+          required:
+            - id
+            - name
+            - description
+            - evalType
+            - outputType
+            - passingThreshold
+          description: A Metric with heuristic evaluation and float output.
+          title: Heuristic float metric
+        - type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the Metric.
+            name:
+              type: string
+              description: The name of the Metric.
+            description:
+              type:
+                - string
+                - "null"
+              default: null
+              description: The description of the Metric.
+            evalType:
+              type: string
+              const: ai
+              description: AI-based evaluation type.
+            guidelines:
+              type:
+                - string
+                - "null"
+              default: null
+              description: Guidelines for AI evaluation on how to score the metric.
+            promptTemplate:
+              type: string
+              description: >-
+                The complete prompt template for AI evaluation. Should include placeholders for dynamic
+                content.
+            evalModelName:
+              type: string
+              default: gpt-4o
+              description: The AI model to use for evaluation.
+            temperature:
+              type: number
+              minimum: 0
+              maximum: 2
+              default: 0
+              description: The temperature for AI evaluation (0-2).
+            outputType:
+              type: string
               const: boolean
               description: Boolean output type.
           required:
@@ -3495,8 +4289,16 @@ components:
             - "null"
           default: null
           description: The ID of the Testset this Run is testing.
+        systemId:
+          type:
+            - string
+            - "null"
+          format: uuid
+          description: The ID of the system this Run is using.
         systemVersionId:
-          type: string
+          type:
+            - string
+            - "null"
           format: uuid
           description: The ID of the system version this Run is using.
         metricIds:
@@ -3504,6 +4306,25 @@ components:
           items:
             type: string
           description: The IDs of the metrics this Run is using.
+        metricVersionIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: The IDs of the metric versions this Run is using.
+        numRecords:
+          type: number
+          description: The number of records in the Run.
+        numExpectedRecords:
+          type:
+            - number
+            - "null"
+          description: >-
+            The number of expected records in the Run. Determined by the number of testcases in the Run's
+            Testset at the time of Run creation.
+        numScores:
+          type: number
+          description: The number of completed scores in the Run so far.
         status:
           type: string
           enum:
@@ -3518,7 +4339,13 @@ components:
       required:
         - id
         - testsetId
+        - systemId
+        - systemVersionId
         - metricIds
+        - metricVersionIds
+        - numRecords
+        - numExpectedRecords
+        - numScores
         - status
       description: A Run in the Scorecard system.
     Record:

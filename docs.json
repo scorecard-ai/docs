@@ -201,7 +201,11 @@
           },
           {
             "group": "Runs",
-            "pages": ["api-reference/create-run"]
+            "pages": [
+              "api-reference/create-run",
+              "api-reference/list-runs",
+              "api-reference/get-run"
+            ]
           },
           {
             "group": "Records",

@@ -5,6 +5,37 @@ description: "New updates and improvements"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="October 3, 2025">
+  ### 📊 Analysis Page
+
+  We've released a new Analysis page that provides deeper insights into your evaluation data.
+
+  ### 🔌 Scorecard MCP Server - Open Source
+
+  We've released the updated source code for our MCP server on [GitHub](https://github.com/scorecard-ai/scorecard-mcp)! See how we integrated:
+
+  - [Clerk](https://clerk.com) for authentication (OAuth 2.0 Protected Resource Metadata).
+  - [Stainless](https://stainless.com) for generated MCP endpoints.
+  - [Sentry](https://sentry.io) for production-grade monitoring and error tracking.
+
+  ### 🚀 New API Endpoints
+
+  We've added new API endpoints for better run management:
+
+  - [Get Run](/api-reference/get-run): Retrieve details for a specific run.
+  - [List Runs](/api-reference/list-runs): Retrieve details for all runs in a project.
+
+  ### 📏 Correctness Metric Template
+
+  A new float metric template called "Correctness" is now available, providing a standardized way to measure accuracy with decimal precision.
+
+  ### 🛠️ Bug Fixes and Improvements
+
+  - **[Runs]** Testcase ID text in the record table now links directly to the record's testcase details page for easier navigation.
+  - **[Error Messages]** Improved error messaging for permissions failures throughout the UI.
+  - **[Scoring]** Exposed complete error details when scoring fails. For example, if a record exceeds the AI metric's context length, the full error message is now displayed instead of a generic "Internal server error".
+</Update>
+
 <Update label="September 26, 2025">
   ### 🎯 MCP Evaluations Platform Launch
 
