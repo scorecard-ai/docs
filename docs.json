@@ -196,6 +196,8 @@
             "group": "Metrics",
             "pages": [
               "api-reference/create-metric",
+              "api-reference/list-metrics",
+              "api-reference/get-metric",
               "api-reference/update-metric"
             ]
           },
@@ -209,7 +211,10 @@
           },
           {
             "group": "Records",
-            "pages": ["api-reference/create-record"]
+            "pages": [
+              "api-reference/create-record",
+              "api-reference/list-records"
+            ]
           },
           {
             "group": "Scores",

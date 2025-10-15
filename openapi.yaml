@@ -1469,6 +1469,118 @@ paths:
                       ]
                     }'
   /projects/{projectId}/metrics:
+    get:
+      operationId: listMetrics
+      summary: List Metrics
+      description: >-
+        List Metrics configured for the specified Project. Metrics are returned in reverse chronological
+        order.
+      parameters:
+        - in: path
+          name: projectId
+          description: The ID of the Project to list Metrics for.
+          schema:
+            type: string
+            example: "314"
+          required: true
+        - in: query
+          name: limit
+          description: Maximum number of items to return (1-100). Use with `cursor` for pagination through large sets.
+          schema:
+            type: integer
+            exclusiveMinimum: 0
+            default: 20
+            example: 20
+        - in: query
+          name: cursor
+          description: >-
+            Cursor for pagination. Pass the `nextCursor` from the previous response to get the next page of
+            results.
+          schema:
+            type: string
+            example: "123"
+      responses:
+        "200":
+          description: Successfully retrieved Metrics.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Metric"
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                  hasMore:
+                    type: boolean
+                  total:
+                    type: integer
+                    minimum: 0
+                required:
+                  - data
+                  - nextCursor
+                  - hasMore
+              examples:
+                List Metrics:
+                  summary: List Metrics
+                  description: Example response showing metrics with different evaluation and output types.
+                  value:
+                    data:
+                      - id: "456"
+                        name: Response Accuracy
+                        description: Evaluates if the response is factually accurate
+                        outputType: boolean
+                        evalType: ai
+                        guidelines: Check if the response contains factually correct information
+                        promptTemplate: "Please evaluate if the following response is factually accurate: {{response}}"
+                        evalModelName: gpt-4o
+                        temperature: 0.1
+                      - id: "457"
+                        name: Response Quality
+                        description: Human review of quality
+                        outputType: float
+                        evalType: human
+                        guidelines: Rate the coherence of the response (0-1).
+                        passingThreshold: 0.8
+                    nextCursor: null
+                    hasMore: false
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: 'My API Key',
+            });
+
+            // Automatically fetches more pages as needed.
+            for await (const metric of client.metrics.list('314')) {
+              console.log(metric);
+            }
+        - lang: Python
+          source: |-
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key="My API Key",
+            )
+            page = client.metrics.list(
+                project_id="314",
+            )
+            page = page.data[0]
+            print(page)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/projects/$PROJECT_ID/metrics \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     post:
       operationId: createMetric
       summary: Create Metric
@@ -1504,10 +1616,7 @@ paths:
                       const: ai
                       description: AI-based evaluation type.
                     guidelines:
-                      type:
-                        - string
-                        - "null"
-                      default: null
+                      type: string
                       description: Guidelines for AI evaluation on how to score the metric.
                     promptTemplate:
                       type: string
@@ -1592,7 +1701,7 @@ paths:
                       description: Heuristic-based evaluation type.
                     guidelines:
                       type: string
-                      description: Optional guidelines for heuristic evaluation logic.
+                      description: Guidelines for heuristic evaluation logic.
                     outputType:
                       type: string
                       const: int
@@ -1625,10 +1734,7 @@ paths:
                       const: ai
                       description: AI-based evaluation type.
                     guidelines:
-                      type:
-                        - string
-                        - "null"
-                      default: null
+                      type: string
                       description: Guidelines for AI evaluation on how to score the metric.
                     promptTemplate:
                       type: string
@@ -1713,7 +1819,7 @@ paths:
                       description: Heuristic-based evaluation type.
                     guidelines:
                       type: string
-                      description: Optional guidelines for heuristic evaluation logic.
+                      description: Guidelines for heuristic evaluation logic.
                     outputType:
                       type: string
                       const: float
@@ -1746,10 +1852,7 @@ paths:
                       const: ai
                       description: AI-based evaluation type.
                     guidelines:
-                      type:
-                        - string
-                        - "null"
-                      default: null
+                      type: string
                       description: Guidelines for AI evaluation on how to score the metric.
                     promptTemplate:
                       type: string
@@ -1822,7 +1925,7 @@ paths:
                       description: Heuristic-based evaluation type.
                     guidelines:
                       type: string
-                      description: Optional guidelines for heuristic evaluation logic.
+                      description: Guidelines for heuristic evaluation logic.
                     outputType:
                       type: string
                       const: boolean
@@ -1869,6 +1972,7 @@ paths:
                 value:
                   name: Non-Empty Response
                   description: Checks if response is not empty
+                  guidelines: Checks if response is not empty
                   outputType: boolean
                   evalType: heuristic
                 summary: Create Simple Heuristic Metric
@@ -1944,6 +2048,81 @@ paths:
                 -H 'Content-Type: application/json' \
                 -H "Authorization: Bearer $SCORECARD_API_KEY"
   /metrics/{metricId}:
+    get:
+      operationId: getMetric
+      summary: Get Metric
+      description: Retrieve a specific Metric by ID.
+      parameters:
+        - in: path
+          name: metricId
+          description: The ID of the Metric to retrieve.
+          schema:
+            type: string
+            example: "321"
+          required: true
+      responses:
+        "200":
+          description: Successfully retrieved Metric.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Metric"
+              examples:
+                AI Metric:
+                  summary: AI Metric
+                  description: Example response showing an AI metric with boolean output.
+                  value:
+                    id: "654"
+                    name: Response Accuracy
+                    description: Evaluates factual correctness
+                    evalType: ai
+                    guidelines: Check if the response is factually correct.
+                    promptTemplate: "Evaluate if the following response is factually correct: {{outputs.response}}"
+                    evalModelName: gpt-4o
+                    temperature: 0.1
+                    outputType: boolean
+                Human Float Metric:
+                  summary: Human Float Metric
+                  description: Example response showing a human evaluated metric with float output.
+                  value:
+                    id: "655"
+                    name: Response Quality
+                    description: Human review of response quality
+                    evalType: human
+                    guidelines: Rate the response quality between 0 and 1.
+                    outputType: float
+                    passingThreshold: 0.85
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: 'My API Key',
+            });
+
+            const metric = await client.metrics.get('321');
+
+            console.log(metric);
+        - lang: Python
+          source: |-
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key="My API Key",
+            )
+            metric = client.metrics.get(
+                "321",
+            )
+            print(metric)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/metrics/$METRIC_ID \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
     patch:
       operationId: updateMetric
       summary: Update Metric
@@ -1979,10 +2158,7 @@ paths:
                       const: ai
                       description: AI-based evaluation type.
                     guidelines:
-                      type:
-                        - string
-                        - "null"
-                      default: null
+                      type: string
                       description: Guidelines for AI evaluation on how to score the metric.
                     promptTemplate:
                       type: string
@@ -2064,7 +2240,7 @@ paths:
                       description: Heuristic-based evaluation type.
                     guidelines:
                       type: string
-                      description: Optional guidelines for heuristic evaluation logic.
+                      description: Guidelines for heuristic evaluation logic.
                     outputType:
                       type: string
                       const: int
@@ -2096,10 +2272,7 @@ paths:
                       const: ai
                       description: AI-based evaluation type.
                     guidelines:
-                      type:
-                        - string
-                        - "null"
-                      default: null
+                      type: string
                       description: Guidelines for AI evaluation on how to score the metric.
                     promptTemplate:
                       type: string
@@ -2181,7 +2354,7 @@ paths:
                       description: Heuristic-based evaluation type.
                     guidelines:
                       type: string
-                      description: Optional guidelines for heuristic evaluation logic.
+                      description: Guidelines for heuristic evaluation logic.
                     outputType:
                       type: string
                       const: float
@@ -2213,10 +2386,7 @@ paths:
                       const: ai
                       description: AI-based evaluation type.
                     guidelines:
-                      type:
-                        - string
-                        - "null"
-                      default: null
+                      type: string
                       description: Guidelines for AI evaluation on how to score the metric.
                     promptTemplate:
                       type: string
@@ -2286,7 +2456,7 @@ paths:
                       description: Heuristic-based evaluation type.
                     guidelines:
                       type: string
-                      description: Optional guidelines for heuristic evaluation logic.
+                      description: Guidelines for heuristic evaluation logic.
                     outputType:
                       type: string
                       const: boolean
@@ -2338,6 +2508,7 @@ paths:
                     description: Evaluates if the response is factually accurate
                     outputType: boolean
                     evalType: ai
+                    evalModelName: gpt-4o
                     guidelines: Check if the response contains factually correct information
                     promptTemplate: |-
                       Using the following guidelines, evaluate the response: {{ guidelines }}
@@ -2796,7 +2967,8 @@ paths:
               examples:
                 Created Record:
                   value:
-                    id: "135"
+                    id: "864"
+                    runId: "135"
                     testcaseId: "248"
                     inputs:
                       question: What is the capital of France?
@@ -2864,6 +3036,142 @@ paths:
                         "response": "bar"
                       }
                     }'
+    get:
+      operationId: listRecords
+      summary: List Records
+      description: Retrieve a paginated list of Records for a Run, including all scores for each record.
+      parameters:
+        - in: path
+          name: runId
+          description: The ID of the Run to list records for.
+          schema:
+            type: string
+            example: "135"
+          required: true
+        - in: query
+          name: limit
+          description: Maximum number of items to return (1-100). Use with `cursor` for pagination through large sets.
+          schema:
+            type: integer
+            exclusiveMinimum: 0
+            default: 20
+            example: 20
+        - in: query
+          name: cursor
+          description: >-
+            Cursor for pagination. Pass the `nextCursor` from the previous response to get the next page of
+            results.
+          schema:
+            type: string
+            example: "123"
+      responses:
+        "200":
+          description: Successfully retrieved list of Records with scores.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RecordWithScores"
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                  hasMore:
+                    type: boolean
+                  total:
+                    type: integer
+                    minimum: 0
+                required:
+                  - data
+                  - nextCursor
+                  - hasMore
+              examples:
+                Records with scores:
+                  value:
+                    data:
+                      - id: "456"
+                        runId: "135"
+                        testcaseId: "248"
+                        inputs:
+                          question: What is the capital of France?
+                        expected:
+                          idealAnswer: Paris is the capital of France
+                        outputs:
+                          response: The capital of France is Paris.
+                        scores:
+                          - recordId: "456"
+                            metricConfigId: a1b2c3d4-e5f6-7890-1234-567890abcdef
+                            score:
+                              binaryScore: true
+                              reasoning: The response correctly identifies Paris as the capital.
+                          - recordId: "456"
+                            metricConfigId: b2c3d4e5-f6a7-8901-2345-67890abcdef0
+                            score:
+                              intScore: 4
+                              reasoning: Good answer but could be more detailed.
+                      - id: "457"
+                        runId: "135"
+                        testcaseId: "249"
+                        inputs:
+                          question: What is the largest planet in our solar system?
+                        expected:
+                          idealAnswer: Jupiter
+                        outputs:
+                          response: Jupiter is the largest planet in our solar system.
+                        scores:
+                          - recordId: "457"
+                            metricConfigId: a1b2c3d4-e5f6-7890-1234-567890abcdef
+                            score:
+                              binaryScore: true
+                              reasoning: Correctly identified Jupiter.
+                          - recordId: "457"
+                            metricConfigId: b2c3d4e5-f6a7-8901-2345-67890abcdef0
+                            score:
+                              intScore: 5
+                              reasoning: Perfect answer with good detail.
+                    nextCursor: "458"
+                    hasMore: true
+                  summary: Records with scores
+                  description: >-
+                    Example response showing a paginated list of Records with their associated scores and
+                    reasoning.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: 'My API Key',
+            });
+
+            // Automatically fetches more pages as needed.
+            for await (const recordListResponse of client.records.list('135')) {
+              console.log(recordListResponse);
+            }
+        - lang: Python
+          source: |-
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key="My API Key",
+            )
+            page = client.records.list(
+                run_id="135",
+            )
+            page = page.data[0]
+            print(page)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/runs/$RUN_ID/records \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /projects/{projectId}/systems:
     get:
       operationId: listSystems
@@ -3890,10 +4198,7 @@ components:
               const: ai
               description: AI-based evaluation type.
             guidelines:
-              type:
-                - string
-                - "null"
-              default: null
+              type: string
               description: Guidelines for AI evaluation on how to score the metric.
             promptTemplate:
               type: string
@@ -3969,6 +4274,7 @@ components:
             - name
             - description
             - evalType
+            - guidelines
             - outputType
             - passingThreshold
           description: A Metric with human evaluation and integer output.
@@ -3993,7 +4299,7 @@ components:
               description: Heuristic-based evaluation type.
             guidelines:
               type: string
-              description: Optional guidelines for heuristic evaluation logic.
+              description: Guidelines for heuristic evaluation logic.
             outputType:
               type: string
               const: int
@@ -4009,6 +4315,7 @@ components:
             - name
             - description
             - evalType
+            - guidelines
             - outputType
             - passingThreshold
           description: A Metric with heuristic evaluation and integer output.
@@ -4032,10 +4339,7 @@ components:
               const: ai
               description: AI-based evaluation type.
             guidelines:
-              type:
-                - string
-                - "null"
-              default: null
+              type: string
               description: Guidelines for AI evaluation on how to score the metric.
             promptTemplate:
               type: string
@@ -4111,6 +4415,7 @@ components:
             - name
             - description
             - evalType
+            - guidelines
             - outputType
             - passingThreshold
           description: A Metric with human evaluation and float output.
@@ -4135,7 +4440,7 @@ components:
               description: Heuristic-based evaluation type.
             guidelines:
               type: string
-              description: Optional guidelines for heuristic evaluation logic.
+              description: Guidelines for heuristic evaluation logic.
             outputType:
               type: string
               const: float
@@ -4151,6 +4456,7 @@ components:
             - name
             - description
             - evalType
+            - guidelines
             - outputType
             - passingThreshold
           description: A Metric with heuristic evaluation and float output.
@@ -4174,10 +4480,7 @@ components:
               const: ai
               description: AI-based evaluation type.
             guidelines:
-              type:
-                - string
-                - "null"
-              default: null
+              type: string
               description: Guidelines for AI evaluation on how to score the metric.
             promptTemplate:
               type: string
@@ -4240,6 +4543,7 @@ components:
             - name
             - description
             - evalType
+            - guidelines
             - outputType
           description: A Metric with human evaluation and boolean output.
           title: Human boolean metric
@@ -4263,7 +4567,7 @@ components:
               description: Heuristic-based evaluation type.
             guidelines:
               type: string
-              description: Optional guidelines for heuristic evaluation logic.
+              description: Guidelines for heuristic evaluation logic.
             outputType:
               type: string
               const: boolean
@@ -4273,6 +4577,7 @@ components:
             - name
             - description
             - evalType
+            - guidelines
             - outputType
           description: A Metric with heuristic evaluation and boolean output.
           title: Heuristic boolean metric
@@ -4379,6 +4684,63 @@ components:
         - expected
         - outputs
       description: A record of a system execution in the Scorecard system.
+    RecordWithScores:
+      allOf:
+        - $ref: "#/components/schemas/Record"
+      properties:
+        scores:
+          type: array
+          items:
+            $ref: "#/components/schemas/Score"
+          description: All scores associated with this record.
+      required:
+        - scores
+      description: A record with all its associated scores.
+    Score:
+      type: object
+      properties:
+        recordId:
+          type: string
+          description: The ID of the Record this Score is for.
+        metricConfigId:
+          type: string
+          format: uuid
+          description: The ID of the MetricConfig this Score is for.
+        score:
+          type: object
+          additionalProperties: true
+          description: >-
+            The score of the Record, as arbitrary JSON. This data should ideally conform to the output schema
+            defined by the associated MetricConfig. If it doesn't, validation errors will be captured in the
+            `validationErrors` field.
+        validationErrors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                description: JSON Pointer to the field with the validation error.
+                example: /data/question
+              message:
+                type: string
+                description: Human-readable error description.
+                example: Required field missing
+            required:
+              - path
+              - message
+          description: >-
+            Validation errors found in the Score data. If present, the Score doesn't fully conform to its
+            MetricConfig's schema.
+      required:
+        - recordId
+        - metricConfigId
+        - score
+      description: >-
+        A Score represents the evaluation of a Record against a specific MetricConfig. The actual `score` is
+        stored as flexible JSON. While any JSON is accepted, it is expected to conform to the output schema
+        defined by the MetricConfig. Any discrepancies will be noted in the `validationErrors` field, but the
+        Score will still be stored.
     System:
       type: object
       properties:
@@ -4468,51 +4830,6 @@ components:
 
         When running evaluations, you reference a specific systemVersionId to establish which system version
         to test.
-    Score:
-      type: object
-      properties:
-        recordId:
-          type: string
-          description: The ID of the Record this Score is for.
-        metricConfigId:
-          type: string
-          format: uuid
-          description: The ID of the MetricConfig this Score is for.
-        score:
-          type: object
-          additionalProperties: true
-          description: >-
-            The score of the Record, as arbitrary JSON. This data should ideally conform to the output schema
-            defined by the associated MetricConfig. If it doesn't, validation errors will be captured in the
-            `validationErrors` field.
-        validationErrors:
-          type: array
-          items:
-            type: object
-            properties:
-              path:
-                type: string
-                description: JSON Pointer to the field with the validation error.
-                example: /data/question
-              message:
-                type: string
-                description: Human-readable error description.
-                example: Required field missing
-            required:
-              - path
-              - message
-          description: >-
-            Validation errors found in the Score data. If present, the Score doesn't fully conform to its
-            MetricConfig's schema.
-      required:
-        - recordId
-        - metricConfigId
-        - score
-      description: >-
-        A Score represents the evaluation of a Record against a specific MetricConfig. The actual `score` is
-        stored as flexible JSON. While any JSON is accepted, it is expected to conform to the output schema
-        defined by the MetricConfig. Any discrepancies will be noted in the `validationErrors` field, but the
-        Score will still be stored.
   responses:
     UnauthenticatedError:
       description: Error indicating that the request is not authenticated.
@@ -4525,6 +4842,7 @@ components:
               value:
                 code: UNAUTHORIZED
                 message: Invalid or missing authentication token
+                details: {}
               summary: Authentication failure
               description: Error returned when authentication credentials are invalid or missing.
     ServiceError:
@@ -4538,5 +4856,6 @@ components:
               value:
                 code: INTERNAL_ERROR
                 message: An unexpected error occurred while processing your request.
+                details: {}
               summary: Internal error
               description: Generic error when an unexpected internal issue occurs.
