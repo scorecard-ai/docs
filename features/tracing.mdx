@@ -153,47 +153,47 @@ Create custom metrics through Scorecard's UI to detect application-specific beha
 Scorecard traces LLM applications built with popular open-source frameworks through [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry provides automatic instrumentation for:
 
 ### Application Frameworks
-- **LangChain** – Chains, agents, and tool calls
-- **LangGraph** – Multi-step workflows and state machines
-- **LlamaIndex** – RAG pipelines and document retrieval
-- **Haystack** – Search and question-answering pipelines
-- **LiteLLM** – Unified interface for 100+ LLMs
 - **CrewAI** – Multi-agent collaboration
+- **Haystack** – Search and question-answering pipelines
+- **LangChain** – Chains, agents, and tool calls
+- **Langflow** – Visual workflow builder
+- **LangGraph** – Multi-step workflows and state machines
+- **LiteLLM** – Unified interface for 100+ LLMs
+- **LlamaIndex** – RAG pipelines and document retrieval
 - **[OpenAI Agents SDK](https://github.com/openai/openai-agents-python?tab=readme-ov-file#tracing)** – Assistants API and function calling
 - **[Vercel AI SDK](https://ai-sdk.dev/providers/observability/scorecard)** – Full-stack AI applications
-- **Langflow** – Visual workflow builder
 
 <Tip>
   Scorecard is featured as a recommended observability provider in the official [Vercel AI SDK documentation](https://ai-sdk.dev/providers/observability/scorecard) and [OpenAI Agents Python README](https://github.com/openai/openai-agents-python?tab=readme-ov-file#tracing).
 </Tip>
 
 ### LLM Providers
-- OpenAI
-- Azure OpenAI
+- Aleph Alpha
 - Anthropic
-- Cohere
-- Ollama
-- Mistral AI
-- HuggingFace
 - AWS Bedrock
 - AWS SageMaker
-- Replicate
-- Google Vertex AI
+- Azure OpenAI
+- Cohere
 - Google Gemini
-- IBM Watsonx AI
-- Together AI
-- Aleph Alpha
+- Google Vertex AI
 - Groq
+- HuggingFace
+- IBM Watsonx AI
+- Mistral AI
+- Ollama
+- OpenAI
+- Replicate
+- Together AI
 - and more
 
 ### Vector Databases
 - Chroma
+- LanceDB
+- Marqo
+- Milvus
 - Pinecone
 - Qdrant
 - Weaviate
-- Milvus
-- Marqo
-- LanceDB
 
 <Info>
   For the complete list of supported integrations, see the [OpenLLMetry repository](https://github.com/traceloop/openllmetry). All integrations are built on OpenTelemetry standards and maintained by the community.
