@@ -201,7 +201,12 @@ Scorecard traces LLM applications built with popular open-source frameworks thro
 
 ### Custom Providers
 
-For frameworks or providers not listed above, use OpenLLMetry's `instrument_http()` for HTTP-based APIs or emit spans manually using OpenTelemetry—see [Custom Providers](/features/custom-provider).
+For frameworks or providers not listed above, you can use:
+
+- **HTTP Instrumentation**: OpenLLMetry's `instrument_http()` for HTTP-based APIs
+- **Manual Spans**: Emit custom OpenTelemetry spans for proprietary systems
+
+See the [OpenLLMetry documentation](https://www.traceloop.com/docs/openllmetry/getting-started-python) for manual instrumentation guides.
 
 ---
 
