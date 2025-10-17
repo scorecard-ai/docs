@@ -6,9 +6,7 @@ description: "Instrument, inspect and monitor every LLM request in minutes."
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
 <Info>
-  New to Scorecard? Head straight to the [Tracing Quickstart](/intro/tracing-quickstart) or jump into our ready-to-run [Google Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) to see traces in under 5 minutes
-
-  .
+  New to Scorecard? Head straight to the [Tracing Quickstart](/intro/tracing-quickstart) or jump into our ready-to-run [Google Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) to see traces in under 5 minutes.
 </Info>
 
 LLM observability means knowing exactly what happened in every generation—latency, token usage, prompts, completions, cost, errors and more. Scorecard’s **Tracing** collects this data automatically via the open-source [OpenLLMetry](https://github.com/traceloop/openllmetry) SDK (Python & Node.js) and displays rich visualisations in the Scorecard UI.
@@ -148,20 +146,65 @@ Create custom metrics through Scorecard's UI to detect application-specific beha
 
 ---
 
-## OpenAI Agents & custom providers
+## Supported Frameworks & Providers
 
-Scorecard works with any provider adhering to OpenTelemetry semantics. Out-of-the-box integrations:
+Scorecard traces LLM applications built with popular open-source frameworks through [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry provides automatic instrumentation for:
 
-- OpenAI (ChatCompletion, Assistants/Agents)
-- Anthropic Claude
-- Google Gemini
-- Groq LPU
+### Application Frameworks
+- **CrewAI** – Multi-agent collaboration
+- **Haystack** – Search and question-answering pipelines
+- **LangChain** – Chains, agents, and tool calls
+- **Langflow** – Visual workflow builder
+- **LangGraph** – Multi-step workflows and state machines
+- **LiteLLM** – Unified interface for 100+ LLMs
+- **LlamaIndex** – RAG pipelines and document retrieval
+- **[OpenAI Agents SDK](https://github.com/openai/openai-agents-python?tab=readme-ov-file#tracing)** – Assistants API and function calling
+- **[Vercel AI SDK](https://ai-sdk.dev/providers/observability/scorecard)** – Full-stack AI applications
+
+<Tip>
+  Scorecard is featured as a recommended observability provider in the official [Vercel AI SDK documentation](https://ai-sdk.dev/providers/observability/scorecard) and [OpenAI Agents Python README](https://github.com/openai/openai-agents-python?tab=readme-ov-file#tracing).
+</Tip>
+
+### LLM Providers
+- Aleph Alpha
+- Anthropic
 - AWS Bedrock
+- AWS SageMaker
+- Azure OpenAI
+- Cohere
+- Google Gemini
+- Google Vertex AI
+- Groq
+- HuggingFace
+- IBM Watsonx AI
+- Mistral AI
+- Ollama
+- OpenAI
+- Replicate
+- Together AI
+- and more
 
-For other libraries use OpenLLMetry’s <code>
-instrument_http</code>
+### Vector Databases
+- Chroma
+- LanceDB
+- Marqo
+- Milvus
+- Pinecone
+- Qdrant
+- Weaviate
 
- or emit spans manually—see [Custom Providers](/features/custom-provider).
+<Info>
+  For the complete list of supported integrations, see the [OpenLLMetry repository](https://github.com/traceloop/openllmetry). All integrations are built on OpenTelemetry standards and maintained by the community.
+</Info>
+
+### Custom Providers
+
+For frameworks or providers not listed above, you can use:
+
+- **HTTP Instrumentation**: OpenLLMetry's `instrument_http()` for HTTP-based APIs
+- **Manual Spans**: Emit custom OpenTelemetry spans for proprietary systems
+
+See the [OpenLLMetry documentation](https://www.traceloop.com/docs/openllmetry/getting-started-python) for manual instrumentation guides.
 
 ---
 
