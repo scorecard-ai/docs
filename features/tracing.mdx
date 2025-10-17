@@ -148,20 +148,33 @@ Create custom metrics through Scorecard's UI to detect application-specific beha
 
 ---
 
-## OpenAI Agents & custom providers
+## Supported Frameworks & Providers
 
-Scorecard works with any provider adhering to OpenTelemetry semantics. Out-of-the-box integrations:
+Scorecard traces LLM applications built with popular open-source frameworks through [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry provides automatic instrumentation for:
 
-- OpenAI (ChatCompletion, Assistants/Agents)
-- Anthropic Claude
-- Google Gemini
-- Groq LPU
-- AWS Bedrock
+### Application Frameworks
+- **LangChain** – Chains, agents, and tool calls
+- **LangGraph** – Multi-step workflows and state machines
+- **LlamaIndex** – RAG pipelines and document retrieval
+- **Haystack** – Search and question-answering pipelines
+- **LiteLLM** – Unified interface for 100+ LLMs
+- **CrewAI** – Multi-agent collaboration
+- **OpenAI Agents** – Assistants API and function calling
+- **Langflow** – Visual workflow builder
 
-For other libraries use OpenLLMetry’s <code>
-instrument_http</code>
+### LLM Providers
+OpenAI, Azure OpenAI, Anthropic, Cohere, Ollama, Mistral AI, HuggingFace, AWS Bedrock, AWS SageMaker, Replicate, Google Vertex AI, Google Gemini, IBM Watsonx AI, Together AI, Aleph Alpha, Groq, and more.
 
- or emit spans manually—see [Custom Providers](/features/custom-provider).
+### Vector Databases
+Chroma, Pinecone, Qdrant, Weaviate, Milvus, Marqo, LanceDB
+
+<Info>
+  For the complete list of supported integrations, see the [OpenLLMetry repository](https://github.com/traceloop/openllmetry). All integrations are built on OpenTelemetry standards and maintained by the community.
+</Info>
+
+### Custom Providers
+
+For frameworks or providers not listed above, use OpenLLMetry's `instrument_http()` for HTTP-based APIs or emit spans manually using OpenTelemetry—see [Custom Providers](/features/custom-provider).
 
 ---
 
