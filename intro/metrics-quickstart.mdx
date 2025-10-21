@@ -6,12 +6,12 @@ description: "Create metrics, group them, run evaluations, and read scores."
 import { Note, Card } from "@mintlify/components";
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
-    <DarkLightImage
-      lightSrc="/images/metrics/metrics-overview-light.png"
-      darkSrc="/images/metrics/metrics-overview-dark.png"
-      caption="Metrics page with Metrics, Groups, and Templates tabs."
-      alt="Metrics page overview"
-    />
+<DarkLightImage
+  lightSrc="/images/metrics/metrics-overview-light.png"
+  darkSrc="/images/metrics/metrics-overview-dark.png"
+  caption="Metrics page with Metrics, Groups, and Templates tabs."
+  alt="Metrics page overview"
+/>
 
 Metrics define what “good” looks like for your LLM. You describe the criteria (e.g., helpfulness, groundedness, safety), and Scorecard turns that into repeatable scores you can track across runs and over time.
 
@@ -121,12 +121,7 @@ Metrics define what “good” looks like for your LLM. You describe the criteri
   <Step title="Inspect scores and explanations">
     Hover over or click a score to view the evaluator’s reasoning and properties. This helps validate and tune your guidelines.
 
-    <DarkLightImage
-      lightSrc="/images/metrics/metrics-scores-detail-light.png"
-      darkSrc="/images/metrics/metrics-scores-detail-dark.png"
-      caption="Score explanation with reasoning and model details."
-      alt="Score explanation panel"
-    />
+    <DarkLightImage lightSrc="/images/testrecord-score-explanation-light.png" caption="Record score explanation." alt="Screenshot of viewing testrecord score explanation in the UI." />
 
     Drill into any record to see inputs, outputs, expected outputs, and all scores together.
 

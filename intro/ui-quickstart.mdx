@@ -6,77 +6,48 @@ description: 'Evaluate a simple LLM agent with Scorecard in minutes.'
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 import { Note } from '@mintlify/components';
 
-<DarkLightImage
-  lightSrc="/images/example-project/projects-overview-with-example-project-light.png"
-  darkSrc="/images/example-project/projects-overview-with-example-project-dark.png"
-  caption="Projects overview with the Example Project and kickoff banner."
-  alt="Projects overview page"
-/>
-
 Kick off your first run in minutes using the Example Project that’s created automatically when you sign up. You can also browse the run that was kicked off for you and explore how testsets, prompts, and metrics fit together.
 
 <Steps>
   <Step title="Find the Example Project and open Kickoff Run">
-    On the Projects overview page, you’ll see a banner welcoming you and a card for the Example Project. Click the banner’s button or the project card’s "Kickoff run" — this opens a pre‑filled Kickoff Run modal like the one below.
+    On the Projects overview page, you'll see a card for the Example Project. Click the project's "Kickoff run" button to open the Kickoff Run modal.
+
+    <DarkLightImage
+      lightSrc="/images/example-project/projects-overview-with-example-project-light.png"
+      darkSrc="/images/example-project/projects-overview-with-example-project-dark.png"
+      caption="Projects overview page with Example Project card."
+      alt="Projects overview page with Example Project and kickoff banner."
+    />
+  </Step>
+
+  <Step title="Kick off your first run">
+    In the modal, you can use the default selected Testset, System, and Metrics.
+
+    Click "Kickoff run" to create the run and automatically evaluate the system.
 
     <DarkLightImage
       lightSrc="/images/example-project/kickoff-modal-pre-filled-light.png"
       darkSrc="/images/example-project/kickoff-modal-pre-filled-dark.png"
-      caption="Kickoff Run modal pre‑filled with a Testset, Prompt, and Metrics."
-      alt="Kickoff modal with prefilled selections"
-    />
-
-  </Step>
-
-  <Step title="Kick off your first run">
-    The modal is pre‑filled with a Testset, Prompt, and Metrics using Scorecard Cloud. You can change selections or keep defaults.
-
-    <DarkLightImage
-      lightSrc="/images/example-project/kickoff-modal-pick-testset-full-light.png"
-      darkSrc="/images/example-project/kickoff-modal-pick-testset-full-dark.png"
-      caption="Pick a Testset (pre‑selected)."
-      alt="Kickoff modal testset picker"
-    />
-
-    Next, choose one or more <strong>Metrics</strong>, or pick a <strong>Metric Group</strong> for consistency.
-
-    <DarkLightImage
-      lightSrc="/images/example-project/kickoff-modal-pick-metrics-full-light.png"
-      darkSrc="/images/example-project/kickoff-modal-pick-metrics-full-dark.png"
-      caption="Optionally select multiple metrics or a metric group."
-      alt="Kickoff modal metric selector"
-    />
-
-    Click “Kickoff run”. A toast confirms creation and links directly to results.
-
-    <DarkLightImage
-      lightSrc="/images/example-project/kickoff-modal-success-toast-full-light.png"
-      darkSrc="/images/example-project/kickoff-modal-success-toast-full-dark.png"
-      caption="Run created — follow the link to results."
-      alt="Success toast with link to run"
+      caption="Kickoff Run modal."
+      alt="Kickoff modal with prefilled Testset, Prompt, and Metrics selections."
     />
   </Step>
 
-  <Step title="View results (or open the sample run)">
-    After your run starts and scoring completes, open the results to see per‑record scores, distributions, and explanations. You can also click “Run again” to rerun with new settings.
+  <Step title="View results">
+    After your run starts and scoring completes, open the results to see per-record scores, distributions, and explanations.
 
     <DarkLightImage
       lightSrc="/images/example-project/run-detail-with-example-run-scores-light.png"
       darkSrc="/images/example-project/run-detail-with-example-run-scores-dark.png"
       caption="Run details with scores and aggregates."
-      alt="Run details page"
+      alt="Run details page with scores and aggregates."
     />
 
-    Tip: Click <strong>Run Again</strong> to iterate with a different prompt version, model, or metric set.
+    <Tip>
+      Click the <strong>Run Again</strong> button in the top right corner to iterate with a different prompt version, model, or metric set.
+    </Tip>
 
-    <DarkLightImage
-      lightSrc="/images/example-project/run-detail-run-again-button-light.png"
-      darkSrc="/images/example-project/run-detail-run-again-button-dark.png"
-      caption="Run Again lets you quickly iterate."
-      alt="Run Again button on run details"
-    />
-
-    Prefer to just explore? Visit Runs & Results to open the example run that was created for you automatically.
+    Prefer to just explore? Visit **Runs & Results** to open the example run that was created for you automatically.
 
     <DarkLightImage
       lightSrc="/images/example-project/runs-list-with-first-example-run-light.png"
@@ -92,11 +63,9 @@ Kick off your first run in minutes using the Example Project that’s created au
     <Note>
       <strong>Quick tour of the data</strong>
       <ul>
-        <li><strong>Emoji Testset</strong>: inputs <code>userQuery</code> → expected <code>ideal</code> (emojis).</li>
         <li><strong>Tone Testset</strong>: inputs <code>original</code>, <code>tone</code> → expected <code>idealRewritten</code>.</li>
-        <li><strong>Prompt versions</strong> for Emoji and Tone — already set to Scorecard Cloud with low temperature for consistency.</li>
-        <li><strong>Metrics</strong>: Correctness (AI, 1–5), Emoji Format (AI, Boolean), Human Emoji Preference (Human, 1–5), Human Tone Check (Human, Boolean).</li>
-        <li><strong>Metric Group</strong>: Emoji Metrics = Emoji Format + Human Emoji Preference.</li>
+        <li><strong>Prompt versions</strong> for Tone — already set to Scorecard Cloud with low temperature for consistency.</li>
+        <li><strong>Metrics</strong>: Correctness (AI, 1-5), Human Tone Check (Human, Boolean).</li>
       </ul>
     </Note>
     
@@ -125,7 +94,7 @@ Kick off your first run in minutes using the Example Project that’s created au
       alt="Prompts list"
     />
 
-    Inside a prompt version, see the template (Jinja‑style variables) and evaluator model configuration.
+    Inside a prompt version, see the template (Jinja-style variables) and evaluator model configuration.
 
     <DarkLightImage
       lightSrc="/images/example-project/example-project-prompt-light.png"
@@ -137,10 +106,10 @@ Kick off your first run in minutes using the Example Project that’s created au
     Finally, explore Metrics to learn how scoring works. Each metric has guidelines, evaluation type, and output type.
 
     <DarkLightImage
-      lightSrc="/images/example-project/metrics-from-example-project-light.png"
-      darkSrc="/images/example-project/metrics-from-example-project-dark.png"
+      lightSrc="/images/example-project/example-project-metrics-light.png"
+      darkSrc="/images/example-project/example-project-metrics-dark.png"
       caption="Metrics configured for the Example Project."
-      alt="Metrics list"
+      alt="Metrics list."
     />
   </Step>
 </Steps>
@@ -152,4 +121,4 @@ Kick off your first run in minutes using the Example Project that’s created au
 - Explore interactive prompt iteration in the [Playground](/features/playground)
 - Define and reuse evaluation criteria with [Metrics](/intro/metrics-quickstart)
 
-That’s it — you’ve seen Scorecard in action and how example data flows through prompts, runs, and metrics. Have fun iterating!
+That's it — you've seen Scorecard in action and how example data flows through prompts, runs, and metrics. Have fun iterating!

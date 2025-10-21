@@ -90,14 +90,9 @@ With the integration set up, you can also trigger runs of your real system from 
 
 ## Run status
 
-- **🟡 Pending**: Run is created but there are no Records in the Run.
-- **🔵 Scoring**: Records are being scored by AI or heuristic metrics, or are awaiting human scoring. The Run may still be awaiting more Records.
-- **🟢 Completed**: All existing Records in the Run have been scored successfully.
-- **🔴 Error**: An error occurred during execution or scoring of one or more Records.
+If you click on the run status of a run, it will expands to show an explanation of the scoring status for each of the metrics in the run.
 
-<Note>
-  **Completed** only means that all _existing_ Records in the Run have been scored. If you add more Records, the status will become **Scoring** until those new Records are also scored.
-</Note>
+<DarkLightImage lightSrc="/images/run-status-explanation-light.png" caption="Run status explanation." alt="Screenshot of the run status explanation in the UI." />
 
 ## Inspect a Record
 
