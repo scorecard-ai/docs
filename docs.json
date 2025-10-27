@@ -119,6 +119,7 @@
               "intro/what-is-scorecard",
               "intro/ui-quickstart",
               "intro/sdk-quickstart",
+              "intro/mcp-quickstart",
               "intro/tracing-quickstart",
               "intro/faq"
             ]
@@ -141,6 +142,7 @@
               "features/synthetic-data-generation",
               "features/best-in-class-metrics",
               "features/runs",
+              "features/analysis",
               "features/prompts",
               "features/systems",
               "features/endpoints",

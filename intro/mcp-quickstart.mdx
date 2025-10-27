@@ -1,0 +1,176 @@
+---
+title: "MCP Server Quickstart"
+description: "Build testsets and metrics conversationally with Claude Desktop and the Scorecard MCP server"
+mode: "center"
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+Use the Scorecard MCP (Model Context Protocol) server to create evaluation testsets and metrics through natural language in Claude. Instead of writing code or clicking through UIs, just tell Claude what you need and it will use the Scorecard API to set everything up.
+
+<Info>
+This quickstart uses Claude Desktop, but it also works with other MCP clients, like Cursor and Claude Code.
+</Info>
+
+## Steps
+
+<Steps>
+  <Step title="Setup Scorecard account">
+    Create a [Scorecard account](https://app.scorecard.io/dashboard) if you don't have one already.
+  </Step>
+
+  <Step title="Install the Scorecard MCP server in Claude">
+    Open Claude and add the Scorecard MCP server using the remote configuration:
+
+    1. Open Claude settings
+    2. Navigate to the "MCP Servers" section
+    3. Add a new remote server with URL: `https://mcp.scorecard.io/mcp`
+    4. Complete the OAuth authentication flow to connect your Scorecard account
+
+    <Note>
+      The remote MCP server requires no local dependencies or API key management. Authentication happens securely through your browser.
+    </Note>
+
+    Once connected, Claude will have access to all Scorecard API capabilities through natural language.
+  </Step>
+
+  <Step title="Create a project">
+    Simply ask Claude to create a new Scorecard project:
+
+    > Create a new Scorecard project called "Customer Support Bot Evaluation" for testing my AI customer support assistant.
+
+    <DarkLightImage
+      lightSrc="/images/mcp-quickstart-create-project-light.png"
+      darkSrc="/images/mcp-quickstart-create-project-dark.png"
+      caption="Screenshot of the conversation showing project creation in Claude"
+      alt="Screenshot of the conversation showing project creation in Claude"
+    />
+
+    <Note>
+      Claude will automatically use the appropriate MCP tools (like `create_projects`, `list_projects`) based on your natural language request.
+    </Note>
+  </Step>
+
+  <Step title="Create a testset with testcases">
+    Now create a testset to hold your evaluation test cases. Describe the structure you need:
+
+    > Create a testset called "Support Scenarios" in this project. The testcases should have:
+    >
+    > - Input fields: "customerMessage" (the customer's question) and "category" (support category like billing, technical, or product)
+    > - Expected output field: "idealResponse" (what a great response from the agent looks like)
+    > - Metadata field: "difficulty" (easy, medium, or hard)
+    >
+    > Then add 5 testcases covering different support scenarios.
+
+    <DarkLightImage
+      lightSrc="/images/mcp-quickstart-create-testset-light.png"
+      darkSrc="/images/mcp-quickstart-create-testset-dark.png"
+      caption="Screenshot of the conversation showing testset creation in Claude"
+      alt="Screenshot of the conversation showing testset creation in Claude"
+    />
+
+    <Tip>
+      Claude can usually guess which inputs and output fields you want, but it's better to tell it what your field names are.
+    </Tip>
+  </Step>
+
+  <Step title="Create evaluation metrics">
+    Define metrics to evaluate your AI system. Describe what "good" looks like:
+
+    > Create two AI-scored metrics for this project:
+    >
+    > 1. "Response Accuracy" (integer) - Measures how well the response answers the customer's question compared to the ideal response
+    > 2. "Tone Appropriateness" (boolean) - Checks if the response uses professional, empathetic language appropriate for customer support
+    >
+    > Use GPT-4o as the evaluator with temperature 0 for consistency.
+
+    <DarkLightImage
+      lightSrc="/images/mcp-quickstart-create-metrics-light.png"
+      darkSrc="/images/mcp-quickstart-create-metrics-dark.png"
+      caption="Screenshot of the conversation showing metric creation in Claude"
+      alt="Screenshot of the conversation showing metric creation in Claude"
+    />
+
+    <Note>
+      Claude's initial tool call to `create_metrics` failed because it used the wrong arguments, but it was able to eventually succeed by reading the documentation and trying again.
+    </Note>
+  </Step>
+
+  <Step title="View your setup in Scorecard">
+    Open your Scorecard project in the web UI to see everything that was created!
+
+    Everything is now ready for evaluation runs. You can kick off runs through the UI, SDK, or continue using Claude Code with MCP commands.
+  </Step>
+
+  <Step title="Next: Run evaluations">
+    You can run evaluations using the [SDK](/intro/quickstart) or the [Scorecard playground](/features/playground).
+
+    You can also continue the conversation to analyze and iterate on your evaluations.
+
+    > Explain the latest run results for this project.
+
+    > Update the Response Accuracy metric to be stricter about factual details.
+
+    > Add 5 more testcases covering edge cases like angry customers and off-topic questions.
+
+    The MCP server gives Claude access to the [full Scorecard API](/api-reference), so you can manage your entire evaluation workflow conversationally.
+  </Step>
+</Steps>
+
+## Tips for Using the MCP Server
+
+<Tip>
+**Be specific about data structures**: When creating testsets, clearly describe the field names, types, and which fields are inputs vs expected outputs. This helps Claude set up the schema correctly.
+</Tip>
+
+<Tip>
+**Describe evaluation criteria**: When creating metrics, explain what makes a "good" output in detail. Claude will translate this into effective evaluation guidelines.
+</Tip>
+
+<Tip>
+**Ask for recommendations**: Claude can suggest metrics, testcase scenarios, and evaluation strategies based on your use case. Just ask "What metrics should I use for evaluating a RAG system?"
+</Tip>
+
+<Tip>
+**Iterate conversationally**: Made a mistake? Just ask Claude to fix it: "Update that metric to use temperature 0.1 instead" or "Add a new field called 'priority' to the testset"
+</Tip>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I have a different MCP client.">
+    The Scorecard MCP server works with most MCP clients, including Claude Desktop, Cursor, and Claude Code. Make sure you've added the remote server URL correctly (`https://mcp.scorecard.io/mcp`) and completed the OAuth flow. See the [MCP Server documentation](/features/mcp) for more installation instructions.
+  </Accordion>
+
+  <Accordion title="MCP server does not show up in Claude.">
+    Make sure you've added the remote server URL correctly (`https://mcp.scorecard.io/mcp`) and completed the OAuth flow. Restart Claude if needed.
+  </Accordion>
+
+  <Accordion title="Claude shows an authentication error.">
+    The MCP server uses OAuth tokens that may expire. Try disconnecting and reconnecting the MCP server in Claude settings to refresh authentication.
+  </Accordion>
+
+  <Accordion title="Claude says it can't find MCP tools.">
+    Verify the MCP server is connected and enabled in Claude settings. You should see "Scorecard" listed in your active MCP servers.
+  </Accordion>
+
+  <Accordion title="I can't connect to remote MCP servers.">
+    For local installation with your Scorecard API key, see the [MCP Server documentation](/features/mcp#local-configuration). Use `npx -y scorecard-ai-mcp@latest` with environment variables.
+  </Accordion>
+</AccordionGroup>
+
+## Learn More
+
+Ready to go deeper? Check out these resources:
+
+<Card title="MCP Server Features" icon="plug" href="/features/mcp">
+  Complete guide to the Scorecard MCP server capabilities and architecture
+</Card>
+
+<Card title="Metrics Guide" icon="chart-line" href="/intro/metrics-quickstart">
+  Deep dive into creating and managing evaluation metrics
+</Card>
+
+<Card title="Testsets" icon="table" href="/features/testsets">
+  Learn about testset schemas, field mappings, and organization
+</Card>
