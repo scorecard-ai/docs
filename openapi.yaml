@@ -3172,6 +3172,70 @@ paths:
           source: |-
             curl https://api2.scorecard.io/api/v2/runs/$RUN_ID/records \
                 -H "Authorization: Bearer $SCORECARD_API_KEY"
+  /records/{recordId}:
+    delete:
+      operationId: deleteRecord
+      summary: Delete Record
+      description: Delete a specific Record by ID.
+      parameters:
+        - in: path
+          name: recordId
+          description: The ID of the Record to delete.
+          schema:
+            type: string
+            example: "777"
+          required: true
+      responses:
+        "200":
+          description: Record deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the deletion was successful.
+                required:
+                  - success
+              examples:
+                Delete Record response:
+                  value:
+                    success: true
+                  summary: Delete Record success
+                  description: Response indicating successful deletion of the Record.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: 'My API Key',
+            });
+
+            const record = await client.records.delete('777');
+
+            console.log(record.success);
+        - lang: Python
+          source: |-
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key="My API Key",
+            )
+            record = client.records.delete(
+                "777",
+            )
+            print(record.success)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/records/$RECORD_ID \
+                -X DELETE \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /projects/{projectId}/systems:
     get:
       operationId: listSystems
@@ -3861,7 +3925,7 @@ paths:
       parameters:
         - in: path
           name: recordId
-          description: The ID of the Record.
+          description: The ID of the Record to upsert the Score for.
           schema:
             type: string
             example: "777"

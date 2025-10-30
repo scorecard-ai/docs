@@ -215,7 +215,8 @@
             "group": "Records",
             "pages": [
               "api-reference/create-record",
-              "api-reference/list-records"
+              "api-reference/list-records",
+              "api-reference/delete-record"
             ]
           },
           {
