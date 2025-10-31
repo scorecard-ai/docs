@@ -133,61 +133,6 @@ All other AI SDK functions are passed through unchanged, so you can use the wrap
 
 ---
 
-## Best Practices
-
-### 1. Wrap once, use everywhere
-
-Create a single wrapped instance and export it for use throughout your application:
-
-```typescript
-// lib/ai.ts
-import * as ai from 'ai';
-import { wrapAISDK } from 'scorecard-ai';
-
-export const scorecardAI = wrapAISDK(ai, {
-  serviceName: process.env.SERVICE_NAME,
-  serviceVersion: process.env.SERVICE_VERSION,
-  projectId: process.env.SCORECARD_PROJECT_ID,
-});
-```
-
-```typescript
-// app/route.ts
-import { scorecardAI } from '@/lib/ai';
-import { openai } from '@ai-sdk/openai';
-
-export async function POST(req: Request) {
-  const { text } = await scorecardAI.generateText({
-    model: openai('gpt-4o-mini'),
-    prompt: await req.text(),
-  });
-
-  return Response.json({ text });
-}
-```
-
-### 2. Use service versioning
-
-Track performance across releases by setting `serviceVersion`:
-
-```typescript
-const aiSDK = wrapAISDK(ai, {
-  serviceVersion: process.env.npm_package_version, // Automatically use package.json version
-});
-```
-
-### 3. Use descriptive service names
-
-Differentiate between services or environments with clear naming:
-
-```typescript
-const aiSDK = wrapAISDK(ai, {
-  serviceName: `chat-api-${process.env.NODE_ENV}`,
-});
-```
-
----
-
 ## Troubleshooting
 
 <AccordionGroup>
@@ -216,7 +161,7 @@ const aiSDK = wrapAISDK(ai, {
     ```
   </Accordion>
 
-  <Accordion title="Traces not appearing in Scorecard" icon="magnifying-glass">
+  <Accordion title="Traces not appearing in Scorecard">
     If you don't see traces in the Scorecard UI, check the following:
 
     - Verify your API key is correct
@@ -226,7 +171,7 @@ const aiSDK = wrapAISDK(ai, {
     - Check that traces are being exported (default batch size is 1, so they export immediately)
   </Accordion>
 
-  <Accordion title="Monitor creation failed" icon="triangle-exclamation">
+  <Accordion title="Monitor creation failed">
     When using metrics, the wrapper automatically creates a monitor. If this fails:
 
     - Verify the project ID is correct
