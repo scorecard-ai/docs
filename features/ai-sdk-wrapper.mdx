@@ -29,7 +29,7 @@ This wrapper leverages OpenTelemetry to capture detailed traces of all AI SDK op
   </Step>
 
   <Step title="Get your API key">
-    Sign in to [Scorecard](https://app.scorecard.ai) and get your API key from the Settings page.
+    Sign in to [Scorecard](https://app.scorecard.io) and get your API key from the Settings page.
 
     <Note>
       You can pass the API key directly in code or set the `SCORECARD_API_KEY` environment variable.
@@ -56,7 +56,7 @@ This wrapper leverages OpenTelemetry to capture detailed traces of all AI SDK op
   </Step>
 
   <Step title="View traces in Scorecard">
-    Run your application and navigate to the [Tracing page](https://app.scorecard.ai/tracing) in Scorecard to see your traces.
+    Run your application and view your traces by navigating to the **Traces** page inside your project in Scorecard.
   </Step>
 </Steps>
 
@@ -191,7 +191,7 @@ const aiSDK = wrapAISDK(ai, {
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Error: SCORECARD_API_KEY is missing" icon="key">
+  <Accordion title="SCORECARD_API_KEY is missing">
     The wrapper requires a valid API key to send traces to Scorecard.
 
     **Solution**: Either set the `SCORECARD_API_KEY` environment variable or pass it explicitly:
@@ -203,7 +203,7 @@ const aiSDK = wrapAISDK(ai, {
     ```
   </Accordion>
 
-  <Accordion title="Error: SCORECARD_PROJECT_ID is missing" icon="folder">
+  <Accordion title="SCORECARD_PROJECT_ID is missing">
     If you specify metrics, you must provide a project ID to associate the monitor with.
 
     **Solution**: Set the `SCORECARD_PROJECT_ID` environment variable or pass it in configuration:
@@ -242,19 +242,19 @@ const aiSDK = wrapAISDK(ai, {
 ## Learn More
 
 <CardGroup cols={2}>
-  <Card title="Tracing" icon="chart-line" href="/features/tracing">
+  <Card title="Tracing" href="/features/tracing">
     Learn about Scorecard's tracing capabilities
   </Card>
 
-  <Card title="Monitoring" icon="monitor-heart-rate" href="/features/monitoring">
+  <Card title="Monitoring" href="/features/monitoring">
     Set up production monitoring for your AI applications
   </Card>
 
-  <Card title="Metrics" icon="chart-mixed" href="/features/best-in-class-metrics">
+  <Card title="Metrics" href="/features/best-in-class-metrics">
     Understand how metrics evaluate your traces
   </Card>
 
-  <Card title="Vercel AI SDK Docs" icon="arrow-up-right-from-square" href="https://sdk.vercel.ai/docs">
+  <Card title="Vercel AI SDK Docs" href="https://sdk.vercel.ai/docs">
     Official documentation for the Vercel AI SDK
   </Card>
 </CardGroup>
