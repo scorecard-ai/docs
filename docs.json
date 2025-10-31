@@ -155,7 +155,8 @@
               "features/ai-guardrails",
               "features/custom-provider",
               "features/privacy-by-design",
-              "features/mcp"
+              "features/mcp",
+              "features/ai-sdk-wrapper"
             ]
           }
         ]
