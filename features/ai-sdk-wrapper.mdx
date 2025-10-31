@@ -5,8 +5,6 @@ description: "Automatically trace and monitor your Vercel AI SDK applications wi
 
 The Scorecard AI SDK Wrapper provides automatic tracing and monitoring for applications built with [Vercel's AI SDK](https://sdk.vercel.ai/). By wrapping your AI SDK instance, you get complete observability of your LLM calls without writing any manual instrumentation code.
 
----
-
 ## Getting Started
 
 <Steps>
@@ -50,8 +48,6 @@ The Scorecard AI SDK Wrapper provides automatic tracing and monitoring for appli
   </Step>
 </Steps>
 
----
-
 ## Core benefits of using the AI SDK Wrapper
 
 **Zero-configuration tracing**: Wrap your AI SDK instance once and automatically capture traces for all supported operations (generateText, generateObject, streamText, streamObject, embed, embedMany).
@@ -59,8 +55,6 @@ The Scorecard AI SDK Wrapper provides automatic tracing and monitoring for appli
 **Automatic monitoring**: Optionally configure metrics to automatically score every trace in real-time, enabling production monitoring without additional code.
 
 **Built on standards**: Uses OpenTelemetry under the hood, ensuring compatibility with the broader observability ecosystem while providing a simpler developer experience.
-
----
 
 ## Advanced Usage
 
@@ -97,8 +91,6 @@ const { object } = await aiSDK.generateObject({
   When you provide metric descriptions, Scorecard automatically creates the metrics if they don't exist. Learn more about [metrics](/features/best-in-class-metrics).
 </Info>
 
----
-
 ## Configuration Reference
 
 The `wrapAISDK` function accepts an optional configuration object with the following properties:
@@ -116,8 +108,6 @@ The `wrapAISDK` function accepts an optional configuration object with the follo
   Environment variables take precedence over default values but are overridden by explicitly provided configuration.
 </Note>
 
----
-
 ## Supported AI SDK Functions
 
 The wrapper automatically adds tracing to the following AI SDK functions:
@@ -130,8 +120,6 @@ The wrapper automatically adds tracing to the following AI SDK functions:
 - **`embedMany`**: Generate embeddings for multiple inputs in batch
 
 All other AI SDK functions are passed through unchanged, so you can use the wrapped instance as a complete replacement for the original AI SDK.
-
----
 
 ## Troubleshooting
 
@@ -181,8 +169,6 @@ All other AI SDK functions are passed through unchanged, so you can use the wrap
     Note: Monitor creation happens asynchronously and won't block your application if it fails.
   </Accordion>
 </AccordionGroup>
-
----
 
 ## Learn More
 
