@@ -5,6 +5,34 @@ description: "New updates and improvements"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="October 31, 2025">
+  ### 🚀 AI SDK Wrapper Launch
+
+  We've launched a new AI SDK wrapper for seamless integration with Scorecard! The wrapper makes it easy to add evaluation and monitoring to your AI applications with minimal code changes.
+
+  Learn more in our [AI SDK Wrapper documentation](/features/ai-sdk-wrapper).
+
+  ### 📚 New Tracing Examples
+
+  We've added comprehensive tracing code examples for instrumenting your applications with OpenTelemetry:
+
+  - **[Pydantic and Logfire](https://github.com/scorecard-ai/scorecard-examples/tree/main/python-logfire-otel-basic)**: Python-based tracing with Pydantic validation and Logfire integration
+  - **[Traceloop](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-traceloop-basic)**: Node.js tracing with Traceloop for easy LLM observability
+  - **Manual OpenTelemetry**:
+    - [Workflow example](https://github.com/scorecard-ai/scorecard-examples/tree/main/nodejs-otel-workflow): Complete workflow implementation
+    - [Basic example](https://github.com/scorecard-ai/scorecard-examples/blob/main/nodejs-otel-basic/index.js): Getting started with OpenTelemetry
+
+  ### 🛠️ Bug Fixes and Improvements
+
+  - **[API]** Added new [Archive Records](/api-reference/delete-record) endpoint to archive records, helping you keep your workspace clean and organized
+  - **[Runs]** Renamed "Trigger run" to "[Kickoff run](/features/runs)" for consistency across the platform
+  - **[Runs]** Changed the runs page to default to the "All runs" tab instead of "My runs" for better discoverability
+  - **[Runs]** Increased the character limit per cell when exporting a run as CSV from 32,000 to 128,000 characters
+  - **[Analysis]** Fixed a bug where the analysis page crashed when there are no metrics
+  - **[Playground]** Updated the delete icon for playground messages from a minus symbol to a trash can for better clarity
+  - **[Playground]** Added support for adding a new Provider directly in the playground instead of navigating to the settings page
+</Update>
+
 <Update label="October 24, 2025">
   ### 📚 Documentation Updates
 
