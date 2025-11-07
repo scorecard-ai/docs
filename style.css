@@ -1,0 +1,20 @@
+#content-area {
+    max-width: 55rem;
+}
+
+/* Remove left margin on Product Updates page */
+#content-area:has([data-page-title="Product Updates"]) {
+    margin-left: 0;
+}
+
+/* Make the <Update> component a single column layout instead of two on screens smaller than 1500px */
+@media (max-width: 1500px) {
+    .update-container {
+        flex-direction: column !important; /* Not row */
+    }
+
+    /* Container of the changelog date chip */
+    .update-container :has(> [data-component-part="update-label"]) {
+        position: static !important; /* Not sticky */
+    }
+}
