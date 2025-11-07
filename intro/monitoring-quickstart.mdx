@@ -61,7 +61,7 @@ Already finished the <a href="/intro/tracing-quickstart">Tracing Quickstart</a>?
     **Filters**
 
     - Narrow evaluation by span name, service name, or free-text search across span/resource attributes.
-    - Use **SearchText** to target keywords and phrases that appear anywhere in a trace (including prompts and responses). Examples: “refund policy”, “PCI”, “unsafe content”, “billing migration”. This lets you monitor a topic, incident, or cohort end-to-end and measure quality improvements precisely where they matter.
+    - Use **SearchText** to target keywords and phrases that appear anywhere in a trace (including prompts and responses). Examples: "refund policy", "PCI", "unsafe content", "billing migration". This lets you monitor a topic, incident, or cohort end-to-end and measure quality improvements precisely where they matter.
 
 <DarkLightImage
   lightSrc="/images/monitors/monitor-filters-2.png"
@@ -70,15 +70,36 @@ Already finished the <a href="/intro/tracing-quickstart">Tracing Quickstart</a>?
   alt="Sample and filter UI."
 />
 
+    **Rule of Thumb: Filtering for GenAI Spans**
+
+    Your monitor must match GenAI spans:
+    - Spans need at least one `gen_ai`, `llm.`, or `traceloop` attribute to be captured
+    - **Your monitor filter must match these GenAI spans** (not their parent spans)
+
+    **Common pitfall:** Filtering by a parent span name that doesn't have GenAI attributes won't work, even if child spans do.
+
+    **Safe approaches for filtering:**
+    1. **Filter by service name** - catches all GenAI spans within that service
+    2. **Filter by specific span name** - target the exact span that has GenAI attributes (ideally with proper IO)
+
+    **Quick filter examples:**
+    - ✅ `{"serviceName": "my-service"}` - catches all GenAI spans in the service
+    - ✅ `{"spanName": "llm-call"}` - catches the specific GenAI span named "llm-call"  
+    - ❌ `{"spanName": "workflow"}` - won't work if "workflow" is a parent span without gen_ai attributes
+
     **Where prompts & completions come from**
 
     Scorecard looks for common attributes: `openinference.*`, `ai.prompt` / `ai.response`, and `gen_ai.*`. Custom keys can be mapped in the UI.
 
+    Once a GenAI span is captured, IO extraction is forgiving:
+    - ✅ **Best case:** Has proper IO attributes (`gen_ai.prompt.*`, `gen_ai.completion.*`) → extracts structured IO
+    - ✅ **Fallback case:** Missing IO attributes → automatically uses full trace as input/output
+
     <Note>
-    Your traces should follow the same conventions used by OpenInference / gen_ai ecosystems (e.g., Traceloop, OpenLLMetry). If you don’t see monitoring or scoring results:
+    Your traces should follow the same conventions used by OpenInference / gen_ai ecosystems (e.g., Traceloop, OpenLLMetry). If you don't see monitoring or scoring results:
 
     - Inspect a span in the **Traces** page and verify it contains prompt and completion under keys like `openinference.input` / `openinference.output`, `ai.prompt` / `ai.response.*`, or `gen_ai.prompt.*` / `gen_ai.completion.*`.
-    - Ensure those spans are within your monitor’s filters (service/span/searchText) and sampling window.
+    - Ensure those spans are within your monitor's filters (service/span/searchText) and sampling window.
     Once the attributes are present, Scorecard will automatically extract and score them.
     </Note>
   </Step>
