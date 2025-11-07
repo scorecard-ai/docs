@@ -5,6 +5,57 @@ description: "New updates and improvements"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="November 7, 2025">
+  This week, we focused on improving the tracing and monitoring features.
+
+  ### 📊 Improved Trace Details UX
+
+  The trace details page now features a **collapsible span tree** and better scrolling behavior for easier navigation through long, highly nested traces.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-trace-details-ux-light.png"
+    darkSrc="/images/changelog-trace-details-ux-dark.png"
+    caption="Improved trace details UX with a collapsible span tree"
+    alt="Screenshot of the trace details page with a collapsible span tree"
+  />
+
+  ### 🔗 Automatic Trace Grouping
+
+  In your traces, you can use the `scorecard.tracing_group_id` span attribute to automatically group traces into runs based on a custom identifier. This makes it easier to track and analyze multi-step workflows or batch operations.
+
+  ### 🎯 Cross-Project Monitoring
+
+  If you choose, monitors can now pick up traces from any project in your organization, allowing you to set up centralized monitoring rules across your entire workspace.
+
+  ### 🔎 Span Name Regex Filter for Monitors
+
+  Added a **"Span name (regex)"** filter to monitors, giving you more precise control over which spans trigger your monitoring rules.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-monitor-span-name-regex-light.png"
+    darkSrc="/images/changelog-monitor-span-name-regex-dark.png"
+    caption="New span name regex filter for monitors"
+    alt="Screenshot of the monitor configuration with span name regex filter"
+  />
+
+  ### 📈 Linkable Metric Groups
+
+  Metric groups are now full pages instead of modals, making it easy to share direct links to specific metric groups with your team. We'll continue to improve the metric creation experience next week.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-metric-group-page-light.png"
+    darkSrc="/images/changelog-metric-group-page-dark.png"
+    caption="Metric groups are now full pages that can be linked to"
+    alt="Screenshot of the metric group page"
+  />
+
+  ### 🛠️ Bug Fixes and Improvements
+
+  - **[Traces]** Added a **Project ID column** to the traces table to help you quickly identify traces by project.
+  - **[Traces]** Fixed the trace chart visualization to show traces in the given time period, not just the traces shown in the trace table.
+  - **[API]** Fixed pagination issue where a cursor pointing to a nonexistent item would skip the first item in the result set.
+</Update>
+
 <Update label="October 31, 2025">
   ### 🚀 AI SDK Wrapper Launch
 
@@ -25,7 +76,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   ### 🛠️ Bug Fixes and Improvements
 
   - **[API]** Added new [Delete Records](/api-reference/delete-record) endpoint to delete records, helping you keep your workspace clean and organized
-  - **[Runs]** Renamed "Trigger run" to "[Kickoff run](/features/runs)" for consistency across the platform
+  - **[Runs]** Renamed "Trigger run" to "[Kickoff run](/features/runs#kickoff-run-from-the-ui)" for consistency across the platform
   - **[Runs]** Changed the runs page to default to the "All runs" tab instead of "My runs" for better discoverability
   - **[Runs]** Increased the character limit per cell when exporting a run as CSV from 32,000 to 128,000 characters
   - **[Analysis]** Fixed a bug where the analysis page crashed when there are no metrics
@@ -520,7 +571,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 <Update label="June 13, 2025">
   ### 🎯 Metric API
 
-  We've launched new API endpoints for programmatic metric management, enabling teams to [create](https://docs.scorecard.io/api-reference/create-metric) and [update](https://docs.scorecard.io/api-reference/update-metric) metrics directly through our SDK. Create metrics with full control over evaluation type, output format, and prompt templates:
+  We've launched new API endpoints for programmatic metric management, enabling teams to [create](/api-reference/create-metric) and [update](/api-reference/update-metric) metrics directly through our SDK. Create metrics with full control over evaluation type, output format, and prompt templates:
 
   ```python
   client.metrics.create(
@@ -593,7 +644,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
   ### 🧪 New Playground Experience
 
-  The new [Scorecard Playground](https://docs.scorecard.io/features/playground) is here\! Built for product teams including prompt engineers, product managers, and subject matter experts, it provides a powerful environment to iterate on prompts and test them against multiple inputs simultaneously. Experience smart variable detection with autocomplete support for Jinja syntax, making template creation effortless. Watch your templates come to life with live preview that shows compiled output as you type. Key capabilities include:
+  The new [Scorecard Playground](/features/playground) is here\! Built for product teams including prompt engineers, product managers, and subject matter experts, it provides a powerful environment to iterate on prompts and test them against multiple inputs simultaneously. Experience smart variable detection with autocomplete support for Jinja syntax, making template creation effortless. Watch your templates come to life with live preview that shows compiled output as you type. Key capabilities include:
 
   - Batch testing - run prompts against entire testsets with one click
   - Model configuration with customizable temperature and parameters
