@@ -88,7 +88,11 @@
     },
     {
       "source": "/how-to-use-scorecard/ci-cd-with-github-actions",
-      "destination": "/how-to-use-scorecard/trigger-run-with-github-actions"
+      "destination": "/features/github-actions"
+    },
+    {
+      "source": "/how-to-use-scorecard/trigger-run-with-github-actions",
+      "destination": "/features/github-actions"
     },
     {
       "source": "/features/prompt-management",
@@ -105,6 +109,10 @@
     {
       "source": "/features/logging",
       "destination": "/features/tracing"
+    },
+    {
+      "source": "/features/best-in-class-metrics",
+      "destination": "/features/metrics"
     }
   ],
   "navigation": {
@@ -114,49 +122,55 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": [
-              "intro/overview",
-              "intro/what-is-scorecard",
-              "intro/ui-quickstart",
-              "intro/sdk-quickstart",
-              "intro/mcp-quickstart",
-              "intro/tracing-quickstart",
-              "intro/faq"
-            ]
+            "pages": ["intro/overview", "intro/what-is-scorecard", "intro/faq"]
           },
           {
-            "group": "How To Use Scorecard",
+            "group": "Quickstarts",
             "pages": [
-              "how-to-use-scorecard/trigger-run-with-github-actions",
-              "intro/metrics-quickstart",
+              "intro/ui-quickstart",
+              "intro/sdk-quickstart",
+              "intro/tracing-quickstart",
               "intro/monitoring-quickstart",
+              "intro/metrics-quickstart",
+              "intro/mcp-quickstart",
               "intro/rag-quickstart"
             ]
           },
           {
-            "group": "Features",
+            "group": "Core features",
             "pages": [
-              "features/projects",
               "features/playground",
-              "features/testsets",
-              "features/synthetic-data-generation",
-              "features/best-in-class-metrics",
+              "features/metrics",
+              "features/tracing",
               "features/runs",
+              "features/testsets",
+              "features/prompts"
+            ]
+          },
+          {
+            "group": "Advanced features",
+            "pages": [
+              "features/mcp",
+              "features/monitoring",
+              "features/trace-to-testcase",
+              "features/synthetic-data-generation",
+              "features/multi-turn-simulation",
+              "features/a-b-comparison",
               "features/analysis",
-              "features/prompts",
               "features/systems",
               "features/endpoints",
-              "features/multi-turn-simulation",
-              "features/tracing",
-              "features/monitoring",
-              "features/enterprise-authentication",
-              "features/trace-to-testcase",
-              "features/a-b-comparison",
+              "features/ai-sdk-wrapper",
+              "features/github-actions",
               "features/ai-guardrails",
               "features/custom-provider",
-              "features/privacy-by-design",
-              "features/mcp",
-              "features/ai-sdk-wrapper"
+              "features/projects"
+            ]
+          },
+          {
+            "group": "Governance, Risk, and Compliance",
+            "pages": [
+              "features/enterprise-authentication",
+              "features/privacy-by-design"
             ]
           }
         ]
@@ -201,7 +215,8 @@
               "api-reference/create-metric",
               "api-reference/list-metrics",
               "api-reference/get-metric",
-              "api-reference/update-metric"
+              "api-reference/update-metric",
+              "api-reference/delete-metric"
             ]
           },
           {
