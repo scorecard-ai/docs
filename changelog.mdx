@@ -5,6 +5,121 @@ description: "New updates and improvements"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="November 21, 2025">
+  ### 🤖 New Model Support
+
+  Added support for the latest models, including **GPT 5.1** and **Gemini 3 Pro**. Try them out and let us know what you think!
+
+  ### 🔎 Monitor Visibility on Traces Page
+
+  The traces page now displays a table of active monitors, making it easier to configure and manage monitors.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-monitor-table-light.png"
+    darkSrc="/images/changelog-monitor-table-dark.png"
+    caption="Table of active monitors on the traces page"
+    alt="Screenshot of the table of active monitors on the traces page"
+  />
+
+  ### 🏃 Monitors "Run now" feature
+
+  The "Run now" button on the monitors page allows you to run a monitor immediately, without having to wait for the next scheduled run. Now, the feature supports selecting a custom "look back" time range.
+
+
+  ### 🔎 Filter Runs by Source
+
+  You can now filter runs by their source (API, Monitor, Playground, or Kickoff), helping you quickly find runs created from specific workflows.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-runs-source-light.png"
+    darkSrc="/images/changelog-runs-source-dark.png"
+    caption="Filter runs by source on the runs page"
+    alt="Screenshot of the runs page with filter by source"
+  />
+
+  ### 🛠️ Bug Fixes and Improvements
+
+  - **[Testsets]** Improved the testset schema editor for a better editing experience.
+  - **[Metrics]** Fixed the empty state display for the metric groups tab.
+  - **[Testsets]** Fixed a bug where editing different fields in the same testcase could lose the first change.
+  - **[Docs]** Improved navigation on this documentation site.
+  - **[Internal]** Upgraded to Next.js 16 for better performance.
+</Update>
+
+<Update label="November 14, 2025">
+  This week, we focused on improving metrics.
+
+  ### 🔄 Re-run Scoring for Existing Runs
+
+  You can now re-run scoring with the latest version of a metric or add new metrics to existing runs without having to re-run your system. This makes it much faster to iterate on metrics!
+
+  <DarkLightImage
+    lightSrc="/images/changelog-rerun-scoring-light.png"
+    darkSrc="/images/changelog-rerun-scoring-dark.png"
+    caption="Re-run scoring for an existing run"
+    alt="Screenshot of the re-run scoring modal for an existing run"
+  />
+
+  ### 🧑‍💻 Heuristic Code Runners
+
+  Metrics now support custom code-based evaluation logic. This allows you to write your own evaluation logic in Python or Typescript.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-heuristic-metric-light.png"
+    darkSrc="/images/changelog-heuristic-metric-dark.png"
+    caption="Create metric modal with Python heuristic code"
+    alt="Screenshot of the create metric modal with Python heuristic code defined"
+  />
+
+  {/* TODO: Add image for heuristic code runners */}
+
+  ### 📏 Improved Metric Details Page
+
+  We overhauled the metric details page to make it easier to edit metrics.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-new-metric-details-page-light.png"
+    darkSrc="/images/changelog-new-metric-details-page-dark.png"
+    caption="New metric details page"
+    alt="Screenshot of the new metric details page"
+  />
+
+  With the metric template preview, you can see your instructions to the LLM-as-a-judge will render without running the metric.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-metric-template-preview-light.png"
+    darkSrc="/images/changelog-metric-template-preview-dark.png"
+    caption="Metric template preview"
+    alt="Screenshot of the metric template preview"
+  />
+
+  **"Recently used" badge**: Quickly identify metrics that were recently used in a run.
+
+  ### 🔍 Improved Trace Search
+
+  The traces page now supports filtering making it easier to find exactly what you're looking for.
+
+  - **Trace ID**: Filter by the root trace ID
+  - **Run ID**: Filter by the trace's run ID
+  - **Service**: Filter by the OpenTelemetry service name
+  - **Span Name**: Filter for runs containing a span with the given name
+
+  <DarkLightImage
+    lightSrc="/images/changelog-traces-search-light.png"
+    darkSrc="/images/changelog-traces-search-dark.png"
+    caption="Traces search with filter options"
+    alt="Screenshot of the traces page with search and filter options"
+  />
+
+  ### 🚀 New API Endpoints
+
+  Added a [Delete Metric](/api-reference/delete-metric) endpoint.
+
+  ### 🛠️ Bug Fixes and Improvements
+
+  - **[Runs]** Added a "Notes" column to the runs table for better organization
+</Update>
+
 <Update label="November 7, 2025">
   This week, we focused on improving the tracing and monitoring features.
 
