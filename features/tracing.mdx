@@ -80,7 +80,7 @@ See the [Quickstart](/intro/tracing-quickstart) for full environment variable se
 Scorecard automatically groups spans into traces and surfaces:
 
 - **Timestamp & duration** – when and how long the request ran.
-- **Service & span tree** – navigate nested function/tool calls (see code reference in `trace-table.tsx`).
+- **Service & span tree** – navigate nested function/tool calls with a collapsible span tree for easier navigation through long, highly nested traces.
 - **Token & cost breakdown** – estimate spend per trace via model pricing.
 - **Scores column** – if a trace links to an evaluation run the results appear inline (`TraceScoresCell`).
 - **Full-text search & filters** – search any span attribute (`searchText`) or limit to a specific project/time-range.
@@ -95,6 +95,67 @@ All table controls map to URL parameters so you can share filtered trace views.
 - **SearchText**: full‑text across span/resource attributes (including prompt/response fields).
 - **Match previews**: quick context snippets with deep links to traces.
 - **Cursor pagination**: efficient browsing with shareable URLs.
+
+---
+
+## Trace Grouping
+
+When running batch operations or multi-step workflows, you can group related traces into a single run using the `scorecard.tracing_group_id` span attribute. This makes it easier to track and analyze workflows that span multiple LLM calls.
+
+### How it works
+
+Add the `scorecard.tracing_group_id` attribute to your spans with a shared identifier. When monitors process these traces, spans with the same group ID are automatically grouped into a single run.
+
+<CodeGroup>
+
+```python Python
+from opentelemetry import trace
+
+tracer = trace.get_tracer(__name__)
+
+# Use the same group_id for all related operations
+group_id = "batch-job-123"
+
+with tracer.start_as_current_span("process_document") as span:
+    span.set_attribute("scorecard.tracing_group_id", group_id)
+    # Your LLM call here
+    
+with tracer.start_as_current_span("summarize_results") as span:
+    span.set_attribute("scorecard.tracing_group_id", group_id)
+    # Another LLM call in the same workflow
+```
+
+```typescript TypeScript
+import { trace } from '@opentelemetry/api';
+
+const tracer = trace.getTracer('my-service');
+
+// Use the same groupId for all related operations
+const groupId = 'batch-job-123';
+
+const span1 = tracer.startSpan('process_document');
+span1.setAttribute('scorecard.tracing_group_id', groupId);
+// Your LLM call here
+span1.end();
+
+const span2 = tracer.startSpan('summarize_results');
+span2.setAttribute('scorecard.tracing_group_id', groupId);
+// Another LLM call in the same workflow
+span2.end();
+```
+
+</CodeGroup>
+
+### Use cases
+
+- **Batch processing**: Group all documents processed in a single batch job
+- **Multi-step agents**: Track all LLM calls within an agent's execution
+- **Workflows**: Link related operations across different services
+- **A/B testing**: Group traces by experiment variant for comparison
+
+<Tip>
+  Traces with the same `scorecard.tracing_group_id` will appear together in the same run when processed by monitors, making it easy to analyze aggregate metrics across related operations.
+</Tip>
 
 ---
 
@@ -123,6 +184,8 @@ Tracing is the foundation for production quality tracking. **Monitors** periodic
 </Frame>
 
 - Select metrics, frequency, sample rate & filters (including full-text `searchText`).
+- Span name regex filtering: Target specific spans using regex patterns (e.g., `llm.*` to match all LLM-related spans).
+- Cross-project monitoring: Optionally pick up traces from any project in your organization for centralized monitoring.
 - Scores appear inline on the Traces page and aggregate in the **Runs** section.
 - Detect drift and regressions without extra instrumentation.
 

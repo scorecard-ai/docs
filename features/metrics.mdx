@@ -118,7 +118,7 @@ Scorecard also offers the flexibility to define any customized metric unique to 
 - Evaluation Type: how your metric will be evaluated
   - AI: takes the Metric Guidelines as prompt and computes the metric via an AI model.
   - Human: a human subject-matter expert manually evaluates the metric.
-  - Heuristic (SDK): this is currently only supported via SDK (check out [this cookbook](https://colab.research.google.com/github/scorecard-ai/scorecard-cookbook/blob/main/Scorecard_Heuristic_Scoring_Example.ipynb)) - UI support is coming soon\! 🚀
+  - Heuristic: write custom evaluation logic in Python or TypeScript that runs in a secure sandbox. See [Heuristic Metrics](#heuristic-metrics) below.
 - Output Type: the output type of your metric.
   - Boolean
   - Integer (1-5)
@@ -246,6 +246,94 @@ Scorecard not only automates the scoring process, it also provides explanations 
   lightSrc="/images/metrics/metrics-scores-detail-light.png"
   darkSrc="/images/metrics/metrics-scores-detail-dark.png"
 />
+
+### Heuristic Metrics
+
+Heuristic metrics allow you to write custom evaluation logic using Python or TypeScript code. This is useful when you need deterministic, rule-based scoring that doesn't require an AI model, such as:
+
+- Checking for specific keywords or patterns
+- Validating JSON structure or format
+- Computing text similarity scores
+- Measuring response length or complexity
+- Custom business logic checks
+
+#### Creating a Heuristic Metric
+
+When creating a new metric, select **Heuristic** as the evaluation type. You'll see a code editor where you can write your evaluation logic.
+
+<DarkLightImage
+  caption="Creating a heuristic metric with Python code"
+  alt="Screenshot of the create metric modal with Python heuristic code"
+  lightSrc="/images/changelog-heuristic-metric-light.png"
+  darkSrc="/images/changelog-heuristic-metric-dark.png"
+/>
+
+#### Writing Heuristic Code
+
+Your code receives the record data and must return a score. Here's the structure:
+
+<Tabs>
+  <Tab title="Python">
+
+```python
+def score(inputs: dict, outputs: dict, expected: dict) -> dict:
+    """
+    Evaluate the output and return a score.
+    
+    Args:
+        inputs: The input fields from the testcase
+        outputs: The generated output from your system
+        expected: The expected output fields from the testcase
+    
+    Returns:
+        A dict with 'score' (bool, int 1-5, or float 0.0-1.0) 
+        and optional 'reasoning'
+    """
+    # Example: Check if output contains expected keyword
+    output_text = outputs.get("response", "")
+    expected_keyword = expected.get("keyword", "")
+    
+    if expected_keyword.lower() in output_text.lower():
+        return {"score": True, "reasoning": "Keyword found in response"}
+    else:
+        return {"score": False, "reasoning": "Keyword not found"}
+```
+
+  </Tab>
+  <Tab title="TypeScript">
+
+```typescript
+function score(
+  inputs: Record<string, any>,
+  outputs: Record<string, any>,
+  expected: Record<string, any>
+): { score: boolean | number; reasoning?: string } {
+  // Example: Check response length
+  const response = outputs.response || "";
+  const minLength = expected.minLength || 100;
+  
+  if (response.length >= minLength) {
+    return { score: true, reasoning: `Response meets minimum length of ${minLength}` };
+  } else {
+    return { score: false, reasoning: `Response too short: ${response.length} < ${minLength}` };
+  }
+}
+```
+
+  </Tab>
+</Tabs>
+
+#### Secure Sandbox Execution
+
+Heuristic code runs in a secure, isolated sandbox environment. This ensures:
+
+- **Safety**: Code cannot access external resources or affect other users
+- **Consistency**: Same code produces same results across runs
+- **Performance**: Execution is optimized for evaluation workloads
+
+<Note>
+  The sandbox has limited access to external libraries. Common utilities like string manipulation and JSON parsing are available. Contact support if you need specific libraries for your use case.
+</Note>
 
 ### Metric Groups
 
