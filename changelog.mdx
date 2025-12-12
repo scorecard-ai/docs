@@ -5,6 +5,50 @@ description: "New updates and improvements"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="December 5, 2025">
+  ### New playground
+  We've introduced a workflow-based playground UI. It offers the same functionality as the previous playground, but with a more intuitive structure that makes the relationship between testcases, prompts, and results clearer. The new interface is still experimental and currently enabled only for newly created Scorecard organizations. If you'd like early access, let us know! We're iterating quickly based on feedback.
+  
+  <DarkLightImage
+    lightSrc="/images/changelog-new-playground-light.webp"
+    darkSrc="/images/changelog-new-playground-dark.webp"
+    caption="New playground"
+    alt="Screenshot of the new playground"
+  />
+
+  ### New records page
+
+  We've added a consolidated Records page that lists every record across all runs. This unlocks new workflows, including viewing testcase performance history, identifying testcases that failed specific metrics, and filtering records by substring. Eventually, this will replace the existing Runs & Results page.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-records-page-light.png"
+    darkSrc="/images/changelog-records-page-dark.png"
+    caption="Records page with filters"
+    alt="Screenshot of the records page with filters"
+  />
+
+  ### Onboarding wizard
+
+  When you create a new project, you'll now see a guided onboarding wizard to help you get started faster. Based on your use case, we recommend an onboarding path (testsets, tracing, or SDK) and suggest a set of metrics to begin with.
+
+  <DarkLightImage
+    lightSrc="/images/create-project-wizard-light.gif"
+    darkSrc="/images/create-project-wizard-dark.gif"
+    caption="Create project wizard"
+    alt="Screenshot of the create project wizard"
+  />
+
+  ### 🛠️ Bug Fixes and Improvements
+  - **[UI]** Descriptions are now optional when creating systems, endpoints, and metric groups.
+  - **[Metrics]** Replaced the "Create" and "Edit" metric modals with a new full-page metric editor.
+  - **[Metrics]** Added a "Recently used" badge to the metric card to quickly identify metrics that were recently used in a run.
+  - **[Testsets]** Improved testset schema modal by removing tabs.
+  - **[Runs]** Fixed newline handling when exporting a run (or testset) to Excel-compatible CSV.
+  - **[Tracing]** We removed the "Monitoring" page and combined it with the existing "Traces" page.
+  - **[UI]** Simplified the sidebar navigation by moving lower-traffic pages into an auto-collapsed Advanced section.
+  - **[UI]** Added page descriptions to headers throughout the app
+</Update>
+
 <Update label="November 21, 2025">
   ### 🤖 New Model Support
 
@@ -70,8 +114,6 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
     caption="Create metric modal with Python heuristic code"
     alt="Screenshot of the create metric modal with Python heuristic code defined"
   />
-
-  {/* TODO: Add image for heuristic code runners */}
 
   ### 📏 Improved Metric Details Page
 
