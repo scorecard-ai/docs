@@ -293,6 +293,10 @@ You can edit a particular Testcase's fields from the Testcase table, or from the
 
 The Scorecard UI supports importing Testcases in CSV, TSV, JSON, and JSONL formats. Scorecard automatically maps your file's columns to the testset's schema fields and validates data.
 
+<Tip>
+  **Upsert behavior**: If your file includes testcases with IDs that already exist in the testset, those testcases will be updated with the new values rather than creating duplicates. This makes it easy to bulk-update existing testcases by re-uploading a modified file.
+</Tip>
+
 <CodeGroup>
 ```csv CSV
 userQuery,context,ideal,category

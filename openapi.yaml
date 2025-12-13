@@ -826,7 +826,6 @@ paths:
           source: |-
             curl https://api2.scorecard.io/api/v2/testsets/$TESTSET_ID \
                 -X PATCH \
-                -H 'Content-Type: application/json' \
                 -H "Authorization: Bearer $SCORECARD_API_KEY"
     delete:
       operationId: deleteTestset
@@ -2045,7 +2044,7 @@ paths:
         - lang: cURL
           source: |-
             curl https://api2.scorecard.io/api/v2/projects/$PROJECT_ID/metrics \
-                -H 'Content-Type: application/json' \
+                -X POST \
                 -H "Authorization: Bearer $SCORECARD_API_KEY"
   /metrics/{metricId}:
     get:
@@ -2558,7 +2557,69 @@ paths:
           source: |-
             curl https://api2.scorecard.io/api/v2/metrics/$METRIC_ID \
                 -X PATCH \
-                -H 'Content-Type: application/json' \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
+    delete:
+      operationId: deleteMetric
+      summary: Delete Metric
+      description: Delete a specific Metric by ID. The metric will be removed from metric groups and monitors.
+      parameters:
+        - in: path
+          name: metricId
+          description: The ID of the Metric to delete.
+          schema:
+            type: string
+            example: "321"
+          required: true
+      responses:
+        "200":
+          description: Metric deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the deletion was successful.
+                required:
+                  - success
+              examples:
+                Successful deletion:
+                  value:
+                    success: true
+                  summary: Successful deletion
+                  description: Response after successfully deleting a metric.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: 'My API Key',
+            });
+
+            const metric = await client.metrics.delete('321');
+
+            console.log(metric.success);
+        - lang: Python
+          source: |-
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key="My API Key",
+            )
+            metric = client.metrics.delete(
+                "321",
+            )
+            print(metric.success)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/metrics/$METRIC_ID \
+                -X DELETE \
                 -H "Authorization: Bearer $SCORECARD_API_KEY"
   /projects/{projectId}/runs:
     get:
@@ -3666,7 +3727,6 @@ paths:
           source: |-
             curl https://api2.scorecard.io/api/v2/systems/$SYSTEM_ID \
                 -X PATCH \
-                -H 'Content-Type: application/json' \
                 -H "Authorization: Bearer $SCORECARD_API_KEY"
     delete:
       operationId: deleteSystem

@@ -16,13 +16,7 @@ mintlify dev
 
 ## Updating API reference pages
 
-Download the Stainless-documented OpenAPI spec to `openapi.yaml`:
-
-```sh
-curl https://app.stainless.com/api/spec/documented/scorecard/openapi.documented.yml -o openapi.yaml
-```
-
-Then generate the API reference docs in `api-reference/`:
+Download the Stainless-documented OpenAPI spec to `openapi.yaml`, then generate the API reference docs in `api-reference/`:
 
 ```sh
 curl https://app.stainless.com/api/spec/documented/scorecard/openapi.documented.yml -o openapi.yaml

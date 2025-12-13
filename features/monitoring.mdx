@@ -34,10 +34,10 @@ Scorecard **Monitors** periodically sample recent LLM spans, extract prompts and
   alt="Screenshot of traces page."
 />
 
-## Create a Monitor
+## Create a Monitoring Rule
 
-1. In the project sidebar select **Monitors** (<code>&lt;Icons.clock/&gt;</code>). You’ll land on the monitor overview page.
-2. Click **“New Monitor +”** to open the Create Monitor modal.
+1. Navigate to the **Traces** page in your project. You'll see the monitoring rules overview table at the top of the page.
+2. Click **“Add +”** to open the Create Monitor modal.
 3. Click **Create Monitor** and scoring starts on the next cycle.
    
 <DarkLightImage
@@ -101,6 +101,7 @@ This turns production monitoring into topic-level QA: you’re not just watching
 
 - **Edit** a monitor to change metrics, sampling, filters or toggle **Active**.
 - **Delete** a monitor to stop processing entirely.
+- **Run now** to trigger a monitor immediately without waiting for the next scheduled run. You can also specify a custom lookback time range to evaluate traces from a specific period.
 
 <DarkLightImage
   lightSrc="/images/monitors/monitors-list.png"
