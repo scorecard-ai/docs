@@ -1,0 +1,8 @@
+#content-area {
+    max-width: 55rem;
+}
+
+/* Remove left margin on Product Updates page */
+#content-area:has([data-page-title="Product Updates"]) {
+    margin-left: 0;
+}
