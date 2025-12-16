@@ -7,6 +7,62 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="December 12, 2025">
+  ### Records page
+
+  The Records page is now more powerful for debugging and triaging large runs: you can pull useful fields into dedicated columns, sort and filter more precisely, and quickly jump to "what I just ran."
+
+  - **Extract columns from inputs, outputs, and expected**: Expand inputs/outputs/expected objects into separate per-field columns so you can scan specific keys without opening each record.
+  - **Reorder columns**: Reorder columns in the table editor (drag-and-drop) and save your preferred layout.
+  - **Created At/By columns**: See when a record was created and who kicked off the run that produced it.
+  - **Created At/By filters**: Filter by a time range and/or by the run creator to focus on the records you care about.
+  - **Sort by Created At**: Sort the table by record creation time to see newest records first (and quick filters will set this automatically).
+  - **New quick filters**: Narrow down to common views like **My Recent Records** with a new "Quick Filters" menu.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-records-columns-filters-light.png"
+    darkSrc="/images/changelog-records-columns-filters-dark.png"
+    caption="Records page with extracted columns, saved layouts, and quick filters"
+    alt="Screenshot of the Records page showing extracted input/output columns, Created At / Created By, and the Quick Filters menu"
+  />
+
+  ### Simpler projects navigation
+
+  We removed the standalone projects page and made project switching faster by showing project information in the top navigation.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-projects-topnav-table-light.png"
+    darkSrc="/images/changelog-projects-topnav-table-dark.png"
+    caption="Project switching via the top navigation"
+    alt="Screenshot of the project switcher in the top navigation showing a table of projects"
+  />
+
+  ### New metric templates
+
+  We updated our built-in metric templates to help you get started faster with common evaluation goals (and reduce the amount of prompt engineering needed to create a high-signal judge).
+
+  Our templates now include **Hallucination detection**, **Response completeness**, **PII leakage**, **Coherency**, **User intent fulfillment**, **Content moderation**, **Source attribution quality**, **Bias**, and **Conciseness**.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-metric-templates-light.png"
+    darkSrc="/images/changelog-metric-templates-dark.png"
+    caption="New metric templates"
+    alt="Screenshot of the new metric templates"
+    />
+
+  {/* ### SDK tracing wrappers
+
+  We shipped new SDK capabilities to make tracing dramatically easier to adopt in production by automatically instrumenting LLM calls.
+
+  - **LLM Proxy**: Automatically instrument tracing for LLM calls without needing to manually add tracing around every request.
+  - **LLM wrap helper**: Wrap popular LLM SDKs (including OpenAI and Anthropic) to auto-instrument tracing in **TypeScript** and **Python**. */}
+
+  ### 🛠️ Bug Fixes and Improvements
+
+  - Added a new "Help" menu in the sidebar with a "Send Feedback" option.
+  - **[New models]** Added support for GPT 5.2 released this week.
+</Update>
+
 <Update label="December 5, 2025">
   ### New playground
   We've introduced a workflow-based playground UI. It offers the same functionality as the previous playground, but with a more intuitive structure that makes the relationship between testcases, prompts, and results clearer. The new interface is still experimental and currently enabled only for newly created Scorecard organizations. If you'd like early access, let us know! We're iterating quickly based on feedback.
@@ -41,6 +97,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   />
 
   ### 🛠️ Bug Fixes and Improvements
+
   - **[UI]** Descriptions are now optional when creating systems, endpoints, and metric groups.
   - **[Metrics]** Replaced the "Create" and "Edit" metric modals with a new full-page metric editor.
   - **[Metrics]** Added a "Recently used" badge to the metric card to quickly identify metrics that were recently used in a run.
@@ -850,7 +907,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
   We recently held our first Scorecard Evaluation Day with a cohort of inception-stage founders who are deeply invested in their AI agents' quality. During the event, we exchanged valuable ideas around evaluation goals and methodologies, had thoughtful discussions about defining meaningful metrics, and explored approaches to evaluation (including the Scorecard method) and integrating evaluation into CI/CD pipelines. Thanks to everyone who attended\! We greatly appreciate the insightful feedback from these teams and have already implemented several improvements to our UI flows and SDK integration patterns based on your input.
 
-  <img src="/images/eval_day.png" alt="Scorecard Eval Day event poster" width="200" />
+  <img src="/images/eval_day.png" alt="Scorecard Eval Day event poster" className="max-w-xs" />
 
   ### 📚 In-App Documentation Search
 
