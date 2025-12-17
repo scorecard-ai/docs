@@ -33,6 +33,8 @@ This quickstart shows how to trace your LLM applications with Scorecard. Change 
     <CodeGroup>
 
     ```js JavaScript
+    // Works with OpenAI and Anthropic - see examples below for more patterns
+    
     import OpenAI from 'openai';
     
     const client = new OpenAI({
@@ -49,18 +51,12 @@ This quickstart shows how to trace your LLM applications with Scorecard. Change 
       model: 'gpt-4',
       messages: [{ role: 'user', content: 'Hello!' }]
     });
-    
-    // For Claude/Anthropic, use the same pattern:
-    // import Anthropic from '@anthropic-ai/sdk';
-    // const client = new Anthropic({
-    //   apiKey: process.env.ANTHROPIC_API_KEY,
-    //   baseURL: 'https://llm.scorecard.io',
-    //   defaultHeaders: { 'x-scorecard-api-key': process.env.SCORECARD_API_KEY }
-    // });
     ```
 
     
     ```py Python
+    # Works with OpenAI and Anthropic - see examples below for more patterns
+    
     from openai import OpenAI
     
     client = OpenAI(
@@ -77,14 +73,6 @@ This quickstart shows how to trace your LLM applications with Scorecard. Change 
         model="gpt-4",
         messages=[{"role": "user", "content": "Hello!"}]
     )
-    
-    # For Claude/Anthropic, use the same pattern:
-    # from anthropic import Anthropic
-    # client = Anthropic(
-    #     api_key=os.environ["ANTHROPIC_API_KEY"],
-    #     base_url="https://llm.scorecard.io",
-    #     default_headers={"x-scorecard-api-key": os.environ["SCORECARD_API_KEY"]}
-    # )
     ```
 
     </CodeGroup>
@@ -110,52 +98,71 @@ Your App → llm.scorecard.io → OpenAI/Anthropic
 
 Your LLM calls work the same way - Scorecard forwards requests and captures telemetry.
 
-## Need Deeper Integration?
+## SDK Wrappers for Deeper Integration
 
-For more control over tracing with custom spans, workflows, and tasks:
+For more control than `llm.scorecard.io`, the Scorecard SDK wrappers provide automatic tracing with native OpenTelemetry integration. Wrap your OpenAI or Anthropic client once and all calls are automatically traced - including streaming responses.
 
-**Scorecard SDK Wrappers:**
+The real power comes from custom spans and nested traces. You can create parent spans for your workflows and business logic, and LLM calls will automatically nest as children. This gives you complete visibility into complex multi-step processes.
+
+### Basic Usage
 
 <CodeGroup>
 
-```py Python
-from openai import OpenAI
-from scorecard_ai import wrap
-
-# Wrap your client for automatic tracing
-openai = wrap(OpenAI(api_key=os.getenv("OPENAI_API_KEY")))
-
-# Use normally - all calls are traced
-response = openai.chat.completions.create(
-    model="gpt-4",
-    messages=[{"role": "user", "content": "Hello!"}]
-)
-```
-
-
 ```js JavaScript
+// Works with OpenAI and Anthropic - see examples below for more patterns
+
 import { wrap } from 'scorecard-ai';
 import OpenAI from 'openai';
 
-// Wrap your client for automatic tracing
-const openai = wrap(new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-}));
+// Wrap your OpenAI client
+const openai = wrap(
+  new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+  }),
+  {
+    apiKey: process.env.SCORECARD_API_KEY,
+    projectId: 'my-chatbot'  // Optional: organize traces by project
+  }
+);
 
-// Use normally - all calls are traced
+// Use normally - all calls are automatically traced
 const response = await openai.chat.completions.create({
   model: 'gpt-4',
   messages: [{ role: 'user', content: 'Hello!' }]
 });
 ```
 
+
+```py Python
+# Works with OpenAI and Anthropic - see examples below for more patterns
+
+from openai import OpenAI
+from scorecard_ai import wrap
+
+# Wrap your OpenAI client
+openai = wrap(
+    OpenAI(api_key=os.environ["OPENAI_API_KEY"]),
+    {
+        "api_key": os.environ["SCORECARD_API_KEY"],
+        "project_id": "my-chatbot"  # Optional: organize traces by project
+    }
+)
+
+# Use normally - all calls are automatically traced
+response = openai.chat.completions.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+```
+
 </CodeGroup>
 
-**Or use OpenTelemetry directly** for full control over instrumentation.
+## Examples
 
-## Examples & Learn More
-
-- [Node.js Examples](https://github.com/scorecard-ai/scorecard-node/tree/main/examples) - OpenAI, Anthropic, Vercel AI SDK, nested traces
-- [Python Examples](https://github.com/scorecard-ai/scorecard-python/tree/main/examples) - OpenAI, Anthropic, nested traces
+- [Node.js Examples](https://github.com/scorecard-ai/scorecard-node/tree/main/examples) - OpenAI, Anthropic, Vercel AI SDK, nested traces, streaming
+- [Python Examples](https://github.com/scorecard-ai/scorecard-python/tree/main/examples) - OpenAI, Anthropic, nested traces, streaming
 - [More Examples](https://github.com/scorecard-ai/scorecard-examples) - Additional integration examples
+
+## Where to go next
+
 - [Tracing Features](/features/tracing) - Advanced tracing patterns
