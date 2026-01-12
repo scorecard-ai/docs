@@ -130,6 +130,7 @@
               "intro/ui-quickstart",
               "intro/sdk-quickstart",
               "intro/tracing-quickstart",
+              "intro/claude-agent-sdk-tracing",
               "intro/monitoring-quickstart",
               "intro/metrics-quickstart",
               "intro/mcp-quickstart",

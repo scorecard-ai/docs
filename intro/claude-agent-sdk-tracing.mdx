@@ -1,0 +1,105 @@
+---
+title: "Claude Agent SDK Tracing"
+sidebarTitle: "Claude Agent SDK"
+description: "Trace your Claude Agent SDK applications with Scorecard."
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+The Claude Agent SDK is Anthropic's framework for building AI agents that can reason, use tools, and complete multi-step tasks. It includes built-in support for OpenTelemetry tracing, making it easy to capture detailed telemetry from your agent workflows.
+
+This quickstart shows how to send traces from your Claude Agent SDK applications to Scorecard for observability, debugging, and evaluation.
+
+<Info>
+  **Using the standard Anthropic SDK?** Check out the general [Tracing Quickstart](/intro/tracing-quickstart) for the proxy method that works with any Anthropic client.
+</Info>
+
+## Steps
+
+<Steps>
+  <Step title="Set up environment variables">
+    Configure the OpenTelemetry exporter to send traces to Scorecard. You'll need your Scorecard API key from [Settings](https://app.scorecard.io/settings).
+
+    ```bash
+    export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer your_scorecard_api_key"
+    export ENABLE_BETA_TRACING_DETAILED=1
+    export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
+    ```
+
+    <Note>
+      Replace `your_scorecard_api_key` with your actual Scorecard API key (starts with `ak_`).
+    </Note>
+  </Step>
+
+  <Step title="Run your agent">
+    With the environment variables configured, run your Claude Agent SDK application. All agent activity is automatically traced.
+
+    ```python title="example.py" [expandable]
+    import anyio
+    from claude_agent_sdk import (
+        AssistantMessage,
+        TextBlock,
+        query,
+    )
+
+    async def main():
+        async for message in query(prompt="What is 2 + 2?"):
+            if isinstance(message, AssistantMessage):
+                for block in message.content:
+                    if isinstance(block, TextBlock):
+                        print(f"Claude: {block.text}")
+
+    anyio.run(main)
+    ```
+  </Step>
+
+  <Step title="View traces in Scorecard">
+    Navigate to the **Records** page in [Scorecard](https://app.scorecard.io) to see your agent traces.
+
+    Each trace shows:
+    - Complete request/response data for every LLM call
+    - Tool invocations with inputs and outputs
+    - Token usage and latency metrics
+    - The full execution tree of your agent's reasoning
+
+    <DarkLightImage lightSrc="/images/tracing-light.png" darkSrc="/images/tracing-dark.png" caption="Viewing Claude Agent SDK traces in Scorecard." alt="Screenshot of viewing Claude Agent SDK traces in Scorecard." />
+  </Step>
+</Steps>
+
+## What Gets Traced
+
+The Claude Agent SDK automatically captures:
+
+| Trace Data | Description |
+|------------|-------------|
+| **LLM Calls** | Every `messages.create` call with full prompt and completion |
+| **Tool Use** | Tool invocations, inputs, and outputs as nested spans |
+| **Token Usage** | Input, output, and total token counts per call |
+| **Latency** | End-to-end timing for each operation |
+| **Model Info** | Model name, parameters, and configuration |
+| **Errors** | Any failures with full error context |
+
+## Environment Variables Reference
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `OTEL_EXPORTER_OTLP_HEADERS` | Yes | Authentication header: `Authorization=Bearer <scorecard_api_key>` |
+| `ENABLE_BETA_TRACING_DETAILED` | Yes | Set to `1` to enable detailed tracing |
+| `BETA_TRACING_ENDPOINT` | Yes | OTLP endpoint URL (use `https://tracing.scorecard.io/otel` for Scorecard) |
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Tracing Features" icon="chart-line" href="/features/tracing">
+    Learn about advanced tracing patterns and trace grouping
+  </Card>
+  <Card title="Monitoring" icon="eye" href="/intro/monitoring-quickstart">
+    Set up production monitoring for your Claude agents
+  </Card>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Create custom metrics to evaluate agent performance
+  </Card>
+  <Card title="Trace to Testcase" icon="flask" href="/features/trace-to-testcase">
+    Convert production traces into evaluation test cases
+  </Card>
+</CardGroup>
