@@ -21,13 +21,13 @@ This quickstart shows how to send traces from your Claude Agent SDK applications
     Configure the OpenTelemetry exporter to send traces to Scorecard. You'll need your Scorecard API key from [Settings](https://app.scorecard.io/settings).
 
     ```bash
-    export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer your_scorecard_api_key"
+    export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your_scorecard_api_key>"
     export ENABLE_BETA_TRACING_DETAILED=1
     export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
     ```
 
     <Note>
-      Replace `your_scorecard_api_key` with your actual Scorecard API key (starts with `ak_`).
+      Replace `<your_scorecard_api_key>` with your actual Scorecard API key (starts with `ak_`).
     </Note>
   </Step>
 
