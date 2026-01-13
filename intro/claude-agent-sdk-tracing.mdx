@@ -56,13 +56,15 @@ This quickstart shows how to send traces from your Claude Agent SDK applications
   <Step title="View traces in Scorecard">
     Navigate to the **Records** page in [Scorecard](https://app.scorecard.io) to see your agent traces.
 
-    Each trace shows:
-    - Complete request/response data for every LLM call
-    - Tool invocations with inputs and outputs
-    - Token usage and latency metrics
-    - The full execution tree of your agent's reasoning
+    <Note>
+      It may take 1-2 minutes for traces to appear on the Records page.
+    </Note>
 
-    <DarkLightImage lightSrc="/images/tracing-light.png" darkSrc="/images/tracing-dark.png" caption="Viewing Claude Agent SDK traces in Scorecard." alt="Screenshot of viewing Claude Agent SDK traces in Scorecard." />
+    <DarkLightImage lightSrc="/images/records-table-claude-sdk-light.png" darkSrc="/images/records-table-claude-sdk-dark.png" alt="Records table showing Claude Agent SDK traces" />
+
+    Click on any record to view the full trace details, including the complete request/response data and model usage.
+
+    <DarkLightImage lightSrc="/images/records-details-claude-sdk-light.png" darkSrc="/images/records-details-claude-sdk-dark.png" alt="Trace details view" />
   </Step>
 </Steps>
 
@@ -74,8 +76,7 @@ The Claude Agent SDK automatically captures:
 |------------|-------------|
 | **LLM Calls** | Every `messages.create` call with full prompt and completion |
 | **Tool Use** | Tool invocations, inputs, and outputs as nested spans |
-| **Token Usage** | Input, output, and total token counts per call |
-| **Latency** | End-to-end timing for each operation |
+| **Model Usage** | Input, output, and total token counts per call |
 | **Model Info** | Model name, parameters, and configuration |
 | **Errors** | Any failures with full error context |
 
