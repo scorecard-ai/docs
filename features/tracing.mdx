@@ -1,6 +1,6 @@
 ---
 title: "Tracing: Overview"
-description: "Instrument, inspect and monitor every LLM request in minutes."
+description: "Instrument and inspect every LLM request in minutes."
 ---
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
@@ -16,7 +16,7 @@ LLM observability means knowing exactly what happened in every generation—late
 - Debug long or failing requests in seconds.
 - Audit prompts & completions for compliance and safety.
 - Attribute quality and cost back to specific services or users.
-- Feed production traffic into evaluations and monitoring.
+- Feed production traffic into evaluations.
 
 ### If you call it something else
 
@@ -104,7 +104,7 @@ When running batch operations or multi-step workflows, you can group related tra
 
 ### How it works
 
-Add the `scorecard.tracing_group_id` attribute to your spans with a shared identifier. When monitors process these traces, spans with the same group ID are automatically grouped into a single run.
+Add the `scorecard.tracing_group_id` attribute to your spans with a shared identifier. Scorecard automatically groups spans with the same group ID into a single run.
 
 <CodeGroup>
 
@@ -154,7 +154,7 @@ span2.end();
 - **A/B testing**: Group traces by experiment variant for comparison
 
 <Tip>
-  Traces with the same `scorecard.tracing_group_id` will appear together in the same run when processed by monitors, making it easy to analyze aggregate metrics across related operations.
+  Traces with the same `scorecard.tracing_group_id` will appear together in the same run, making it easy to analyze aggregate metrics across related operations.
 </Tip>
 
 ---
@@ -171,35 +171,13 @@ Read more in [Trace to Testcase](/features/trace-to-testcase).
 
 ---
 
-## Continuous Monitoring
-
-Tracing is the foundation for production quality tracking. **Monitors** periodically sample recent LLM spans, score them with your chosen metrics and surface trends right back in the traces view.
-
-<Frame caption="Monitor results – production traces with scores">
-  ![Monitor results – production traces with scores](/images/monitors/monitors-traces-score.png)
-</Frame>
-
-<Frame caption="Traces search with monitor scores">
-  ![Traces search page with scores created by a monitor](/images/monitors/monitors-traces-search.png)
-</Frame>
-
-- Select metrics, frequency, sample rate & filters (including full-text `searchText`).
-- Span name regex filtering: Target specific spans using regex patterns (e.g., `llm.*` to match all LLM-related spans).
-- Cross-project monitoring: Optionally pick up traces from any project in your organization for centralized monitoring.
-- Scores appear inline on the Traces page and aggregate in the **Runs** section.
-- Detect drift and regressions without extra instrumentation.
-
-Deep-dive in [Monitoring](/features/monitoring) or follow the [Monitoring Quickstart](/intro/monitoring-quickstart).
-
----
-
 ## AI-Specific Error Detection
 
-Scorecard's tracing goes beyond technical failures to detect AI-specific behavioral issues that traditional monitoring misses. The system acts as an always-on watchdog, analyzing every AI interaction to catch both obvious technical errors and subtle behavioral problems that could impact user experience.
+Scorecard's tracing goes beyond technical failures to detect AI-specific behavioral issues that traditional observability misses. The system acts as an always-on watchdog, analyzing every AI interaction to catch both obvious technical errors and subtle behavioral problems that could impact user experience.
 
 ### Silent Failure Detection
 
-The most dangerous errors in AI systems are "silent failures" where your AI responds but incorrectly. Scorecard automatically detects behavioral errors including off-topic responses, workflow interruptions, safety violations, hallucinations, and context loss. These silent failures often go unnoticed without specialized AI monitoring but can severely impact user trust and application effectiveness.
+The most dangerous errors in AI systems are "silent failures" where your AI responds but incorrectly. Scorecard automatically detects behavioral errors including off-topic responses, workflow interruptions, safety violations, hallucinations, and context loss. These silent failures often go unnoticed without specialized AI observability but can severely impact user trust and application effectiveness.
 
 Technical errors like rate limits, timeouts, and API failures are captured automatically through standard trace error recording. However, AI applications also face unique challenges like semantic drift, safety policy violations, factual accuracy issues, and task completion failures that require intelligent analysis beyond traditional error logging.
 
@@ -273,12 +251,11 @@ See the [OpenLLMetry documentation](https://www.traceloop.com/docs/openllmetry/g
 
 ## Use cases
 
-- **Production monitoring of LLM quality and safety**
+- **Production observability for LLM quality and safety**
 - **Debugging slow/failed requests with full span context**
 - **Auditing prompts/completions for compliance**
 - **Attributing token cost and latency to services/cohorts**
 - **Building evaluation datasets from real traffic (Trace to Testcase)**
-- **Closing the loop with auto-scoring Monitors and linked Runs**
 
 ---
 
@@ -287,6 +264,5 @@ See the [OpenLLMetry documentation](https://www.traceloop.com/docs/openllmetry/g
 1. Follow the [Quickstart](/intro/tracing-quickstart) to send your first trace.
 2. Open the [Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) for an interactive tour.
 3. Convert live traffic to evaluations with [Trace to Testcase](/features/trace-to-testcase).
-4. Add a [Monitor](/features/monitoring) to keep an eye on production quality.
 
 Happy tracing\! 🚀
