@@ -29,6 +29,14 @@ This quickstart shows how to send traces from your Claude Agent SDK applications
     <Note>
       Replace `<your_scorecard_api_key>` with your actual Scorecard API key (starts with `ak_`).
     </Note>
+
+    **Optional:** To send traces to a specific project, set the project ID:
+
+    ```bash
+    export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=<your-project-id>"
+    ```
+
+    If not set, traces will default to your oldest project in the organization.
   </Step>
 
   <Step title="Run your agent">
@@ -87,6 +95,7 @@ The Claude Agent SDK automatically captures:
 | `OTEL_EXPORTER_OTLP_HEADERS` | Yes | Authentication header: `Authorization=Bearer <scorecard_api_key>` |
 | `ENABLE_BETA_TRACING_DETAILED` | Yes | Set to `1` to enable detailed tracing |
 | `BETA_TRACING_ENDPOINT` | Yes | OTLP endpoint URL (use `https://tracing.scorecard.io/otel` for Scorecard) |
+| `OTEL_RESOURCE_ATTRIBUTES` | No | Set `scorecard.project_id=<id>` to target a specific project (defaults to oldest project) |
 
 ## Next Steps
 
