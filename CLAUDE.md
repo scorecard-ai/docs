@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with the Scorecard AI documentation repository.
+This file provides guidance to Claude Code when working with the Scorecard AI documentation repository.
 
 ## Project Context
 This is the official documentation site for Scorecard AI, a platform for testing, evaluating, and monitoring AI applications. The documentation is built with Mintlify, a modern documentation framework optimized for developer experience.
@@ -8,19 +8,17 @@ This is the official documentation site for Scorecard AI, a platform for testing
 ## Commands
 
 ### Development
-- Start local dev server: `mintlify dev` (opens at http://localhost:3000)
-- Re-install dependencies: `mintlify install`
-- Validate docs configuration: `mintlify broken-links`
+- Start local dev server: `npx mintlify dev` (opens at http://localhost:3000 or http://localhost:3001)
+- Validate docs configuration: `npx mintlify broken-links`
 
 ### API Reference Generation
 - Generate API reference docs from OpenAPI spec: `npx @mintlify/scraping@latest openapi-file openapi.yaml -o api-reference`
 - The OpenAPI spec (v3.1.0) is located at `/openapi.yaml`
 
 ### Troubleshooting
-- If `mintlify dev` isn't running: Run `mintlify install` to re-install dependencies
 - Ensure you're in the folder containing `docs.json` when running commands
 - Clear cache if changes aren't showing: `rm -rf .mintlify`
-- Check for broken links: `mintlify broken-links`
+- Check for broken links: `npx mintlify broken-links`
 
 ## Architecture Overview
 
@@ -205,10 +203,6 @@ icon: "icon-name" # Optional, from Font Awesome or Lucide
 - Markdown versions available for AI processing
 - Quick copy/share options for AI tools
 
-### Analytics
-- Google Analytics 4 integration (G-Y98MZSSCE3)
-- Track documentation usage and user behavior
-
 ## Best Practices
 
 1. **Image Management**:
@@ -219,7 +213,7 @@ icon: "icon-name" # Optional, from Font Awesome or Lucide
 2. **Link Management**:
    - Use relative links for internal navigation
    - Verify external links remain active
-   - Run `mintlify broken-links` before committing
+   - Run `npx mintlify broken-links` before committing
 
 3. **Component Usage**:
    - Prefer Mintlify components over raw HTML

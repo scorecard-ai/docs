@@ -6,3 +6,8 @@
 #content-area:has([data-page-title="Product Updates"]) {
     margin-left: 0;
 }
+
+/* Change the highlighted line color to green instead of Scorecard orange */
+code {
+    --primary-light: 62 255 110;
+}

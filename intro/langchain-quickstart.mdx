@@ -1,0 +1,135 @@
+---
+title: "LangChain Tracing"
+description: "Trace your LangChain applications with Scorecard using OpenLLMetry."
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+This quickstart shows how to instrument your [LangChain](https://www.langchain.com/) application using [OpenLLMetry](https://github.com/traceloop/openllmetry) and Scorecard for observability, debugging, and evaluation.
+
+<Info>
+  **Looking for general tracing guidance?** Check out the [Tracing Quickstart](/intro/tracing-quickstart) for an overview of tracing concepts and alternative integration methods.
+</Info>
+
+## Steps
+
+<Steps>
+  <Step title="Install dependencies">
+    Install the Traceloop SDK and the LangChain instrumentation package.
+
+    ```bash
+    pip install traceloop-sdk opentelemetry-instrumentation-langchain
+    ```
+  </Step>
+
+  <Step title="Set up environment variables">
+    Configure the Traceloop SDK to send traces to Scorecard. Get your Scorecard API key from [Settings](https://app.scorecard.io/settings).
+
+    ```bash
+    export TRACELOOP_API_KEY="<your_scorecard_api_key>"
+    export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel"
+    ```
+
+    <Note>
+      Replace `<your_scorecard_api_key>` with your actual Scorecard API key (starts with `ak_`).
+    </Note>
+  </Step>
+
+  <Step title="Initialize tracing">
+    Initialize the Traceloop SDK with LangChain instrumentation **before** importing LangChain modules.
+
+    <Warning>
+      **Import order matters!** You must initialize Traceloop before importing any LangChain modules to ensure all calls are properly instrumented.
+    </Warning>
+
+    ```python highlight={1-7}
+    from traceloop.sdk import Traceloop
+    from traceloop.sdk.instruments import Instruments
+
+    Traceloop.init(
+        disable_batch=True,
+        instruments={Instruments.LANGCHAIN}
+    )
+
+    # Now import your LangChain modules
+    from langchain_openai import ChatOpenAI
+    from langchain_core.prompts import ChatPromptTemplate
+    ```
+  </Step>
+
+  <Step title="Run your LangChain application">
+    With tracing initialized, run your LangChain application. All LLM calls, chain executions, and agent actions are automatically traced.
+
+    Here's a full example:
+
+    ```python title="example.py" highlight={1-7} [expandable]
+    from traceloop.sdk import Traceloop
+    from traceloop.sdk.instruments import Instruments
+
+    Traceloop.init(
+        disable_batch=True,
+        instruments={Instruments.LANGCHAIN}
+    )
+
+    # Then import LangChain
+    from langchain_openai import ChatOpenAI
+    from langchain_core.prompts import ChatPromptTemplate
+
+    # Create a simple chain
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are a helpful assistant."),
+        ("user", "{input}")
+    ])
+
+    model = ChatOpenAI(model="gpt-4o-mini")
+    chain = prompt | model
+
+    # Run the chain - this will be traced
+    response = chain.invoke({"input": "What is the capital of France?"})
+    print(response.content)
+    ```
+
+    <Note>
+      You may see `Failed to export batch` warnings in the console. These can be safely ignored - your traces are still being captured and sent to Scorecard successfully.
+    </Note>
+
+  </Step>
+
+  <Step title="View traces in Scorecard">
+    Navigate to the **Records** page in [Scorecard](https://app.scorecard.io) to see your LangChain traces.
+
+    <Note>
+      It may take 1-2 minutes for traces to appear on the Records page.
+    </Note>
+
+    <DarkLightImage lightSrc="/images/records-traces-light.png" darkSrc="/images/records-traces-dark.png" alt="Records page showing LangChain traces" caption="Records page showing LangChain application traces" />
+
+    Click on any record to view the full trace details, including chain execution, LLM calls, and token usage.
+
+    <DarkLightImage lightSrc="/images/records-details-claude-sdk-light.png" darkSrc="/images/records-details-claude-sdk-dark.png" alt="Trace details view" caption="Trace details with chain execution and LLM call data" />
+  </Step>
+</Steps>
+
+## What Gets Traced
+
+OpenLLMetry automatically captures comprehensive telemetry from your LangChain applications:
+
+| Trace Data | Description |
+|------------|-------------|
+| **LLM Calls** | Every LLM invocation with full prompt and completion |
+| **Chains** | Chain executions with inputs, outputs, and intermediate steps |
+| **Agents** | Agent reasoning steps, tool selections, and action outputs |
+| **Retrievers** | Document retrieval operations and retrieved content |
+| **Token Usage** | Input, output, and total token counts per LLM call |
+| **Errors** | Any failures with full error context and stack traces |
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Records" icon="database" href="/features/records">
+    Learn more about viewing and managing your traced records
+  </Card>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Create custom metrics to evaluate LangChain application performance
+  </Card>
+</CardGroup>

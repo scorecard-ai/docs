@@ -31,39 +31,16 @@ This quickstart shows how to trace your LLM applications with Scorecard. Change 
     Change the `baseURL` to `https://llm.scorecard.io`. Everything else in your code stays the same - your LLM calls will be automatically traced.
 
     <CodeGroup>
-
-    ```js JavaScript
-    // Works with OpenAI and Anthropic - see examples below for more patterns
-    
-    import OpenAI from 'openai';
-    
-    const client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-      baseURL: 'https://llm.scorecard.io',  // Add this line
-      defaultHeaders: {
-        'x-scorecard-api-key': process.env.SCORECARD_API_KEY,  // Add this
-        'x-scorecard-project-id': 'my-chatbot'  // Optional: organize traces by project
-      }
-    });
-    
-    // Use OpenAI normally - everything is automatically traced!
-    const response = await client.chat.completions.create({
-      model: 'gpt-4',
-      messages: [{ role: 'user', content: 'Hello!' }]
-    });
-    ```
-
-    
-    ```py Python
+    ```py Python highlight={7-11}
     # Works with OpenAI and Anthropic - see examples below for more patterns
     
     from openai import OpenAI
     
     client = OpenAI(
         api_key=os.environ["OPENAI_API_KEY"],
-        base_url="https://llm.scorecard.io",  # Add this line
+        base_url="https://llm.scorecard.io",
         default_headers={
-            "x-scorecard-api-key": os.environ["SCORECARD_API_KEY"],  # Add this
+            "x-scorecard-api-key": os.environ["SCORECARD_API_KEY"],
             "x-scorecard-project-id": "my-chatbot"  # Optional: organize traces by project
         }
     )
@@ -75,6 +52,26 @@ This quickstart shows how to trace your LLM applications with Scorecard. Change 
     )
     ```
 
+    ```js JavaScript highlight={7-11}
+    // Works with OpenAI and Anthropic - see examples below for more patterns
+    
+    import OpenAI from 'openai';
+    
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: 'https://llm.scorecard.io',
+      defaultHeaders: {
+        'x-scorecard-api-key': process.env.SCORECARD_API_KEY,
+        'x-scorecard-project-id': 'my-chatbot'  // Optional: organize traces by project
+      }
+    });
+    
+    // Use OpenAI normally - everything is automatically traced!
+    const response = await client.chat.completions.create({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: 'Hello!' }]
+    });
+    ```
     </CodeGroup>
   </Step>
   <Step title="View traces in Scorecard">
@@ -107,8 +104,29 @@ The real power comes from custom spans and nested traces. You can create parent 
 ### Basic Usage
 
 <CodeGroup>
+```py Python highlight={4,7,9-13}
+# Works with OpenAI and Anthropic - see examples below for more patterns
 
-```js JavaScript
+from openai import OpenAI
+from scorecard_ai import wrap
+
+# Wrap your OpenAI client
+openai = wrap(
+    OpenAI(api_key=os.environ["OPENAI_API_KEY"]),
+    {
+        "api_key": os.environ["SCORECARD_API_KEY"],
+        "project_id": "my-chatbot"  # Optional: organize traces by project
+    }
+)
+
+# Use normally - all calls are automatically traced
+response = openai.chat.completions.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+```
+
+```js JavaScript highlight={3,7,11-15}
 // Works with OpenAI and Anthropic - see examples below for more patterns
 
 import { wrap } from 'scorecard-ai';
@@ -130,29 +148,6 @@ const response = await openai.chat.completions.create({
   model: 'gpt-4',
   messages: [{ role: 'user', content: 'Hello!' }]
 });
-```
-
-
-```py Python
-# Works with OpenAI and Anthropic - see examples below for more patterns
-
-from openai import OpenAI
-from scorecard_ai import wrap
-
-# Wrap your OpenAI client
-openai = wrap(
-    OpenAI(api_key=os.environ["OPENAI_API_KEY"]),
-    {
-        "api_key": os.environ["SCORECARD_API_KEY"],
-        "project_id": "my-chatbot"  # Optional: organize traces by project
-    }
-)
-
-# Use normally - all calls are automatically traced
-response = openai.chat.completions.create(
-    model="gpt-4",
-    messages=[{"role": "user", "content": "Hello!"}]
-)
 ```
 
 </CodeGroup>

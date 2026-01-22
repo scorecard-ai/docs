@@ -115,17 +115,6 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     - **Percentile analysis**: P50, P90, P95, P99 latency breakdown
     - **Trend analysis**: Latency over time with alerting
     - **Trace-level detail**: Individual request timing breakdowns
-    
-    **Alerting**:
-    ```python
-    # Set up latency alerts
-    alert = client.alerts.create(
-        name="High Latency Alert",
-        metric="p95_latency",
-        threshold=5000,  # 5 seconds
-        window="10m"
-    )
-    ```
   </Accordion>
 
   <Accordion title="Can Scorecard test agentic workflows and multi-step AI agents?">
