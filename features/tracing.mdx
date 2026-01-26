@@ -50,7 +50,14 @@ from traceloop.sdk import Traceloop
 from traceloop.sdk.instruments import Instruments
 
 # Initialize OpenLLMetry. Works with any supported provider (OpenAI, Anthropic, Gemini, Bedrock, etc.)
-Traceloop.init(disable_batch=True, instruments={Instruments.OPENAI})
+# Set scorecard.project_id to route traces to a specific project (defaults to oldest project)
+Traceloop.init(
+    disable_batch=True,
+    instruments={Instruments.OPENAI},
+    resource_attributes={
+        "scorecard.project_id": "<your-project-id>"
+    }
+)
 
 # Make any LLM/provider call with your client – it will be traced automatically
 ```
@@ -60,7 +67,14 @@ Traceloop.init(disable_batch=True, instruments={Instruments.OPENAI})
 import { Traceloop, Instruments } from '@traceloop/node-server-sdk'
 
 // Initialize OpenLLMetry. Works with any supported provider or HTTP instrumentation
-Traceloop.init({ disableBatch: true, instruments: new Set([Instruments.OPENAI]) })
+// Set scorecard.project_id to route traces to a specific project (defaults to oldest project)
+Traceloop.init({
+  disableBatch: true,
+  instruments: new Set([Instruments.OPENAI]),
+  resourceAttributes: {
+    'scorecard.project_id': '<your-project-id>'
+  }
+})
 
 // Make any LLM/provider call with your client – it will be traced automatically
 ```
