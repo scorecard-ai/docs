@@ -28,6 +28,7 @@ This quickstart shows how to instrument your [LangChain](https://www.langchain.c
     ```bash
     export TRACELOOP_API_KEY="<your_scorecard_api_key>"
     export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel"
+    export SCORECARD_PROJECT_ID="<your-project-id>"
     ```
 
     <Note>
@@ -42,13 +43,18 @@ This quickstart shows how to instrument your [LangChain](https://www.langchain.c
       **Import order matters!** You must initialize Traceloop before importing any LangChain modules to ensure all calls are properly instrumented.
     </Warning>
 
-    ```python highlight={1-7}
+    ```python highlight={1-12}
+    import os
     from traceloop.sdk import Traceloop
     from traceloop.sdk.instruments import Instruments
 
+    # Set scorecard.project_id to route traces to a specific project (defaults to oldest project)
     Traceloop.init(
         disable_batch=True,
-        instruments={Instruments.LANGCHAIN}
+        instruments={Instruments.LANGCHAIN},
+        resource_attributes={
+            "scorecard.project_id": os.getenv("SCORECARD_PROJECT_ID")
+        }
     )
 
     # Now import your LangChain modules
@@ -62,13 +68,18 @@ This quickstart shows how to instrument your [LangChain](https://www.langchain.c
 
     Here's a full example:
 
-    ```python title="example.py" highlight={1-7} [expandable]
+    ```python title="example.py" highlight={1-11} [expandable]
+    import os
     from traceloop.sdk import Traceloop
     from traceloop.sdk.instruments import Instruments
 
+    # Set scorecard.project_id to route traces to a specific project (defaults to oldest project)
     Traceloop.init(
         disable_batch=True,
-        instruments={Instruments.LANGCHAIN}
+        instruments={Instruments.LANGCHAIN},
+        resource_attributes={
+            "scorecard.project_id": os.getenv("SCORECARD_PROJECT_ID")
+        }
     )
 
     # Then import LangChain
