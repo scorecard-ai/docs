@@ -7,8 +7,9 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
 <DarkLightImage
   lightSrc="/images/playground-light.png"
-  caption="Playground overview."
-  alt="Screenshot of the playground in the UI."
+  darkSrc="/images/playground-dark.png"
+  caption="Playground overview showing the three-panel interface."
+  alt="Screenshot of the Playground showing testset selection, prompt editing, and preview panels."
 />
 
 ## Getting Started
@@ -16,37 +17,36 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 ### 1. Select Your Test Data (Left Panel)
 
 **Choose a Testset:**
-- Click the testset dropdown at the top of the left panel
+- Click the "Choose Testset" dropdown at the top left
 - Select a testset that contains the data you want to test your prompt against
-- If no testsets exist, click "Create testset" to create one directly from the Playground
-- The first testcase will be automatically selected
+- If no testsets exist, create one from the [Testsets](/features/testsets) page first
+- Once selected, testcases from the testset will appear in the left panel
 
 **Select Testcases:**
 - Click on individual testcases to select them
 - Hold Shift and click to select multiple testcases
-- Selected testcases have a blue left border
+- Selected testcases have a highlighted left border
 - Hover over the info icon to see the full testcase data
-- Testcases with a green flask icon have been tested
 
 ### 2. Edit Your Prompt (Middle Panel)
 
 **Choose a Prompt:**
-- Select a prompt from the dropdown in the header
-- If no prompts exist, click "Create prompt" to create one directly from the Playground
+- Select a prompt from the "Prompt" dropdown at the top of the middle panel
+- If no prompts exist, create one from the [Prompts](/features/prompts) page first
 
 **Work with Prompt Versions:**
-- The left sidebar shows all versions of your selected prompt
+- The "Prompt Versions" section shows all versions of your selected prompt
 - Click any version to switch to it
-- Versions with unsaved changes show a save indicator
-- The production version is marked with a badge
+- The status indicator shows "All changes saved" when there are no pending changes
+- The production version is marked with a "Production" badge
 
 **Edit Prompt Templates:**
 - Use the "Prompt Templates" tab to write your prompts
-- The editor supports **Jinja syntax** for dynamic content
-- Insert variables from your testcase data like `{{variable_name}}`
-- Add multiple messages by clicking "+ Add Message"
-- Set message roles (System, User, Assistant) using the dropdown
-- Remove messages with the trash can icon
+- The editor supports [Jinja syntax](https://jinja.palletsprojects.com/) for dynamic content
+- Insert variables from your testcase data like `{{variable_name}}` or use `{{allInputs}}` for all inputs
+- Add multiple messages by clicking "+ ADD MESSAGE"
+- Set message roles (System, User, Assistant) using the role dropdown
+- Remove messages with the trash icon
 
 **Configure Model Settings:**
 - Switch to the "Model Settings" tab
@@ -87,9 +87,9 @@ Hello {{name}}, your order #{{order_id}} is {{status}}.
 - Compare results across different prompt versions
 
 ### Version Management
-- Save new versions of your prompts with the "Save" button
-- Switch between versions to compare performance
-- Publish versions to production when ready
+- Save new versions of your prompts with the "SAVE" button in the header
+- Switch between versions in the "Prompt Versions" panel to compare performance
+- Mark versions as production when ready to deploy
 
 ### Real-time Preview
 - See exactly how your prompt will look with real data
