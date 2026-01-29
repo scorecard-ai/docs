@@ -1,6 +1,6 @@
 ---
 title: "Playground"
-description: "The Playground is a visual workflow builder where you test and evaluate your AI agent with real data. Connect testsets, prompts, and evaluators in an intuitive node-based interface to iterate on your AI system."
+description: "Test and iterate on your AI agent with real data using a visual workflow interface."
 ---
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
@@ -8,108 +8,28 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 <DarkLightImage
   lightSrc="/images/playground-light.png"
   darkSrc="/images/playground-dark.png"
-  caption="Playground visual workflow showing testset, agent, and evaluator nodes."
-  alt="Screenshot of the Playground showing the visual workflow with testset selection, agent configuration, and evaluator nodes connected in a flow."
+  caption="Playground showing testset selection, prompt configuration, and evaluation results."
+  alt="Screenshot of the Playground with testcases, prompt editor, and results panel."
 />
 
 ## Overview
 
-The Playground provides a visual workflow interface for testing your AI agent. It consists of three main components connected in a flow:
+The Playground lets you test your AI agent against testcases and see results in real time. It has three main areas:
 
-1. **Testset Panel** (left): Select and view your test data
-2. **Agent Node** (center): Configure your prompt and model settings
-3. **Evaluator Node** (right): Choose metrics to score your agent's outputs
+1. **Testset Panel** (left): Select a testset and view individual testcases
+2. **Prompt Editor** (center): Configure your prompt template and model settings
+3. **Results Panel** (right): View outputs and evaluation metrics
 
-## Getting Started
+## Quick Start
 
-### 1. Select a Testset
+1. **Select a Testset**: Use the dropdown to choose a testset with your test data
+2. **Configure the Prompt**: Edit the prompt template using [Jinja syntax](https://jinja.palletsprojects.com/) with variables like `{{context}}` or `{{allInputs}}`
+3. **Adjust Model Settings**: Switch to the Model Settings tab to configure temperature, max tokens, etc.
+4. **Run**: Click **Try** to test on selected testcases, or **Kickoff Run** to run a full evaluation
 
-In the left panel:
-- Click the **Choose Testset** dropdown to select a testset
-- Once selected, testcases appear as cards below
-- Each testcase shows a preview of its data
-- Click **View testcase** to see full details
-- Use **Add testcases** to include more test data
+## Prompt Templates
 
-### 2. Configure the Agent
-
-The Agent node in the center is where you configure your AI system:
-
-**Select a Prompt:**
-- Use the version dropdown to select a saved prompt
-- Click the external link icon to view the full system version
-
-**Edit the Prompt:**
-- Switch between **Prompt** and **Settings** tabs
-- The prompt editor supports [Jinja syntax](https://jinja.palletsprojects.com/) for dynamic content
-- Use `{{variable}}` to insert testcase fields
-- Use `{{allInputs}}` to include all input fields
-- Click **+ ADD MESSAGE** to add conversation turns
-- Set the message role (System, User, Assistant) using the dropdown
-
-**Save Changes:**
-- Click **Save** to save your prompt changes
-- The save indicator shows when changes are pending
-
-### 3. Configure the Evaluator
-
-The Evaluator node on the right defines how your agent's outputs are scored:
-
-- Click **Metrics** to select which metrics to apply
-- Connected metrics appear in the evaluator node
-- Each metric will score your agent's responses
-
-### 4. Run the Evaluation
-
-Once configured:
-- Click the **Run** button in the top right to execute the evaluation
-- Results flow through the workflow and appear in the Results section
-- Each testcase shows its output and scores
-
-## Workflow Components
-
-### Testset Panel
-
-The left panel displays your selected testset:
-- Testcases are shown as interactive cards
-- Green indicators show completed evaluations
-- Orange indicators show pending or in-progress items
-- Click on a testcase to select it for testing
-
-### Agent Node
-
-The central Agent node contains:
-- **Version selector**: Choose from saved prompt versions
-- **Prompt tab**: Edit the prompt template with Jinja support
-- **Settings tab**: Configure model parameters (temperature, max tokens, etc.)
-- **Message list**: Add multiple conversation turns
-
-### Evaluator Node
-
-The Evaluator node on the right:
-- Shows the number of configured metrics
-- Connects to the Agent node via a flow line
-- Displays evaluation results for each testcase
-
-### Results Flow
-
-Results appear in the workflow:
-- Agent outputs flow from the Agent node
-- Scores appear after evaluation completes
-- Click on results to view detailed information
-
-## Workflow Controls
-
-At the bottom left of the canvas:
-- **Zoom in (+)**: Increase canvas zoom
-- **Zoom out (-)**: Decrease canvas zoom
-- **Fit to view**: Auto-fit the workflow to the viewport
-
-## Key Features
-
-### Jinja Templating
-
-Your prompts support Jinja syntax for dynamic content:
+The prompt editor supports Jinja templating for dynamic content:
 
 ```jinja
 You are a helpful assistant.
@@ -118,60 +38,15 @@ User question: {{question}}
 Context: {{context}}
 ```
 
-### Visual Flow
+Use `{{allInputs}}` to include all input fields from your testcase.
 
-The node-based interface lets you:
-- See the complete evaluation pipeline at a glance
-- Understand how data flows from testcases through your agent to scoring
-- Quickly identify which testcases pass or fail
-
-### Real-time Results
-
-As evaluations complete:
-- Results appear directly in the workflow
-- Scores are displayed on each testcase
-- Click through to see detailed reasoning
-
-## Common Workflows
-
-**Quick Iteration:**
-1. Select a testset with representative data
-2. Edit your prompt in the Agent node
-3. Run evaluation on a few testcases
-4. Review results and iterate
-
-**Comprehensive Testing:**
-1. Load a complete testset
-2. Configure multiple metrics in the Evaluator
-3. Run the full evaluation
-4. Analyze results across all testcases
-
-**Prompt Comparison:**
-1. Run evaluation with your current prompt
-2. Switch to a different prompt version
-3. Run again and compare results
-
-## Best Practices
-
-1. **Start with a small testset**: Use 3-5 testcases for quick iteration before running larger evaluations
-2. **Use meaningful metrics**: Select metrics that match your quality criteria
-3. **Save prompt versions**: Save working prompts before making changes
-4. **Review failures**: Click into failed testcases to understand why they didn't pass
-5. **Iterate quickly**: The visual workflow makes it easy to see the impact of changes
-
-## Related Features
+## Related
 
 <CardGroup cols={2}>
   <Card title="Testsets" href="/features/testsets" icon="flask">
-    Create and manage test data for your evaluations
+    Create and manage test data
   </Card>
   <Card title="Metrics" href="/features/metrics" icon="chart-bar">
-    Define evaluation criteria for scoring outputs
-  </Card>
-  <Card title="Prompts" href="/features/prompts" icon="message">
-    Manage and version your prompt templates
-  </Card>
-  <Card title="Runs & Results" href="/features/runs" icon="play">
-    View detailed evaluation history and results
+    Define evaluation criteria
   </Card>
 </CardGroup>
