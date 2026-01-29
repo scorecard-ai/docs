@@ -1,6 +1,6 @@
 ---
 title: "Playground"
-description: "Test and iterate on your AI agent with real data using a visual workflow interface."
+description: "A visual workflow builder for testing and evaluating your AI agent with real data."
 ---
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
@@ -8,37 +8,28 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 <DarkLightImage
   lightSrc="/images/playground-light.png"
   darkSrc="/images/playground-dark.png"
-  caption="Playground showing testset selection, prompt configuration, and evaluation results."
-  alt="Screenshot of the Playground with testcases, prompt editor, and results panel."
+  caption="Playground workflow with testcases, agent, evaluator, results, and scores."
+  alt="Screenshot of the Playground showing a visual node-based workflow with connected components."
 />
 
 ## Overview
 
-The Playground lets you test your AI agent against testcases and see results in real time. It has three main areas:
+The Playground is a visual workflow builder where you connect nodes to test your AI agent:
 
-1. **Testset Panel** (left): Select a testset and view individual testcases
-2. **Prompt Editor** (center): Configure your prompt template and model settings
-3. **Results Panel** (right): View outputs and evaluation metrics
+- **Testset** (left): Your test data flows into the agent
+- **Agent** (center): Configure prompts and model settings
+- **Evaluator** (top right): Select metrics to score outputs
+- **Results**: View agent responses for each testcase
+- **Scores**: See pass/fail status and metric scores
 
-## Quick Start
+## Running an Evaluation
 
-1. **Select a Testset**: Use the dropdown to choose a testset with your test data
-2. **Configure the Prompt**: Edit the prompt template using [Jinja syntax](https://jinja.palletsprojects.com/) with variables like `{{context}}` or `{{allInputs}}`
-3. **Adjust Model Settings**: Switch to the Model Settings tab to configure temperature, max tokens, etc.
-4. **Run**: Click **Try** to test on selected testcases, or **Kickoff Run** to run a full evaluation
+1. **Select a testset** or add testcases manually
+2. **Configure your prompt** using [Jinja syntax](https://jinja.palletsprojects.com/) with variables like `{{context}}` or `{{allInputs}}`
+3. **Add metrics** to the Evaluator node
+4. **Click Run** to execute the evaluation
 
-## Prompt Templates
-
-The prompt editor supports Jinja templating for dynamic content:
-
-```jinja
-You are a helpful assistant.
-
-User question: {{question}}
-Context: {{context}}
-```
-
-Use `{{allInputs}}` to include all input fields from your testcase.
+Results flow through the workflow—watch as responses appear in the Results node and scores populate in the Scores node.
 
 ## Related
 
