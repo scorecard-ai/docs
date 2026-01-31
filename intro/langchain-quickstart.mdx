@@ -123,16 +123,34 @@ This quickstart shows how to instrument your [LangChain](https://www.langchain.c
 
 ## What Gets Traced
 
-OpenLLMetry automatically captures comprehensive telemetry from your LangChain applications:
+OpenLLMetry automatically captures comprehensive telemetry from your LangChain applications. Scorecard includes enhanced LangChain/Traceloop adapter support for better trace visualization:
 
 | Trace Data | Description |
 |------------|-------------|
-| **LLM Calls** | Every LLM invocation with full prompt and completion |
+| **LLM Calls** | Every LLM invocation with full prompt and completion, including model information and token counts |
 | **Chains** | Chain executions with inputs, outputs, and intermediate steps |
 | **Agents** | Agent reasoning steps, tool selections, and action outputs |
+| **Tools** | Tool invocations with proper tool call sections (not prompt/completion) |
 | **Retrievers** | Document retrieval operations and retrieved content |
-| **Token Usage** | Input, output, and total token counts per LLM call |
+| **Token Usage** | Input, output, and total token counts per LLM call extracted from `gen_ai.*` attributes |
 | **Errors** | Any failures with full error context and stack traces |
+
+### Enhanced Span Classification
+
+Scorecard's LangChain adapter recognizes both OpenInference (`openinference.*`) and Traceloop (`traceloop.*`) attribute formats:
+
+- **Workflow spans** (`traceloop.span.kind: workflow`) - High-level application flows
+- **Task spans** (`traceloop.span.kind: task`) - Individual processing steps
+- **Tool spans** (`traceloop.span.kind: tool`) - Tool invocations with dedicated Tool Call sections
+- **LLM spans** - Model calls with extracted model names, token counts, and costs
+
+### Tool Visualization
+
+Common LangChain tools receive appropriate coloring and categorization:
+- **Retrievers** (retriever, vectorstore, search)
+- **SQL tools** (sql, database)
+- **Web search** (search, google, bing)
+- **Custom tools** - Automatically detected from span names
 
 ## Next Steps
 

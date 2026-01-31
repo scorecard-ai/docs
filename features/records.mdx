@@ -26,6 +26,24 @@ A **Record** is an individual test execution within a run. Each record contains:
 
 Records are created when you run evaluations via the API, Playground, or from traces.
 
+## Searching and Filtering
+
+### Metadata Search
+
+Search through trace metadata to find specific records. Click the search field and enter any text that appears in your trace metadata. This search looks through all metadata fields and returns records from matching traces.
+
+<Tip>
+Metadata search uses ClickHouse for high-performance searches across large datasets. Results may take a few seconds to load for very large projects.
+</Tip>
+
+### Filtering Options
+
+Use the filter dropdown to narrow results by:
+- **Run**: Filter by specific evaluation run
+- **Source**: How the record was created (API, Playground, Kickoff, Trace)
+- **Status**: Scoring status (completed, pending, errored)
+- **Date range**: Records created within a specific time period
+
 ## Customizing the Table
 
 Click **Edit Table** to customize which columns appear and their order. You can add, remove, and reorder columns including:
@@ -62,7 +80,13 @@ Re-scoring uses the latest version of your metrics without re-running your AI sy
 
 ## Record Details
 
-Click any record to view its full details. The details view differs based on how the record was created:
+Click anywhere on a table row to view the full record details. You can also click the specific record ID link if you prefer. The entire row is clickable to improve discoverability.
+
+<Tip>
+Interactive elements like checkboxes, score cards, and popover buttons won't trigger navigation - only clicking on empty areas of the row will open the record details.
+</Tip>
+
+The details view differs based on how the record was created:
 
 ### Testcase-Based Records
 

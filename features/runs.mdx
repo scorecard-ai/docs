@@ -32,6 +32,10 @@ You can filter runs by their **source** to quickly find runs created from specif
 - **Playground**: Runs kicked off from the Playground
 - **Kickoff**: Runs created via the Kickoff Run modal in the UI
 
+<Note>
+By default, monitor-created runs are excluded from the main runs list to reduce clutter. Use the source filter to specifically view monitor runs when needed.
+</Note>
+
 ## Creating Runs
 
 ### Kickoff Run from the UI
@@ -127,6 +131,12 @@ To re-run scoring, open a run's details page and click the **Re-run Scoring** bu
 ## Inspect a Record
 
 <DarkLightImage lightSrc="/images/testrecord-score-explanation-light.png" caption="Record score explanation." alt="Screenshot of viewing testrecord score explanation in the UI." />
+
+Click anywhere on a table row to view detailed record information. The entire row is clickable to improve discoverability of record details.
+
+<Tip>
+Interactive elements like checkboxes, score cards, and truncated content popovers won't trigger navigation - only clicking on empty areas of the row will open the record details.
+</Tip>
 
 Drill down into specific test executions for detailed analysis:
 
