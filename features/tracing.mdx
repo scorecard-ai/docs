@@ -106,9 +106,39 @@ All table controls map to URL parameters so you can share filtered trace views.
 
 - **Time ranges**: 30m, 24h, 3d, 7d, 30d, All.
 - **Project scope**: toggle between Current project and All projects.
-- **SearchText**: full‑text across span/resource attributes (including prompt/response fields).
+- **SearchText**: full‑text across span name, span kind, span ID, and all span attributes (including nested values in prompt/response fields).
 - **Match previews**: quick context snippets with deep links to traces.
 - **Cursor pagination**: efficient browsing with shareable URLs.
+
+### Conversation view
+
+The **Conversation** tab displays AI interactions in a familiar chat-like format, making it easy to follow the flow of prompts and responses. This view:
+
+- Extracts messages from `gen_ai` spans and renders them as user/assistant bubbles
+- Shows system prompts in a distinct format
+- Displays tool calls and their results inline
+- Supports Claude Code traces with agent identification and rich tool rendering
+- Automatically deduplicates messages across spans
+
+Use the Conversation view to quickly understand what happened in a trace without navigating the span tree.
+
+### User annotations
+
+Add human feedback directly to traces and individual spans using the **Annotations** feature. Annotations help you:
+
+- **Rate interactions**: Give thumbs up/down ratings to mark good or problematic responses
+- **Add comments**: Document observations, issues, or suggestions for improvement
+- **Track feedback by span**: Annotate specific spans to pinpoint exactly where issues occurred
+
+To add an annotation:
+1. Open a trace and select a span (or view the trace overview)
+2. Expand the **Annotations** section
+3. Click **Add Annotation**
+4. Optionally select a thumbs up or thumbs down rating
+5. Add a comment describing your feedback
+6. Click **Submit**
+
+Annotations are visible to your team and persist with the trace. Spans with annotations show a feedback indicator in the span tree for easy identification.
 
 ---
 
