@@ -1,5 +1,5 @@
 ---
-title: "Tracing: Overview"
+title: "Tracing"
 description: "Instrument and inspect every LLM request in minutes."
 ---
 
@@ -139,6 +139,7 @@ with tracer.start_as_current_span("summarize_results") as span:
     # Another LLM call in the same workflow
 ```
 
+
 ```typescript TypeScript
 import { trace } from '@opentelemetry/api';
 
@@ -171,7 +172,6 @@ span2.end();
   Traces with the same `scorecard.tracing_group_id` will appear together in the same run, making it easy to analyze aggregate metrics across related operations.
 </Tip>
 
-
 ---
 
 ## AI-Specific Error Detection
@@ -195,6 +195,7 @@ Create custom metrics through Scorecard's UI to detect application-specific beha
 Scorecard traces LLM applications built with popular open-source frameworks through [OpenLLMetry](https://github.com/traceloop/openllmetry). OpenLLMetry provides automatic instrumentation for:
 
 ### Application Frameworks
+
 - **CrewAI** – Multi-agent collaboration
 - **Haystack** – Search and question-answering pipelines
 - **LangChain** – Chains, agents, and tool calls
@@ -202,14 +203,15 @@ Scorecard traces LLM applications built with popular open-source frameworks thro
 - **LangGraph** – Multi-step workflows and state machines
 - **LiteLLM** – Unified interface for 100+ LLMs
 - **LlamaIndex** – RAG pipelines and document retrieval
-- **[OpenAI Agents SDK](https://github.com/openai/openai-agents-python?tab=readme-ov-file#tracing)** – Assistants API and function calling
-- **[Vercel AI SDK](https://ai-sdk.dev/providers/observability/scorecard)** – Full-stack AI applications
+- [**OpenAI Agents SDK**](https://github.com/openai/openai-agents-python?tab=readme-ov-file#tracing) – Assistants API and function calling
+- [**Vercel AI SDK**](https://ai-sdk.dev/providers/observability/scorecard) – Full-stack AI applications
 
 <Tip>
   Scorecard is featured as a recommended observability provider in the official [Vercel AI SDK documentation](https://ai-sdk.dev/providers/observability/scorecard) and [OpenAI Agents Python README](https://github.com/openai/openai-agents-python?tab=readme-ov-file#tracing).
 </Tip>
 
 ### LLM Providers
+
 - Aleph Alpha
 - Anthropic
 - AWS Bedrock
@@ -229,6 +231,7 @@ Scorecard traces LLM applications built with popular open-source frameworks thro
 - and more
 
 ### Vector Databases
+
 - Chroma
 - LanceDB
 - Marqo
@@ -267,4 +270,4 @@ See the [OpenLLMetry documentation](https://www.traceloop.com/docs/openllmetry/g
 1. Follow the [Quickstart](/intro/tracing-quickstart) to send your first trace.
 2. Open the [Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) for an interactive tour.
 
-Happy tracing\! 🚀
+Happy tracing! 🚀
