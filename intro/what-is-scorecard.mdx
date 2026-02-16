@@ -17,32 +17,34 @@ Scorecard provides the infrastructure to run AI evals systematically, validate i
 
 ## Who uses Scorecard
 
-**AI Engineers** run evals systematically instead of manually checking outputs
+**AI Engineers** run evals systematically instead of manually checking outputs.
 
-**Agent Developers** test multi-turn conversations and complex workflows
+**Agent Developers** test multi-turn conversations and complex workflows.
 
-**Product Teams** validate that AI behavior matches user expectations
+**Product Teams** validate that AI behavior matches user expectations.
 
-**QA Teams** build comprehensive test suites for AI agents
+**QA Teams** build comprehensive test suites for AI agents.
 
-**Leadership** gets visibility into AI reliability and performance
+**Leadership** gets visibility into AI reliability and performance.
 
 ## What Scorecard provides
 
-**Testset management** — Convert real production scenarios into reusable test cases. When your AI fails in production, capture that case and add it to your regression suite.
+**[Tracing](/features/tracing)** — Capture and inspect every step of your AI agent's execution. Understand how your agent processes requests, identify bottlenecks, and debug failures with full visibility into each trace.
 
-**Playground evaluation** — Test prompts and models side-by-side without writing code. Compare different approaches across providers (OpenAI, Anthropic, Google Gemini) to find what works best.
+**[Domain-specific metrics](/features/metrics)** — Choose from pre-validated metrics for your industry or create custom evaluators, available for legal, financial services, healthcare, customer support, and general quality evaluation.
 
-**Domain-specific metrics** — Choose from pre-validated metrics for your industry or create custom evaluators. Available for legal, financial services, healthcare, customer support, and general quality evaluation.
+**[Testset management](/features/testsets)** — Convert real production scenarios into reusable test cases. When your AI fails in production, capture that case and add it to your regression suite.
 
-**Automated workflows** — Integrate AI evals into your CI/CD pipeline. Get alerts when performance drops and prevent regressions before they reach users.
+**[Playground evaluation](/features/playground)** — Test prompts and models side-by-side without writing code. Compare different approaches across providers (OpenAI, Anthropic, Google Gemini) to find what works best.
+
+**[Automated workflows](/features/github-actions)** — Integrate AI evals into your CI/CD pipeline. Get alerts when performance drops and prevent regressions before they reach users.
 
 ## How it works
 
-1. **Create testsets** from your real use cases and edge cases
-2. **Run evaluations** across different prompts, models, and configurations
-3. **Compare results** to identify the best performing approaches
-4. **Deploy with confidence** knowing your AI agent meets quality standards
+1. **Instrument your agent** with Scorecard's tracing SDK to capture every step of execution.
+2. **Define metrics** that evaluate quality, accuracy, and safety of your agent's outputs.
+3. **Analyze traces** to identify failures, bottlenecks, and areas for improvement.
+4. **Deploy with confidence**, knowing your AI agent meets quality standards.
 
 
 <CardGroup cols={2}>

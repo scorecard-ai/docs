@@ -8,21 +8,21 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   Metrics serve as benchmarks for assessing the quality of LLM responses, while scoring is the process of applying these metrics to generate actionable insights about your LLM application.
 </Note>
 
-When starting out with a LLM application, you begin with a "vibe check" by running a few prompts manually to see if the responses make sense. Then, you take it a step further by manually testing a set of your favorite prompts after each LLM iteration. However, you might wonder how to quantify and consistently test the quality of LLM responses. This is when you need metrics. A metric is a standard of measurement. In LLM evaluation, a metric serves as a benchmark for assessing the quality of LLM responses.
+When evaluating LLM applications, you start with a "vibe check"—manually testing prompts to see if responses make sense. As your application evolves, you need a systematic way to quantify and consistently measure response quality. Metrics provide this standard of measurement for LLM evaluation.
 
 ## Assess Your LLM Quality With Scorecard's Metrics
 
 Scorecard's metric system is organized into three main components:
 
 - **Metrics**: Individual evaluation criteria that assess specific aspects of your LLM's performance
-- **Metric Groups**: Collections of related metrics that work together to provide comprehensive evaluation
-- **Templates**: Pre-built metric configurations that you can copy and customize for your use case
+- **Metric Groups**: Collections of related metrics for comprehensive evaluation
+- **Templates**: Pre-built metric configurations you can copy and customize
 
-Scorecard assists you in several ways in defining and organizing these metrics for LLM evaluation. Let's check out some of the advantages that Scorecard offers\!
+Scorecard assists you in several ways in defining and organizing metrics for LLM evaluation.
 
 ### Metric Templates
 
-The Scorecard team consists of experts in LLM evaluation, with extensive experience in assessing and deploying large-scale AI applications at some of the world's leading companies. Our Scorecard Core Metrics, validated by our team, represent industry-standard benchmarks for LLM performance. You can explore these Core Metrics in the Scoring Lab, under "Templates," to select the ones best suited for your LLM evaluation needs.
+Our Scorecard Core Metrics represent industry-standard benchmarks for LLM performance, validated by our team of evaluation experts. Explore these templates on the Metrics page under "Templates".
 
 <DarkLightImage
   caption="Overview of Scorecard Core Metrics in Templates"
@@ -31,7 +31,7 @@ The Scorecard team consists of experts in LLM evaluation, with extensive experie
   darkSrc="/images/metrics/metrics-templates-dark.png"
 />
 
-If you would like to use a specific template, simply make a copy of it and, if needed, edit its details before importing it into your metrics section.
+Copy any template and customize it for your specific use case.
 
 <DarkLightImage
   caption="Metric Template to Copy"
@@ -40,89 +40,57 @@ If you would like to use a specific template, simply make a copy of it and, if n
   darkSrc="/images/metrics/metrics-template-dark.png"
 />
 
-#### Second-Party Metrics from MLflow
+#### MLflow-Inspired Metrics
 
-Scorecard provides support for running MLflow metrics directly within the Scorecard platform and provides complementary additional capabilities such as aggregation, A/B comparison, iteration and more. Several of MLflow's metrics of the `genai` package are available in the Scorecard metrics library. These metrics include:
+Scorecard provides support for MLflow-style metrics with additional capabilities like aggregation, A/B comparison, and iteration. Available metrics include:
 
-1. **Relevance**
+- **Relevance**: Evaluates how well the response aligns with the input and context
+- **Answer Relevance**: Assesses relevance and applicability to the specific query
+- **Faithfulness**: Measures factual consistency with provided context
+- **Answer Correctness**: Evaluates accuracy against ground truth
+- **Answer Similarity**: Assesses semantic similarity to expected responses
 
-- **Description**: Evaluates the appropriateness, significance, and applicability of an LLM's output in relation to the input and context.
-- **Purpose**: Assesses how well the model's response aligns with the expected context or intent of the input.
+View full prompts on the Metrics page or in the [MLflow GitHub repository](https://github.com/mlflow/mlflow/blob/master/mlflow/metrics/genai/prompts/v1.py).
 
-2. **Answer Relevance**
+#### RAGAS-Inspired Metrics for RAG Pipelines
 
-- **Description**: Assesses the relevance of a response provided by an LLM, considering the accuracy and applicability of the response to the given query.
-- **Purpose**: Focuses specifically on the relevance of responses in the context of queries posed to the LLM.
+Scorecard provides RAGAS-style metrics for evaluating Retrieval Augmented Generation (RAG) systems:
 
-3. **Faithfulness**
+**Component-Wise:**
+- **Faithfulness**: Factual consistency with context
+- **Answer Relevancy**: Pertinence to the prompt
+- **Context Recall**: Retrieved context alignment with expected response
+- **Context Precision**: Ranking of ground-truth relevant items
+- **Context Relevancy**: Relevance of retrieved context to query
 
-- **Description**: Measures the factual consistency of an LLM's output with the provided context.
-- **Purpose**: Ensures that the model's responses are not only relevant but also accurate and trustworthy, based on the information available in the context.
+**End-to-End:**
+- **Answer Semantic Similarity**: Semantic resemblance to ground truth
+- **Answer Correctness**: Accuracy compared to ground truth
 
-4. **Answer Correctness**
-
-- **Description**: Evaluates the accuracy of the provided output based on a given "ground truth" or expected response.
-- **Purpose**: Crucial for understanding how well an LLM can generate correct and reliable responses to specific queries.
-
-5. **Answer Similarity**
-
-- **Description**: Assesses the semantic similarity between the model's output and the provided targets or "ground truth".
-- **Purpose**: Used to evaluate how closely the generated response matches the expected response in terms of meaning and content.
-
-You can view the full prompts for these metrics in the Scorecard Scoring lab or in the [MLflow GitHub repository](https://github.com/mlflow/mlflow/blob/master/mlflow/metrics/genai/prompts/v1.py).
-
-#### Second-Party Metrics from RAGAS
-
-You can also utilize metrics from the RAGAS framework, which is specialized in evaluating Retrieval Augmented Generation (RAG) pipelines. Scorecard also provides complementary additional capabilities such as aggregation, A/B comparison, iteration, and more.
-
-##### Component-Wise Evaluation
-
-To assess the performance of individual components within a RAG pipeline, you can leverage metrics such as:
-
-- **Faithfulness**: Measures the factual consistency of the generated response against the provided context.
-- **Answer Relevancy**: Assesses how pertinent the generated response is to the given prompt.
-- **Context Recall**: Evaluates the extent to which the retrieved context aligns with the annotated response.
-- **Context Precision**: Determines whether all ground-truth relevant items present in the contexts are ranked higher.
-- **Context Relevancy**: Evaluates how relevant the retrieved context is in addressing the provided query.
-
-##### End-to-End Evaluation
-
-To assess the end-to-end performance of a RAG pipeline, you can leverage metrics such as:
-
-- **Answer Semantic Similarity**: Assesses the semantic resemblance between the generated response and the ground truth.
-- **Answer Correctness**: Gauges the accuracy of the generated response when compared to the ground truth.
-
-You can view the full prompts for these metrics in the Scorecard Scoring lab or in the [RAGAS GitHub repository](https://github.com/explodinggradients/ragas/tree/main/src/ragas/metrics).
+View full prompts on the Metrics page or in the [RAGAS GitHub repository](https://github.com/explodinggradients/ragas/tree/main/src/ragas/metrics).
 
 <Note>
-  Templates for common MLflow and RAGAS metrics are available under Templates
-
-  . Copy a template (e.g., Relevance, Faithfulness) and tailor the guidelines to your domain.
+  Templates for common MLflow and RAGAS metrics are available under Templates. Copy a template (e.g., Relevance, Faithfulness) and tailor the guidelines to your domain.
 </Note>
-
-For additional context on RAG‑focused evaluations and dataset setup, see the RAGAS docs: [RAGAS integrations guide](https://docs.ragas.io/en/stable/howtos/integrations/langsmith/).
 
 ### Define Custom Metrics for Your LLM Use Case
 
 <DarkLightImage
-  caption="Adding a New Custom Metric in Scoring Lab"
-  alt="Adding a New Custom Metric in Scoring Lab"
+  caption="Adding a New Custom Metric"
+  alt="Adding a New Custom Metric"
   lightSrc="/images/metrics/metrics-overview-light.png"
   darkSrc="/images/metrics/metrics-overview-dark.png"
 />
 
-Scorecard also offers the flexibility to define any customized metric unique to your LLM application. At the top of the metrics section in the Scoring Lab, click the "\+ New Metric" button and fill out the details of your metric. Information needed includes:
+On the Metrics page, click "\+ New Metric" to create a custom metric. Configure:
 
-- Metric Name: a human-readable name of your metric.
-- Metric Guidelines: natural language instructions to define how a metric should be computed.
-- Evaluation Type: how your metric will be evaluated
-  - AI: takes the Metric Guidelines as prompt and computes the metric via an AI model.
-  - Human: a human subject-matter expert manually evaluates the metric.
-  - Heuristic: write custom evaluation logic in Python or TypeScript that runs in a secure sandbox. See [Heuristic Metrics](#heuristic-metrics) below.
-- Output Type: the output type of your metric.
-  - Boolean
-  - Integer (1-5)
-  - Float (0.0-1.0)
+- **Metric Name**: Human-readable name
+- **Metric Guidelines**: Natural language instructions for evaluation
+- **Evaluation Type**:
+  - **AI**: Uses Metric Guidelines as prompt for an AI model
+  - **Human**: Manual evaluation by subject-matter experts
+  - **Heuristic (Code)**: Custom Python or TypeScript logic (see [Heuristic Metrics](#heuristic-metrics))
+- **Output Type**: Boolean, Integer (1-5), or Float (0.0-1.0)
 
 <DarkLightImage
   caption="New Custom Metric"
@@ -135,10 +103,10 @@ Scorecard also offers the flexibility to define any customized metric unique to 
 
 #### Boolean Output Type
 
-- **Range**: true/false.
-- **Pass/Fail**: `binaryScore` directly represents pass/fail.
-- **Good for**: format checks, refusals, policy/guardrails, presence/absence.
-- **Aggregation**: Ratios of passes over total and counts across runs and Metric Groups.
+- **Range**: true/false
+- **Pass/Fail**: Direct pass/fail representation
+- **Use cases**: Format checks, refusals, policy/guardrails, presence/absence
+- **Aggregation**: Pass ratios and counts
 
 Example model output for a boolean metric:
 
@@ -151,10 +119,10 @@ Example model output for a boolean metric:
 
 #### Integer Output Type
 
-- **Range**: 1–5 (coarse ordinal scale where higher is better).
-- **Pass/Fail Threshold**: Configure a `passingThreshold` (e.g., 4). A record passes if `intScore ≥ passingThreshold`.
-- **Good for**: rubric-based quality judgments (helpfulness, factuality, completeness) with simple guidance for SMEs.
-- **Aggregation**: Means and distributions across runs/testsets and within Metric Groups.
+- **Range**: 1–5 (higher is better)
+- **Pass/Fail**: Set a `passingThreshold` (e.g., 4). Passes if `intScore ≥ threshold`
+- **Use cases**: Rubric-based quality judgments (helpfulness, factuality, completeness)
+- **Aggregation**: Means and distributions
 
 Example model output for an integer metric:
 
@@ -167,12 +135,12 @@ Example model output for an integer metric:
 
 #### Float Output Type
 
-Float metrics produce a normalized score between 0.0 and 1.0 and are useful when you want a graded, continuous measure instead of a binary or 1–5 integer rating.
+Normalized score between 0.0 and 1.0 for graded, continuous measurement.
 
-- **Range**: 0.0–1.0, where higher is better by convention.
-- **Pass/Fail Threshold**: Configure a `passingThreshold` (e.g., 0.90). A record passes if `floatScore ≥ passingThreshold`.
-- **Good for**: semantic similarity, confidence/uncertainty, coverage, or quality scores you expect to average across many samples.
-- **Aggregation**: Scorecard aggregates float metrics via means across runs/testsets and within Metric Groups, enabling trend tracking over time.
+- **Range**: 0.0–1.0 (higher is better)
+- **Pass/Fail**: Set a `passingThreshold` (e.g., 0.90). Passes if `floatScore ≥ threshold`
+- **Use cases**: Semantic similarity, confidence/uncertainty, coverage, quality scores
+- **Aggregation**: Means for trend tracking
 
 Example model output for a float metric:
 
@@ -185,17 +153,11 @@ Example model output for a float metric:
 
 ## Automated Scoring
 
-### Increasing Complexity When Manually Evaluating Large Testsets
+As testsets grow, manual evaluation becomes time-consuming. Subject-matter experts (SMEs) can become bottlenecks as the number of testcases increases. Scorecard's AI-powered scoring automates evaluation, allowing SMEs to focus on complex edge cases while the system handles well-defined metrics.
 
-When introducing a framework to evaluate a Large Language Model (LLM), the process typically begins on a small scale by manually evaluating a few Testcases. These initial Testcases form the basis of the first Testset, and subject-matter experts (SMEs) evaluate the LLM outputs of these Testcases. As the evaluation process iterates, the number of Testcases grows, allowing testing across more dimensions using different metrics. However, as the number of Testcases increases, the time required to evaluate the metrics increases proportionally. Since SMEs have limited resources, the evaluation of large Testsets can quickly become a bottleneck, hindering the progress of the LLM evaluation process.
+### AI-Based Metrics
 
-### AI-Supported Scoring With Scorecard
-
-Scorecard offers a solution to this problem by outsourcing the evaluation part to an AI model. With Scorecard's AI-powered scoring, valuable time can be saved and SMEs can focus on complex edge cases instead of well-defined and easy-to-score metrics. This streamlines the LLM evaluation process, enabling teams to iterate and deliver faster.
-
-#### Define Metrics to Score With AI
-
-When defining a new metric to be used for your LLM evaluation, you can specify the evaluation type. Choose the evaluation type "AI" to have a metric automatically scored by an AI model.
+When creating a metric, select "AI" as the evaluation type for automated scoring.
 
 <DarkLightImage
   caption="New Metric With AI-Scoring"
@@ -204,30 +166,30 @@ When defining a new metric to be used for your LLM evaluation, you can specify t
   darkSrc="/images/metrics/metrics-create-b-dark.png"
 />
 
-##### Basic and Advanced AI Metric Configuration
+#### Configuration Modes
 
-The AI metric creation flow now offers two modes:
-
-- **Basic Mode**: In this mode, you define the metric guidelines using natural language instructions. Make sure to accurately describe how the AI model should score the metric.
-- **Advanced Mode**: For more control, you can access the advanced mode to modify the full prompt template beyond just the guidelines, allowing for more sophisticated evaluation logic.
+- **Basic Mode**: Define metric guidelines using natural language instructions
+- **Advanced Mode**: Modify the full prompt template for sophisticated evaluation logic
 
 <Warning>
-  When specifying the metric guidelines for an AI-scored metric, you must be very specific, as this forms the core instruction the AI model receives for scoring the metric.
+  Be very specific with metric guidelines—they form the core instruction for AI scoring.
 </Warning>
 
-##### AI Evaluation Settings
+#### Evaluation Settings
 
-In the AI Evaluation Settings section of the metric creation or editing modal, you can configure the model and parameters used for AI-based evaluation. This gives you fine-grained control over how your metrics are evaluated:
+Configure AI evaluation parameters:
 
-- **Model Selection**: Choose from available models (such as GPT-4o) to perform the evaluation
-- **Temperature**: Control the randomness of the AI evaluation (typically set to 0 for consistent scoring)
-- **Additional Parameters**: Configure other model-specific settings as needed
+- **Model Selection**: Choose models like GPT-4o
+- **Temperature**: Control randomness (typically 0 for consistency)
+- **Additional Parameters**: Model-specific settings
 
-This flexibility allows you to optimize the evaluation process for different types of metrics and use cases.
+### Automatic Scoring
 
-#### Score Your Testset With a Single Click
+When you create a run via the Kickoff Run modal (from the testset page or the Kickoff Run page) or through GitHub Actions, AI and Heuristic metrics are automatically scored—no manual action needed. You can view scoring progress and results in the run details page.
 
-After you have run a Testset against your LLM and the model has generated responses for each Testcase, the Scorecard UI displays the status of "Awaiting Scoring".
+<Tip>
+  New to Scorecard? See the [UI Quickstart](/intro/ui-quickstart) to learn how to kick off your first run.
+</Tip>
 
 <DarkLightImage
   caption="Run Scoring in the Scorecard UI"
@@ -236,9 +198,11 @@ After you have run a Testset against your LLM and the model has generated respon
   darkSrc="/images/metrics/metrics-run-dark.png"
 />
 
+If needed, you can re-run scoring by selecting records and clicking "Re-run Scoring".
+
 #### Score Explanations
 
-Scorecard not only automates the scoring process, it also provides explanations of why the AI model scored the metrics in a certain way. This helps you understand the reasons of the AI scores, allowing you to re-evaluate whether the evaluations make sense.
+Scorecard provides explanations for each score, helping you understand and validate the AI's evaluation reasoning.
 
 <DarkLightImage
   caption="Score Explained by the Scorecard AI Model"
@@ -247,9 +211,9 @@ Scorecard not only automates the scoring process, it also provides explanations 
   darkSrc="/images/metrics/metrics-scores-detail-dark.png"
 />
 
-### Heuristic Metrics
+### Heuristic Metrics (Code-Based Evaluation)
 
-Heuristic metrics allow you to write custom evaluation logic using Python or TypeScript code. This is useful when you need deterministic, rule-based scoring that doesn't require an AI model, such as:
+Write custom evaluation logic in Python or TypeScript for deterministic, rule-based scoring:
 
 - Checking for specific keywords or patterns
 - Validating JSON structure or format
@@ -259,7 +223,7 @@ Heuristic metrics allow you to write custom evaluation logic using Python or Typ
 
 #### Creating a Heuristic Metric
 
-When creating a new metric, select **Heuristic** as the evaluation type. You'll see a code editor where you can write your evaluation logic.
+Select **Heuristic** as the evaluation type to access the code editor.
 
 <DarkLightImage
   caption="Creating a heuristic metric with Python code"
@@ -325,11 +289,11 @@ function score(
 
 #### Secure Sandbox Execution
 
-Heuristic code runs in a secure, isolated sandbox environment. This ensures:
+Code runs in a secure, isolated sandbox ensuring:
 
-- **Safety**: Code cannot access external resources or affect other users
-- **Consistency**: Same code produces same results across runs
-- **Performance**: Execution is optimized for evaluation workloads
+- **Safety**: No external resource access
+- **Consistency**: Deterministic results
+- **Performance**: Optimized execution
 
 <Note>
   The sandbox has limited access to external libraries. Common utilities like string manipulation and JSON parsing are available. Contact support if you need specific libraries for your use case.
@@ -337,19 +301,19 @@ Heuristic code runs in a secure, isolated sandbox environment. This ensures:
 
 ### Metric Groups
 
-Once you have defined all metrics that you need to properly assess the quality of your LLM application, you can group them together to form a Metric Group. A Scorecard Metric Group is a collection of metrics that are used together to score an LLM application. This Metric Group can be routinely run against your LLM application to yield a consistent measure of the performance and quality of its responses. Instead of manually selecting multiple metrics to score an LLM application every time for a particular use case, defining this set of metrics makes it easy to repeatedly score in the same way with multiple metrics. Different Metric Groups can serve different purposes by ensuring consistency in testing, e.g. a Metric Group for RAG applications, a Metric Group for translation use cases, etc.
+Group related metrics for consistent, repeatable evaluation. Metric Groups let you apply multiple metrics to runs without manual selection each time. Create groups for specific use cases like RAG applications or translation tasks.
 
 <DarkLightImage
-  caption="Overview of Metric Groups in Scoring Lab"
-  alt="Overview of Metric Groups in Scoring Lab"
+  caption="Overview of Metric Groups"
+  alt="Overview of Metric Groups"
   lightSrc="/images/metrics/metric-groups-light.png"
   darkSrc="/images/metrics/metrics-groups-dark.png"
 />
 
-Have an overview of your existing Metric Groups in the Scoring Lab under "Metric Groups". In this tab, you can also define a new Metric Group by providing the following information:
+View and create Metric Groups on the Metrics page under "Metric Groups". Provide:
 
-- Name: a human-readable name of your Metric Group.
-- Description: a short description of your Metric Group.
+- **Name**: Human-readable identifier
+- **Description**: Short summary of the group's purpose
 
 <DarkLightImage
   caption="Defining a New Metric Group"
@@ -358,4 +322,4 @@ Have an overview of your existing Metric Groups in the Scoring Lab under "Metric
   darkSrc="/images/metrics/metrics-create-group-dark.png"
 />
 
-After specifying a name and description, select metrics by clicking on "Select Metrics". On the next page, select one or multiple metrics to use for the Metric Group.
+Click "Select Metrics" to choose which metrics to include in the group.
