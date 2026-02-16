@@ -171,17 +171,6 @@ span2.end();
   Traces with the same `scorecard.tracing_group_id` will appear together in the same run, making it easy to analyze aggregate metrics across related operations.
 </Tip>
 
----
-
-## Turn traces to testcases
-
-Live traffic exposes edge-cases synthetic datasets miss. From any span that contains prompt/response attributes click **Create Testcase** and Scorecard will:
-
-1. Extract `openinference.*`, `ai.prompt` / `ai.response`, or `gen_ai.*` fields.
-2. Save the pair into a chosen **Testset**.
-3. Make it immediately available for offline evaluation runs.
-
-Read more in [Trace to Testcase](/features/trace-to-testcase).
 
 ---
 
@@ -277,6 +266,5 @@ See the [OpenLLMetry documentation](https://www.traceloop.com/docs/openllmetry/g
 
 1. Follow the [Quickstart](/intro/tracing-quickstart) to send your first trace.
 2. Open the [Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) for an interactive tour.
-3. Convert live traffic to evaluations with [Trace to Testcase](/features/trace-to-testcase).
 
 Happy tracing\! 🚀

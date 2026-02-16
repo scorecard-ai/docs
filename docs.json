@@ -136,11 +136,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": [
-              "intro/overview",
-              "intro/what-is-scorecard",
-              "intro/faq"
-            ]
+            "pages": ["intro/overview", "intro/what-is-scorecard", "intro/faq"]
           },
           {
             "group": "Quickstarts",
@@ -174,7 +170,6 @@
               "features/synthetic-data-generation",
               "features/multi-turn-simulation",
               "features/a-b-comparison",
-              "features/analysis",
               "features/endpoints",
               "features/ai-sdk-wrapper",
               "features/github-actions",
@@ -197,9 +192,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "api-reference/overview"
-            ]
+            "pages": ["api-reference/overview"]
           },
           {
             "group": "Projects",
@@ -256,9 +249,7 @@
           },
           {
             "group": "Scores",
-            "pages": [
-              "api-reference/upsert-score"
-            ]
+            "pages": ["api-reference/upsert-score"]
           },
           {
             "group": "Systems",
@@ -284,9 +275,7 @@
         "groups": [
           {
             "group": "Updates",
-            "pages": [
-              "changelog"
-            ]
+            "pages": ["changelog"]
           }
         ]
       }
