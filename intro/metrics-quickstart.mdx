@@ -20,116 +20,90 @@ Metrics define what “good” looks like for your LLM. You describe the criteri
     Go to your project’s **Metrics** page. Start fast by copying a proven template, then tailor the guidelines to your domain.
 
     <DarkLightImage
-      lightSrc="/images/metrics/metrics-templates-light.png"
-      darkSrc="/images/metrics/metrics-templates-dark.png"
+      lightSrc="/images/metrics/metrics-templates-dark.png"
+      darkSrc="/images/metrics/metrics-templates-light.png"
       caption="Templates list with Create from Template."
       alt="Metric templates list"
     />
-
-    <DarkLightImage
-      lightSrc="/images/metrics/metrics-template-light.png"
-      darkSrc="/images/metrics/metrics-template-dark.png"
-      caption="Template details with description and output type."
-      alt="Template details panel"
-    />
   </Step>
 
-  <Step title="Create your first metric (AI‑scored)">
+  <Step title="Create a metric">
     You can also create a metric from scratch. Provide a name, description, clear <strong>guidelines</strong>, and choose an <strong>Evaluation Type</strong> and <strong>Output Type</strong>.
-
-    <DarkLightImage
-      lightSrc="/images/metrics/metrics-create-a-light.png"
-      darkSrc="/images/metrics/metrics-create-a-dark.png"
-      caption="New Metric modal – name, description, evaluation type, and guidelines."
-      alt="New metric configuration modal"
-    />
-
-    For AI‑scored metrics, pick the evaluator model and keep temperature low for repeatability.
-
-    <DarkLightImage
-      lightSrc="/images/metrics/metrics-create-b-light.png"
-      darkSrc="/images/metrics/metrics-create-b-dark.png"
-      caption="AI evaluator settings and output type."
-      alt="AI evaluation settings"
-    />
-
-
-    <DarkLightImage
-      lightSrc="/images/metrics/metrics-outputtype-light.png"
-      darkSrc="/images/metrics/metrics-outputtype-dark.png"
-      caption="Choose Boolean (pass/fail) or Integer (1–5)."
-      alt="Output type options"
-    />
 
     <Note>
       <strong>Guidelines matter.</strong> Describe what to reward and what to penalize, and include 1–2 concise examples if helpful. These instructions become the core of the evaluator prompt.
     </Note>
+
+    <Tabs>
+      <Tab title="AI‑scored">
+        Uses a model to apply your guidelines consistently and at scale. Pick the evaluator model and keep temperature low for repeatability.
+
+        <DarkLightImage
+          lightSrc="/images/metrics/metrics-ai-detail-light.png"
+          darkSrc="/images/metrics/metrics-ai-detail-dark.png"
+          caption="AI metric – evaluator model, output type, and evaluation guidelines."
+          alt="AI metric detail with model and output type settings"
+        />
+      </Tab>
+
+      <Tab title="Human‑scored">
+        Best for nuanced judgments or gold‑standard baselines. Select <strong>Human</strong> as the evaluation type and write clear instructions for reviewers.
+
+        <DarkLightImage
+          lightSrc="/images/metrics/metrics-human-detail-light.png"
+          darkSrc="/images/metrics/metrics-human-detail-dark.png"
+          caption="Human evaluation – provide guidelines for reviewers."
+          alt="Human metric detail with evaluation guidelines"
+        />
+      </Tab>
+
+      <Tab title="Heuristic (SDK)">
+        Deterministic, code‑based checks (e.g., latency, regex, policy flags). Select <strong>Heuristic (SDK)</strong> as the evaluation type and provide a scorer function in Python or TypeScript.
+
+        <DarkLightImage
+          lightSrc="/images/metrics/metrics-heuristic-detail-light.png"
+          darkSrc="/images/metrics/metrics-heuristic-detail-dark.png"
+          caption="Heuristic metric – Python or TypeScript scorer function."
+          alt="Heuristic metric detail with scorer function"
+        />
+      </Tab>
+
+      <Tab title="Critic Agent (coming soon)">
+        An agentic evaluator that can use tools, browse context, and reason over multiple steps before producing a score. Stay tuned for updates.
+      </Tab>
+    </Tabs>
   </Step>
 
-  <Step title="Optional: Human‑scored metric">
-    Some criteria are best judged by humans. Select <strong>Human</strong> as the evaluation type and write clear instructions for reviewers.
+  <Step title="Go to the Records page and select records">
+    Navigate to your project's [Records page](/features/records). Select the records you want to score, then click the **Score Records** button.
 
     <DarkLightImage
-      lightSrc="/images/metrics/metrics-create-human-light.png"
-      darkSrc="/images/metrics/metrics-create-human-dark.png"
-      caption="Human evaluation – provide instructions for reviewers."
-      alt="Human evaluation configuration"
+      lightSrc="/images/metrics/metrics-records-page-light.png"
+      darkSrc="/images/metrics/metrics-records-page-dark.png"
+      caption="Records page with selected records and Score Records button."
+      alt="Records page showing selected records and Score Records button"
     />
   </Step>
 
-  <Step title="Create a Metric Group">
-    Group related metrics (e.g., Groundedness + Relevance + Safety) so you can select them together during a run.
+  <Step title="Choose metrics and score">
+    In the **Score Records** modal, select one or more metrics to evaluate against, then click **Score**.
 
     <DarkLightImage
-      lightSrc="/images/metrics/metrics-create-group-light.png"
-      darkSrc="/images/metrics/metrics-create-group-dark.png"
-      caption="Create a Metric Group and select metrics to include."
-      alt="Create metric group modal"
-    />
-
-    After saving, you’ll see your groups alongside individual metrics.
-
-    <DarkLightImage
-      lightSrc="/images/metrics/metric-groups-light.png"
-      darkSrc="/images/metrics/metrics-groups-dark.png"
-      caption="Metric Groups overview."
-      alt="Metric groups list"
+      lightSrc="/images/metrics/metrics-score-records-modal-light.png"
+      darkSrc="/images/metrics/metrics-score-records-modal-dark.png"
+      caption="Score Records modal – select metrics to evaluate."
+      alt="Score Records modal with metrics selected"
     />
   </Step>
 
-  <Step title="Kick off a Run and pick metrics">
-    Start a run from your project dashboard, Playground, or Runs list. In the <strong>Kickoff Run</strong> modal, choose a Testset, select your System or Endpoint, and add one or more <strong>Metrics</strong> or a <strong>Metric Group</strong>.
-
-    <ul>
-      <li>Pick individual metrics by name, or select a Metric Group for consistency.</li>
-      <li>Integer metrics show an average on the run; Boolean metrics show pass‑rate.</li>
-      <li>Runs with human‑scored metrics will show status <em>Scoring</em> until reviewers submit results.</li>
-    </ul>
-
-    See <a className="underline" href="/features/runs">Runs & Results</a> for a deeper walkthrough of the kickoff modal and options.
-
-    When the run executes and scoring completes, open the run to review results.
+  <Step title="View scores in the record panel">
+    Once scoring completes, click any record to open the side panel. View scores, inputs, outputs, and evaluation details.
 
     <DarkLightImage
-      lightSrc="/images/metrics/metrics-run-light.png"
-      darkSrc="/images/metrics/metrics-run-dark.png"
-      caption="Run results with per‑record scores."
-      alt="Run results table"
-    />
-  </Step>
-
-  <Step title="Inspect scores and explanations">
-    Hover over or click a score to view the evaluator’s reasoning and properties. This helps validate and tune your guidelines.
-
-    <DarkLightImage lightSrc="/images/testrecord-score-explanation-light.png" caption="Record score explanation." alt="Screenshot of viewing testrecord score explanation in the UI." />
-
-    Drill into any record to see inputs, outputs, expected outputs, and all scores together.
-
-    <DarkLightImage
-      lightSrc="/images/metrics/metrics-testrecord-light.png"
-      darkSrc="/images/metrics/metrics-testrecord-dark.png"
-      caption="Record view showing inputs/outputs and metric results."
-      alt="Test record details"
+      lightSrc="/images/metrics/metrics-record-scores-panel-light.png"
+      darkSrc="/images/metrics/metrics-record-scores-panel-dark.png"
+      caption="Record detail panel with metric scores."
+      alt="Record side panel showing metric scores, inputs, and outputs"
     />
   </Step>
 </Steps>
@@ -139,6 +113,7 @@ Metrics define what “good” looks like for your LLM. You describe the criteri
 - **AI‑scored**: Uses a model to apply your guidelines consistently and at scale.
 - **Human‑scored**: Great for nuanced judgments or gold‑standard baselines.
 - **Heuristic (SDK)**: Deterministic, code‑based checks via the SDK (e.g., latency, regex, policy flags).
+- **Critic Agent** *(coming soon)*: An agentic evaluator that reasons over multiple steps with tool use.
 - **Output types**: Choose <strong>Boolean</strong> (pass/fail) or <strong>Integer (1–5)</strong>.
 
 ## Second‑party metrics (optional)

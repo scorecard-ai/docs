@@ -22,7 +22,7 @@ Scorecard assists you in several ways in defining and organizing these metrics f
 
 ### Metric Templates
 
-The Scorecard team consists of experts in LLM evaluation, with extensive experience in assessing and deploying large-scale AI applications at some of the world's leading companies. Our Scorecard Core Metrics, validated by our team, represent industry-standard benchmarks for LLM performance. You can explore these Core Metrics in the Scoring Lab, under "Templates," to select the ones best suited for your LLM evaluation needs.
+The Scorecard team consists of experts in LLM evaluation, with extensive experience in assessing and deploying large-scale AI applications at some of the world's leading companies. Our Scorecard Core Metrics, validated by our team, represent industry-standard benchmarks for LLM performance. You can explore these Core Metrics on the Metrics page under "Templates" to select the ones best suited for your LLM evaluation needs.
 
 <DarkLightImage
   caption="Overview of Scorecard Core Metrics in Templates"
@@ -69,7 +69,7 @@ Scorecard provides support for running MLflow metrics directly within the Scorec
 - **Description**: Assesses the semantic similarity between the model's output and the provided targets or "ground truth".
 - **Purpose**: Used to evaluate how closely the generated response matches the expected response in terms of meaning and content.
 
-You can view the full prompts for these metrics in the Scorecard Scoring lab or in the [MLflow GitHub repository](https://github.com/mlflow/mlflow/blob/master/mlflow/metrics/genai/prompts/v1.py).
+You can view the full prompts for these metrics on the Metrics page or in the [MLflow GitHub repository](https://github.com/mlflow/mlflow/blob/master/mlflow/metrics/genai/prompts/v1.py).
 
 #### Second-Party Metrics from RAGAS
 
@@ -92,33 +92,29 @@ To assess the end-to-end performance of a RAG pipeline, you can leverage metrics
 - **Answer Semantic Similarity**: Assesses the semantic resemblance between the generated response and the ground truth.
 - **Answer Correctness**: Gauges the accuracy of the generated response when compared to the ground truth.
 
-You can view the full prompts for these metrics in the Scorecard Scoring lab or in the [RAGAS GitHub repository](https://github.com/explodinggradients/ragas/tree/main/src/ragas/metrics).
+You can view the full prompts for these metrics on the Metrics page or in the [RAGAS GitHub repository](https://github.com/explodinggradients/ragas/tree/main/src/ragas/metrics).
 
 <Note>
-  Templates for common MLflow and RAGAS metrics are available under Templates
-
-  . Copy a template (e.g., Relevance, Faithfulness) and tailor the guidelines to your domain.
+  Templates for common MLflow and RAGAS metrics are available under Templates. Copy a template (e.g., Relevance, Faithfulness) and tailor the guidelines to your domain.
 </Note>
-
-For additional context on RAG‑focused evaluations and dataset setup, see the RAGAS docs: [RAGAS integrations guide](https://docs.ragas.io/en/stable/howtos/integrations/langsmith/).
 
 ### Define Custom Metrics for Your LLM Use Case
 
 <DarkLightImage
-  caption="Adding a New Custom Metric in Scoring Lab"
-  alt="Adding a New Custom Metric in Scoring Lab"
+  caption="Adding a New Custom Metric"
+  alt="Adding a New Custom Metric"
   lightSrc="/images/metrics/metrics-overview-light.png"
   darkSrc="/images/metrics/metrics-overview-dark.png"
 />
 
-Scorecard also offers the flexibility to define any customized metric unique to your LLM application. At the top of the metrics section in the Scoring Lab, click the "\+ New Metric" button and fill out the details of your metric. Information needed includes:
+Scorecard also offers the flexibility to define any customized metric unique to your LLM application. On the Metrics page, click the "\+ New Metric" button and fill out the details of your metric. Information needed includes:
 
 - Metric Name: a human-readable name of your metric.
 - Metric Guidelines: natural language instructions to define how a metric should be computed.
 - Evaluation Type: how your metric will be evaluated
   - AI: takes the Metric Guidelines as prompt and computes the metric via an AI model.
   - Human: a human subject-matter expert manually evaluates the metric.
-  - Heuristic: write custom evaluation logic in Python or TypeScript that runs in a secure sandbox. See [Heuristic Metrics](#heuristic-metrics) below.
+  - Heuristic (Code): write custom evaluation logic in Python or TypeScript that runs in a secure sandbox. See [Heuristic Metrics](#heuristic-metrics) below.
 - Output Type: the output type of your metric.
   - Boolean
   - Integer (1-5)
@@ -247,7 +243,7 @@ Scorecard not only automates the scoring process, it also provides explanations 
   darkSrc="/images/metrics/metrics-scores-detail-dark.png"
 />
 
-### Heuristic Metrics
+### Heuristic Metrics (Code-Based Evaluation)
 
 Heuristic metrics allow you to write custom evaluation logic using Python or TypeScript code. This is useful when you need deterministic, rule-based scoring that doesn't require an AI model, such as:
 
@@ -340,13 +336,13 @@ Heuristic code runs in a secure, isolated sandbox environment. This ensures:
 Once you have defined all metrics that you need to properly assess the quality of your LLM application, you can group them together to form a Metric Group. A Scorecard Metric Group is a collection of metrics that are used together to score an LLM application. This Metric Group can be routinely run against your LLM application to yield a consistent measure of the performance and quality of its responses. Instead of manually selecting multiple metrics to score an LLM application every time for a particular use case, defining this set of metrics makes it easy to repeatedly score in the same way with multiple metrics. Different Metric Groups can serve different purposes by ensuring consistency in testing, e.g. a Metric Group for RAG applications, a Metric Group for translation use cases, etc.
 
 <DarkLightImage
-  caption="Overview of Metric Groups in Scoring Lab"
-  alt="Overview of Metric Groups in Scoring Lab"
+  caption="Overview of Metric Groups"
+  alt="Overview of Metric Groups"
   lightSrc="/images/metrics/metric-groups-light.png"
   darkSrc="/images/metrics/metrics-groups-dark.png"
 />
 
-Have an overview of your existing Metric Groups in the Scoring Lab under "Metric Groups". In this tab, you can also define a new Metric Group by providing the following information:
+View your existing Metric Groups on the Metrics page under "Metric Groups". In this tab, you can also define a new Metric Group by providing the following information:
 
 - Name: a human-readable name of your Metric Group.
 - Description: a short description of your Metric Group.
