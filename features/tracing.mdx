@@ -1,5 +1,5 @@
 ---
-title: "Tracing: Overview"
+title: "Tracing"
 description: "Instrument and inspect every LLM request in minutes."
 ---
 
@@ -9,7 +9,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   New to Scorecard? Head straight to the [Tracing Quickstart](/intro/tracing-quickstart) or jump into our ready-to-run [Google Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) to see traces in under 5 minutes.
 </Info>
 
-LLM observability means knowing exactly what happened in every generation—latency, token usage, prompts, completions, cost, errors and more. Scorecard’s **Tracing** collects this data automatically via the open-source [OpenLLMetry](https://github.com/traceloop/openllmetry) SDK (Python & Node.js) and displays rich visualisations in the Scorecard UI.
+LLM observability means knowing exactly what happened in every generation—latency, token usage, prompts, completions, cost, errors and more. Scorecard's **Tracing** collects this data automatically—via SDK wrappers, environment variables, [OpenLLMetry](https://github.com/traceloop/openllmetry), an LLM proxy, or direct OpenTelemetry—and displays rich visualisations in the Scorecard UI.
 
 ## Why Tracing matters
 
@@ -26,89 +26,549 @@ LLM observability means knowing exactly what happened in every generation—late
 
 ---
 
-## Instrument once, capture everything
+## Instrumentation Methods
 
-<CodeGroup>
+Choose the method that fits your stack. All methods send traces to Scorecard's OpenTelemetry endpoint.
 
-```bash Python (pip)
-pip install traceloop-sdk
-```
+<Tabs>
+  <Tab title="Agent Frameworks">
+    For frameworks with built-in OpenTelemetry support (Claude Agent SDK, OpenAI Agents SDK). No code changes—just set environment variables.
+
+    ```bash
+    export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your-scorecard-api-key>"
+    export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
+    export ENABLE_BETA_TRACING_DETAILED=1
+    export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=<your-project-id>"
+    ```
+
+    <CodeGroup>
+
+    ```python Python
+    # No code changes required — just set the env vars above and run your app.
+    import anyio
+    from claude_agent_sdk import (
+        AssistantMessage,
+        TextBlock,
+        query,
+    )
 
 
-```bash TypeScript/Node (npm)
-npm install @traceloop/node-server-sdk
-```
+    async def main():
+        async for message in query(prompt="What is 2 + 2?"):
+            if isinstance(message, AssistantMessage):
+                for block in message.content:
+                    if isinstance(block, TextBlock):
+                        print(f"Claude: {block.text}")
 
-</CodeGroup>
 
-Scorecard also supports standard OpenTelemetry (OTLP/HTTP) exporters across languages (Python, TypeScript/JS, Java, Go, .NET, Rust)—point your exporter at your Scorecard project and include your API key.
+    anyio.run(main)
+    ```
 
-<CodeGroup>
+    ```ts TypeScript
+    // No code changes required — just set the env vars above and run your app.
+    import {
+      AssistantMessage,
+      TextBlock,
+      query,
+    } from "@anthropic-ai/claude-agent-sdk";
 
-```python Python
-from traceloop.sdk import Traceloop
-from traceloop.sdk.instruments import Instruments
+    async function main() {
+      const stream = query({
+        prompt: "What is 2 + 2?",
+      });
 
-# Initialize OpenLLMetry. Works with any supported provider (OpenAI, Anthropic, Gemini, Bedrock, etc.)
-# Set scorecard.project_id to route traces to a specific project (defaults to oldest project)
-Traceloop.init(
-    disable_batch=True,
-    instruments={Instruments.OPENAI},
-    resource_attributes={
-        "scorecard.project_id": "<your-project-id>"
+      for await (const message of stream) {
+        if (message instanceof AssistantMessage) {
+          for (const block of message.content) {
+            if (block instanceof TextBlock) {
+              console.log("Claude:", block.text);
+            }
+          }
+        }
+      }
     }
-)
 
-# Make any LLM/provider call with your client – it will be traced automatically
-```
+    main();
+    ```
+
+    </CodeGroup>
+
+    See the [Claude Agent SDK Tracing](/intro/claude-agent-sdk-tracing) guide for details.
+  </Tab>
+
+  <Tab title="SDK Wrappers">
+    One-line wrapper for OpenAI, Anthropic, or Vercel AI SDK clients. Install the `scorecard-ai` package and wrap your client—no other changes needed.
+
+    <CodeGroup>
+
+    ```bash Python
+    pip install scorecard-ai
+    ```
+
+    ```bash TypeScript
+    npm install scorecard-ai
+    ```
+
+    </CodeGroup>
+
+    **OpenAI**
+
+    <CodeGroup>
+
+    ```python Python
+    from scorecard_ai import wrap
+    from openai import OpenAI
+    import os
+
+    openai = wrap(
+        OpenAI(api_key=os.getenv("OPENAI_API_KEY")),
+    )
+
+    response = openai.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "What is the capital of France?"},
+        ],
+    )
+
+    print(response.choices[0].message.content)
+    ```
+
+    ```ts TypeScript
+    import { wrap } from 'scorecard-ai';
+    import OpenAI from 'openai';
+
+    const openai = wrap(
+      new OpenAI({
+        apiKey: process.env['OPENAI_API_KEY'],
+      }),
+    );
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: 'You are a helpful assistant.' },
+        { role: 'user', content: 'What is the capital of France?' },
+      ],
+    });
+
+    console.log(response.choices[0]?.message?.content);
+    ```
+
+    </CodeGroup>
+
+    **Anthropic**
+
+    <CodeGroup>
+
+    ```python Python
+    from scorecard_ai import wrap
+    from anthropic import Anthropic
+    import os
+
+    claude = wrap(
+        Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY")),
+    )
+
+    response = claude.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "What is the capital of France?"}],
+    )
+
+    text_content = next(
+        (block for block in response.content if block.type == "text"), None
+    )
+    print(text_content.text if text_content else "No response")
+    ```
+
+    ```ts TypeScript
+    import { wrap } from 'scorecard-ai';
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const claude = wrap(
+      new Anthropic({
+        apiKey: process.env['ANTHROPIC_API_KEY'],
+      }),
+    );
+
+    const response = await claude.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: 'What is the capital of France?' }],
+    });
+
+    const textContent = response.content.find((block) => block.type === 'text');
+    console.log(textContent?.text);
+    ```
+
+    </CodeGroup>
+
+    **Vercel AI SDK** (TypeScript only)
+
+    ```ts TypeScript
+    import { openai } from '@ai-sdk/openai';
+    import * as ai from 'ai';
+    import { wrapAISDK } from 'scorecard-ai';
+
+    const aiSDK = wrapAISDK(ai);
+
+    const { text } = await aiSDK.generateText({
+      model: openai('gpt-4o'),
+      prompt: 'What is the capital of France?',
+    });
+
+    console.log(text);
+    ```
+
+    See the [Tracing Quickstart](/intro/tracing-quickstart) and [Vercel AI SDK wrapper](/features/ai-sdk-wrapper) for full setup details.
+  </Tab>
+
+  <Tab title="Traceloop">
+    Universal OpenTelemetry-based tracing via [OpenLLMetry](https://github.com/traceloop/openllmetry). Supports LangChain, LlamaIndex, CrewAI, and 20+ providers.
+
+    <CodeGroup>
+
+    ```bash Python
+    pip install traceloop-sdk
+    ```
+
+    ```bash TypeScript
+    npm install @traceloop/node-server-sdk
+    ```
+
+    </CodeGroup>
+
+    Set these environment variables:
+
+    ```bash
+    export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel"
+    export TRACELOOP_HEADERS="Authorization=Bearer%20<your-scorecard-api-key>"
+    ```
+
+    <CodeGroup>
+
+    ```python Python
+    from traceloop.sdk import Traceloop
+    from traceloop.sdk.decorators import workflow
+    from traceloop.sdk.instruments import Instruments
+    from openai import OpenAI
+
+    Traceloop.init(disable_batch=True, instruments={Instruments.OPENAI})
+
+    client = OpenAI()
+
+    @workflow(name="simple_chat")
+    def chat():
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": "Hello!"}]
+        )
+        return response.choices[0].message.content
+
+    result = chat()
+    print(result)
+    ```
+
+    ```ts TypeScript
+    import * as traceloop from "@traceloop/node-server-sdk";
+    import OpenAI from "openai";
+
+    traceloop.initialize({
+      disableBatch: true,
+      instrumentModules: { openAI: OpenAI },
+    });
+
+    const openai = new OpenAI();
+
+    async function chat() {
+      return await traceloop.withWorkflow({ name: "simple_chat" }, async () => {
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [{ role: "user", content: "Hello!" }],
+        });
+        return response.choices[0].message.content;
+      });
+    }
+
+    const result = await chat();
+    console.log(result);
+    ```
+
+    </CodeGroup>
+
+    **LangChain** — add `opentelemetry-instrumentation-langchain` and use `Instruments.LANGCHAIN`:
+
+    ```python Python
+    from traceloop.sdk import Traceloop
+    from traceloop.sdk.instruments import Instruments
+
+    # IMPORTANT: Initialize Traceloop before importing any LangChain modules.
+    Traceloop.init(
+        disable_batch=True,
+        instruments={Instruments.LANGCHAIN}
+    )
+
+    from langchain_openai import ChatOpenAI
+    from langchain_core.prompts import ChatPromptTemplate
+
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are a helpful assistant."),
+        ("user", "{input}")
+    ])
+
+    model = ChatOpenAI(model="gpt-4o-mini")
+    chain = prompt | model
+
+    response = chain.invoke({"input": "What is the capital of France?"})
+    print(response.content)
+    ```
+
+    **LlamaIndex** — use `Instruments.LLAMA_INDEX`:
+
+    ```python Python
+    from traceloop.sdk import Traceloop
+    from traceloop.sdk.instruments import Instruments
+    from llama_index.llms.openai import OpenAI
+    from llama_index.core.llms import ChatMessage
+
+    Traceloop.init(
+        disable_batch=True,
+        instruments={Instruments.LLAMA_INDEX, Instruments.OPENAI}
+    )
+
+    llm = OpenAI(model="gpt-4o")
+    response = llm.chat([ChatMessage(role="user", content="Hello!")])
+
+    print(response.message.content)
+    ```
+
+    **CrewAI** — use `Instruments.CREWAI`:
+
+    ```python Python
+    from traceloop.sdk import Traceloop
+    from traceloop.sdk.instruments import Instruments
+    from crewai import Agent, Task, Crew
+
+    Traceloop.init(
+        disable_batch=True,
+        instruments={Instruments.CREWAI, Instruments.OPENAI}
+    )
+
+    researcher = Agent(
+        role="Researcher",
+        goal="Research and summarize topics",
+        backstory="You are an expert researcher.",
+    )
+
+    task = Task(
+        description="What is the capital of France?",
+        expected_output="A brief answer",
+        agent=researcher,
+    )
+
+    crew = Crew(agents=[researcher], tasks=[task])
+    result = crew.kickoff()
+
+    print(result)
+    ```
+
+    See the [LangChain Quickstart](/intro/langchain-quickstart) and supported [frameworks and providers](#supported-frameworks--providers) below.
+  </Tab>
+
+  <Tab title="LLM Proxy">
+    Change your `baseURL` to `https://llm.scorecard.io`. No SDK, no dependencies—just a URL change.
+
+    <CodeGroup>
+
+    ```python Python
+    from openai import OpenAI
+    import os
+
+    client = OpenAI(
+        api_key=os.environ["OPENAI_API_KEY"],
+        base_url="https://llm.scorecard.io",
+        default_headers={
+            "x-scorecard-api-key": os.environ["SCORECARD_API_KEY"],
+        },
+    )
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": "What is the capital of France?"}],
+    )
+
+    print(response.choices[0].message.content)
+    ```
+
+    ```ts TypeScript
+    import OpenAI from 'openai';
+
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: 'https://llm.scorecard.io',
+      defaultHeaders: {
+        'x-scorecard-api-key': process.env.SCORECARD_API_KEY,
+      },
+    });
+
+    const response = await client.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [{ role: 'user', content: 'What is the capital of France?' }],
+    });
+
+    console.log(response.choices[0].message.content);
+    ```
+
+    </CodeGroup>
+
+    See the [Tracing Quickstart](/intro/tracing-quickstart) for full setup details.
+  </Tab>
+
+  <Tab title="OpenTelemetry">
+    Send traces directly using any OpenTelemetry SDK (Python, TypeScript, Java, Go, .NET, Rust).
+
+    - **Endpoint:** `https://tracing.scorecard.io/otel/v1/traces`
+    - **Auth:** `Authorization: Bearer <SCORECARD_API_KEY>`
+
+    <CodeGroup>
+
+    ```python Python
+    from anthropic import Anthropic
+    from opentelemetry import trace
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor
+    from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+    from opentelemetry.sdk.resources import Resource
+    from opentelemetry.semconv.resource import ResourceAttributes
+    import os
+
+    resource = Resource.create({
+        ResourceAttributes.SERVICE_NAME: "my-app",
+    })
+
+    trace_provider = TracerProvider(resource=resource)
+    trace_provider.add_span_processor(BatchSpanProcessor(
+        OTLPSpanExporter(
+            endpoint="https://tracing.scorecard.io/otel",
+            headers={"Authorization": f"Bearer {os.environ['SCORECARD_API_KEY']}"}
+        )
+    ))
+    trace.set_tracer_provider(trace_provider)
+
+    tracer = trace.get_tracer(__name__)
+    client = Anthropic()
 
 
-```ts TypeScript/Node
-import { Traceloop, Instruments } from '@traceloop/node-server-sdk'
+    @tracer.start_as_current_span("chat")
+    def chat(prompt: str) -> str:
+        span = trace.get_current_span()
+        span.set_attributes({
+            "gen_ai.system": "anthropic",
+            "gen_ai.request.model": "claude-sonnet-4-20250514",
+        })
 
-// Initialize OpenLLMetry. Works with any supported provider or HTTP instrumentation
-// Set scorecard.project_id to route traces to a specific project (defaults to oldest project)
-Traceloop.init({
-  disableBatch: true,
-  instruments: new Set([Instruments.OPENAI]),
-  resourceAttributes: {
-    'scorecard.project_id': '<your-project-id>'
-  }
-})
+        message = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": prompt}],
+        )
 
-// Make any LLM/provider call with your client – it will be traced automatically
-```
+        return message.content[0].text
 
-</CodeGroup>
 
-See the [Quickstart](/intro/tracing-quickstart) for full environment variable setup, examples and best practices.
+    result = chat("What is the capital of France?")
+    print(result)
+
+    trace.get_tracer_provider().force_flush()
+    ```
+
+    ```ts TypeScript
+    import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+    import { Resource } from "@opentelemetry/resources";
+    import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
+    import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
+    import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
+    import { trace, SpanStatusCode } from "@opentelemetry/api";
+    import OpenAI from "openai";
+
+    const exporter = new OTLPTraceExporter({
+      url: "https://tracing.scorecard.io/otel/v1/traces",
+      headers: {
+        Authorization: `Bearer ${process.env.SCORECARD_API_KEY}`,
+      },
+    });
+
+    const tracerProvider = new NodeTracerProvider({
+      resource: Resource.default().merge(
+        new Resource({ [ATTR_SERVICE_NAME]: "my-app" })
+      ),
+    });
+
+    tracerProvider.addSpanProcessor(new BatchSpanProcessor(exporter));
+    tracerProvider.register();
+
+    const tracer = trace.getTracer("my-app");
+    const openai = new OpenAI();
+
+    async function chat(prompt: string) {
+      return tracer.startActiveSpan("chat", async (span) => {
+        span.setAttribute("gen_ai.system", "openai");
+        span.setAttribute("gen_ai.request.model", "gpt-4o");
+
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [{ role: "user", content: prompt }],
+        });
+
+        span.setStatus({ code: SpanStatusCode.OK });
+        span.end();
+        return completion.choices[0].message.content;
+      });
+    }
+
+    const result = await chat("What is the capital of France?");
+    console.log(result);
+
+    await tracerProvider.forceFlush();
+    ```
+
+    </CodeGroup>
+
+    ```bash Install (Python)
+    pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp-proto-grpc
+    ```
+
+    ```bash Install (TypeScript)
+    npm install @opentelemetry/api @opentelemetry/sdk-trace-node @opentelemetry/sdk-trace-base @opentelemetry/exporter-trace-otlp-http @opentelemetry/resources @opentelemetry/semantic-conventions
+    ```
+  </Tab>
+</Tabs>
 
 ---
 
-## Explore traces in Scorecard
+## View Traces in the Records Page
 
-<Frame caption="Traces dashboard – search, filters, cost & scores">
-  ![Traces View](/images/monitors/monitors-traces-search.png)
-</Frame>
+Ingested traces appear on the **Records** page alongside records from other sources (API, Playground, Kickoff). Each row in the table shows:
 
-Scorecard automatically groups spans into traces and surfaces:
+<DarkLightImage
+  lightSrc="/images/tracing-records-list-light.png"
+  darkSrc="/images/tracing-records-list-dark.png"
+  caption="Records page showing ingested traces."
+  alt="Records page showing a list of traced records"
+/>
 
-- **Timestamp & duration** – when and how long the request ran.
-- **Service & span tree** – navigate nested function/tool calls with a collapsible span tree for easier navigation through long, highly nested traces.
-- **Token & cost breakdown** – estimate spend per trace via model pricing.
-- **Scores column** – if a trace links to an evaluation run the results appear inline (`TraceScoresCell`).
-- **Full-text search & filters** – search any span attribute (`searchText`) or limit to a specific project/time-range.
-- **Copyable Trace ID** – quickly copy and share trace identifiers.
+Each row shows the record's inputs, outputs, status, source, trace ID, and metric scores. You can search by inputs, outputs, and expected values, or filter by `status`, `source`, `trace.id`, `run.id`, `testcase.id`, `metric`, `metadata`, time range, and more. Use **Quick Filters** for presets like "My Recent Records". Customise visible columns via the **Edit Table** modal.
 
-All table controls map to URL parameters so you can share filtered trace views.
+Open a record to see more details including the **span tree**, **conversation** (for chat-based traces), **timeline**, and **scores**:
 
-### Search & filters
-
-- **Time ranges**: 30m, 24h, 3d, 7d, 30d, All.
-- **Project scope**: toggle between Current project and All projects.
-- **SearchText**: full‑text across span/resource attributes (including prompt/response fields).
-- **Match previews**: quick context snippets with deep links to traces.
-- **Cursor pagination**: efficient browsing with shareable URLs.
+<DarkLightImage
+  lightSrc="/images/tracing-record-spans-light.png"
+  darkSrc="/images/tracing-record-spans-dark.png"
+  caption="Record detail view showing the span tree"
+  alt="Record detail view showing spans with inputs, outputs, and timing"
+/>
 
 ---
 
@@ -264,7 +724,10 @@ See the [OpenLLMetry documentation](https://www.traceloop.com/docs/openllmetry/g
 
 ## Next steps
 
-1. Follow the [Quickstart](/intro/tracing-quickstart) to send your first trace.
-2. Open the [Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) for an interactive tour.
+1. Follow the [Tracing Quickstart](/intro/tracing-quickstart) to send your first trace.
+2. Set up [Claude Agent SDK Tracing](/intro/claude-agent-sdk-tracing) with zero code changes.
+3. Instrument [LangChain](/intro/langchain-quickstart) chains and agents.
+4. Use the [Vercel AI SDK wrapper](/features/ai-sdk-wrapper) for full-stack AI apps.
+5. Open the [Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) for an interactive tour.
 
 Happy tracing\! 🚀
