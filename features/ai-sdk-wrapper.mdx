@@ -27,7 +27,7 @@ The Scorecard AI SDK Wrapper provides automatic tracing and monitoring for appli
   <Step title="Wrap your AI SDK instance">
     Import the `wrapAISDK` function and wrap your AI SDK module:
 
-    ```typescript
+    ```typescript highlight={3,5-6}
     import { openai } from '@ai-sdk/openai';
     import * as ai from 'ai';
     import { wrapAISDK } from 'scorecard-ai';
@@ -62,7 +62,7 @@ The Scorecard AI SDK Wrapper provides automatic tracing and monitoring for appli
 
 You can configure the wrapper to automatically score traces against metrics. This enables real-time monitoring of your AI applications in production:
 
-```typescript
+```typescript highlight={3,5-12}
 import { openai } from '@ai-sdk/openai';
 import * as ai from 'ai';
 import { wrapAISDK } from 'scorecard-ai';
