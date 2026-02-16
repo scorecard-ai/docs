@@ -1,125 +1,69 @@
 ---
 title: "Playground"
-description: "The Playground is where you test and refine your AI agent prompts using real data. It's a three-panel interface that lets you select test data, edit prompts with Jinja templating, configure AI models, and see results in real-time."
+description: "Test agents against testcases and score results with metrics — all in one visual workspace."
 ---
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+The **Playground** lets you wire up testcases, an agent, and metrics in a single workspace, then run everything end-to-end. Results and scores appear inline so you can iterate without leaving the page.
+
 <DarkLightImage
   lightSrc="/images/playground-light.png"
+  darkSrc="/images/playground-dark.png"
   caption="Playground overview."
-  alt="Screenshot of the playground in the UI."
+  alt="Screenshot of the Playground showing testcases, agent, results, and scores."
 />
 
-## Getting Started
+## How It Works
 
-### 1. Select Your Test Data (Left Panel)
+The Playground is laid out as a left-to-right flow:
 
-**Choose a Testset:**
-- Click the testset dropdown at the top of the left panel
-- Select a testset that contains the data you want to test your prompt against
-- If no testsets exist, click "Create testset" to create one directly from the Playground
-- The first testcase will be automatically selected
+1. **Testcases** (left) — the inputs and expected outputs your agent will be tested against
+2. **Agent** (center) — the prompt and settings (temperature, maximum length, etc.) that define your agent's behavior
+3. **Results** (center-right) — the agent's actual responses for each testcase
+4. **Evaluator → Scores** (right) — metrics score each result and show pass/fail with reasoning
 
-**Select Testcases:**
-- Click on individual testcases to select them
-- Hold Shift and click to select multiple testcases
-- Selected testcases have a blue left border
-- Hover over the info icon to see the full testcase data
-- Testcases with a green flask icon have been tested
+Click **RUN** to execute the full flow.
 
-### 2. Edit Your Prompt (Middle Panel)
+## Testcases
 
-**Choose a Prompt:**
-- Select a prompt from the dropdown in the header
-- If no prompts exist, click "Create prompt" to create one directly from the Playground
+Select a testset from the dropdown at the top of the left panel. The testcases in that testset appear as cards below, each summarizing its input fields. Click **+ Add testcases** to create new ones directly in the Playground.
 
-**Work with Prompt Versions:**
-- The left sidebar shows all versions of your selected prompt
-- Click any version to switch to it
-- Versions with unsaved changes show a save indicator
-- The production version is marked with a badge
+## Agent
 
-**Edit Prompt Templates:**
-- Use the "Prompt Templates" tab to write your prompts
-- The editor supports **Jinja syntax** for dynamic content
-- Insert variables from your testcase data like `{{variable_name}}`
-- Add multiple messages by clicking "+ Add Message"
-- Set message roles (System, User, Assistant) using the dropdown
-- Remove messages with the trash can icon
+The Agent node is where you configure what gets sent to the model.
 
-**Configure Model Settings:**
-- Switch to the "Model Settings" tab
-- Choose your AI model (GPT-4, Claude, etc.)
-- Adjust parameters like temperature, max tokens, and top-p
-- These settings affect how the AI generates responses
+- **Prompt tab** — write your prompt using Jinja syntax. Reference testcase fields with `{{all.inputs}}` or specific fields like `{{inputs.query}}`.
+- **Settings tab** — choose the model, temperature, and other parameters.
+- **Messages** — click **+ ADD MESSAGE** to add messages and set roles (System, User, Assistant).
 
-### 3. Preview and Test (Right Panel)
+The version indicator (e.g. "V1 Prod") shows which agent version you're editing.
 
-**Template Preview:**
-- The "Template Preview" tab shows how your prompt looks with real data
-- Variables are automatically replaced with values from selected testcases
-- This helps you verify your Jinja templating is working correctly
+## Results
 
-**Run Tests:**
-- Click "Try" to test your prompt on selected testcases
-- Click "Kickoff Run" to create a full run for the entire testset, which will appear in your run history
-- Results appear in the "Results" tab automatically
+After a run, each testcase gets a result card showing the agent's response. Flow lines connect each testcase to its corresponding result.
 
-**View Results:**
-- The "Results" tab shows AI responses for each testcase
-- See response time, token count, and full output
-- Click the completion badge to open a detailed results modal
-- Green indicates successful completion, yellow shows partial results
+## Evaluator and Scores
 
-## Key Features
+The **Evaluator** node in the top-right holds your metrics. Click it to configure which metrics to use and how many are attached (e.g. "1 METRICS").
 
-### Jinja Templating
-Your prompts support Jinja syntax for dynamic content:
-```jinja
-Hello {{name}}, your order #{{order_id}} is {{status}}.
-```
+After scoring completes, each result gets a score card on the far right showing:
 
-### Multi-testcase Testing
-- Test individual testcases for quick iteration
-- Run all testcases for comprehensive evaluation
-- Kickoff full runs that are tracked in your run history
-- Compare results across different prompt versions
+- **Pass/Fail** status per metric
+- **Score** value (e.g. 3/5)
+- **Reasoning** explaining why the metric scored the way it did
 
-### Version Management
-- Save new versions of your prompts with the "Save" button
-- Switch between versions to compare performance
-- Publish versions to production when ready
+<Tip>
+Update a metric's guidelines and re-run to see how scoring changes — no need to re-execute the agent.
+</Tip>
 
-### Real-time Preview
-- See exactly how your prompt will look with real data
-- Catch templating errors before running tests
-- Understand how variables are populated
+## Workflows
 
-## Best Practices
+**Iterate on a prompt:**
+Configure agent → RUN → review scores → adjust prompt → re-run
 
-1. **Start Small**: Select one testcase first to quickly iterate on your prompt
-2. **Use Variables**: Leverage Jinja templating to make prompts dynamic and reusable
-3. **Test Thoroughly**: Run all testcases before publishing to production
-4. **Save Versions**: Create new versions when making significant changes
-5. **Monitor Results**: Check response times and token usage to optimize costs
+**Tune metrics:**
+RUN → read score reasoning → update metric guidelines → re-run
 
-## Common Workflows
-
-**Quick Testing:**
-
-Select a testcase → Edit prompt → Preview → Try → Review results
-
-**Comprehensive Evaluation:**
-
-Select all testcases → Edit prompt → Try All → Analyze results modal
-
-**Version Comparison:**
-
-Test Version A → Switch to Version B → Test → Compare results
-
-**Full Run Creation:**
-
-Select testset → Edit prompt → Kickoff Run → Monitor in run history
-
-The Playground makes prompt engineering intuitive by providing immediate feedback and real data testing in a single interface.
+**Expand test coverage:**
+Review scores → add edge-case testcases → RUN → verify
