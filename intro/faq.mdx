@@ -10,14 +10,14 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
 
 <AccordionGroup>
   <Accordion title="What is an eval/evaluation?">
-    An **evaluation** (or "eval") is the process of systematically testing and measuring your AI system's performance against a set of test cases. In Scorecard, an evaluation involves:
+    An **evaluation** (or "eval") is the systematic process of testing and measuring your AI system's performance against defined criteria. In Scorecard, an evaluation consists of:
     
-    - **Testset**: A collection of input/output pairs to test against
-    - **System**: The AI model, prompt, or API endpoint being evaluated  
-    - **Metrics**: Criteria used to score performance (accuracy, tone, safety, etc.)
-    - **Run**: The execution of the evaluation across all test cases
+    - **Testset**: A collection of test cases with inputs and expected outputs
+    - **System**: The AI agent, prompt, API endpoint, or workflow being evaluated  
+    - **Metrics**: Scoring criteria (accuracy, safety, tone, etc.) with AI, Human, or Code-based evaluation
+    - **Run**: Execution of your system against all test cases, with automatic scoring
     
-    Think of it like unit testing for AI - you define what good looks like, run your system against test cases, and get quantitative scores to measure performance.
+    Evaluations help you quantitatively measure AI quality, track improvements over time, and catch regressions before production. Think of it like continuous integration for AI—defining what good looks like and measuring against it systematically.
   </Accordion>
 
   <Accordion title="How does Scorecard differ from other AI evaluation tools?">
@@ -34,10 +34,28 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     - **Framework integrations**: LangChain, LlamaIndex, OpenAI, and more
   </Accordion>
 
-  <Accordion title="Can Scorecard be used for RLHF and agent training?">
-    Yes, Scorecard evaluation data serves as high-quality feedback for reinforcement learning and agent improvement. By systematically evaluating agent outputs and capturing human preferences through custom metrics, teams can generate training datasets for RLHF workflows.
+  <Accordion title="Can Scorecard be used for agent improvement and continuous learning?">
+    Yes! Scorecard provides multiple pathways for improving AI agents:
     
-    The platform's testsets and evaluation results provide structured feedback loops that help identify agent weaknesses, create preference pairs for fine-tuning, and validate improvements through regression testing. This makes Scorecard valuable not just for evaluation, but as part of the continuous improvement cycle for AI agents.
+    **Evaluation-Driven Improvement**:
+    - Identify failure patterns across test cases to focus improvement efforts
+    - Track performance metrics over time to measure agent improvements
+    - Use A/B comparison to validate that changes actually improve performance
+    - Regression testing ensures new versions don't break existing capabilities
+    
+    **Training Data Generation**:
+    - Evaluation results serve as high-quality feedback for RLHF workflows
+    - Human-scored examples create preference pairs for fine-tuning
+    - Score explanations provide detailed reasoning for model training
+    - Export scored data for custom training pipelines
+    
+    **Continuous Feedback Loops**:
+    - Monitor production performance through tracing and observability
+    - Create test cases from production failures for regression testing
+    - Iterate on prompts, tools, and configurations with quantitative feedback
+    - Multi-turn simulations test conversational improvements
+    
+    See our [Multi-turn Simulation](/features/multi-turn-simulation) and [A/B Comparison](/features/ab-comparison) docs for specific improvement workflows.
   </Accordion>
 </AccordionGroup>
 
@@ -61,10 +79,76 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     
     - **Maximum playbook length**: 50KB of text
     - **Template variables**: Up to 100 variables per playbook
-    - **Conversation turns**: Maximum 50 turns per simulation (safety limit)
-    - **Stop conditions**: Up to 10 custom stop conditions per simulation
+    - **Conversation turns**: Maximum 100 turns per simulation (safety limit to prevent infinite loops)
+    - **Stop conditions**: Multiple stop conditions can be combined (max turns, time, or content-based)
     
-    Playbooks support Jinja2 templating for dynamic content and can reference any field from your test cases.
+    Playbooks support Jinja2 templating for dynamic content and can reference any field from your test cases. For example: `{{item_to_return}}`, `{{customer_name}}`, etc.
+  </Accordion>
+
+  <Accordion title="How do I create test cases?">
+    Scorecard offers multiple ways to create test cases:
+
+    **UI Creation**:
+    - Manually create test cases one at a time in the Testset editor
+    - Define custom schemas with inputs, outputs, and metadata fields
+    - Use the visual editor for quick iteration
+
+    **Bulk Import**:
+    - Upload CSV, JSON, or JSONL files with test data
+    - Automatic schema detection from imported data
+    - Support for large datasets (thousands of test cases)
+
+    **Programmatic Creation**:
+    - Use Python or Node.js SDK to create test cases via API
+    - Generate synthetic test cases with LLMs
+    - Import from production logs or existing datasets
+
+    **From Production Data**:
+    - Convert traces from production into test cases
+    - Create regression tests from production failures
+    - Sample real user interactions for evaluation
+
+    See our [Testsets documentation](/features/testsets) for detailed guides.
+  </Accordion>
+
+  <Accordion title="Can I use custom AI models for evaluation?">
+    Yes! Scorecard supports using custom models for AI-based metric evaluation:
+
+    **Model Options**:
+    - **Scorecard-hosted models**: GPT-4o, Claude 3.5 Sonnet, and other leading models
+    - **Custom endpoints**: Point to your own model API for evaluation
+    - **Fine-tuned models**: Use domain-specific evaluator models
+    - **Multiple models**: Different metrics can use different evaluation models
+
+    **Configuration**:
+    - Set model parameters (temperature, max tokens) per metric
+    - Configure custom prompt templates in advanced mode
+    - Control evaluation costs by selecting appropriate models
+
+    For enterprise customers, we can integrate with your on-premise models or private deployments.
+  </Accordion>
+
+  <Accordion title="What's the difference between a Run and a Record?">
+    **Run**:
+    - A collection of test executions against a testset
+    - Contains multiple records (one per test case)
+    - Has aggregated metrics and statistics
+    - Represents a snapshot of your system's performance
+
+    **Record**:
+    - A single test case execution with its results
+    - Contains inputs, outputs, and scores from all metrics
+    - Can have multiple scores (one per metric applied)
+    - Represents one test case within a run
+
+    **Example**:
+    - Run #42: Testing customer support agent v3.1
+      - Record 1: Test case "refund request" → scored with 3 metrics = 3 scores
+      - Record 2: Test case "product inquiry" → scored with 3 metrics = 3 scores
+      - Record 3: Test case "complaint" → scored with 3 metrics = 3 scores
+    - Total: 1 run, 3 records, 9 scores
+
+    See [Runs & Results](/features/runs) and [Records](/features/records) for more details.
   </Accordion>
 </AccordionGroup>
 
@@ -128,9 +212,10 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
 
     **How It Works**:
     - Use **Systems** to version your complete agent configuration (prompts + tools + settings)
-    - Use **Multi-turn Simulation** to test conversational agents with automated user personas
+    - Use **Multi-turn Simulation** to test conversational agents with automated user personas (Sim Agents)
     - Use **Custom Endpoints** to evaluate agent APIs and HTTP endpoints
     - Apply metrics to agent outputs just like any other evaluation
+    - Use **Tracing** to observe and debug multi-step agent executions
 
     See our [Multi-turn Simulation](/features/multi-turn-simulation) and [Tracing](/features/tracing) documentation for agent-specific features.
   </Accordion>
