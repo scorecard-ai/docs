@@ -153,12 +153,10 @@
             "group": "Advanced features",
             "pages": [
               "features/mcp",
-              "features/trace-to-testcase",
               "features/synthetic-data-generation",
               "features/multi-turn-simulation",
               "features/a-b-comparison",
               "features/analysis",
-              "features/systems",
               "features/endpoints",
               "features/ai-sdk-wrapper",
               "features/github-actions",
