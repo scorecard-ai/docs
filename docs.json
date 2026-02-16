@@ -116,13 +116,31 @@
     }
   ],
   "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "About Us",
+          "icon": "building",
+          "href": "https://www.scorecard.io/about-us"
+        },
+        {
+          "anchor": "Blog",
+          "icon": "newspaper",
+          "href": "https://www.scorecard.io/blog"
+        }
+      ]
+    },
     "tabs": [
       {
         "tab": "Guides",
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["intro/overview", "intro/what-is-scorecard", "intro/faq"]
+            "pages": [
+              "intro/overview",
+              "intro/what-is-scorecard",
+              "intro/faq"
+            ]
           },
           {
             "group": "Quickstarts",
@@ -169,7 +187,7 @@
             "group": "Governance, Risk, and Compliance",
             "pages": [
               "features/enterprise-authentication",
-              "features/privacy-by-design"
+              "features/security-and-privacy"
             ]
           }
         ]
@@ -179,7 +197,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["api-reference/overview"]
+            "pages": [
+              "api-reference/overview"
+            ]
           },
           {
             "group": "Projects",
@@ -236,7 +256,9 @@
           },
           {
             "group": "Scores",
-            "pages": ["api-reference/upsert-score"]
+            "pages": [
+              "api-reference/upsert-score"
+            ]
           },
           {
             "group": "Systems",
@@ -262,24 +284,12 @@
         "groups": [
           {
             "group": "Updates",
-            "pages": ["changelog"]
+            "pages": [
+              "changelog"
+            ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "About Us",
-          "href": "https://www.scorecard.io/about-us",
-          "icon": "building"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://www.scorecard.io/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   }
 }
