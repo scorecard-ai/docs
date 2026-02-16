@@ -70,9 +70,20 @@ This quickstart shows how to send traces from your Claude Agent SDK (Python v0.1
 
     <DarkLightImage lightSrc="/images/records-table-claude-sdk-light.png" darkSrc="/images/records-table-claude-sdk-dark.png" alt="Records table showing Claude Agent SDK traces" caption="Records page showing agent traces" />
 
-    Click on any record to view the full trace details, including the complete request/response data and model usage.
+    Click on any record to view the full trace. The **conversation view** shows a chat-like replay of user messages, assistant responses, and tool calls.
 
-    <DarkLightImage lightSrc="/images/records-details-claude-sdk-light.png" darkSrc="/images/records-details-claude-sdk-dark.png" alt="Trace details view" caption="Trace details with request/response data and model usage" />
+    {/* TODO: screenshot of conversation view showing user/assistant messages and tool calls */}
+    <DarkLightImage lightSrc="/images/claude-sdk-conversation-view-light.png" darkSrc="/images/claude-sdk-conversation-view-dark.png" alt="Conversation view showing user messages, assistant responses, and tool call results" caption="Conversation view of an agent trace" />
+
+    The **timeline view** shows a Gantt chart-style breakdown of every span in the trace, so you can see how LLM calls, tool executions, and other steps overlap and how long each takes.
+
+    {/* TODO: screenshot of trace timeline showing span hierarchy with duration bars */}
+    <DarkLightImage lightSrc="/images/claude-sdk-trace-timeline-light.png" darkSrc="/images/claude-sdk-trace-timeline-dark.png" alt="Trace timeline showing span hierarchy with duration bars for LLM calls and tool executions" caption="Timeline view of an agent trace" />
+
+    For more complex agents with multiple tool calls and nested spans, the trace gives you full visibility into every step of execution.
+
+    {/* TODO: screenshot of a multi-step trace with nested tool calls and LLM spans */}
+    <DarkLightImage lightSrc="/images/claude-sdk-complex-trace-light.png" darkSrc="/images/claude-sdk-complex-trace-dark.png" alt="Detailed trace of a multi-step agent with nested tool calls, LLM spans, and token usage" caption="A multi-step agent trace with nested tool calls" />
   </Step>
 </Steps>
 
