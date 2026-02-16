@@ -11,19 +11,42 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
 <AccordionGroup>
   <Accordion title="What is an eval/evaluation?">
     An **evaluation** (or "eval") is the process of systematically testing and measuring your AI system's performance against a set of test cases. In Scorecard, an evaluation involves:
-    
+
     - **Testset**: A collection of input/output pairs to test against
-    - **System**: The AI model, prompt, or API endpoint being evaluated  
+    - **System**: The AI model, prompt, or API endpoint being evaluated
     - **Metrics**: Criteria used to score performance (accuracy, tone, safety, etc.)
-    - **Run**: The execution of the evaluation across all test cases
-    
-    Think of it like unit testing for AI - you define what good looks like, run your system against test cases, and get quantitative scores to measure performance.
+    - **Record**: A single evaluation result capturing inputs, outputs, and scores
+
+    Think of it like unit testing for AI - you define what good looks like, evaluate your system against test cases, and get quantitative scores to measure performance.
   </Accordion>
 
   <Accordion title="How does Scorecard differ from other AI evaluation tools?">
-    Scorecard is designed to be **human-centric and cross-functional**, bringing together subject matter experts, product managers, and developers to collaboratively define and evaluate AI quality.
-    
-    Unlike developer-only tools, Scorecard enables non-technical stakeholders to contribute their domain expertise through intuitive interfaces for creating test cases and reviewing results. This collaborative approach ensures AI systems meet both technical requirements and real-world business needs, making it the evaluation platform for teams that want diverse perspectives in their AI quality process.
+    Scorecard is **the simulation platform for agent self-improvement**. While most eval tools focus on observing and testing after deployment, Scorecard helps you proactively simulate thousands of realistic scenarios and apply expert judgment at scale — so you can ship frontier agent capabilities in days, not weeks.
+
+    Scorecard also brings together AI researchers, engineers, and subject-matter experts into a single workflow. SMEs encode their knowledge into metrics and reward models instead of manually labeling production logs, while AI researchers build improvement flywheels instead of running QA cycles.
+  </Accordion>
+
+  <Accordion title="What is simulation and how is it different from traditional evals?">
+    **Simulation** is the process of running your AI agent through **thousands of realistic scenarios** to test and improve its capabilities — without relying on production traffic or manual review.
+
+    Traditional eval approaches treat quality as a **QA problem**: wait for production logs, manually review cases, and fix issues one at a time. This breaks down as agents get more complex because:
+
+    - **Coverage gaps**: You miss edge cases until real users hit them
+    - **Slow feedback**: Collecting enough production data takes **days or weeks**
+    - **Expert bottleneck**: SMEs spend time labeling individual cases instead of teaching the system what "good" looks like
+    - **Ceiling on improvement**: You're limited to scenarios that happen to occur in production
+
+    **Simulation flips this.** Instead of reacting to problems in production, you proactively generate the messy, realistic interactions your agent will encounter and get feedback in **minutes, not weeks**.
+  </Accordion>
+
+  <Accordion title="How does Scorecard help agents self-improve?">
+    Scorecard enables a **self-improvement loop** by combining realistic scenario simulation with **scalable expert judgment**:
+
+    - **Expert judgment at scale**: Instead of waiting for SMEs to manually label production cases, encode their knowledge into [Critic Agent Metrics](/features/metrics) that act as **reward models** — applying expert judgment consistently across every scenario automatically.
+    - **Fast feedback loops**: Evaluate your agent through **10,000+ scenarios in minutes**. Identify weaknesses, iterate, and validate improvements — all in the same day.
+    - **Broad scenario coverage**: Test against **tool-calling workflows**, **edge cases and adversarial inputs**, **multi-turn conversations** *(coming soon)*, and **enterprise environments** *(coming soon)*.
+
+    The result: your team's bottleneck moves from **feedback** (slow, getting slower) to **building** (fast, getting faster). Scorecard's evaluation data also serves as high-quality training data for **RLHF and reinforcement learning** pipelines.
   </Accordion>
 
   <Accordion title="What programming languages does Scorecard support?">
@@ -31,13 +54,7 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     - **Python**: Full-featured SDK with all capabilities
     - **JavaScript/TypeScript**: Complete Node.js and browser support
     - **REST API**: Universal HTTP access for any language
-    - **Framework integrations**: LangChain, LlamaIndex, OpenAI, and more
-  </Accordion>
-
-  <Accordion title="Can Scorecard be used for RLHF and agent training?">
-    Yes, Scorecard evaluation data serves as high-quality feedback for reinforcement learning and agent improvement. By systematically evaluating agent outputs and capturing human preferences through custom metrics, teams can generate training datasets for RLHF workflows.
-    
-    The platform's testsets and evaluation results provide structured feedback loops that help identify agent weaknesses, create preference pairs for fine-tuning, and validate improvements through regression testing. This makes Scorecard valuable not just for evaluation, but as part of the continuous improvement cycle for AI agents.
+    - **Framework integrations**: Claude Agent SDK, LangChain, LlamaIndex, OpenAI, and more
   </Accordion>
 </AccordionGroup>
 
@@ -132,7 +149,7 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     - Use **Custom Endpoints** to evaluate agent APIs and HTTP endpoints
     - Apply metrics to agent outputs just like any other evaluation
 
-    See our [Multi-turn Simulation](/features/multi-turn-simulation) and [Tracing](/features/tracing) documentation for agent-specific features.
+    See our Multi-turn Simulation and [Tracing](/features/tracing) documentation for agent-specific features.
   </Accordion>
 
   <Accordion title="What types of AI systems can Scorecard evaluate?">
