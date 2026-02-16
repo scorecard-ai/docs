@@ -183,9 +183,13 @@ Configure AI evaluation parameters:
 - **Temperature**: Control randomness (typically 0 for consistency)
 - **Additional Parameters**: Model-specific settings
 
-### Running Scoring
+### Automatic Scoring
 
-After running your testset, click "Run Scoring" when the UI shows "Awaiting Scoring".
+When you create a run via the Kickoff Run modal (from the testset page or the Kickoff Run page) or through GitHub Actions, AI and Heuristic metrics are automatically scored—no manual action needed. You can view scoring progress and results in the run details page.
+
+<Tip>
+  New to Scorecard? See the [UI Quickstart](/intro/ui-quickstart) to learn how to kick off your first run.
+</Tip>
 
 <DarkLightImage
   caption="Run Scoring in the Scorecard UI"
@@ -193,6 +197,8 @@ After running your testset, click "Run Scoring" when the UI shows "Awaiting Scor
   lightSrc="/images/metrics/metrics-run-light.png"
   darkSrc="/images/metrics/metrics-run-dark.png"
 />
+
+If needed, you can re-run scoring by selecting records and clicking "Re-run Scoring".
 
 #### Score Explanations
 
