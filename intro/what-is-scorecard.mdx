@@ -1,63 +1,81 @@
 ---
 title: "What Is Scorecard?"
-description: "Build trusted AI agents with systematic testing and evaluation"
+description: "The simulation platform for building frontier AI agents. Run thousands of realistic scenarios in minutes and ship new capabilities with confidence."
 ---
 
 <Frame>
 ![Scorecard Workflow](/images/what-is-scorecard/scorecard-workflow.gif)
 </Frame>
 
-Scorecard is an AI evaluation platform that helps teams build reliable AI products through systematic AI evals. Test your AI agents before they impact users, catch regressions early, and deploy with confidence.
+Scorecard is the simulation platform for AI agent self-improvement. Run your agents through thousands of realistic scenarios in minutes, encode expert judgment into scalable reward models, and ship frontier capabilities in days.
 
-## Why you need AI evals
+## The bottleneck is feedback, not building
 
-Building production AI agents without proper AI evals is risky. Teams often discover issues in production because they lack visibility into AI behavior across different scenarios. Manual evals don't scale, and without systematic evaluation, it's impossible to know if changes improve or degrade performance.
+Teams are building increasingly complex agents — multi-step workflows, consequential actions, real-world integrations. But the way most teams validate these agents hasn't kept up. The current approach is manual: review a handful of production cases, wait weeks for expert feedback, and hope nothing slips through.
 
-Scorecard provides the infrastructure to run AI evals systematically, validate improvements, and prevent regressions.
+This limits you to scenarios you've already seen. Edge cases stay hidden until they hit production. Expert time doesn't scale — every new capability means more review cycles, longer iteration loops, and slower releases.
 
-## Who uses Scorecard
+The bottleneck has shifted from building to feedback. Scorecard flips this by turning expert judgment into automated reward models and replacing manual review with large-scale simulation.
 
-**AI Engineers** run evals systematically instead of manually checking outputs.
+<Tip>
+**Traditional approach:** Review tens of production cases over weeks.
 
-**Agent Developers** test multi-turn conversations and complex workflows.
+**Scorecard approach:** Simulate tens of thousands of scenarios in 30 minutes.
+</Tip>
 
-**Product Teams** validate that AI behavior matches user expectations.
+## How Scorecard works
 
-**QA Teams** build comprehensive test suites for AI agents.
+<Steps>
+  <Step title="Encode expert judgment">
+    Define reward criteria in natural language. Scorecard turns them into automated judges that score every scenario consistently and at scale.
 
-**Leadership** gets visibility into AI reliability and performance.
+    [Learn about metrics →](/features/metrics)
+  </Step>
+  <Step title="Simulate at scale">
+    Run your agent through thousands of realistic scenarios using AI-powered personas. Generate diverse test scenarios automatically — no manual case writing required.
 
-## What Scorecard provides
+    [Multi-turn simulation →](/features/multi-turn-simulation) · [Synthetic data generation →](/features/synthetic-data-generation)
+  </Step>
+  <Step title="Compare and improve">
+    Quantitative A/B comparison across every metric. Iterate visually in the Playground with real-time feedback to find the best prompt, model, or architecture.
 
-**[Tracing](/features/tracing)** — Capture and inspect every step of your AI agent's execution. Understand how your agent processes requests, identify bottlenecks, and debug failures with full visibility into each trace.
+    [A/B comparison →](/features/a-b-comparison) · [Playground →](/features/playground)
+  </Step>
+  <Step title="Ship with confidence">
+    Integrate simulation into CI/CD so every pull request is validated automatically. Monitor production with tracing and feed real traffic back into your simulation suite.
 
-**[Domain-specific metrics](/features/metrics)** — Choose from pre-validated metrics for your industry or create custom evaluators, available for legal, financial services, healthcare, customer support, and general quality evaluation.
+    [GitHub Actions →](/features/github-actions) · [Tracing →](/features/tracing)
+  </Step>
+</Steps>
 
-**[Testset management](/features/testsets)** — Convert real production scenarios into reusable test cases. When your AI fails in production, capture that case and add it to your regression suite.
+## Works with your agent stack
 
-**[Playground evaluation](/features/playground)** — Test prompts and models side-by-side without writing code. Compare different approaches across providers (OpenAI, Anthropic, Google Gemini) to find what works best.
-
-**[Automated workflows](/features/github-actions)** — Integrate AI evals into your CI/CD pipeline. Get alerts when performance drops and prevent regressions before they reach users.
-
-## How it works
-
-1. **Instrument your agent** with Scorecard's tracing SDK to capture every step of execution.
-2. **Define metrics** that evaluate quality, accuracy, and safety of your agent's outputs.
-3. **Analyze traces** to identify failures, bottlenecks, and areas for improvement.
-4. **Deploy with confidence**, knowing your AI agent meets quality standards.
-
-
-<CardGroup cols={2}>
-  <Card title="5-minute quickstart" icon="play" href="/intro/quickstart">
-    Set up your first evaluation
+<CardGroup cols={3}>
+  <Card title="Claude Agent SDK" icon="bolt" href="/intro/claude-agent-sdk-tracing">
+    Zero-code tracing. Set three environment variables and get full visibility into agent decisions, tool use, and costs.
   </Card>
-  <Card title="Try the playground" icon="flask" href="/features/playground">
-    Start testing without code
+  <Card title="LangChain" icon="link" href="/intro/langchain-quickstart">
+    Trace LangChain agents and chains with OpenTelemetry.
+  </Card>
+  <Card title="Any LLM" icon="plug" href="/intro/tracing-quickstart">
+    Works with OpenAI, Anthropic, Google, and any OpenTelemetry-compatible provider.
   </Card>
 </CardGroup>
 
-## Next steps
+## Get started
 
-Ready to integrate Scorecard into your workflow? We provide SDK support for Python and TypeScript, full REST API access, and GitHub Actions integration.
+Built by engineers from Waymo, Uber, and SpaceX who used large-scale simulation to ship autonomous vehicles, global logistics, and rockets — now applied to AI agents.
+
+<CardGroup cols={3}>
+  <Card title="Run your first evaluation" icon="play" href="/intro/sdk-quickstart">
+    Set up Scorecard and run a simulation in minutes.
+  </Card>
+  <Card title="Try the Playground" icon="beaker" href="/features/playground">
+    Start testing without writing code.
+  </Card>
+  <Card title="Talk to our team" icon="calendar" href="https://www.scorecard.io/book-a-demo">
+    Book a demo and see Scorecard in action.
+  </Card>
+</CardGroup>
 
 Email support@scorecard.io for help getting started.
