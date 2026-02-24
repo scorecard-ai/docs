@@ -61,9 +61,12 @@ Update a metric's guidelines and re-run to see how scoring changes — no need t
 
 **Iterate on a prompt:**
 Configure agent → RUN → review scores → adjust prompt → re-run
+Start here when your outputs are close but inconsistent. Use score reasoning to pinpoint which instruction or example to refine before your next run.
 
 **Tune metrics:**
 RUN → read score reasoning → update metric guidelines → re-run
+Use this workflow when agent behavior looks right but grading feels off. Tightening guidelines helps metrics align with your real quality bar.
 
 **Expand test coverage:**
 Review scores → add edge-case testcases → RUN → verify
+Use failures and near-misses to identify gaps in your dataset. Adding targeted edge cases improves confidence that your agent generalizes beyond happy paths.

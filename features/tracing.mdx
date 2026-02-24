@@ -34,7 +34,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
   <Tab title="Agent Frameworks">
     For frameworks with built-in OpenTelemetry support (Claude Agent SDK, OpenAI Agents SDK). No code changes—just set environment variables.
 
-    ```bash
+    ```bash highlight={1-4}
     export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your-scorecard-api-key>"
     export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
     export ENABLE_BETA_TRACING_DETAILED=1
@@ -52,14 +52,12 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
         query,
     )
 
-
     async def main():
         async for message in query(prompt="What is 2 + 2?"):
             if isinstance(message, AssistantMessage):
                 for block in message.content:
                     if isinstance(block, TextBlock):
                         print(f"Claude: {block.text}")
-
 
     anyio.run(main)
     ```
@@ -115,7 +113,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
     <CodeGroup>
 
-    ```python Python
+    ```python Python highlight={1,5,7}
     from scorecard_ai import wrap
     from openai import OpenAI
     import os
@@ -135,7 +133,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
     print(response.choices[0].message.content)
     ```
 
-    ```ts TypeScript
+    ```ts TypeScript highlight={1,4,8}
     import { wrap } from 'scorecard-ai';
     import OpenAI from 'openai';
 
@@ -162,7 +160,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
     <CodeGroup>
 
-    ```python Python
+    ```python Python highlight={1,5,7}
     from scorecard_ai import wrap
     from anthropic import Anthropic
     import os
@@ -183,7 +181,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
     print(text_content.text if text_content else "No response")
     ```
 
-    ```ts TypeScript
+    ```ts TypeScript highlight={1,4,8}
     import { wrap } from 'scorecard-ai';
     import Anthropic from '@anthropic-ai/sdk';
 
@@ -207,7 +205,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
     **Vercel AI SDK** (TypeScript only)
 
-    ```ts TypeScript
+    ```ts TypeScript highlight={3,5}
     import { openai } from '@ai-sdk/openai';
     import * as ai from 'ai';
     import { wrapAISDK } from 'scorecard-ai';
@@ -242,14 +240,14 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
     Set these environment variables:
 
-    ```bash
+    ```bash highlight={1-2}
     export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel"
     export TRACELOOP_HEADERS="Authorization=Bearer%20<your-scorecard-api-key>"
     ```
 
     <CodeGroup>
 
-    ```python Python
+    ```python Python highlight={1-3,6,10}
     from traceloop.sdk import Traceloop
     from traceloop.sdk.decorators import workflow
     from traceloop.sdk.instruments import Instruments
@@ -271,7 +269,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
     print(result)
     ```
 
-    ```ts TypeScript
+    ```ts TypeScript highlight={1,4-7,12,18}
     import * as traceloop from "@traceloop/node-server-sdk";
     import OpenAI from "openai";
 
@@ -300,7 +298,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
     **LangChain** — add `opentelemetry-instrumentation-langchain` and use `Instruments.LANGCHAIN`:
 
-    ```python Python
+    ```python Python highlight={1-8}
     from traceloop.sdk import Traceloop
     from traceloop.sdk.instruments import Instruments
 
@@ -327,7 +325,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
     **LlamaIndex** — use `Instruments.LLAMA_INDEX`:
 
-    ```python Python
+    ```python Python highlight={1-2,6-9}
     from traceloop.sdk import Traceloop
     from traceloop.sdk.instruments import Instruments
     from llama_index.llms.openai import OpenAI
@@ -346,7 +344,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
     **CrewAI** — use `Instruments.CREWAI`:
 
-    ```python Python
+    ```python Python highlight={1-2,5-8}
     from traceloop.sdk import Traceloop
     from traceloop.sdk.instruments import Instruments
     from crewai import Agent, Task, Crew
@@ -382,7 +380,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
     <CodeGroup>
 
-    ```python Python
+    ```python Python highlight={6-9}
     from openai import OpenAI
     import os
 
@@ -402,7 +400,7 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
     print(response.choices[0].message.content)
     ```
 
-    ```ts TypeScript
+    ```ts TypeScript highlight={5-8}
     import OpenAI from 'openai';
 
     const client = new OpenAI({
@@ -434,7 +432,19 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
     <CodeGroup>
 
-    ```python Python
+    ```bash Python wrap
+    pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp-proto-grpc
+    ```
+
+    ```bash TypeScript wrap
+    npm install @opentelemetry/api @opentelemetry/sdk-trace-node @opentelemetry/sdk-trace-base @opentelemetry/exporter-trace-otlp-http @opentelemetry/resources @opentelemetry/semantic-conventions
+    ```
+
+    </CodeGroup>
+
+    <CodeGroup>
+
+    ```python Python highlight={2-23,27,29-33,45}
     from anthropic import Anthropic
     from opentelemetry import trace
     from opentelemetry.sdk.trace import TracerProvider
@@ -460,7 +470,6 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
     tracer = trace.get_tracer(__name__)
     client = Anthropic()
 
-
     @tracer.start_as_current_span("chat")
     def chat(prompt: str) -> str:
         span = trace.get_current_span()
@@ -477,14 +486,13 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
 
         return message.content[0].text
 
-
     result = chat("What is the capital of France?")
     print(result)
 
     trace.get_tracer_provider().force_flush()
     ```
 
-    ```ts TypeScript
+    ```ts TypeScript highlight={1-6,9-25,29-31,38-39,47}
     import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
     import { Resource } from "@opentelemetry/resources";
     import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
@@ -535,14 +543,6 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
     ```
 
     </CodeGroup>
-
-    ```bash Install (Python)
-    pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp-proto-grpc
-    ```
-
-    ```bash Install (TypeScript)
-    npm install @opentelemetry/api @opentelemetry/sdk-trace-node @opentelemetry/sdk-trace-base @opentelemetry/exporter-trace-otlp-http @opentelemetry/resources @opentelemetry/semantic-conventions
-    ```
   </Tab>
 </Tabs>
 
@@ -582,7 +582,7 @@ Add the `scorecard.tracing_group_id` attribute to your spans with a shared ident
 
 <CodeGroup>
 
-```python Python
+```python Python highlight={1-6,8-9,12-13}
 from opentelemetry import trace
 
 tracer = trace.get_tracer(__name__)
@@ -593,14 +593,13 @@ group_id = "batch-job-123"
 with tracer.start_as_current_span("process_document") as span:
     span.set_attribute("scorecard.tracing_group_id", group_id)
     # Your LLM call here
-    
+
 with tracer.start_as_current_span("summarize_results") as span:
     span.set_attribute("scorecard.tracing_group_id", group_id)
     # Another LLM call in the same workflow
 ```
 
-
-```typescript TypeScript
+```typescript TypeScript highlight={1-10,12-14,16}
 import { trace } from '@opentelemetry/api';
 
 const tracer = trace.getTracer('my-service');
