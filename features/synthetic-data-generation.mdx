@@ -5,6 +5,7 @@ description: "Generate high-quality synthetic test data for comprehensive AI eva
 ---
 
 import { Note, Card } from "@mintlify/components";
+import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
 ## What is Synthetic Data Generation?
 
@@ -22,7 +23,21 @@ Scorecard uses advanced AI models to generate testcases that automatically match
 
 Navigate to your testset and select existing testcases to use as examples, then click **Generate** from the actions toolbar. Provide optional keywords or descriptions to guide generation, specify how many testcases to create, and review the generated results before adding them to your testset. The system automatically ensures all generated testcases match your testset's schema and field requirements.
 
+<DarkLightImage
+  caption="Generate Testcases"
+  alt="Generate Testcases"
+  lightSrc="/images/generate-testcases-light.png"
+  darkSrc="/images/generate-testcases-dark.png"
+/>
+
 For larger-scale synthetic data generation, you can create datasets using external tools and import them via CSV, JSON, or JSONL upload through Scorecard's bulk import feature.
+
+<DarkLightImage
+  caption="Upload Testcases"
+  alt="Upload Testcases"
+  lightSrc="/images/upload-testcases-light.png"
+  darkSrc="/images/upload-testcases-dark.png"
+/>
 
 ## External Generation Tools
 

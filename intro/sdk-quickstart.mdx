@@ -34,14 +34,9 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai/) (v3.2.1) and [Typ
   </Step>
 
   <Step title="Create simple LLM system to evaluate">
-    For the quickstart, the LLM system is `run_system()`, which rewrites the user's message into a different tone and optionally addresses the recipient.
-    
-    In Scorecard, system inputs and outputs are dictionaries, so:
+    For the quickstart, the LLM system is `run_system()`, a simple function that takes an input and returns an output.
 
-    - `system_input["original"]` is the user's message.
-    - `system_input["tone"]` is the tone to translate to.
-    - `system_input["recipient"]` (optional) is the recipient to address.
-    - The output contains the rewritten message, e.g. `{ "rewritten": "..." }`
+    In Scorecard, system inputs and outputs are dictionaries. The function receives `system_input` and returns a dictionary.
 
     <Tabs>
       <Tab title="Without OpenAI key">
@@ -89,7 +84,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai/) (v3.2.1) and [Typ
           ```
         </CodeGroup>
 
-        Then, create the tone translator system:.
+        Then, create the system:
 
         <CodeGroup>
           ```py Python wrap
@@ -175,7 +170,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai/) (v3.2.1) and [Typ
   </Step>
   
   <Step title="Create test cases">
-    Create some test cases to represent the inputs and the ideal (`expected`) outputs of your tone translator system.
+    Create some test cases to represent the inputs and the ideal (`expected`) outputs of your system.
 
     <CodeGroup>
       ```py Python
@@ -329,7 +324,7 @@ Scorecard has [Python](https://pypi.org/project/scorecard-ai/) (v3.2.1) and [Typ
   </Step>
 
   <Step title="Analyze results">
-    Finally, review the results in Scorecard to understand the performance of the tone translator system.
+    Finally, review the results in Scorecard to understand the performance of your system.
 
     <DarkLightImage
       lightSrc="/images/quickstart-run-light.png"
