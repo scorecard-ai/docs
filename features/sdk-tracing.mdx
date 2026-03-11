@@ -1,0 +1,232 @@
+---
+title: "SDK + Tracing"
+description: "Combine structured evaluation data with detailed trace observability in a single record."
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+The [Scorecard SDK](/intro/sdk-quickstart) lets you evaluate AI systems with structured inputs, outputs, and scores. [Tracing](/features/tracing) captures every LLM call, tool use, and retry with full observability. SDK + Tracing combines both into a single record.
+
+<DarkLightImage
+  lightSrc="/images/sdk-tracing-light.png"
+  darkSrc="/images/sdk-tracing-dark.png"
+  caption="A single record with SDK inputs, outputs, and expected values alongside trace spans."
+  alt="A record showing SDK inputs, outputs, and expected values alongside trace spans."
+/>
+
+## Why combine SDK + Tracing?
+
+Oftentimes, traces become cluttered with data, and SDK records don't contain enough information to understand **why** something went wrong. To supplement the shortcomings of one or the other, we allow you to link the traces created by runs to the SDK, showing all of your data in one place:
+
+- **Full observability** into every LLM call, tool use, and retry
+- **Cost and latency breakdown** per span
+- **Conversation view** for chat-based traces
+- **Debugging context** when a test case fails — see exactly which step went wrong
+
+---
+
+## Setup
+
+You need two things: the **Scorecard SDK** to create records, and **tracing instrumentation** so your system emits OpenTelemetry traces.
+
+### 1. Install the SDK
+
+<CodeGroup>
+
+```bash Python
+pip install scorecard-ai
+```
+
+```bash JavaScript
+npm install scorecard-ai
+```
+
+</CodeGroup>
+
+### 2. Enable tracing in your system
+
+Choose any [instrumentation method](/features/tracing#instrumentation-methods). The simplest approach depends on your stack:
+
+**Agent frameworks** (Claude Agent SDK, OpenAI Agents SDK) — set environment variables:
+
+```bash
+export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
+export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your-scorecard-api-key>"
+export ENABLE_BETA_TRACING_DETAILED=1
+export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=<your-project-id>"
+```
+
+**SDK wrappers** (OpenAI, Anthropic) — wrap your client:
+
+```python Python
+from scorecard_ai import wrap
+from openai import OpenAI
+
+openai = wrap(OpenAI(), {"project_id": "YOUR_PROJECT_ID"})
+```
+
+### 3. Use `runAndEvaluate()` with your traced system
+
+<Tabs>
+  <Tab title="Claude Agent SDK">
+    For agent frameworks, pass `otelLinkId` from the `options` argument into your agent's `OTEL_RESOURCE_ATTRIBUTES` so traces link to records.
+
+    <CodeGroup>
+
+    ```typescript TypeScript highlight={17}
+    import { query } from '@anthropic-ai/claude-agent-sdk';
+    import Scorecard, { runAndEvaluate, type SystemOptions } from 'scorecard-ai';
+
+    const scorecard = new Scorecard();
+    const PROJECT_ID = 'YOUR_PROJECT_ID';
+
+    async function system(input: { question: string }, options?: SystemOptions) {
+      let resultText = '';
+      for await (const message of query({
+        prompt: input.question,
+        options: {
+          env: {
+            ...process.env,
+            ENABLE_BETA_TRACING_DETAILED: '1',
+            BETA_TRACING_ENDPOINT: 'https://tracing.scorecard.io/otel',
+            OTEL_EXPORTER_OTLP_HEADERS: `Authorization=Bearer ${process.env.SCORECARD_API_KEY}`,
+            OTEL_RESOURCE_ATTRIBUTES: `scorecard.otel_link_id=${options!.otelLinkId},scorecard.project_id=${PROJECT_ID}`,
+          },
+        },
+      })) {
+        if (message.type === 'result' && message.subtype === 'success') resultText = message.result;
+      }
+      return { answer: resultText };
+    }
+
+    const run = await runAndEvaluate(scorecard, {
+      projectId: PROJECT_ID,
+      metricIds: ['YOUR_METRIC_ID'],
+      system,
+      testcases: [
+        { inputs: { question: 'What is the capital of France?' }, expected: { answer: 'Paris' } },
+      ],
+    });
+    ```
+
+    ```python Python highlight={21}
+    import os, asyncio
+    from claude_agent_sdk import query, ClaudeAgentOptions
+    from scorecard_ai import Scorecard
+    from scorecard_ai.lib import run_and_evaluate
+
+    scorecard = Scorecard()
+    PROJECT_ID = "YOUR_PROJECT_ID"
+
+    def system(inputs, _system_version, options):
+        otel_link_id = options["otel_link_id"]
+
+        async def run_agent():
+            result_text = ""
+            async for message in query(
+                prompt=inputs["question"],
+                options=ClaudeAgentOptions(env={
+                    **os.environ,
+                    "ENABLE_BETA_TRACING_DETAILED": "1",
+                    "BETA_TRACING_ENDPOINT": "https://tracing.scorecard.io/otel",
+                    "OTEL_EXPORTER_OTLP_HEADERS": f"Authorization=Bearer {os.environ['SCORECARD_API_KEY']}",
+                    "OTEL_RESOURCE_ATTRIBUTES": f"scorecard.otel_link_id={otel_link_id},scorecard.project_id={PROJECT_ID}",
+                }),
+            ):
+                if hasattr(message, "result") and getattr(message, "subtype", None) == "success":
+                    result_text = message.result
+            return result_text
+
+        return {"answer": asyncio.run(run_agent())}
+
+    run = run_and_evaluate(
+        client=scorecard,
+        project_id=PROJECT_ID,
+        metric_ids=["YOUR_METRIC_ID"],
+        system=system,
+        testcases=[
+            {"inputs": {"question": "What is the capital of France?"}, "expected": {"answer": "Paris"}},
+        ],
+    )
+    ```
+
+    </CodeGroup>
+
+    The key is setting `scorecard.otel_link_id` in `OTEL_RESOURCE_ATTRIBUTES` — this tells the trace pipeline which record to merge into.
+  </Tab>
+  <Tab title="SDK Wrappers (OpenAI, Anthropic)">
+    With SDK wrappers, use `wrap()` to instrument your client and manually set `scorecard.otel_link_id` on a span so traces link to records.
+
+    <CodeGroup>
+
+    ```python Python highlight={14}
+    from scorecard_ai import Scorecard, wrap
+    from scorecard_ai.lib import run_and_evaluate, SystemOptions
+    from openai import OpenAI
+    from opentelemetry import trace
+
+    scorecard = Scorecard()
+    PROJECT_ID = "YOUR_PROJECT_ID"
+
+    openai = wrap(OpenAI(), {"project_id": PROJECT_ID})
+
+    def system(inputs, _system_version, options: SystemOptions):
+        tracer = trace.get_tracer("scorecard-llm")
+        with tracer.start_as_current_span("my_system") as span:
+            span.set_attributes({"scorecard.otel_link_id": options["otel_link_id"]})
+
+            response = openai.chat.completions.create(
+                model="gpt-4o",
+                messages=[{"role": "user", "content": inputs["question"]}],
+            )
+            return {"answer": response.choices[0].message.content}
+
+    run = run_and_evaluate(
+        client=scorecard,
+        project_id=PROJECT_ID,
+        metric_ids=["YOUR_METRIC_ID"],
+        system=system,
+        testcases=[
+            {"inputs": {"question": "What is the capital of France?"}, "expected": {"answer": "Paris"}},
+        ],
+    )
+    ```
+
+    </CodeGroup>
+
+    The `wrap()` call sets up the OTel tracer and exporter. Setting `scorecard.otel_link_id` on a parent span ensures all child LLM calls are linked to the correct record. Call `trace.get_tracer_provider().force_flush()` before your process exits to ensure traces are sent.
+  </Tab>
+</Tabs>
+
+---
+
+## How it works
+
+`runAndEvaluate()` generates a unique `otelLinkId` for each testcase and passes it to your system function via the `options` argument. Your system can then insert this ID into the trace's resource attributes (`scorecard.otel_link_id`), which tells the tracing pipeline to merge the trace into the corresponding record.
+
+---
+
+## Multi-trace sessions
+
+Some systems emit multiple traces per invocation — for example, the Claude Agent SDK generates a separate trace for each turn in a multi-turn conversation. Scorecard groups these into a single record using the **session ID**. When multiple traces share the same `session.id`, they are combined into a unified span tree under a session root, with trace IDs accumulated rather than overwritten.
+
+Your SDK inputs and outputs are preserved across all session merges.
+
+---
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| **Inputs/outputs not showing in Trace Overview** | Verify your system function returns a value. Check that `scorecard.project_id` in the trace matches the project in `runAndEvaluate()`. |
+| **Trace not linking to the record** | Ensure traces are sent to `https://tracing.scorecard.io/otel`. Confirm the API key belongs to the same org. Call `force_flush()` before the process exits. |
+| **Scores reference trace data instead of SDK data** | `{{inputs.*}}` and `{{outputs.*}}` resolve to SDK data automatically. If you see raw trace JSON, the record wasn't created via `runAndEvaluate()`. |
+
+---
+
+## Next steps
+
+- [SDK Quickstart](/intro/sdk-quickstart) — Set up `runAndEvaluate()` from scratch
+- [Tracing](/features/tracing) — All instrumentation methods
+- [Metrics](/features/metrics) — Define evaluation criteria
+- [Records](/features/records) — Search and filter records

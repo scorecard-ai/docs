@@ -166,6 +166,7 @@
           {
             "group": "Advanced features",
             "pages": [
+              "features/sdk-tracing",
               "features/mcp",
               "features/synthetic-data-generation",
               "features/multi-turn-simulation",
