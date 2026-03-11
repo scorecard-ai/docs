@@ -7,6 +7,33 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="February 27, 2026">
+  ### 📊 Run Details Page
+
+  We've made several improvements to the Run Details page for a better evaluation review experience:
+
+  - **Resizable popovers**: The scoring popover and column cells can now be resized, giving you more room to inspect detailed outputs
+  - **Markdown rendering in cells**: Text outputs inside column cells now render markdown for improved readability
+  - **Markdown in scoring reasoning**: The reasoning section on the score popover now renders markdown, making structured explanations easier to follow
+
+  ### 🔍 Traces
+
+  - **Export annotations as CSV**: You can now export your trace annotations directly as a CSV file for offline analysis and reporting
+  - **New Chat tab**: Traces now include a dedicated **Chat tab** that provides an AI-powered summary of the trace. Ask questions about the trace to quickly understand what happened without manually inspecting every span.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-traces-chat-tab-light.png"
+    darkSrc="/images/changelog-traces-chat-tab-dark.png"
+    caption="Chat tab on the Trace details page"
+    alt="Screenshot of the Chat tab on a trace record, showing an AI-generated summary and a text input to ask questions about the trace"
+  />
+
+  ### 🚀 Records Page Performance
+
+  - **Faster page loading**: We significantly improved the performance of the Records page, so it loads quicker even with large datasets
+  - **Faster search**: Searching records on the page is now noticeably faster, helping you find what you need without delay
+</Update>
+
 <Update label="January 30, 2026">
   ### 💬 Conversation Tab
 
