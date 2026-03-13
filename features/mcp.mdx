@@ -8,40 +8,53 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
 ## Overview
 
-Scorecard's MCP (Model Context Protocol) server transforms AI assistants like Claude and Cursor into conversational AI evaluation companions. With natural language commands, you can manage projects, create testsets, configure metrics, run evaluations, and analyze results—all through your favorite AI assistant's interface.
+Scorecard's MCP (Model Context Protocol) server lets you manage projects, create testsets, configure metrics, run evaluations, and analyze results through natural language in any MCP-compatible client.
+
+## Available Tools
+
+The MCP server exposes ~45 tools covering metrics, scores, systems, annotations, and documentation search.
+
+<Frame caption="Scorecard MCP server tools listed in Claude Code.">
+  <img src="/images/mcp-tools-overview.png" alt="Scorecard MCP server tool listing showing ~45 available tools across Metrics, Scores, Systems, Annotations, and Docs." />
+</Frame>
 
 ## Setting Up the MCP Server
 
-### Prerequisites
+### Claude Code
 
-- An MCP-compatible client (Claude Desktop, Cursor, or other MCP clients)
-- A Scorecard account with API access
+Add the Scorecard remote MCP server with a single command:
 
-### Remote configuration (recommended)
+```bash
+claude mcp add --transport http scorecard https://mcp.scorecard.io/mcp
+```
 
-You can install the Scorecard remote MCP server without any dependencies.
+Complete the OAuth authentication flow in your browser when prompted. Verify the connection:
 
-#### Claude Desktop
+```bash
+claude mcp list
+```
 
-Go to Claude Desktop settings page and click on the "Connectors" tab. Click "Add custom connector" and paste the following URL: `https://mcp.scorecard.io/mcp`. Click "Add" on the modal, then click "Connect" on the modal to login to Scorecard.
+You should see `scorecard: https://mcp.scorecard.io/mcp (HTTP) - ✓ Connected`.
+
+### Claude Desktop
+
+Go to Claude Desktop settings and click the "Connectors" tab. Click "Add custom connector" and paste the URL: `https://mcp.scorecard.io/mcp`. Click "Add", then "Connect" to login to Scorecard.
 
 <DarkLightImage
   lightSrc="/images/claude-desktop-mcp-light.png"
-  caption="Screenshot of the Claude Desktop MCP connector"
+  caption="Adding the Scorecard MCP connector in Claude Desktop."
 />
 
 ### Local configuration
 
-You can directly run the MCP Server locally via npx:
+You can run the MCP server locally via npx:
 
 ```sh
-export SCORECARD_API_KEY="My API Key"
+export SCORECARD_API_KEY="your_api_key"
 npx -y scorecard-ai-mcp@latest
 ```
 
-If you already have a client, consult their documentation to install the MCP server.
-
-For clients with a configuration JSON, it might look something like this:
+For clients with a configuration JSON:
 
 ```json
 {
@@ -50,187 +63,59 @@ For clients with a configuration JSON, it might look something like this:
       "command": "npx",
       "args": ["-y", "scorecard-ai-mcp", "--client=claude", "--tools=dynamic"],
       "env": {
-        "SCORECARD_API_KEY": "ak_MyAPIKey",
+        "SCORECARD_API_KEY": "ak_MyAPIKey"
       }
     }
   }
 }
 ```
 
-<Note>
-The MCP server uses Clerk OAuth authentication and JWT tokens to securely connect to your Scorecard account. The configuration is identical across all MCP clients—simply add it to your client's MCP settings.
-</Note>
+## Examples
 
-## Core Capabilities
+### Create a project and testset
 
-The MCP server provides natural language access to Scorecard's core functionality:
+```
+Create a new Scorecard project called "Support Bot Eval". Then create a testset
+called "Support Scenarios" with 10 testcases. Each testcase should have:
+- inputs: "customerMessage" and "category" (billing, technical, or product)
+- expected: "idealResponse"
+```
 
-<Accordion title="Project Management">
-Create and manage evaluation projects for your AI systems.
+### Create metrics
 
-**Example Commands:**
-- "Create a new project for evaluating my customer service chatbot"
-- "Show me all my current projects"
-- "Set up a project for testing my RAG pipeline"
-</Accordion>
+```
+Create two metrics in the "Support Bot Eval" project:
+1. "Response Accuracy" (integer 1-5) - How well does the response answer the question?
+2. "Tone" (boolean) - Is the response professional and empathetic?
+```
 
-<Accordion title="Testset Creation">
-Build comprehensive testsets with various scenarios and edge cases.
+### Analyze results
 
-**Example Commands:**
-- "Create a testset for customer service scenarios"
-- "Add 20 testcases covering product returns and refunds"
-- "Import testcases from my CSV file"
-</Accordion>
+```
+Show me the latest run results for the "Support Bot Eval" project.
+Which testcases scored lowest on Response Accuracy?
+```
 
-<Accordion title="Testcase Organization">
-Organize and categorize your testcases for systematic evaluation.
+### Generate testcases from a codebase
 
-**Example Commands:**
-- "Group testcases by difficulty level"
-- "Add tags for 'edge cases' and 'common queries'"
-- "Show me all testcases related to billing issues"
-</Accordion>
+In Claude Code, you can combine file access with the MCP server:
 
-<Accordion title="Custom Metrics Configuration">
-Define metrics that matter for your specific use case.
+```
+Read the API routes in src/api/ and generate 20 testcases covering
+the edge cases for each endpoint. Add them to the "API Tests" testset
+in project 1234.
+```
 
-**Example Commands:**
-- "Configure accuracy and helpfulness metrics"
-- "Add a custom metric for response relevance"
-- "Set up hallucination detection scoring"
-</Accordion>
+### Iterate on metrics
 
-<Accordion title="AI System Version Management">
-Track different versions of your AI systems and models.
+```
+The "Response Accuracy" metric is too lenient — update the prompt template
+to penalize responses that miss key details from the ideal response.
+```
 
-**Example Commands:**
-- "Register my GPT-4 based assistant as version 1.0"
-- "Create a new version for my updated prompt template"
-- "Compare versions 1.0 and 2.0 of my chatbot"
-</Accordion>
+## Technical Details
 
-<Accordion title="Evaluation Runs & Analysis">
-Execute evaluations and analyze performance results.
-
-**Example Commands:**
-- "Run an evaluation against my latest model"
-- "Show me the performance results from yesterday's run"
-- "Compare accuracy across the last 5 evaluation runs"
-</Accordion>
-
-<Accordion title="Annotations & Feedback">
-Access human feedback annotations (ratings and comments) left on records.
-
-**Example Commands:**
-- "Show me all annotations for record 12345"
-- "What feedback did reviewers leave on the latest run's records?"
-- "Filter annotations to only show negative ratings"
-</Accordion>
-
-## Example Workflows
-
-### Complete Evaluation Setup
-
-Here's how you might set up a complete evaluation workflow using natural language in any MCP client:
-
-<Steps>
-<Step title="Create a Project">
-"Create a new project called 'Customer Support Bot v2' for evaluating my updated support assistant"
-</Step>
-
-<Step title="Define Testcases">
-"Create a testset with 50 diverse customer support scenarios including billing, technical issues, and product inquiries"
-</Step>
-
-<Step title="Configure Metrics">
-"Set up metrics for accuracy, response helpfulness, hallucination rate, and response time"
-</Step>
-
-<Step title="Register Your Model">
-"Register my current GPT-4 based assistant with custom prompts as version 2.0"
-</Step>
-
-<Step title="Run Evaluation">
-"Run a full evaluation of version 2.0 against all testcases"
-</Step>
-
-<Step title="Analyze Results">
-"Show me areas where the model is underperforming and suggest improvements"
-</Step>
-</Steps>
-
-### Continuous Testing Workflow
-
-<Tabs>
-<Tab title="Daily Testing">
-**Example Commands:**
-- "Run daily evaluation on production model"
-- "Alert me if accuracy drops below 85%"
-- "Generate weekly performance report"
-</Tab>
-
-<Tab title="A/B Testing">
-**Example Commands:**
-- "Compare performance between prompt A and prompt B"
-- "Run both versions on the same testset"
-- "Show statistical significance of differences"
-</Tab>
-
-<Tab title="Regression Testing">
-**Example Commands:**
-- "Test new model version against regression suite"
-- "Highlight any degradations from previous version"
-- "Generate detailed comparison report"
-</Tab>
-</Tabs>
-
-## Advanced Use Cases
-
-### Multi-Model Comparison
-
-Use your AI assistant to orchestrate complex multi-model evaluations:
-
-**Example Commands:**
-- "Compare GPT-4, Claude 3, and Llama 3 on my customer service testset"
-- "Evaluate cost-performance tradeoffs between models"
-- "Recommend the best model for my use case"
-
-### Automated Test Generation
-
-Leverage your AI assistant's understanding to create comprehensive test suites:
-
-**Example Commands:**
-- "Generate 100 edge cases for my medical diagnosis assistant"
-- "Create adversarial testcases to test robustness"
-- "Build a testset from real user conversations"
-
-### Performance Optimization
-
-Get insights and recommendations for improving your AI systems:
-
-**Example Commands:**
-- "Analyze failure patterns in my evaluation results"
-- "Suggest prompt improvements based on errors"
-- "Identify which types of queries need more training data"
-
-## Technical Architecture
-
-The MCP server is:
-- Built on the Model Context Protocol standard
-- Compatible with any MCP client (Claude Desktop, Cursor, and more)
-- Deployed on Vercel edge infrastructure for low latency
-- Secured with Clerk OAuth authentication
-- Open source and available on [GitHub](https://github.com/scorecard-ai/scorecard-mcp)
-
-<Tip>
-The MCP server is continuously updated with new capabilities. Check the [GitHub repository](https://github.com/scorecard-ai/scorecard-mcp) for the latest features and updates.
-</Tip>
-
-## Getting Help
-
-If you encounter issues or have questions about the MCP server:
-
-1. Check the [GitHub repository](https://github.com/scorecard-ai/scorecard-mcp) for documentation
-2. Open an issue for bugs or feature requests
-3. Contact Scorecard support (support@scorecard.io) for account-related questions
+- Built on the [Model Context Protocol](https://modelcontextprotocol.io/) standard
+- Compatible with any MCP client (Claude Code, Claude Desktop, Cursor, and more)
+- Secured with OAuth authentication
+- Open source: [github.com/scorecard-ai/scorecard-mcp](https://github.com/scorecard-ai/scorecard-mcp)
