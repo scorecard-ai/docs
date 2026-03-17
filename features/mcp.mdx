@@ -12,11 +12,118 @@ Scorecard's MCP (Model Context Protocol) server lets you manage projects, create
 
 ## Available Tools
 
-The MCP server exposes ~45 tools covering metrics, scores, systems, annotations, and documentation search.
+The MCP server exposes tools across 8 categories for full programmatic access to Scorecard.
 
 <Frame caption="Scorecard MCP server tools listed in Claude Code.">
   <img src="/images/mcp-tools-overview.png" alt="Scorecard MCP server tool listing showing ~45 available tools across Metrics, Scores, Systems, Annotations, and Docs." />
 </Frame>
+
+<AccordionGroup>
+
+<Accordion title="Projects">
+
+| Tool | Description |
+|------|-------------|
+| `list_projects` | List all Projects, ordered by creation date |
+| `create_projects` | Create a new Project |
+
+</Accordion>
+
+<Accordion title="Testsets">
+
+| Tool | Description |
+|------|-------------|
+| `list_testsets` | List Testsets in a Project |
+| `get_testsets` | Get a specific Testset by ID |
+| `create_testsets` | Create a new Testset with a JSON schema and field mappings |
+| `update_testsets` | Update a Testset's name, description, schema, or field mappings |
+| `delete_testsets` | Delete a Testset |
+
+</Accordion>
+
+<Accordion title="Testcases">
+
+| Tool | Description |
+|------|-------------|
+| `list_testcases` | List Testcases in a Testset |
+| `get_testcases` | Get a specific Testcase by ID |
+| `create_testcases` | Create up to 100 Testcases in a Testset |
+| `update_testcases` | Replace the data of an existing Testcase |
+| `delete_testcases` | Delete multiple Testcases by ID |
+
+</Accordion>
+
+<Accordion title="Metrics">
+
+| Tool | Description |
+|------|-------------|
+| `list_metrics` | List Metrics configured for a Project |
+| `get_metrics` | Get a specific Metric by ID |
+| `create_metrics` | Create a Metric — supports `ai`, `human`, and `heuristic` eval types with `int`, `float`, or `boolean` output |
+| `update_metrics` | Update an existing Metric |
+| `delete_metrics` | Delete a Metric by ID |
+
+</Accordion>
+
+<Accordion title="Runs">
+
+| Tool | Description |
+|------|-------------|
+| `list_runs` | List Runs for a Project, most recent first |
+| `get_runs` | Get a specific Run by ID |
+| `create_runs` | Create a new Run against a Testset and System Version |
+
+</Accordion>
+
+<Accordion title="Records">
+
+| Tool | Description |
+|------|-------------|
+| `list_records` | List Records for a Run, including all scores |
+| `create_records` | Create a new Record (system execution result) in a Run |
+| `delete_records` | Delete a specific Record by ID |
+
+</Accordion>
+
+<Accordion title="Scores">
+
+| Tool | Description |
+|------|-------------|
+| `upsert_scores` | Create or update a Score for a Record and Metric — updates if one already exists |
+
+</Accordion>
+
+<Accordion title="Systems">
+
+| Tool | Description |
+|------|-------------|
+| `list_systems` | List all Systems in a Project |
+| `get_systems` | Get a specific System by ID |
+| `upsert_systems` | Create a System, or update it if one with the same name exists |
+| `update_systems` | Update an existing System's name, description, or production version |
+| `delete_systems` | Delete a System by ID |
+| `get_systems_versions` | Get a specific System Version by ID |
+| `upsert_systems_versions` | Create a System Version, or update its name if the config already exists |
+
+</Accordion>
+
+<Accordion title="Annotations">
+
+| Tool | Description |
+|------|-------------|
+| `list_annotations` | List annotations (ratings and comments) for a specific Record |
+
+</Accordion>
+
+<Accordion title="Docs">
+
+| Tool | Description |
+|------|-------------|
+| `search_docs` | Search SDK/API documentation — supports Python, TypeScript, Go, and more |
+
+</Accordion>
+
+</AccordionGroup>
 
 ## Setting Up the MCP Server
 
