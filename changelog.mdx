@@ -7,6 +7,23 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="April 10, 2026">
+  ### 📊 Records Analysis
+
+  The Records page now features an AI-powered **Records Analysis** banner that automatically spots patterns across your latest records — like high failure rates, scoring anomalies, factual hallucinations, or stuck records.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-records-analysis-light.png"
+    darkSrc="/images/changelog-records-analysis-dark.png"
+    caption="Records Analysis banner on the Records page"
+    alt="Screenshot of the Records Analysis banner showing AI-generated insights with severity indicators and filter actions"
+  />
+
+  When you expand the banner, you'll see a list of insights ranked by severity (critical, warning, info), each with a description of the detected pattern. Click the **filter icon** next to any insight to instantly filter the records table to the relevant subset.
+
+  The analysis automatically refreshes as new records come in, and you can manually trigger a refresh at any time. The footer shows when the analysis was last generated, how many records were analyzed, and how many unique patterns were detected.
+</Update>
+
 <Update label="February 27, 2026">
   ### 📊 Run Details Page
 
