@@ -99,6 +99,116 @@ The Claude Agent SDK automatically captures:
 | **Model Info** | Model name, parameters, and configuration |
 | **Errors** | Any failures with full error context |
 
+## Span Reference
+
+The SDK emits four span types, stitched into one record by a shared `session.id`. Each section below lists every field carried on that span.
+
+### `claude_code.interaction`
+
+User turn boundary. Only emitted on tool-less turns — disappears as soon as the agent uses a tool.
+
+| Field | Description |
+| :--- | :--- |
+| `span.type` | `"interaction"`. |
+| `session.id` | Claude Code session UUID. Used by Scorecard to group spans into a single record. |
+| `terminal.type` | Terminal where Claude Code is running (`iTerm.app`, `vscode`, `intellij`, etc.). |
+| `duration_ms` | Wall-clock span duration in milliseconds. |
+| `user.id` | SHA-256 hash of the Anthropic account UUID. |
+| `scorecard.auth_id` | Scorecard organization ID (`org_…`). Injected from your Scorecard API key by the ingestion pipeline. |
+| `user_prompt` | Raw user prompt. May appear as `<REDACTED>` depending on account tier. |
+| `user_prompt_length` | Character count of the user prompt. |
+| `interaction.sequence` | Nth user turn in the session. |
+| `interaction.duration_ms` | Time from user Enter to assistant reply complete. |
+| `new_context` | Prompt block formatted as `[USER PROMPT]\n<prompt>`. |
+
+### `claude_code.llm_request`
+
+One per model call. The information-dense span — model, latency, tokens, and the delta added to the conversation for this call.
+
+| Field | Description |
+| :--- | :--- |
+| `span.type` | `"llm_request"`. |
+| `session.id` | Claude Code session UUID. |
+| `terminal.type` | Terminal where Claude Code is running. |
+| `duration_ms` | Total latency of the LLM call. |
+| `user.id` | SHA-256 hash of the Anthropic account UUID. |
+| `scorecard.auth_id` | Scorecard organization ID. |
+| `model` | Exact model string, e.g. `claude-sonnet-4-5-20250929`. |
+| `attempt` | Retry number. `1` = first attempt. |
+| `ttft_ms` | Time to first streamed token. |
+| `speed` | Output tokens per second. |
+| `success` | Whether the call returned without error. |
+| `input_tokens` | Input tokens billed (excluding cached). |
+| `output_tokens` | Output tokens generated. |
+| `cache_creation_tokens` | Tokens written to Anthropic's prompt cache. |
+| `cache_read_tokens` | Tokens served from the prompt cache. |
+| `new_context` | Delta added to the conversation for this call only. Blocks separated by `\n---\n`, each tagged `[USER]`, `[ASSISTANT]`, or `[TOOL RESULT: toolu_XXX]`. |
+| `new_context_message_count` | Block count in `new_context`. |
+| `llm_request.context` | Call categorization (e.g. `"standalone"`). |
+| `query_source` | Origin: `sdk`, `agent:builtin:Explore`, `agent:builtin:Bash`, `agent:builtin:Plan`, or internal utilities. |
+| `system_prompt_preview` | First ~500 characters of the system prompt. |
+| `system_prompt_length` | Character length of the full system prompt. |
+| `system_prompt_hash` | Short hash of the system prompt (e.g. `sp_742d12203d74`). |
+| `system_reminders` | Reminder strings injected into context. |
+| `system_reminders_count` | Count of injected reminders. |
+| `tools` | JSON array of `{name, hash}` for every exposed tool. |
+| `tools_count` | Length of `tools`. |
+| `response.has_tool_call` | `true` if the response included `tool_use` blocks. |
+| `response.model_output` | Assistant text, concatenated. Tool-use and thinking blocks stripped. |
+
+### `claude_code.tool`
+
+One per tool call.
+
+| Field | Description |
+| :--- | :--- |
+| `span.type` | `"tool"`. |
+| `session.id` | Claude Code session UUID. |
+| `terminal.type` | Terminal where Claude Code is running. |
+| `duration_ms` | Total tool-call duration. |
+| `user.id` | SHA-256 hash of the Anthropic account UUID. |
+| `scorecard.auth_id` | Scorecard organization ID. |
+| `tool_name` | Tool invoked, e.g. `Bash`, `Read`, `Write`, `Grep`, `Skill`, `mcp__planning__make_plan`. |
+| `tool_input` | Full structured tool input, formatted as `[TOOL INPUT: <tool_name>]\n<json>` — e.g. `{"command": "...", "timeout": 3600000}` for Bash. |
+| `full_command` | Bash only — the expanded shell command (duplicates `tool_input.command`). |
+| `file_path` | Read / Write only — the file path argument (duplicates `tool_input.file_path`). |
+| `new_context` | Tool result as fed back to the LLM, formatted as `[TOOL RESULT: <tool_name>]\n<json>`. |
+
+### `claude_code.hook`
+
+One per hook invocation (e.g. `UserPromptSubmit`, `PreToolUse`, `PostToolUse`). Covers both built-in and user-defined hooks.
+
+| Field | Description |
+| :--- | :--- |
+| `span.type` | `"hook"`. |
+| `session.id` | Claude Code session UUID. |
+| `terminal.type` | Terminal where Claude Code is running. |
+| `duration_ms` | Total time spent running all hooks for this event. |
+| `user.id` | SHA-256 hash of the Anthropic account UUID. |
+| `scorecard.auth_id` | Scorecard organization ID. |
+| `hook_event` | Event class — `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`, etc. |
+| `hook_name` | Specific hook invoked. For tool hooks, suffixed with the tool name (e.g. `PreToolUse:Read`, `PostToolUse:Skill`). |
+| `hook_definitions` | JSON array describing each registered hook (e.g. `[{"type":"callback","name":"callback"}]`). |
+| `num_hooks` | Total hooks that fired for this event. |
+| `num_success` | Hooks that completed successfully. |
+| `num_blocking` | Hooks whose decision blocked the action. |
+| `num_cancelled` | Hooks that were cancelled before completion. |
+| `num_non_blocking_error` | Hooks that errored but did not block. |
+
+### Resource attributes
+
+Set once per process, attached to every span.
+
+| Field | Description |
+| :--- | :--- |
+| `service.name` | Always `"claude-code"`. |
+| `service.version` | Claude Code CLI version (e.g. `2.1.87`). |
+| `host.arch` | CPU architecture (e.g. `arm64`). |
+| `os.type` | Operating system family. |
+| `os.version` | OS version. |
+| `scorecard.project_id` | Your Scorecard project ID. Set via `OTEL_RESOURCE_ATTRIBUTES` to route traces to a specific project. |
+| `scorecard.otel_link_id` | Per-testcase link ID from `runAndEvaluate()`. Set via `OTEL_RESOURCE_ATTRIBUTES` to merge traces into a specific record. See [SDK + Tracing](/features/sdk-tracing). |
+
 ## Environment Variables Reference
 
 | Variable | Required | Description |
