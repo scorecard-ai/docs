@@ -53,6 +53,9 @@ Choose any [instrumentation method](/features/tracing#instrumentation-methods). 
 export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
 export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your-scorecard-api-key>"
 export ENABLE_BETA_TRACING_DETAILED=1
+export OTEL_LOG_USER_PROMPTS=1
+export OTEL_LOG_TOOL_DETAILS=1
+export OTEL_LOG_TOOL_CONTENT=1
 export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=<your-project-id>"
 ```
 
@@ -90,6 +93,9 @@ openai = wrap(OpenAI(), {"project_id": "YOUR_PROJECT_ID"})
             ENABLE_BETA_TRACING_DETAILED: '1',
             BETA_TRACING_ENDPOINT: 'https://tracing.scorecard.io/otel',
             OTEL_EXPORTER_OTLP_HEADERS: `Authorization=Bearer ${process.env.SCORECARD_API_KEY}`,
+            OTEL_LOG_USER_PROMPTS: '1',
+            OTEL_LOG_TOOL_DETAILS: '1',
+            OTEL_LOG_TOOL_CONTENT: '1',
             OTEL_RESOURCE_ATTRIBUTES: `scorecard.otel_link_id=${options!.otelLinkId},scorecard.project_id=${PROJECT_ID}`,
           },
         },
@@ -130,6 +136,9 @@ openai = wrap(OpenAI(), {"project_id": "YOUR_PROJECT_ID"})
                     "ENABLE_BETA_TRACING_DETAILED": "1",
                     "BETA_TRACING_ENDPOINT": "https://tracing.scorecard.io/otel",
                     "OTEL_EXPORTER_OTLP_HEADERS": f"Authorization=Bearer {os.environ['SCORECARD_API_KEY']}",
+                    "OTEL_LOG_USER_PROMPTS": "1",
+                    "OTEL_LOG_TOOL_DETAILS": "1",
+                    "OTEL_LOG_TOOL_CONTENT": "1",
                     "OTEL_RESOURCE_ATTRIBUTES": f"scorecard.otel_link_id={otel_link_id},scorecard.project_id={PROJECT_ID}",
                 }),
             ):
