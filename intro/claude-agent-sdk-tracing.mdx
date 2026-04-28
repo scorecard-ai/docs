@@ -24,6 +24,9 @@ This quickstart shows how to send traces from your Claude Agent SDK (Python v0.1
     export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your_scorecard_api_key>"
     export ENABLE_BETA_TRACING_DETAILED=1
     export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
+    export OTEL_LOG_USER_PROMPTS=1
+    export OTEL_LOG_TOOL_DETAILS=1
+    export OTEL_LOG_TOOL_CONTENT=1
     ```
 
     <Note>
@@ -216,6 +219,9 @@ Set once per process, attached to every span.
 | `OTEL_EXPORTER_OTLP_HEADERS` | Yes | Authentication header: `Authorization=Bearer <scorecard_api_key>` |
 | `ENABLE_BETA_TRACING_DETAILED` | Yes | Set to `1` to enable detailed tracing |
 | `BETA_TRACING_ENDPOINT` | Yes | OTLP endpoint URL (use `https://tracing.scorecard.io/otel` for Scorecard) |
+| `OTEL_LOG_USER_PROMPTS` | Yes | Set to `1` to include user prompt content in spans |
+| `OTEL_LOG_TOOL_DETAILS` | Yes | Set to `1` to include tool names and input parameters in spans |
+| `OTEL_LOG_TOOL_CONTENT` | Yes | Set to `1` to include tool result content in spans |
 | `OTEL_RESOURCE_ATTRIBUTES` | No | Set `scorecard.project_id=<id>` to target a specific project (defaults to oldest project) |
 
 ## Next Steps
