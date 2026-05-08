@@ -7,6 +7,30 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="May 8, 2026">
+  ### 💬 Conversation View Improvements
+
+  Several upgrades to the threaded **Conversation view** on the record details page (Claude Code traces) to make debugging agent runs faster.
+
+  - **Tool execution errors**: Failed tool calls now show a red **Error** pill on the row, a one-line truncated error preview when collapsed, and a full error block above the tool result when expanded. This catches a class of failures (like blocked `Agent` invocations) that previously rendered as normal successes because they signaled the failure via a `success: "false"` attribute instead of an OpenTelemetry error status.
+  - **Inline sub-agent steps**: Sub-agent runs spawned by Claude Code's `Agent` tool are now rendered inline under the expanded parent tool call. Each nested LLM turn shows its header, thinking, and tool steps just like a top-level turn, and sub-agents that themselves invoke `Agent` nest recursively — so you can follow a multi-level agent run without leaving the conversation view.
+
+  ### 🔗 Clickable Span Links in Trace Chat
+
+  Span references that the **Chat tab** (the AI-powered trace summary) emits in its responses are now clickable. Clicking one jumps to the **Spans** tab, selects the matching span, and auto-scrolls the span tree to bring it into view.
+
+  ### 📤 Export Annotations as JSON
+
+  We replaced the old CSV/XLSX annotation exports with a single, much more useful **Export as JSON** option. Annotations are now inlined into the regular trace JSON: each annotation hangs off the exact span it was made on (record-level and orphan annotations attach to the trace itself), and each one carries the annotator's name. You get the full trace context alongside your labels in one file — ready for downstream analysis, training data, or review workflows.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-export-annotations-light.png"
+    darkSrc="/images/changelog-export-annotations-dark.png"
+    caption="Reorganized Export menu with Records, Annotations, and Traces sections"
+    alt="Screenshot of the Export menu showing Export Records as CSV/Excel, Export Annotations as JSON, and Export Traces as JSON"
+  />
+</Update>
+
 <Update label="April 10, 2026">
   ### 📊 Records Analysis
 
