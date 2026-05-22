@@ -7,6 +7,39 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="May 22, 2026">
+  ### 📊 Annotations Column
+
+  The Records page now has an opt-in **Annotations** column that surfaces reviewer feedback directly in the table. Each cell shows a compact badge with the total count and per-rating breakdown (👍 / 👎 / 💬). Click the badge to open a popover listing each annotation's author, rating, and comment — no need to open the record details.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-annotations-column-light.png"
+    darkSrc="/images/changelog-annotations-column-dark.png"
+    caption="Annotations column on the Records page"
+    alt="Screenshot of the Records page showing the new Annotations column with badges indicating annotation counts on individual records"
+  />
+
+  Toggle it on via **Edit Table → Additional → Annotations**. Annotations are joined into the records query in a single round-trip, so adding the column doesn't slow down page loads.
+
+  ### 💬 Trace Comparison in Chat
+
+  The Trace **Chat tab** now lets you load additional records — from the current project or any other project you have access to — and ask the model to compare them side-by-side. Use the new **Comparing** picker next to the model selector, multi-select the records you want, and the chat will diff the primary trace (labeled **A**) against the comparisons (**B**, **C**, **D**, …).
+
+  <DarkLightImage
+    lightSrc="/images/changelog-trace-chat-compare-light.png"
+    darkSrc="/images/changelog-trace-chat-compare-dark.png"
+    caption="Comparing two traces side-by-side in the Chat tab"
+    alt="Screenshot of the Chat tab on a trace record, showing a side-by-side comparison table of two traces with differences in duration, model, strategy, and final outcome"
+  />
+
+  Useful for debugging regressions ("why did this run fail when the previous one passed?") or comparing approaches across projects.
+
+  ### 🛠️ Bug Fixes and Improvements
+
+  - **[Records]** Resizing the record details right panel no longer stutters — width now updates via the DOM directly during drag, with no re-renders on the records table or history chart.
+  - **[AI]** Refreshed the LiteLLM model catalog so `gemini/gemini-3.5-flash` (the current default model) resolves correctly and no longer falls through to an error path for orgs without a custom-model override.
+</Update>
+
 <Update label="May 8, 2026">
   ### 💬 Conversation View Improvements
 
