@@ -7,6 +7,19 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="May 29, 2026">
+  ### 💬 Conversation View Is Now the Default
+
+  The record details page now opens on the threaded **Conversation** view by default, so you land directly on the human-readable agent run instead of the raw span tree. The span tree + details view has been renamed to **Debug** and moved to the end of the tab order to signal it as a developer/inspection tool. Tabs now read **Conversation, Timeline, Chat, Scores, Debug**, and clicking a span from any tab still jumps into Debug with that span selected.
+
+  ### 🔽 Expand All / Collapse All in Conversation View
+
+  Two quality-of-life upgrades for the Conversation view:
+
+  - **Expand all / Collapse all**: A new inline toggle in the Conversation tab header expands or collapses every tool step, compact-turn preview, and long user-turn "Show more" at once. Subagent steps nested inside an `Agent` tool call respect it too, and per-step buttons keep working normally after a bulk action.
+  - **Persistent collapse state**: Expanding a step and then switching to Timeline, Chat, or Debug no longer resets everything — what you expanded stays expanded when you come back.
+</Update>
+
 <Update label="May 22, 2026">
   ### 📊 Annotations Column
 
