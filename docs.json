@@ -246,7 +246,16 @@
               "api-reference/create-record",
               "api-reference/list-records",
               "api-reference/delete-record",
-              "api-reference/list-annotations"
+              "api-reference/list-annotations",
+              {
+                "group": "Record Tags",
+                "expanded": true,
+                "pages": [
+                  "api-reference/create-record-tag",
+                  "api-reference/list-record-tags",
+                  "api-reference/delete-record-tag"
+                ]
+              }
             ]
           },
           {
