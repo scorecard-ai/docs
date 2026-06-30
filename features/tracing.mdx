@@ -9,7 +9,7 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   New to Scorecard? Head straight to the [Tracing Quickstart](/intro/tracing-quickstart) or jump into our ready-to-run [Google Colab notebook](https://colab.research.google.com/github/scorecard-ai/scorecard-examples/blob/main/python-jupyter-openllmetry-openai/openllmetry_openai_example.ipynb) to see traces in under 5 minutes.
 </Info>
 
-LLM observability means knowing exactly what happened in every generation—latency, token usage, prompts, completions, cost, errors and more. Scorecard's **Tracing** collects this data automatically—via SDK wrappers, environment variables, [OpenLLMetry](https://github.com/traceloop/openllmetry), an LLM proxy, or direct OpenTelemetry—and displays rich visualisations in the Scorecard UI.
+LLM observability means knowing exactly what happened in every generation: latency, token usage, prompts, completions, cost, and errors. Scorecard's **Tracing** captures all of this automatically and visualises it in the Scorecard UI. Send traces through SDK wrappers, environment variables, [OpenLLMetry](https://github.com/traceloop/openllmetry), an LLM proxy, or direct OpenTelemetry.
 
 ## Why Tracing matters
 
@@ -34,10 +34,13 @@ Choose the method that fits your stack. All methods send traces to Scorecard's O
   <Tab title="Agent Frameworks">
     For frameworks with built-in OpenTelemetry support (Claude Agent SDK, OpenAI Agents SDK). No code changes—just set environment variables.
 
-    ```bash highlight={1-4}
+    ```bash highlight={1-7}
     export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your-scorecard-api-key>"
-    export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
     export ENABLE_BETA_TRACING_DETAILED=1
+    export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
+    export OTEL_LOG_USER_PROMPTS=1
+    export OTEL_LOG_TOOL_DETAILS=1
+    export OTEL_LOG_TOOL_CONTENT=1
     export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=<your-project-id>"
     ```
 
@@ -561,12 +564,21 @@ Ingested traces appear on the **Records** page alongside records from other sour
 
 Each row shows the record's inputs, outputs, status, source, trace ID, and metric scores. You can search by inputs, outputs, and expected values, or filter by `status`, `source`, `trace.id`, `run.id`, `testcase.id`, `metric`, `metadata`, time range, and more. Use **Quick Filters** for presets like "My Recent Records". Customise visible columns via the **Edit Table** modal.
 
-Open a record to see more details including the **span tree**, **conversation** (for chat-based traces), **timeline**, and **scores**:
+Open a record to see its trace detail panel, which breaks the trace into four tabs: **Conversation**, **Timeline**, **Chat**, and **Debug**. For chat-based traces, the **Conversation** tab replays the trace as user messages, assistant responses, and tool calls:
+
+<DarkLightImage
+  lightSrc="/images/claude-sdk-conversation-view-light.png"
+  darkSrc="/images/claude-sdk-conversation-view-dark.png"
+  caption="Conversation tab of a trace-based record."
+  alt="Conversation tab showing user messages, assistant responses, and tool call results."
+/>
+
+The **Debug** tab pairs the full span tree with a trace overview (duration, cost, tokens, and model):
 
 <DarkLightImage
   lightSrc="/images/tracing-record-spans-light.png"
   darkSrc="/images/tracing-record-spans-dark.png"
-  caption="Record detail view showing the span tree"
+  caption="Debug tab showing the span tree."
   alt="Record detail view showing spans with inputs, outputs, and timing"
 />
 
@@ -635,17 +647,17 @@ span2.end();
 
 ## AI-Specific Error Detection
 
-Scorecard's tracing goes beyond technical failures to detect AI-specific behavioral issues that traditional observability misses. The system acts as an always-on watchdog, analyzing every AI interaction to catch both obvious technical errors and subtle behavioral problems that could impact user experience.
+Scorecard's tracing detects AI-specific behavioral issues that standard observability misses, not just technical failures. It analyzes every interaction for both technical errors and behavioral problems.
 
 ### Silent Failure Detection
 
-The most dangerous errors in AI systems are "silent failures" where your AI responds but incorrectly. Scorecard automatically detects behavioral errors including off-topic responses, workflow interruptions, safety violations, hallucinations, and context loss. These silent failures often go unnoticed without specialized AI observability but can severely impact user trust and application effectiveness.
+A "silent failure" is when your AI responds, but incorrectly. These often go unnoticed without AI-specific observability. Scorecard automatically detects behavioral errors including off-topic responses, workflow interruptions, safety violations, hallucinations, and context loss.
 
-Technical errors like rate limits, timeouts, and API failures are captured automatically through standard trace error recording. However, AI applications also face unique challenges like semantic drift, safety policy violations, factual accuracy issues, and task completion failures that require intelligent analysis beyond traditional error logging.
+Technical errors like rate limits, timeouts, and API failures are captured automatically through standard trace error recording. AI applications also face issues that error logs don't capture: semantic drift, safety policy violations, factual accuracy problems, and task completion failures.
 
 ### Custom Error Detection
 
-Create custom metrics through Scorecard's UI to detect application-specific behavioral issues. Design AI-powered metrics that analyze trace data for off-topic responses, safety violations, or task completion failures. These custom metrics automatically evaluate your traces and surface problematic interactions that would otherwise go unnoticed in production.
+Create custom metrics in Scorecard's UI to catch application-specific issues. An AI-powered metric can analyze trace data for things like off-topic responses, safety violations, or task completion failures, then automatically flag the traces that match.
 
 ---
 
