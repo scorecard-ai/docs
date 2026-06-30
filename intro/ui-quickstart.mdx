@@ -1,117 +1,133 @@
 ---
 title: 'UI Quickstart'
-description: 'Evaluate a simple LLM agent with Scorecard in minutes.'
+description: 'Send your first trace to Scorecard and explore it in the UI.'
 ---
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
-import { Note } from '@mintlify/components';
 
-Kick off your first run in minutes using the Example Project that’s created automatically when you sign up. You can also browse the run that was kicked off for you and explore how testsets, prompts, and metrics fit together.
+See what your LLM app is doing inside Scorecard in minutes. Point your client at Scorecard's proxy to ingest a trace, then explore it on the Records page.
 
 <Steps>
-  <Step title="Open the Example Project and click Kickoff Run">
-    After org creation, navigate to the Example Project's [Records page](/features/records). Click the **Kickoff Run** button in the top right to open the Kickoff Run modal.
+  <Step title="Get your API key">
+    Create a [Scorecard account](https://app.scorecard.io) and copy your API key from [Settings](https://app.scorecard.io/settings).
+
+    ```bash
+    export SCORECARD_API_KEY="ak_..."
+    export OPENAI_API_KEY="sk_..."  # or ANTHROPIC_API_KEY
+    ```
+  </Step>
+
+  <Step title="Send a trace">
+    The fastest way to ingest a trace is the LLM proxy: change your client's `baseURL` to `https://llm.scorecard.io` and pass your Scorecard API key as a header. No SDK or instrumentation needed.
+
+    <CodeGroup>
+    ```py Python highlight={6-10}
+    import os
+    from openai import OpenAI
+
+    client = OpenAI(
+        api_key=os.environ["OPENAI_API_KEY"],
+        base_url="https://llm.scorecard.io",
+        default_headers={
+            "x-scorecard-api-key": os.environ["SCORECARD_API_KEY"],
+            "x-scorecard-project-id": "my-chatbot",  # Optional: organize traces by project
+        },
+    )
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": "Hello!"}],
+    )
+    ```
+
+    ```js JavaScript highlight={5-9}
+    import OpenAI from 'openai';
+
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: 'https://llm.scorecard.io',
+      defaultHeaders: {
+        'x-scorecard-api-key': process.env.SCORECARD_API_KEY,
+        'x-scorecard-project-id': 'my-chatbot',  // Optional: organize traces by project
+      },
+    });
+
+    const response = await client.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [{ role: 'user', content: 'Hello!' }],
+    });
+    ```
+    </CodeGroup>
+
+    Run your app once to send a trace. For SDK wrappers, OpenTelemetry, and framework integrations, see the [Tracing Quickstart](/intro/tracing-quickstart).
+  </Step>
+
+  <Step title="Find your trace on the Records page">
+    Go to [app.scorecard.io](https://app.scorecard.io) and open the [Records](/features/records) page. Your trace appears as a record with its inputs, outputs, cost, latency, and any scores.
 
     <DarkLightImage
-      lightSrc="/images/records-kickoff-run-button-light.png"
-      darkSrc="/images/records-kickoff-run-button-dark.png"
-      caption="Kickoff Run button on the Records page."
-      alt="Screenshot showing the Kickoff Run button in the top right of the Records page."
+      lightSrc="/images/tracing-records-list-light.png"
+      darkSrc="/images/tracing-records-list-dark.png"
+      caption="Ingested traces on the Records page."
+      alt="Records page showing a list of traced records."
+    />
+
+    Search and filter by status, source, trace ID, time range, and more. Use **Quick Filters** for presets and **Edit Table** to pick columns.
+  </Step>
+
+  <Step title="Explore the trace">
+    Click a record to open its trace detail panel, which breaks the trace into four tabs:
+
+    - **Conversation**: a chat-style replay of messages and tool calls
+    - **Timeline**: a Gantt-style view of every span and how long each takes
+    - **Chat**: ask questions about the trace in natural language
+    - **Debug**: the full span tree, trace overview, and raw span data
+
+    <DarkLightImage
+      lightSrc="/images/claude-sdk-conversation-view-light.png"
+      darkSrc="/images/claude-sdk-conversation-view-dark.png"
+      caption="The Conversation tab of a trace."
+      alt="Conversation tab showing user messages, assistant responses, and tool call results."
     />
   </Step>
 
-  <Step title="Kick off your first run">
-    In the modal, you can use the default selected [Testset](/features/testsets), Agent Integration ([Prompt](/features/prompts), [GitHub Action](/features/github-actions), or [Endpoint](/features/endpoints)), and [Metrics](/features/metrics).
-
-    Click "Kickoff run" to create the run and automatically evaluate the system.
+  <Step title="Score the records">
+    Score traces right from the Records page. Select the records to evaluate, then click **Score Records**.
 
     <DarkLightImage
-      lightSrc="/images/example-project/kickoff-modal-pre-filled-light.png"
-      darkSrc="/images/example-project/kickoff-modal-pre-filled-dark.png"
-      caption="Kickoff Run modal."
-      alt="Kickoff modal with prefilled Testset, Prompt, and Metrics selections."
+      lightSrc="/images/metrics/metrics-records-page-light.png"
+      darkSrc="/images/metrics/metrics-records-page-dark.png"
+      caption="Select records, then click Score Records."
+      alt="Records page with records selected and the Score Records button."
     />
-  </Step>
 
-  <Step title="View results">
-    After your run starts and scoring completes, open the results to see per-record scores, distributions, and explanations.
+    Pick one or more metrics in the modal and click **Score**. Scores appear on each record when evaluation finishes.
 
     <DarkLightImage
-      lightSrc="/images/example-project/run-detail-with-example-run-scores-light.png"
-      darkSrc="/images/example-project/run-detail-with-example-run-scores-dark.png"
-      caption="Run details with scores and aggregates."
-      alt="Run details page with scores and aggregates."
+      lightSrc="/images/metrics/metrics-score-records-modal-light.png"
+      darkSrc="/images/metrics/metrics-score-records-modal-dark.png"
+      caption="Choose the metrics to evaluate against."
+      alt="Score Records modal with metrics selected."
     />
 
-    <Tip>
-      Click the <strong>Run Again</strong> button in the top right corner to iterate with a different prompt version, model, or metric set.
-    </Tip>
-
-    Click any record in the [Records page](/features/records) to view individual testcase inputs, outputs, and score explanations.
-  </Step>
-
-  <Step title="Browse the Example Project">
-    Learn how the sample data is organized:
-    
     <Note>
-      <strong>Quick tour of the data</strong>
-      <ul>
-        <li><strong>Tone Testset</strong>: inputs <code>original</code>, <code>tone</code> → expected <code>idealRewritten</code>.</li>
-        <li><strong>Prompt versions</strong> for Tone — already set to Scorecard Cloud with low temperature for consistency.</li>
-        <li><strong>Metrics</strong>: Correctness (AI, 1-5), Human Tone Check (Human, Boolean).</li>
-      </ul>
+      You need at least one metric in your project first. Create one in a minute with the [Metrics Quickstart](/intro/metrics-quickstart).
     </Note>
-    
-    <DarkLightImage
-      lightSrc="/images/example-project/example-project-testsets-overview-light.png"
-      darkSrc="/images/example-project/example-project-testsets-overview-dark.png"
-      caption="Testsets overview."
-      alt="Testsets overview"
-    />
-
-    Open a Testset to see its schema and Testcases. Click a testcase row to view its inputs and expected outputs.
-
-    <DarkLightImage
-      lightSrc="/images/example-project/example-project-testset-light.png"
-      darkSrc="/images/example-project/example-project-testset-dark.png"
-      caption="A sample Testset with Testcases."
-      alt="Testset details"
-    />
-
-    Next, browse Prompts. Use “View” to open a prompt, review messages, and model settings.
-
-    <DarkLightImage
-      lightSrc="/images/example-project/example-prompts-light.png"
-      darkSrc="/images/example-project/example-prompts-dark.png"
-      caption="Prompts list."
-      alt="Prompts list"
-    />
-
-    Inside a prompt version, see the template (Jinja-style variables) and evaluator model configuration.
-
-    <DarkLightImage
-      lightSrc="/images/example-project/example-project-prompt-light.png"
-      darkSrc="/images/example-project/example-project-prompt-dark.png"
-      caption="Prompt version with template and model settings."
-      alt="Prompt version editor"
-    />
-
-    Finally, explore Metrics to learn how scoring works. Each metric has guidelines, evaluation type, and output type.
-
-    <DarkLightImage
-      lightSrc="/images/example-project/example-project-metrics-light.png"
-      darkSrc="/images/example-project/example-project-metrics-dark.png"
-      caption="Metrics configured for the Example Project."
-      alt="Metrics list."
-    />
   </Step>
 </Steps>
 
+## Ask about your data with MCP
+
+Connect Scorecard's [MCP server](/features/mcp) to a client like Claude Code or Cursor and ask about your records, runs, and scores in natural language, without leaving your editor.
+
+```
+Show me the records from my latest run that scored lowest on Correctness,
+and summarize what they have in common.
+```
+
 ## Where to go next
 
-- Read about creating and managing Testsets in [Testsets](/features/testsets)
-- Dive deeper into running evaluations in [Runs & Results](/features/runs)
-- Explore interactive prompt iteration in the [Playground](/features/playground)
-- Define and reuse evaluation criteria with [Metrics](/intro/metrics-quickstart)
-
-That's it — you've seen Scorecard in action and how example data flows through prompts, runs, and metrics. Have fun iterating!
+- Turn real traces into test cases with [Testsets](/features/testsets)
+- Define reusable evaluation criteria with [Metrics](/intro/metrics-quickstart)
+- Learn advanced instrumentation in [Tracing](/features/tracing)
+- Combine evaluation data with trace observability in [SDK + Tracing](/features/sdk-tracing)
