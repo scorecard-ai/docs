@@ -103,6 +103,16 @@ The real power comes from custom spans and nested traces. You can create parent 
 
 ### Basic Usage
 
+<Note>
+  The Python SDK wrappers require the optional `otel` extra, which installs OpenTelemetry. Without it, `wrap()` raises an `ImportError`:
+
+  ```bash
+  pip install 'scorecard-ai[otel]'
+  ```
+
+  The TypeScript SDK bundles OpenTelemetry, so `npm install scorecard-ai` is all you need.
+</Note>
+
 <CodeGroup>
 ```py Python highlight={4,7,9-13}
 # Works with OpenAI and Anthropic - see examples below for more patterns
