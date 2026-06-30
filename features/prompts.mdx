@@ -5,7 +5,7 @@ description: "Create, version, test, and deploy prompts with integrated evaluati
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-Prompts in Scorecard are configurable templates that generate inputs for language models. They support dynamic variable substitution, multi-message conversations, and integrated testing workflows.
+Prompts in Scorecard are configurable templates that generate inputs for language models. They support dynamic variable substitution, multi-message conversations, and testing in the playground.
 
 <DarkLightImage
   lightSrc="/images/prompt-details-light.png"
@@ -17,7 +17,7 @@ Prompts in Scorecard are configurable templates that generate inputs for languag
 
 Go to the Prompts page in Scorecard and click the **"New Prompt +"** button. Provide a name and description for your prompt, then choose your AI model and configure parameters:
 
-- **Model**: Select from available models (e.g. `gpt-4.1-mini`, `opus-4`).
+- **Model**: Select from available models (e.g. `gpt-5-mini`, `opus-4.8`).
     - If you don't see the LLM provider you want, add the provider API key in [organization settings](https://app.scorecard.io/settings).
 - **Temperature**: Control randomness (0.0 = deterministic, 1.0 = creative).
 - **Max Tokens**: Set maximum response length.
@@ -72,7 +72,7 @@ Scorecard also has a special `{{allInputs}}` variable that contains all the test
 
 ## Version Management
 
-The prompt details page shows a version history of the prompt. You can create a new version of the prompt by modifying the existing prompt or parameters and clicking **"Save Changes"**. Selecting "Publish this version to production" will mark that version as the "production" version. Otherwise, it'll simply be an experimental version.
+The prompt details page shows a version history of the prompt. You can create a new version of the prompt by modifying the existing prompt or parameters and clicking **"Save Changes"**. Selecting "Publish this version to production" will mark that version as the "production" version. Otherwise, it'll be an experimental version.
 
 You can mark any version as production by clicking the **"Publish"** button, but exactly one version is marked as production at any time.
 
@@ -107,7 +107,7 @@ const prompt = await client.systems.upsert('your-project-id', {
   name: 'Customer Service Assistant',
   description: 'AI assistant for handling customer inquiries',
   config: {
-    modelName: 'gpt-4-turbo',
+    modelName: 'gpt-5',
     temperature: 0.7,
     maxTokens: 1024,
     topP: 0.9,
@@ -139,7 +139,7 @@ prompt = client.systems.upsert(
     name="Customer Service Assistant",
     description="AI assistant for handling customer inquiries",
     config={
-        "modelName": "gpt-4-turbo",
+        "modelName": "gpt-5",
         "temperature": 0.7,
         "maxTokens": 1024,
         "topP": 0.9,
@@ -160,7 +160,7 @@ print(f"Prompt created with ID: {prompt.id}")
 </CodeGroup>
 
 The `config` object contains your prompt's model parameters and template:
-- **modelName**: The LLM model to use (e.g., `gpt-4-turbo`, `claude-3-opus`)
+- **modelName**: The LLM model to use (e.g., `gpt-5`, `claude-opus-4-8`)
 - **temperature**: Controls randomness (0.0-1.0)
 - **maxTokens**: Maximum response length
 - **topP**: Token selection probability
@@ -181,7 +181,7 @@ Use the `systems.versions.upsert()` method to create new versions of your prompt
 const promptVersion = await client.systems.versions.upsert('your-system-id', {
   name: 'v2.0 - Improved tone',
   config: {
-    modelName: 'gpt-4-turbo',
+    modelName: 'gpt-5',
     temperature: 0.5,
     maxTokens: 1024,
     topP: 0.8,
@@ -206,7 +206,7 @@ prompt_version = client.systems.versions.upsert(
     system_id="your-system-id",
     name="v2.0 - Improved tone",
     config={
-        "modelName": "gpt-4-turbo",
+        "modelName": "gpt-5",
         "temperature": 0.5,
         "maxTokens": 1024,
         "topP": 0.8,
