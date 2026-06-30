@@ -86,11 +86,13 @@ Records created from production traces show:
 - **Spans**: Individual LLM calls with timing and cost breakdown
 - **Model Usage**: Which models were called and token counts
 
+For chat and agent traces, the **Conversation** view (one of the tabs at the top of the record, alongside **Timeline**, **Chat**, and **Debug**) renders the trace as a threaded conversation: each user turn, assistant response, and tool call appears as an expandable step, so you can follow what the agent did without reading the raw span tree.
+
 <DarkLightImage
-  lightSrc="/images/record-details-trace-light.png"
-  darkSrc="/images/record-details-trace-dark.png"
-  caption="Trace-based record showing spans and trace overview."
-  alt="Screenshot of a trace-based record with spans and trace overview."
+  lightSrc="/images/claude-sdk-conversation-view-light.png"
+  darkSrc="/images/claude-sdk-conversation-view-dark.png"
+  caption="Conversation view of a trace-based record, showing a user turn followed by tool-call steps."
+  alt="Screenshot of the Conversation tab on a trace-based record, showing a user turn and expandable tool-call steps."
 />
 
 ## Use Cases
