@@ -12,7 +12,7 @@ Scorecard's MCP (Model Context Protocol) server lets you manage projects, create
 
 ## Available Tools
 
-The MCP server exposes ~45 tools covering metrics, scores, systems, annotations, and documentation search.
+The MCP server has ~45 tools covering projects, testsets, testcases, systems, metrics, runs, records, scores, and annotations, plus documentation search. Each tool maps to a Scorecard API operation, so anything the SDK can do is available in natural language. The [full tool reference](#tool-reference) is at the bottom of this page.
 
 <Frame caption="Scorecard MCP server tools listed in Claude Code.">
   <img src="/images/mcp-tools-overview.png" alt="Scorecard MCP server tool listing showing ~45 available tools across Metrics, Scores, Systems, Annotations, and Docs." />
@@ -96,6 +96,14 @@ Show me the latest run results for the "Support Bot Eval" project.
 Which testcases scored lowest on Response Accuracy?
 ```
 
+### Review human feedback
+
+```
+For the latest run in the "Support Bot Eval" project, list the annotations on
+each record and summarize the thumbs-down ratings. What do reviewers complain
+about most?
+```
+
 ### Generate testcases from a codebase
 
 In Claude Code, you can combine file access with the MCP server:
@@ -119,3 +127,89 @@ to penalize responses that miss key details from the ideal response.
 - Compatible with any MCP client (Claude Code, Claude Desktop, Cursor, and more)
 - Secured with OAuth authentication
 - Open source: [github.com/scorecard-ai/scorecard-mcp](https://github.com/scorecard-ai/scorecard-mcp)
+
+## Tool reference
+
+<AccordionGroup>
+  <Accordion title="Projects">
+    | Tool | Description |
+    | ---- | ----------- |
+    | `list_projects` | List all projects, paginated and ordered oldest first. |
+    | `create_projects` | Create a new project with a name and description. |
+  </Accordion>
+
+  <Accordion title="Testsets">
+    | Tool | Description |
+    | ---- | ----------- |
+    | `list_testsets` | List the testsets in a project. |
+    | `get_testsets` | Retrieve a single testset by ID. |
+    | `create_testsets` | Create a testset, defining its JSON schema and the field mapping (inputs / expected / metadata). |
+    | `update_testsets` | Update a testset's name, description, schema, or field mapping. |
+    | `delete_testsets` | Delete a testset. |
+  </Accordion>
+
+  <Accordion title="Testcases">
+    | Tool | Description |
+    | ---- | ----------- |
+    | `list_testcases` | List the testcases in a testset, paginated. |
+    | `get_testcases` | Retrieve a single testcase by ID. |
+    | `create_testcases` | Create up to 100 testcases in a testset, validated against its schema. |
+    | `update_testcases` | Replace the data of an existing testcase. |
+    | `delete_testcases` | Delete one or more testcases by ID. |
+  </Accordion>
+
+  <Accordion title="Systems">
+    | Tool | Description |
+    | ---- | ----------- |
+    | `list_systems` | List the systems (systems under test) in a project. |
+    | `get_systems` | Retrieve a single system by ID. |
+    | `upsert_systems` | Create a system, or update the existing one if a system with the same name exists. |
+    | `update_systems` | Update a system's name, description, or production version. |
+    | `delete_systems` | Delete a system definition (its versions are kept). |
+    | `get_systems_versions` | Retrieve a single system version by ID. |
+    | `upsert_systems_versions` | Create an immutable system version from a config snapshot. |
+  </Accordion>
+
+  <Accordion title="Metrics">
+    | Tool | Description |
+    | ---- | ----------- |
+    | `list_metrics` | List the metrics configured for a project. |
+    | `get_metrics` | Retrieve a single metric by ID. |
+    | `create_metrics` | Create a metric for evaluating outputs. |
+    | `update_metrics` | Update an existing metric. |
+    | `delete_metrics` | Delete a metric (also removes it from metric groups and monitors). |
+
+    <Note>
+      The server splits `create_metrics` and `update_metrics` into one variant per metric type, so the structure of the call depends on the metric's `evalType` (`ai`, `human`, or `heuristic`) and `outputType` (integer or boolean). Your client picks the right variant automatically based on the metric you describe.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Runs">
+    | Tool | Description |
+    | ---- | ----------- |
+    | `list_runs` | List the runs in a project, most recent first. |
+    | `get_runs` | Retrieve a run by ID, including its status and scoring progress. |
+    | `create_runs` | Create a run against a testset with a chosen system version and set of metrics. |
+  </Accordion>
+
+  <Accordion title="Records and scores">
+    | Tool | Description |
+    | ---- | ----------- |
+    | `list_records` | List the records for a run, including all scores on each record. |
+    | `create_records` | Create a record capturing a system's inputs, outputs, and expected values. |
+    | `delete_records` | Delete a record by ID. |
+    | `upsert_scores` | Create or update a record's score for a given metric. |
+  </Accordion>
+
+  <Accordion title="Annotations">
+    | Tool | Description |
+    | ---- | ----------- |
+    | `list_annotations` | List the ratings and comments left on a record. |
+  </Accordion>
+
+  <Accordion title="Documentation">
+    | Tool | Description |
+    | ---- | ----------- |
+    | `search_docs` | Search Scorecard's SDK and API documentation across supported languages. |
+  </Accordion>
+</AccordionGroup>
