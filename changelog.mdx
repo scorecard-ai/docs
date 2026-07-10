@@ -7,6 +7,32 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="July 10, 2026">
+  ### 🎛️ Sampling parameters now run at provider defaults
+
+  We removed the **Temperature**, **Maximum Length**, and **Top P** controls from the UI across the playground, prompts, sim agents, run kickoff, the metric editor, and settings. New configurations run at each model provider's own defaults instead of injected values.
+
+  This unblocks AI metrics that were failing on newer models: graders seeded `temperature: 0`, which models like gpt-5 and claude-opus-4-8 reject outright. Existing versions keep their stored parameters as long as the model stays the same, and switching a metric or prompt to a different model clears the old values so the new model runs clean. You can still set parameters programmatically through the API and SDK.
+
+  {/* TODO(screenshot): /images/changelog-model-settings-no-sliders-{light,dark}.png — Playground model settings panel with the Temperature/Maximum Length/Top P sliders removed */}
+
+  ### 📊 Scored metric columns appear on their own
+
+  When you select records and score them with a metric whose column is hidden, that column now shows up automatically as scoring starts. No more digging through **Edit Table** to see the results you just asked for. Scores fill in as jobs finish, the revealed columns persist across refreshes, and you can hide them again if you want.
+
+  {/* TODO(screenshot): /images/changelog-reveal-scored-columns-{light,dark}.png — Records table with a metric column appearing right after Score Records */}
+
+  ### 🤖 Fuller Claude Agent SDK traces from onboarding
+
+  The Claude Agent SDK setup on the onboarding page now includes three extra environment variables — `OTEL_LOG_USER_PROMPTS`, `OTEL_LOG_TOOL_DETAILS`, and `OTEL_LOG_TOOL_CONTENT` — in both the TypeScript and Python snippets. Copy the block as-is and your traces capture user prompts, tool-call details, and tool content from the start.
+
+  {/* TODO(screenshot): /images/changelog-onboarding-otel-vars-{light,dark}.png — Onboarding page Claude Agent SDK env var block showing the three OTEL_LOG_* variables */}
+
+  ### 🛠️ Bug Fixes and Improvements
+
+  - **[API]** Record creation (`POST /v2/runs/:runId/records`) now accepts bodies up to 15MB, so long agent sessions that carry full trace data in their outputs no longer get rejected. Oversized requests return a clear `413` instead of an opaque `500`.
+</Update>
+
 <Update label="May 29, 2026">
   ### 💬 Conversation View Is Now the Default
 
