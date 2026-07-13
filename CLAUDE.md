@@ -49,29 +49,20 @@ description: "New updates and improvements"
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
 <Update label="Month DD, YYYY">
-  ### 📊 Main Feature Title
-  
-  Brief description of the feature and its benefits. Explain what changed and why it matters to users.
-  
+  ### Major Feature Title
+
+  One or two sentences stating what changed. No emojis, no rationale.
+
   <DarkLightImage
     lightSrc="/images/feature-name-light.png"
     caption={null}
     alt="Screenshot of the [feature name]"
   />
-  
-  ### 🔍 Secondary Feature Title
-  
-  Description with bullet points if needed:
-  
-  - **Key point 1**: Description of the improvement
-  - **Key point 2**: What users can now do
-  - **Key point 3**: Technical details if relevant
-  
-  ### 🛠️ Bug Fixes and Improvements
-  
-  - **[Component]** Description of the fix or improvement
-  - **[Feature Area]** What was changed and the impact
-  - **[Performance]** Optimization details
+
+  ### Bug Fixes and Improvements
+
+  - **[Component]** What changed
+  - **[Feature Area]** What changed
 </Update>
 ```
 
@@ -79,35 +70,37 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
 1. **Date Format**: Use "Month DD, YYYY" (e.g., "July 25, 2025")
 
-2. **Section Headers**: 
-   - Use emojis to make sections visually distinct and engaging
-   - Common examples: 📊 for analytics, 🔍 for search/discovery, 🛠️ for bug fixes, 🚀 for performance, 🎨 for UI/design, 🤖 for AI features
+2. **Default to minor**: Most changes belong as one-line bullets under "### Bug Fixes and Improvements" with a **[Component]** prefix. Many weeks the entire entry is just that list. Promote a change to its own feature section ONLY when it is a genuinely new user-facing capability — something a customer could not do before and needs to learn about. Removed controls, widened limits, new env vars, and UX polish are bullets, not sections.
+
+3. **Section Headers**:
+   - Plain text, no emojis
    - Keep titles concise and action-oriented
    - Use ### for main sections within each update
 
-3. **Content Style**:
-   - Lead with user impact - what they can now do
-   - Be specific about improvements (e.g., "reduced from ~15s to 3s")
+4. **Content Style**:
+   - State WHAT changed, not why — no motivation, root-cause analysis, or implementation detail
+   - Keep it short: 1–2 sentences per item
+   - Be specific (names of controls, endpoints, limits, versions)
    - Link to relevant documentation with `[text](/path)`
    - Include version numbers for SDK releases
 
-4. **Images**:
-   - Use DarkLightImage component for UI screenshots
+5. **Images**:
+   - Use DarkLightImage component for UI screenshots (feature sections only)
    - Store images in `/images/` with descriptive names
    - Include both light and dark versions when applicable
    - Add meaningful alt text for accessibility
 
-5. **Bug Fixes Format**:
+6. **Bug Fixes Format**:
    - Start with **[Component/Area]** in bold
    - Describe what was fixed, not just the bug
    - Group related fixes together
 
-6. **Code Examples**:
+7. **Code Examples**:
    - Include code snippets for API/SDK updates
    - Show both Python and JavaScript examples when relevant
    - Use proper syntax highlighting
 
-7. **Special Elements**:
+8. **Special Elements**:
    - Embed videos with iframe for major features
    - Use image width constraints for logos/posters
    - Include links to npm/PyPI for SDK releases
