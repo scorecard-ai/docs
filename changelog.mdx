@@ -7,6 +7,15 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="July 10, 2026">
+  ### Bug Fixes and Improvements
+
+  - **[UI]** Removed the **Temperature**, **Maximum Length**, and **Top P** controls. New configurations run at each provider's defaults; existing versions keep their stored parameters, and you can still set them through the API and SDK.
+  - **[Records]** Scoring records with a hidden metric column now reveals that column automatically, with scores filling in as jobs finish.
+  - **[Onboarding]** The Claude Agent SDK snippets now include `OTEL_LOG_USER_PROMPTS`, `OTEL_LOG_TOOL_DETAILS`, and `OTEL_LOG_TOOL_CONTENT`.
+  - **[API]** Record creation (`POST /v2/runs/:runId/records`) now accepts bodies up to 15MB, and oversized requests return a `413` instead of a `500`.
+</Update>
+
 <Update label="May 29, 2026">
   ### 💬 Conversation View Is Now the Default
 
