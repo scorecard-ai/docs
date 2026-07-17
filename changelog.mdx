@@ -7,6 +7,31 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="July 17, 2026">
+  ### Session attachments
+
+  You can now attach files to a session and see them next to its [record](/features/records). Attachments appear in a **Files** card in the record details panel and in an **Attachments** tab, and any file an agent read or wrote shows up as a clickable chip inline in the conversation, on the turn that mentions it. Upload runs through the API: declare the file, upload the bytes, then commit.
+
+  {/* TODO(screenshot): /images/changelog-session-attachments-{light,dark}.png — record details Files card and the Attachments tab with a file list */}
+
+  ### Records overview widgets
+
+  The [Records](/features/records) page now has a widget board at the top that you can customize. Add a **Volume** widget to see record ingest over time, or a **Metric** widget to track a metric's pass rate — either as a snapshot or a stacked pass/fail/ungraded chart over time. Widgets follow the table's active filters, and your layout is saved per project.
+
+  {/* TODO(screenshot): /images/changelog-records-widgets-{light,dark}.png — widget board with a Volume widget and two metric widgets */}
+
+  ### Skills in Trace Chat
+
+  Trace chat accepts skill attachments. Attach a `.skill` bundle or a plain `.md` file and the chat follows its instructions when it analyzes a trace — for example, checking a run against a bundled rubric. Skills stay attached per project and pull in their reference files as needed.
+
+  {/* TODO(screenshot): /images/changelog-trace-chat-skills-{light,dark}.png — trace chat with a skill attached as a chip and a skill-structured answer */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Records]** You can build filters by typing. Enter a field name and a colon (e.g. `status:`) to start a pill, and typed values like metric or creator names resolve to the right filter value when you commit.
+  - **[Records]** Fixed the filter popovers overlapping the field dropdown and closing when you clicked their scrollbar.
+</Update>
+
 <Update label="July 10, 2026">
   ### Bug Fixes and Improvements
 
