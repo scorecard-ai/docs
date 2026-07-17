@@ -1,15 +1,15 @@
 ---
-title: "Claude Code & Agent SDK Tracing"
-sidebarTitle: "Claude Code & Agent SDK Tracing"
-description: "Trace Claude Code sessions and Claude Agent SDK applications with Scorecard."
+title: "Claude Agent SDK Tracing"
+sidebarTitle: "Claude Agent SDK Tracing"
+description: "Trace your Claude Agent SDK applications with Scorecard."
 mode: "wide"
 ---
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-Claude Code is Anthropic's coding agent, and the Claude Agent SDK is Anthropic's framework for building your own AI agents on top of it. OpenTelemetry tracing is built into Claude Code itself, so the same environment variables trace everything it powers: interactive `claude` sessions, headless `claude -p` runs, and Claude Agent SDK (Python v0.1.18+, TypeScript v0.1.71+) applications, which run Claude Code under the hood.
+The Claude Agent SDK is Anthropic's framework for building AI agents that can reason, use tools, and complete multi-step tasks. It includes built-in support for OpenTelemetry tracing, making it easy to capture detailed telemetry from your agent workflows.
 
-This quickstart shows how to send those traces to Scorecard for observability, debugging, and evaluation—no code changes required.
+This quickstart shows how to send traces from your Claude Agent SDK (Python v0.1.18+, TypeScript v0.1.71+) applications to Scorecard for observability, debugging, and evaluation.
 
 <Info>
   **Using the standard Anthropic SDK?** Check out the general [Tracing Quickstart](/intro/tracing-quickstart) for the proxy method that works with any Anthropic client.
@@ -21,90 +21,15 @@ This quickstart shows how to send those traces to Scorecard for observability, d
   <Step title="Set up environment variables">
     Configure the OpenTelemetry exporter to send traces to Scorecard. You'll need your Scorecard API key from [Settings](https://app.scorecard.io/settings).
 
-    The variables are the same everywhere—only where you set them differs. Pick the scope that fits:
-
-    <Tabs>
-      <Tab title="Shell">
-        Export in your terminal to trace the current shell session, or add the exports to your shell profile (`~/.zshrc`, `~/.bashrc`) to trace every session on your machine:
-
-        ```bash
-        export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your_scorecard_api_key>"
-        export ENABLE_BETA_TRACING_DETAILED=1
-        export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
-        export OTEL_LOG_USER_PROMPTS=1
-        export OTEL_LOG_TOOL_DETAILS=1
-        export OTEL_LOG_TOOL_CONTENT=1
-        export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=<your-project-id>"
-        ```
-      </Tab>
-      <Tab title="Claude Code settings">
-        Add an `env` block to `.claude/settings.json` in your repository to trace every Claude Code session in that project, or to `~/.claude/settings.json` to trace all projects:
-
-        ```json .claude/settings.json
-        {
-          "env": {
-            "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer <your_scorecard_api_key>",
-            "ENABLE_BETA_TRACING_DETAILED": "1",
-            "BETA_TRACING_ENDPOINT": "https://tracing.scorecard.io/otel",
-            "OTEL_LOG_USER_PROMPTS": "1",
-            "OTEL_LOG_TOOL_DETAILS": "1",
-            "OTEL_LOG_TOOL_CONTENT": "1",
-            "OTEL_RESOURCE_ATTRIBUTES": "scorecard.project_id=<your-project-id>"
-          }
-        }
-        ```
-
-        <Warning>
-          `.claude/settings.json` is usually committed to version control. Keep your API key out of it—put the `env` block in `.claude/settings.local.json` (Claude Code's personal, not-checked-in settings file) instead.
-        </Warning>
-      </Tab>
-      <Tab title="Agent SDK (in code)">
-        Pass the variables per `query()` call via the `env` option—useful when one application traces to different projects or you don't control the process environment:
-
-        <CodeGroup>
-
-        ```typescript agent.ts
-        import { query } from "@anthropic-ai/claude-agent-sdk";
-
-        const stream = query({
-          prompt: "What is 2 + 2?",
-          options: {
-            env: {
-              ...process.env, // env replaces the subprocess environment; keep existing vars
-              OTEL_EXPORTER_OTLP_HEADERS: `Authorization=Bearer ${process.env.SCORECARD_API_KEY}`,
-              ENABLE_BETA_TRACING_DETAILED: "1",
-              BETA_TRACING_ENDPOINT: "https://tracing.scorecard.io/otel",
-              OTEL_LOG_USER_PROMPTS: "1",
-              OTEL_LOG_TOOL_DETAILS: "1",
-              OTEL_LOG_TOOL_CONTENT: "1",
-              OTEL_RESOURCE_ATTRIBUTES: "scorecard.project_id=<your-project-id>",
-            },
-          },
-        });
-        ```
-
-        ```python agent.py
-        import os
-        from claude_agent_sdk import query, ClaudeAgentOptions
-
-        stream = query(
-            prompt="What is 2 + 2?",
-            options=ClaudeAgentOptions(env={
-                **os.environ,  # env replaces the subprocess environment; keep existing vars
-                "OTEL_EXPORTER_OTLP_HEADERS": f"Authorization=Bearer {os.environ['SCORECARD_API_KEY']}",
-                "ENABLE_BETA_TRACING_DETAILED": "1",
-                "BETA_TRACING_ENDPOINT": "https://tracing.scorecard.io/otel",
-                "OTEL_LOG_USER_PROMPTS": "1",
-                "OTEL_LOG_TOOL_DETAILS": "1",
-                "OTEL_LOG_TOOL_CONTENT": "1",
-                "OTEL_RESOURCE_ATTRIBUTES": "scorecard.project_id=<your-project-id>",
-            }),
-        )
-        ```
-
-        </CodeGroup>
-      </Tab>
-    </Tabs>
+    ```bash
+    export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your_scorecard_api_key>"
+    export ENABLE_BETA_TRACING_DETAILED=1
+    export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
+    export OTEL_LOG_USER_PROMPTS=1
+    export OTEL_LOG_TOOL_DETAILS=1
+    export OTEL_LOG_TOOL_CONTENT=1
+    export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=<your-project-id>"
+    ```
 
     <Note>
       Replace `<your_scorecard_api_key>` with your actual Scorecard API key (starts with `ak_`), and `<your-project-id>` with the project you want traces to land in.
@@ -115,17 +40,10 @@ This quickstart shows how to send those traces to Scorecard for observability, d
     </Warning>
   </Step>
 
-  <Step title="Run Claude Code or your agent">
-    With the environment variables configured, everything Claude Code does is traced automatically. Run an interactive session, a headless prompt, or a Claude Agent SDK application:
+  <Step title="Run your agent">
+    With the environment variables configured, run your Claude Agent SDK application. All agent activity is automatically traced.
 
-    <CodeGroup>
-
-    ```bash Claude Code CLI
-    # Interactive sessions and headless -p runs are both traced.
-    claude -p "What is 2 + 2?"
-    ```
-
-    ```python example.py
+    ```python title="example.py" [expandable]
     import anyio
     from claude_agent_sdk import (
         AssistantMessage,
@@ -142,8 +60,6 @@ This quickstart shows how to send those traces to Scorecard for observability, d
 
     anyio.run(main)
     ```
-
-    </CodeGroup>
   </Step>
 
   <Step title="View traces in Scorecard">
@@ -171,14 +87,18 @@ This quickstart shows how to send those traces to Scorecard for observability, d
 
 ## Anatomy of a trace
 
-Explore how a Claude Code trace is structured—spans, tool calls, model usage, and metadata—in this interactive demo:
+Explore how a Claude Agent SDK trace is structured—spans, tool calls, model usage, and metadata—in this interactive demo:
 
 <iframe
   className="w-full rounded-xl border-0"
   style={{ aspectRatio: "3 / 2" }}
   src="https://scorecard-git-feat-trace-anatomy-demo-embed-scorecard-ai.vercel.app/demo/trace-anatomy"
-  title="Anatomy of a Claude Code trace"
+  title="Anatomy of a Claude Agent SDK trace"
 />
+
+<Note>
+  **Using the Claude Code CLI?** The same environment variables work there: tracing is built into Claude Code, which the Agent SDK runs under the hood, so interactive `claude` sessions and headless `claude -p` runs are traced without any SDK code.
+</Note>
 
 ## Next Steps
 
