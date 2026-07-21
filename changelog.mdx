@@ -12,19 +12,34 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
   You can now attach files to a session and see them next to its [record](/features/records). Attachments appear in a **Files** card in the record details panel and in an **Attachments** tab, and any file an agent read or wrote shows up as a clickable chip inline in the conversation, on the turn that mentions it. Upload runs through the API: declare the file, upload the bytes, then commit.
 
-  {/* TODO(screenshot): /images/changelog-session-attachments-{light,dark}.png — record details Files card and the Attachments tab with a file list */}
+  <DarkLightImage
+    lightSrc="/images/changelog-session-attachments-light.png"
+    darkSrc="/images/changelog-session-attachments-dark.png"
+    caption="Attachments tab listing files attached to a session"
+    alt="Screenshot of the record details panel showing the Attachments tab with quarterly-report.pdf, summary.md, and key-metrics.csv attached to the session"
+  />
 
   ### Records overview widgets
 
   The [Records](/features/records) page now has a widget board at the top that you can customize. Add a **Volume** widget to see record ingest over time, or a **Metric** widget to track a metric's pass rate — either as a snapshot or a stacked pass/fail/ungraded chart over time. Widgets follow the table's active filters, and your layout is saved per project.
 
-  {/* TODO(screenshot): /images/changelog-records-widgets-{light,dark}.png — widget board with a Volume widget and two metric widgets */}
+  <DarkLightImage
+    lightSrc="/images/changelog-records-widgets-light.png"
+    darkSrc="/images/changelog-records-widgets-dark.png"
+    caption="Widget board on the Records page with Volume and metric widgets"
+    alt="Screenshot of the Records page overview widget board showing a Volume widget alongside Biographical accuracy and Design quality metric widgets"
+  />
 
   ### Skills in Trace Chat
 
   Trace chat accepts skill attachments. Attach a `.skill` bundle or a plain `.md` file and the chat follows its instructions when it analyzes a trace — for example, checking a run against a bundled rubric. Skills stay attached per project and pull in their reference files as needed.
 
-  {/* TODO(screenshot): /images/changelog-trace-chat-skills-{light,dark}.png — trace chat with a skill attached as a chip and a skill-structured answer */}
+  <DarkLightImage
+    lightSrc="/images/changelog-trace-chat-skills-light.png"
+    darkSrc="/images/changelog-trace-chat-skills-dark.png"
+    caption="Add skill control in the Trace Chat composer"
+    alt="Screenshot of the Trace Chat composer showing the Add skill control above the ask-about-this-trace input"
+  />
 
   ### Bug Fixes and Improvements
 
