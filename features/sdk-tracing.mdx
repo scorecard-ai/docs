@@ -47,7 +47,7 @@ npm install scorecard-ai
 
 Choose any [instrumentation method](/features/tracing#instrumentation-methods). The simplest approach depends on your stack:
 
-**Agent frameworks** (Claude Agent SDK, OpenAI Agents SDK) — set environment variables:
+**Agents and frameworks** (Claude Code, Claude Agent SDK, OpenAI Agents SDK) — set environment variables:
 
 ```bash
 export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
@@ -73,6 +73,10 @@ openai = wrap(OpenAI(), {"project_id": "YOUR_PROJECT_ID"})
 <Tabs>
   <Tab title="Claude Agent SDK">
     For agent frameworks, pass `otelLinkId` from the `options` argument into your agent's `OTEL_RESOURCE_ATTRIBUTES` so traces link to records.
+
+    <Warning>
+      In TypeScript, the `env` option replaces the subprocess environment rather than extending it, so spread `process.env` in as shown below—otherwise the agent loses its API credentials and `PATH`. The Python SDK merges `env` on top of the inherited environment automatically.
+    </Warning>
 
     <CodeGroup>
 
