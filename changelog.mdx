@@ -7,6 +7,33 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="July 24, 2026">
+  ### Compare records side by side
+
+  A new **Compare** page puts up to three [records](/features/records) next to each other in full-width cards. Each card has **Output**, **Inputs**, **Expected**, and **Trajectory** tabs, and a tab shows up only when the record has that data. Select text in an output to annotate that passage. Saved annotations stay highlighted inline, and hovering one shows its author and comment.
+
+  {/* TODO(screenshot): /images/changelog-compare-page-light.png + /images/changelog-compare-page-dark.png — Compare page with three record cards side by side, Output tab active, one annotated passage highlighted */}
+
+  ### Assign records to teammates
+
+  Assign organization members to a [record](/features/records) from the picker in the record details panel, beside Tags. The records table has an optional **Assignees** column, and typing `assigned.to:` in the search bar narrows the table to one person's records.
+
+  {/* TODO(screenshot): /images/changelog-record-assignments-light.png + /images/changelog-record-assignments-dark.png — records table with the Assignees column on and the assignee picker open in the details panel */}
+
+  ### Import a testset from an agent transcript
+
+  **Import from transcript** on a project's [Testsets](/features/testsets) page takes a pasted or dropped agent-session transcript, such as a Claude Code `session.jsonl`, and pulls out the moments where the agent should have acted differently. Each one becomes a testcase in a new testset, with the prompt as input and the expected behavior as the label. Analysis can take a couple of minutes. Closing the dialog doesn't cancel it, and a toast reports the result when it finishes.
+
+  {/* TODO(screenshot): /images/changelog-transcript-import-light.png + /images/changelog-transcript-import-dark.png — Import from transcript modal in its input state, with the drop zone and optional guidance field */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Records]** Clicking a session attachment opens a preview sheet instead of downloading the file. Images, PDFs, video, audio, markdown, and code render inline, and download is a separate button.
+  - **[Records]** Markdown tables in record outputs render as tables instead of raw pipes.
+  - **[Onboarding]** The onboarding page shows the organization API key to admins again instead of "No API key found".
+  - **[API]** [Record creation](/api-reference/create-record) accepts an optional `sessionId`, so records created through the API or SDK join that session's traces and attachments.
+</Update>
+
 <Update label="July 17, 2026">
   ### Session attachments
 
