@@ -255,6 +255,15 @@
                   "api-reference/list-record-tags",
                   "api-reference/delete-record-tag"
                 ]
+              },
+              {
+                "group": "Record Assignees",
+                "expanded": true,
+                "pages": [
+                  "api-reference/assign-record-user",
+                  "api-reference/list-record-assignees",
+                  "api-reference/unassign-record-user"
+                ]
               }
             ]
           },
