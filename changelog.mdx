@@ -7,6 +7,66 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="July 31, 2026">
+  ### Bug Fixes and Improvements
+
+  - **[Compare]** Each record card has a **Scores** tab, so you can compare records on quality. Add a score or record a human score inline without leaving the page.
+  - **[Compare]** Chat over both compared records' traces at once. The answer labels each side (Trace A / Trace B) and its span citations link back to that record.
+  - **[Compare]** A **Model preference** panel under the two cards lets you pick Record A or Record B for each human binary metric they share, writing a pass to the chosen side and a fail to the other.
+  - **[Compare]** Pick each record from a per-slot table with search, toggleable columns, and infinite scroll, and filter it by clicking a metric's pass/fail badge or the **Assigned to Me** toggle. The per-card **Trajectory** tab is gone.
+  - **[Compare]** A shared **Expected** column sits between the two cards in place of the per-card Expected tab, and labels both values when they differ.
+  - **[Records]** New **Assigned to Me** quick filter, and bulk **assign / unassign** across selected records from the row-selection menu in a single request.
+  - **[Records]** Filter records by a specific metric's **pass**, **fail**, or **pending** status.
+  - **[Records]** Export your columns and widgets as JSON and import them into another project to reuse a view.
+  - **[Records]** One **Columns** control now toggles and drag-reorders columns in a single popover, replacing the Edit Table modal. Tag chips in the table are clickable to filter.
+  - **[Records]** An **Assigned to** widget on the overview, and the `assigned.to` filter pill shows the member's avatar and name instead of a raw id.
+  - **[Records]** The record details panel scrolls as one region so nothing gets clipped, and pending score rows are static and neutral instead of pulsing.
+  - **[Playground]** Added **Claude Sonnet 5** and **Claude Fable 5**, and refreshed model pricing and context-window data.
+  - **[API]** New public endpoints to [assign](/api-reference/assign-record-user), [unassign](/api-reference/unassign-record-user), and [list](/api-reference/list-record-assignees) a record's assignees.
+</Update>
+
+<Update label="July 24, 2026">
+  ### Compare records side by side
+
+  A new **Compare** page puts records next to each other in full-width cards so you can read their outputs side by side, with each record's inputs and expected answer alongside. Select text in an output to annotate that passage. Saved annotations stay highlighted inline, and hovering one shows its author and comment.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-compare-page-light.png"
+    darkSrc="/images/changelog-compare-page-dark.png"
+    caption="Comparing two records side by side on the Compare page"
+    alt="Screenshot of the Compare page with two record cards side by side on their Output tabs and the shared expected answer in a column between them"
+  />
+
+  ### Assign records to teammates
+
+  Assign organization members to a [record](/features/records) from the picker in the record details panel, beside Tags. The records table has an optional **Assignees** column, and typing `assigned.to:` in the search bar narrows the table to one person's records.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-record-assignments-light.png"
+    darkSrc="/images/changelog-record-assignments-dark.png"
+    caption="Assigning an organization member to a record from the details panel"
+    alt="Screenshot of the record details panel with an assignee added next to Tags, showing the member's avatar and name"
+  />
+
+  ### Import a testset from an agent transcript
+
+  **Import from transcript** on a project's [Testsets](/features/testsets) page takes a pasted or dropped agent-session transcript, such as a Claude Code `session.jsonl`, and pulls out the moments where the agent should have acted differently. Each one becomes a testcase in a new testset, with the prompt as input and the expected behavior as the label. Analysis can take a couple of minutes. Closing the dialog doesn't cancel it, and a toast reports the result when it finishes.
+
+  <DarkLightImage
+    lightSrc="/images/changelog-transcript-import-light.png"
+    darkSrc="/images/changelog-transcript-import-dark.png"
+    caption="Importing a testset from an agent-session transcript"
+    alt="Screenshot of the Import from transcript modal showing the file drop zone, a paste field, and an optional guidance input"
+  />
+
+  ### Bug Fixes and Improvements
+
+  - **[Records]** Clicking a session attachment opens a preview sheet instead of downloading the file. Images, PDFs, video, audio, markdown, and code render inline, and download is a separate button.
+  - **[Records]** Markdown tables in record outputs render as tables instead of raw pipes.
+  - **[Onboarding]** The onboarding page shows the organization API key to admins again instead of "No API key found".
+  - **[API]** [Record creation](/api-reference/create-record) accepts an optional `sessionId`, so records created through the API or SDK join that session's traces and attachments.
+</Update>
+
 <Update label="July 17, 2026">
   ### Session attachments
 
