@@ -7,6 +7,24 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="July 31, 2026">
+  ### Bug Fixes and Improvements
+
+  - **[Compare]** Each record card has a **Scores** tab, so you can compare records on quality. Add a score or record a human score inline without leaving the page.
+  - **[Compare]** Chat over both compared records' traces at once. The answer labels each side (Trace A / Trace B) and its span citations link back to that record.
+  - **[Compare]** A **Model preference** panel under the two cards lets you pick Record A or Record B for each human binary metric they share, writing a pass to the chosen side and a fail to the other.
+  - **[Compare]** Pick each record from a per-slot table with search, toggleable columns, and infinite scroll, and filter it by clicking a metric's pass/fail badge or the **Assigned to Me** toggle. The per-card **Trajectory** tab is gone.
+  - **[Compare]** A shared **Expected** column sits between the two cards in place of the per-card Expected tab, and labels both values when they differ.
+  - **[Records]** New **Assigned to Me** quick filter, and bulk **assign / unassign** across selected records from the row-selection menu in a single request.
+  - **[Records]** Filter records by a specific metric's **pass**, **fail**, or **pending** status.
+  - **[Records]** Export your columns and widgets as JSON and import them into another project to reuse a view.
+  - **[Records]** One **Columns** control now toggles and drag-reorders columns in a single popover, replacing the Edit Table modal. Tag chips in the table are clickable to filter.
+  - **[Records]** An **Assigned to** widget on the overview, and the `assigned.to` filter pill shows the member's avatar and name instead of a raw id.
+  - **[Records]** The record details panel scrolls as one region so nothing gets clipped, and pending score rows are static and neutral instead of pulsing.
+  - **[Playground]** Added **Claude Sonnet 5** and **Claude Fable 5**, and refreshed model pricing and context-window data.
+  - **[API]** New public endpoints to [assign](/api-reference/assign-record-user), [unassign](/api-reference/unassign-record-user), and [list](/api-reference/list-record-assignees) a record's assignees.
+</Update>
+
 <Update label="July 24, 2026">
   ### Compare records side by side
 
