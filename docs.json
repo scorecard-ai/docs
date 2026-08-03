@@ -203,6 +203,12 @@
             ]
           },
           {
+            "group": "Users",
+            "pages": [
+              "api-reference/list-users"
+            ]
+          },
+          {
             "group": "Testsets",
             "pages": [
               "api-reference/create-testset",

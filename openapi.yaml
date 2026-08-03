@@ -189,6 +189,110 @@ paths:
           source: |-
             curl https://api2.scorecard.io/api/v2/projects \
                 -H "Authorization: Bearer $SCORECARD_API_KEY"
+  /users:
+    get:
+      operationId: listOrgUsers
+      summary: List Users
+      description: >-
+        Retrieve a paginated list of all users that are members of your
+        organization, including their unique user IDs.
+      parameters:
+        - in: query
+          name: limit
+          description: >-
+            Maximum number of items to return (1-100). Use with `cursor` for
+            pagination through large sets.
+          schema:
+            type: integer
+            exclusiveMinimum: 0
+            default: 20
+            example: 20
+        - in: query
+          name: cursor
+          description: >-
+            Cursor for pagination. Pass the `nextCursor` from the previous
+            response to get the next page of results.
+          schema:
+            type: string
+            example: "2"
+      responses:
+        "200":
+          description: Successfully retrieved list of Users.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/OrgUser"
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                  hasMore:
+                    type: boolean
+                  total:
+                    type: integer
+                    minimum: 0
+                required:
+                  - data
+                  - nextCursor
+                  - hasMore
+              examples:
+                User list with pagination:
+                  value:
+                    data:
+                      - id: user_2abcDEF3ghIJ4klMNO5pqRST6uv
+                        name: Ada Lovelace
+                        email: ada@example.com
+                        role: "org:admin"
+                        imageUrl: https://img.clerk.com/preview.png
+                      - id: user_2xyzGHI7jklMNO8pqrST9uvWX0yz
+                        name: Alan Turing
+                        email: alan@example.com
+                        role: "org:member"
+                        imageUrl: null
+                    nextCursor: "2"
+                    hasMore: true
+                    total: 12
+                  summary: User list with pagination
+                  description: >-
+                    Example response showing two members of the organization
+                    with pagination information.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Scorecard from 'scorecard-ai';
+
+            const client = new Scorecard({
+              apiKey: process.env['SCORECARD_API_KEY'], // This is the default and can be omitted
+            });
+
+            // Automatically fetches more pages as needed.
+            for await (const orgUser of client.users.list()) {
+              console.log(orgUser.id);
+            }
+        - lang: Python
+          source: |-
+            import os
+            from scorecard_ai import Scorecard
+
+            client = Scorecard(
+                api_key=os.environ.get("SCORECARD_API_KEY"),  # This is the default and can be omitted
+            )
+            page = client.users.list()
+            page = page.data[0]
+            print(page.id)
+        - lang: cURL
+          source: |-
+            curl https://api2.scorecard.io/api/v2/users \
+                -H "Authorization: Bearer $SCORECARD_API_KEY"
   /projects/{projectId}/testsets:
     get:
       operationId: listTestsets
@@ -4855,6 +4959,39 @@ components:
         - name
         - description
       description: A Project in the Scorecard system.
+    OrgUser:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique ID of the user (their Clerk user id, e.g. `user_2ab...`).
+        name:
+          type:
+            - string
+            - "null"
+          description: The user's full name, or null if the user has not set a name.
+        email:
+          type:
+            - string
+            - "null"
+          description: The user's primary email address, or null if unavailable.
+        role:
+          type: string
+          description: >-
+            The user's role within the organization (e.g. `org:admin`,
+            `org:member`).
+        imageUrl:
+          type:
+            - string
+            - "null"
+          description: URL of the user's profile image, or null if none is set.
+      required:
+        - id
+        - name
+        - email
+        - role
+        - imageUrl
+      description: A user that is a member of the organization.
     ApiError:
       type: object
       properties:
