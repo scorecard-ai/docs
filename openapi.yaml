@@ -3789,6 +3789,145 @@ paths:
             \
                 -X DELETE \
                 -H "Authorization: Bearer $SCORECARD_API_KEY"
+  /records/{recordId}/assignees:
+    get:
+      operationId: listRecordAssignees
+      summary: List Record Assignees
+      description: List the organization members assigned to a Record.
+      parameters:
+        - in: path
+          name: recordId
+          description: The ID of the Record to list assignees for.
+          schema:
+            type: string
+            example: "777"
+          required: true
+      responses:
+        "200":
+          description: Successfully retrieved the Record's assignees.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RecordAssignment"
+                required:
+                  - data
+              examples:
+                Assignees for a record:
+                  value:
+                    data:
+                      - id: "1"
+                        recordId: "777"
+                        assigneeUserId: user_2abc123
+                        assignedByUserId: user_2def456
+                        createdAt: 2026-03-01T12:00:00.000Z
+                  summary: Assignees for a record
+                  description: Example response showing the members assigned to a Record.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+    post:
+      operationId: assignRecordUser
+      summary: Assign Record User
+      description: "Assign an organization member to a Record. Idempotent:
+        re-assigning an existing member returns the existing assignment."
+      parameters:
+        - in: path
+          name: recordId
+          description: The ID of the Record to assign.
+          schema:
+            type: string
+            example: "777"
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                assigneeUserId:
+                  type: string
+                  description: "The ID of the organization member to assign. Idempotent:
+                    re-assigning an existing member returns the existing
+                    assignment."
+              required:
+                - assigneeUserId
+            examples:
+              Assign a member:
+                value:
+                  assigneeUserId: user_2abc123
+                summary: Assign a member
+                description: Assign the given member to the Record.
+      responses:
+        "201":
+          description: The created (or existing) assignment.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordAssignment"
+              examples:
+                Created assignment:
+                  value:
+                    id: "1"
+                    recordId: "777"
+                    assigneeUserId: user_2abc123
+                    assignedByUserId: user_2def456
+                    createdAt: 2026-03-01T12:00:00.000Z
+                  summary: Created assignment
+                  description: Response after successfully assigning a member to a Record.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+  /records/{recordId}/assignees/{assigneeUserId}:
+    delete:
+      operationId: unassignRecordUser
+      summary: Unassign Record User
+      description: Remove an assignee from a Record.
+      parameters:
+        - in: path
+          name: recordId
+          description: The ID of the Record to unassign from.
+          schema:
+            type: string
+            example: "777"
+          required: true
+        - in: path
+          name: assigneeUserId
+          description: The ID of the assignee to remove.
+          schema:
+            type: string
+            example: user_2abc123
+          required: true
+      responses:
+        "200":
+          description: The assignee was removed (or was not present).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: number
+                    description: The number of assignment rows removed (0 if the member was not
+                      assigned).
+                required:
+                  - deleted
+              examples:
+                Removed assignee:
+                  value:
+                    deleted: 1
+                  summary: Removed assignee
+                  description: Response indicating how many assignment rows were removed.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
   /projects/{projectId}/systems:
     get:
       operationId: listSystems
@@ -5501,6 +5640,31 @@ components:
       description: >-
         An annotation on a Record, containing a rating (thumbs up/down) and/or a
         text comment.
+    RecordAssignment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the record assignment.
+        recordId:
+          type: string
+          description: The ID of the Record this assignment belongs to.
+        assigneeUserId:
+          type: string
+          description: The ID of the organization member assigned to the Record.
+        assignedByUserId:
+          type: string
+          description: The ID of the user who created the assignment.
+        createdAt:
+          type: string
+          description: The ISO 8601 timestamp when the assignment was created.
+      required:
+        - id
+        - recordId
+        - assigneeUserId
+        - assignedByUserId
+        - createdAt
+      description: An assignment of an organization member to a Record.
     RecordTag:
       type: object
       properties:
