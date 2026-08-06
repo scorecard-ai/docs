@@ -287,6 +287,16 @@
               "api-reference/upsert-system-version",
               "api-reference/get-system-version"
             ]
+          },
+          {
+            "group": "Attachments",
+            "pages": [
+              "api-reference/initiate-attachment-upload",
+              "api-reference/commit-attachment-upload",
+              "api-reference/get-attachment",
+              "api-reference/delete-attachment",
+              "api-reference/list-session-attachments"
+            ]
           }
         ]
       },
