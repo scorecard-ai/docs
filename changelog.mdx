@@ -7,6 +7,25 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="August 7, 2026">
+  ### Read and annotate documents on a record
+
+  The record trace view has an **Output** tab that renders the output with the same select-to-annotate layer as the Compare page. If the output names a session attachment we can render as HTML (`.docx`, markdown, or plain text), that file appears inline inside the annotation layer, so you can highlight and comment on the document itself. Word files keep their tracked changes: insertions in green, deletions struck through in red. Click a comment marker to open that comment in a panel over the right side of the page. PDFs, images, audio, and video stay as chips that open the preview sheet.
+
+  {/* TODO(screenshot): /images/changelog-document-review-{light,dark}.png — record Output tab with a redline .docx rendered inline, tracked changes visible, and an annotation highlight with its hover card */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Records]** Any session attachment named in a record's output renders as a clickable chip that opens the preview.
+  - **[Records]** A record's **Expected** value sits beside the output in a collapsible column, rendering docx, markdown, and text inline. It isn't annotatable, and the collapse state is remembered per project.
+  - **[Records]** The toolbar wraps and the table scrolls sideways when the details panel is open, instead of hiding behind it. The panel's Scores card no longer repeats the metric name.
+  - **[Records]** Annotation lists show the quoted passage as a quote bar above the note instead of one merged string, and the table's annotations popover scrolls inside the viewport.
+  - **[Scores]** **Edit** on a completed score in the score details popover lets you change the value and reasoning of any [metric](/features/metrics) after grading, AI and heuristic included.
+  - **[Compare]** The compare chat answers at the comparison level and no longer cites individual trace spans. Chat on the record detail page is unchanged.
+  - **[Overview]** A **Records** card shows the project's total record count, replacing the Testsets card and its recently-added list.
+  - **[API]** [Upsert score](/api-reference/upsert-score) accepts a request with no `score`, which queues a human metric for manual grading and leaves it **pending**. AI and heuristic metrics still require a value.
+</Update>
+
 <Update label="July 31, 2026">
   ### Bug Fixes and Improvements
 
