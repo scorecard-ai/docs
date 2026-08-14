@@ -7,6 +7,18 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="August 14, 2026">
+  ### Bug Fixes and Improvements
+
+  - **[Records]** Typing a human score and then clicking outside no longer throws the draft away. Reopen the cell and your Pass/Fail pick and reasoning are still in the form.
+  - **[Records]** Re-running scoring on a record leaves a completed [human score](/features/metrics) alone, instead of blanking it back to an empty **Add score** cell.
+  - **[Records]** The annotations popover shows a highlighted passage as a quote above its note, rather than one run-on block of text. Long lists of annotations scroll instead of running off the screen.
+  - **[Models]** `claude-opus-5` and `gemini-3.7-flash` are in the model selector, and both are now the suggested pick for their tier.
+  - **[Projects]** The [project](/features/projects) list loads faster, and its testset and metric counts now count only your org's items.
+  - **[Records]** Record counts on large projects load in well under a second.
+  - **[Sessions]** Attachment lists load faster, most noticeably on sessions with hundreds of files.
+</Update>
+
 <Update label="July 31, 2026">
   ### Bug Fixes and Improvements
 
