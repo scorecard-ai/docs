@@ -4678,6 +4678,13 @@ paths:
         be updated. Otherwise, a new Score will be created. The score provided
         should conform to the schema defined by the MetricConfig; otherwise,
         validation errors will be reported.
+
+
+        Note: creating a Record automatically starts scoring for the AI and
+        Heuristic metrics on its Run, and a grade that lands afterwards
+        replaces any score pushed earlier for the same Record and metric. To
+        supply your own scores for those metrics, upsert them after automatic
+        scoring has finished.
       parameters:
         - in: path
           name: recordId
