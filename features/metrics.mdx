@@ -187,6 +187,8 @@ Configure AI evaluation parameters:
 
 When you score records (from the testset page, the Records page, or through GitHub Actions), AI and Heuristic metrics are evaluated automatically. You can view scoring progress and results on the Records page.
 
+Records created through the [API](/api-reference/create-record) are scored automatically too: creating a record starts scoring for every AI and Heuristic metric on its run. If you push your own scores with [Upsert Score](/api-reference/upsert-score), do so after that automatic scoring finishes — a grade that lands afterwards replaces the pushed score.
+
 <Tip>
   New to Scorecard? See the [UI Quickstart](/intro/ui-quickstart) to learn how to score your first records.
 </Tip>
