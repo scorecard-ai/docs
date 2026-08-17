@@ -4827,6 +4827,371 @@ paths:
                         "reasoning": "bar"
                       }
                     }'
+  /attachments:
+    post:
+      operationId: initiateAttachment
+      summary: Initiate Attachment Upload
+      description: "Initiates (or deduplicates) an upload of a file attached to a
+        session. If the exact content is already stored for this (session ID,
+        file path), the response has `alreadyExists: true` and no upload is
+        needed. Otherwise, PUT the file bytes to the returned `uploadUrl`, then
+        call the commit endpoint. Re-initiating an existing (session ID, file
+        path) with new content updates the attachment in place on commit."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+                  minLength: 1
+                  maxLength: 256
+                  description: The session ID the attachment belongs to. Matches the `session.id`
+                    emitted on OTel spans, which is how attachments are joined
+                    to traces and records.
+                  example: c59e5bd0-e5eb-4bf0-a08a-01f7e8f712c7
+                filePath:
+                  type: string
+                  minLength: 1
+                  maxLength: 1024
+                  description: "The logical file path of the attachment (e.g. the path the agent
+                    wrote on disk). Together with the session ID it identifies
+                    the attachment: re-uploading the same path in the same
+                    session updates the existing attachment in place."
+                  example: /tmp/report.pdf
+                sha256:
+                  type: string
+                  pattern: ^[0-9a-f]{64}$
+                  description: Lowercase hex SHA-256 of the file content.
+                  example: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+                sizeBytes:
+                  type: integer
+                  minimum: 0
+                  description: Size of the file in bytes.
+                  example: 482133
+                contentType:
+                  type: string
+                  minLength: 1
+                  maxLength: 256
+                  description: MIME type of the file.
+                  example: application/pdf
+                filename:
+                  type: string
+                  minLength: 1
+                  maxLength: 512
+                  description: Display filename. Defaults to none.
+                  example: report.pdf
+                metadata:
+                  type: object
+                  additionalProperties: true
+                  description: Arbitrary metadata to store with the attachment.
+                  x-stainless-any: true
+              required:
+                - sessionId
+                - filePath
+                - sha256
+                - sizeBytes
+                - contentType
+            examples:
+              Initiate an upload:
+                value:
+                  sessionId: c59e5bd0-e5eb-4bf0-a08a-01f7e8f712c7
+                  filePath: /tmp/report.pdf
+                  sha256: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+                  sizeBytes: 482133
+                  contentType: application/pdf
+                  filename: report.pdf
+                summary: Initiate an upload
+                description: Declare a file produced during a session. The response tells you
+                  whether bytes need to be uploaded.
+      responses:
+        "201":
+          description: Upload initiated (or content already stored). If `alreadyExists` is
+            false, PUT the bytes to `uploadUrl` and then commit.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: The ID of the Attachment.
+                    example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                  alreadyExists:
+                    type: boolean
+                    description: True if this exact content is already stored for this (session,
+                      file path) — no upload is needed and no upload URL is
+                      returned.
+                  uploadUrl:
+                    type:
+                      - string
+                      - "null"
+                    description: Signed URL to PUT the file bytes to. Null when `alreadyExists` is
+                      true.
+                  uploadMethod:
+                    type:
+                      - string
+                      - "null"
+                    enum:
+                      - PUT
+                      - null
+                    description: HTTP method to use with `uploadUrl`.
+                  expiresAt:
+                    type:
+                      - string
+                      - "null"
+                    description: ISO 8601 expiry of `uploadUrl`.
+                required:
+                  - id
+                  - alreadyExists
+                  - uploadUrl
+                  - uploadMethod
+                  - expiresAt
+              examples:
+                Upload needed:
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    alreadyExists: false
+                    uploadUrl: https://storage.example.com/object/upload/sign/attachments/development/org_123/session/3fa85f64?token=abc
+                    uploadMethod: PUT
+                    expiresAt: 2026-07-13T12:00:00.000Z
+                  summary: Upload needed
+                  description: The content is new; PUT the file to `uploadUrl`, then commit.
+                Already stored:
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    alreadyExists: true
+                    uploadUrl: null
+                    uploadMethod: null
+                    expiresAt: null
+                  summary: Already stored
+                  description: This exact content is already attached to the session; nothing to
+                    upload.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+  /attachments/{attachmentId}:
+    get:
+      operationId: getAttachment
+      summary: Get Attachment
+      description: Retrieves an attachment's metadata and a short-lived signed
+        download URL for its content.
+      parameters:
+        - in: path
+          name: attachmentId
+          description: The ID of the Attachment.
+          schema:
+            type: string
+            format: uuid
+            example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          required: true
+      responses:
+        "200":
+          description: The attachment.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Attachment"
+                properties:
+                  downloadUrl:
+                    type:
+                      - string
+                      - "null"
+                    description: Short-lived signed URL to download the file. Null while the
+                      attachment has no committed content.
+                  downloadExpiresAt:
+                    type:
+                      - string
+                      - "null"
+                    description: ISO 8601 expiry of `downloadUrl`.
+                required:
+                  - downloadUrl
+                  - downloadExpiresAt
+              examples:
+                Attachment:
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    sessionId: c59e5bd0-e5eb-4bf0-a08a-01f7e8f712c7
+                    filePath: /tmp/report.pdf
+                    filename: report.pdf
+                    contentType: application/pdf
+                    sizeBytes: 482133
+                    sha256: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+                    status: uploaded
+                    uploadedAt: 2026-07-13T12:00:00.000Z
+                    metadata: null
+                    downloadUrl: https://storage.example.com/object/sign/attachments/development/org_123/session/3fa85f64?token=def
+                    downloadExpiresAt: 2026-07-13T12:10:00.000Z
+                  summary: Attachment
+                  description: An uploaded attachment with a signed download URL.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+    delete:
+      operationId: deleteAttachment
+      summary: Delete Attachment
+      description: "Deletes an attachment: both the stored file and its metadata."
+      parameters:
+        - in: path
+          name: attachmentId
+          description: The ID of the Attachment to delete.
+          schema:
+            type: string
+            format: uuid
+            example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          required: true
+      responses:
+        "200":
+          description: Attachment deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the deletion was successful.
+                required:
+                  - success
+              examples:
+                Deleted:
+                  value:
+                    success: true
+                  summary: Deleted
+                  description: The attachment was deleted.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+  /attachments/{attachmentId}/commit:
+    post:
+      operationId: commitAttachment
+      summary: Commit Attachment Upload
+      description: Finalizes an upload after the file bytes have been PUT to the
+        signed upload URL. Verifies the object landed in storage before the
+        attachment starts describing the new content. Committing an
+        already-committed attachment is a no-op.
+      parameters:
+        - in: path
+          name: attachmentId
+          description: The ID of the Attachment to commit.
+          schema:
+            type: string
+            format: uuid
+            example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          required: true
+      responses:
+        "200":
+          description: The committed attachment.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attachment"
+              examples:
+                Committed:
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    sessionId: c59e5bd0-e5eb-4bf0-a08a-01f7e8f712c7
+                    filePath: /tmp/report.pdf
+                    filename: report.pdf
+                    contentType: application/pdf
+                    sizeBytes: 482133
+                    sha256: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+                    status: uploaded
+                    uploadedAt: 2026-07-13T12:00:00.000Z
+                    metadata: null
+                  summary: Committed
+                  description: The upload was verified and the attachment now describes the new
+                    content.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+  /sessions/{sessionId}/attachments:
+    get:
+      operationId: listSessionAttachments
+      summary: List Session Attachments
+      description: Lists the uploaded attachments for a session. Only committed
+        attachments are returned.
+      parameters:
+        - in: path
+          name: sessionId
+          description: The session ID to list attachments for.
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 256
+            example: c59e5bd0-e5eb-4bf0-a08a-01f7e8f712c7
+          required: true
+        - in: query
+          name: limit
+          description: Maximum number of items to return (1-100). Use with `cursor` for
+            pagination through large sets.
+          schema:
+            type: integer
+            exclusiveMinimum: 0
+            default: 20
+            example: 20
+        - in: query
+          name: cursor
+          description: Cursor for pagination. Pass the `nextCursor` from the previous
+            response to get the next page of results.
+          schema:
+            type: string
+            example: eyJvZmZzZXQiOjAsInBhZ2VJZCI6ImNvZGUifQ
+      responses:
+        "200":
+          description: The session's attachments.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Attachment"
+                  nextCursor:
+                    type:
+                      - string
+                      - "null"
+                  hasMore:
+                    type: boolean
+                  total:
+                    type: integer
+                    minimum: 0
+                required:
+                  - data
+                  - nextCursor
+                  - hasMore
+              examples:
+                Session attachments:
+                  value:
+                    data:
+                      - id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                        sessionId: c59e5bd0-e5eb-4bf0-a08a-01f7e8f712c7
+                        filePath: /tmp/report.pdf
+                        filename: report.pdf
+                        contentType: application/pdf
+                        sizeBytes: 482133
+                        sha256: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+                        status: uploaded
+                        uploadedAt: 2026-07-13T12:00:00.000Z
+                        metadata: null
+                    nextCursor: null
+                    hasMore: false
+                  summary: Session attachments
+                  description: All files attached to the session, ready to download via the get
+                    endpoint.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -5801,6 +6166,87 @@ components:
 
         When running evaluations, you reference a specific systemVersionId to
         establish which system version to test.
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the Attachment.
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        sessionId:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: The session ID the attachment belongs to. Matches the `session.id`
+            emitted on OTel spans, which is how attachments are joined to traces
+            and records.
+          example: c59e5bd0-e5eb-4bf0-a08a-01f7e8f712c7
+        filePath:
+          type: string
+          minLength: 1
+          maxLength: 1024
+          description: "The logical file path of the attachment (e.g. the path the agent
+            wrote on disk). Together with the session ID it identifies the
+            attachment: re-uploading the same path in the same session updates
+            the existing attachment in place."
+          example: /tmp/report.pdf
+        filename:
+          type:
+            - string
+            - "null"
+          description: Display filename, if provided.
+        contentType:
+          type:
+            - string
+            - "null"
+          description: MIME type of the last committed content. Null until the first commit.
+        sizeBytes:
+          type:
+            - integer
+            - "null"
+          description: Size in bytes of the last committed content. Null until the first
+            commit.
+        sha256:
+          type:
+            - string
+            - "null"
+          pattern: ^[0-9a-f]{64}$
+          description: SHA-256 of the last committed content. Null until the first commit.
+          example: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+        status:
+          type: string
+          enum:
+            - pending
+            - uploaded
+          description: "`uploaded` once a commit has succeeded; `pending` while an
+            initiated upload has not been committed yet."
+        uploadedAt:
+          type:
+            - string
+            - "null"
+          description: ISO 8601 timestamp of the last successful commit. Null until the
+            first commit.
+        metadata:
+          type:
+            - object
+            - "null"
+          additionalProperties: true
+          description: Arbitrary caller-supplied metadata.
+          x-stainless-any: true
+      required:
+        - id
+        - sessionId
+        - filePath
+        - filename
+        - contentType
+        - sizeBytes
+        - sha256
+        - status
+        - uploadedAt
+        - metadata
+      description: A file attached to a session. Bytes live in object storage; this
+        describes the last committed content.
   responses:
     UnauthenticatedError:
       description: Error indicating that the request is not authenticated.
