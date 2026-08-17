@@ -94,6 +94,15 @@ With the integration set up, you can also trigger runs of your real system from 
 
 ## Run Status
 
+A run's status reflects how far along execution and scoring are:
+
+- **`awaiting_execution`** — the run has testcases but no records yet
+- **`running_execution`** — records are still being created
+- **`running_scoring`** — all records exist and metrics are still being scored
+- **`completed`** — every record has a score for every metric
+
+When Scorecard executes the run for you (for example through the Playground or the GitHub integration), the status advances automatically. Runs you populate yourself by [creating records through the API](/api-reference/create-record) may keep showing **`awaiting_execution`** in the UI — this is cosmetic, and the records, traces, and scores are fully available.
+
 If you click on the run status of a run, it will expands to show an explanation of the scoring status for each of the metrics in the run.
 
 <DarkLightImage lightSrc="/images/run-status-explanation-light.png" caption="Run status explanation." alt="Screenshot of the run status explanation in the UI." />
