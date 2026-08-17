@@ -3103,7 +3103,9 @@ paths:
     post:
       operationId: createRecord
       summary: Create Record
-      description: Create a new Record in a Run.
+      description: >-
+        Create a new Record in a Run. The request body may be up to 15 MB;
+        larger requests are rejected.
       parameters:
         - in: path
           name: runId
