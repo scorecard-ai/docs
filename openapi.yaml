@@ -3140,6 +3140,15 @@ paths:
                   description: >-
                     Optional ID for linking this record with an OpenTelemetry
                     trace. Used for deduplication.
+                sessionId:
+                  type: string
+                  minLength: 1
+                  maxLength: 256
+                  description: >-
+                    Optional session ID for this record. Matches the
+                    `session.id` emitted on OTel spans, joining the record to
+                    its session's traces and attachments.
+                  example: c59e5bd0-e5eb-4bf0-a08a-01f7e8f712c7
               required:
                 - inputs
                 - expected
