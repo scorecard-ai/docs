@@ -326,8 +326,8 @@ Click "Select Metrics" to choose which metrics to include in the group.
 
 ### Deleting a Metric
 
-Deleting a metric removes it from any metric groups and monitors that use it. Scores previously recorded for that metric also stop appearing on records and runs, including in API responses.
+Deleting a metric removes it from any metric groups and monitors that use it, and scores previously recorded for that metric stop appearing on records and runs in the Scorecard app.
 
 <Note>
-  Historical score data is retained rather than erased—it is hidden from these views, not destroyed.
+  Deletion changes only what the app displays. The API and record exports (CSV and XLSX) continue to return scores from deleted metrics, so integrations and downloaded results still reconcile against your complete scoring history.
 </Note>
