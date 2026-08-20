@@ -2679,8 +2679,9 @@ paths:
       operationId: deleteMetric
       summary: Delete Metric
       description: >-
-        Delete a specific Metric by ID. The metric will be removed from metric
-        groups and monitors.
+        Delete a specific Metric by ID. The metric is removed from metric groups
+        and monitors, and scores previously recorded for it no longer appear in
+        Record or Run responses.
       parameters:
         - in: path
           name: metricId
