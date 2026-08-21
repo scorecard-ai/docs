@@ -7,6 +7,30 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="August 21, 2026">
+  ### Compare three records at once
+
+  The **Compare** page takes a third record. Pick two as before, then use the **Add record** rail to choose a third, or run a search that narrows to exactly three records and the slots fill themselves. Each card collapses to a slim rail while you read the others. The shared **Expected** column moves to the front of the row, and chat compares Traces A, B and C. At three records, human float [metrics](/features/metrics) trade the five-point scale for a 1st/2nd/3rd ranking, and binary metrics become one winner pick: Pass for the winner, Fail for the rest.
+
+  {/* TODO(screenshot): /images/changelog-compare-three-records-{light,dark}.png — three record cards side by side, shared Expected column leading the row, 1st/2nd/3rd ranking panel below */}
+
+  ### Score per-model metrics in the preference panel
+
+  Human metrics that sit on one of the compared records but not the other (a reviewer's `model a preference` on one card, `model b preference` on the other) now get their own rows in the preference panel. Pass/Fail writes to that record alone. Int and float metrics show the current value with an edit button onto the scoring form. Put two of these metrics in a **metric group** and they share one row, labeled with the group's name.
+
+  {/* TODO(screenshot): /images/changelog-per-model-metrics-{light,dark}.png — preference panel showing a shared pairwise row, a group-paired per-model row, and a one-sided row with the other column empty */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Compare]** Shared human float metrics get a five-point preference scale: Strong A, Slight A, Equal, Slight B, Strong B. Each pick saves a matching pair of scores to the two records. The panel's "Model preference" heading is gone.
+  - **[Compare]** The preference panel names each side after the model that produced the record, taken from its `model:` tag, instead of by slot position. A record without a usable tag falls back to its run or record id.
+  - **[Compare]** Clicking a metric name in the preference panel opens its scoring guidelines, and record tags show next to the record id on the cards and on the panel's column headers.
+  - **[Compare]** Docx attachments render inline below a record's output on the compare cards, tracked changes and Word comments included. Filenames mentioned in the text are clickable chips, and highlight-to-annotate works over the inline document.
+  - **[Records]** The **Add widget** menu greys out widgets already on the board. Saved or imported layouts that hold duplicates keep the first instance.
+  - **[API]** New endpoints for metric groups: list and create them under a project, then fetch, update, or archive one by id.
+  - **[Projects]** The [project](/features/projects) selector loads every project's record count in a single request rather than one request per project.
+</Update>
+
 <Update label="August 14, 2026">
   ### Bug Fixes and Improvements
 
