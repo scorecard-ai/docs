@@ -1,0 +1,108 @@
+---
+title: "Claude Tag Tracing"
+sidebarTitle: "Claude Tag Tracing"
+description: "Trace Claude Tag (Claude in Slack) sessions with Scorecard."
+mode: "wide"
+---
+
+import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+
+Claude Tag is [Claude working inside your team's Slack workspace](https://claude.com/docs/claude-tag/overview). Each thread Claude works in is a **session**: it starts when someone mentions `@Claude`, runs Claude Code in an Anthropic-hosted sandbox, and ends when the thread goes quiet. Anthropic's [How Claude Tag works](https://claude.com/docs/claude-tag/concepts/how-it-works) page covers the session lifecycle in detail.
+
+Because a session runs Claude Code, the same OpenTelemetry tracing used for [Claude Agent SDK tracing](/intro/claude-agent-sdk-tracing) works here too. Every session shows up in Scorecard as one record with a trace of user turns, agent reasoning, and tool calls.
+
+This quickstart shows how to configure an Anthropic-hosted environment so Claude Tag sessions are traced to Scorecard.
+
+<Info>
+  Claude Tag requires a Claude **Team or Enterprise** plan, and these steps are done by a Claude organization admin. If your Slack workspace doesn't have Claude Tag yet, follow [Anthropic's setup guide](https://claude.com/docs/claude-tag/admins/setup-overview) first.
+</Info>
+
+## Steps
+
+<Steps>
+  <Step title="Get your Scorecard API key and project ID">
+    You'll need two values from Scorecard:
+
+    - Your API key from [Settings](https://app.scorecard.io/settings). It starts with `ak_`.
+    - The ID of the [project](https://app.scorecard.io) you want traces to land in.
+
+    <Warning>
+      If the project ID is wrong or invalid, traces are sent to the **oldest project** in your organization.
+    </Warning>
+  </Step>
+
+  <Step title="Create an Anthropic-hosted environment">
+    Go to [**Cloud environments**](https://claude.ai/admin-settings/cloud-environments) in your Claude admin settings and create a new Anthropic-hosted environment. Name it something like "Claude Tag Environment". Under **Network access**, pick a setting that lets sessions reach `tracing.scorecard.io`. The example below uses **Full access**.
+
+    In the **Environment variables** field, add the following, one per line as `KEY=value`. Substitute your API key and project ID from the previous step.
+
+    ```bash
+    OTEL_EXPORTER_OTLP_HEADERS=Authorization=Bearer <your_scorecard_api_key>
+    ENABLE_BETA_TRACING_DETAILED=1
+    BETA_TRACING_ENDPOINT=https://tracing.scorecard.io/otel
+    OTEL_LOG_USER_PROMPTS=1
+    OTEL_LOG_TOOL_DETAILS=1
+    OTEL_LOG_TOOL_CONTENT=1
+    OTEL_RESOURCE_ATTRIBUTES=scorecard.project_id=<your-project-id>
+    ```
+
+    <DarkLightImage lightSrc="/images/claude-tag-create-environment.png" alt="Create an Anthropic-hosted environment dialog named Claude Tag Environment, with the tracing variables entered and the Environment variables field highlighted" caption="The environment dialog with the tracing variables filled in." width="480" />
+
+    <Note>
+      These variables are available to every session that uses this environment. Nothing is traced yet. That happens in the next step.
+    </Note>
+  </Step>
+
+  <Step title="Assign the environment to Claude Tag">
+    This is the step that turns tracing on. Go to [**Claude Tag**](https://claude.ai/admin-settings/claude-tag) in admin settings and find **Claude Tag's access**. Select the **Slack** tab, expand **Advanced**, and set **Environment** to the environment you created in step 2.
+
+    <DarkLightImage lightSrc="/images/claude-tag-environment-setting.png" alt="Claude Tag's access page with the Slack tab selected and Advanced expanded, with the Environment dropdown highlighted" caption="Set Environment under Claude Tag's access → Slack → Advanced." />
+
+    <Warning>
+      **Every channel in the workspace is traced.** Setting the environment on the Slack workspace applies to every channel Claude works in, and traces include user prompts and tool inputs and outputs. If you only want to trace some channels, leave the workspace setting alone and instead select each channel in the left sidebar and set its Environment there.
+    </Warning>
+
+    Threads that are already running don't see configuration changes, so start a new thread after setting the environment.
+  </Step>
+
+  <Step title="Talk to Claude in Slack">
+    Mention `@Claude` in a channel it's been invited to and give it a task. Nothing changes on the Slack side. The session is traced as it runs.
+
+    > @Claude summarize the open questions in this thread.
+  </Step>
+
+  <Step title="View traces in Scorecard">
+    Open the [**Records**](/features/records) page of your project in [Scorecard](https://app.scorecard.io). Each Claude Tag session appears as a record. Click one to open its trace detail panel and see the full session, including tool calls like Slack replies and reactions.
+
+    <DarkLightImage lightSrc="/images/claude-tag-records-light.png" darkSrc="/images/claude-tag-records-dark.png" alt="Scorecard Records page with a Claude Tag session record selected and its trace detail panel open, showing the user turn and Slack tool calls" caption="Each Claude Tag session arrives as a record. Selecting one opens its trace." />
+  </Step>
+</Steps>
+
+## What you'll see
+
+Each Claude Tag session becomes one record. Record sizes vary a lot because Claude Tag runs several kinds of sessions:
+
+| Session | How it starts | What the record looks like |
+|---|---|---|
+| **Channel session** | Any new top-level message in a channel Claude is in | A few LLM calls, usually ending in an `mcp__slackbot__no_reply_needed` tool call. You get one of these for most messages in the channel, not only the ones addressed to Claude. |
+| **Thread session** | The channel session hands a task to a thread, or someone replies in a thread Claude is working in | Tens to hundreds of LLM calls, sub-agent tasks, and tool calls (Slack replies, GitHub, Bash). Can run for hours and stitch together many traces. |
+| **DM** | Someone messages Claude directly | Similar to a thread session. |
+| **Routine** | A scheduled trigger fires | No Slack messages in the prompt. The routine's instructions are the prompt, and there's no channel on the record until Claude posts somewhere. |
+
+Inside a record:
+
+- **User turns** are the raw Slack payload Claude receives: message text, author display names, `@handles`, Slack user IDs, channel IDs, thread participants, attachment file names, message edits, and reactions. In thread sessions this also includes the parent session's hand-off notes and Claude's own memory files for the channel.
+- **LLM request spans** carry the model, token counts, a system prompt preview, the model output, and tool results as they were fed back to the model.
+- **Tool spans** carry the tool name and full inputs and outputs: Slack reply text, Bash commands, file paths, GitHub calls.
+- **Identity** is limited to a hashed `user.id`, session IDs, and your `scorecard.project_id`. Unlike Claude Code CLI traces, there is no email or account ID. Your environment variables and Scorecard API key are not in the trace.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Tracing Features" icon="chart-line" href="/features/tracing">
+    Learn about advanced tracing patterns and trace grouping
+  </Card>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Create custom metrics to evaluate Claude Tag's performance
+  </Card>
+</CardGroup>
