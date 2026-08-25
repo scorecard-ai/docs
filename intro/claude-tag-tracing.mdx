@@ -32,7 +32,7 @@ This quickstart shows how to configure an Anthropic-hosted environment so Claude
   </Step>
 
   <Step title="Create an Anthropic-hosted environment">
-    Go to [**Cloud environments**](https://claude.ai/admin-settings/cloud-environments) in your Claude admin settings and create a new Anthropic-hosted environment. Name it something like "Scorecard Tracing".
+    Go to [**Cloud environments**](https://claude.ai/admin-settings/cloud-environments) in your Claude admin settings and create a new Anthropic-hosted environment. Name it something like "Claude Tag Environment". Under **Network access**, pick a setting that lets sessions reach `tracing.scorecard.io`; the example below uses **Full access**.
 
     In the **Environment variables** field, add the following, one per line as `KEY=value`. Substitute your API key and project ID from the previous step.
 
@@ -46,7 +46,7 @@ This quickstart shows how to configure an Anthropic-hosted environment so Claude
     OTEL_RESOURCE_ATTRIBUTES=scorecard.project_id=<your-project-id>
     ```
 
-    <DarkLightImage lightSrc="/images/claude-tag-create-environment.png" alt="Create an Anthropic-hosted environment dialog with the Environment variables field highlighted" caption="Add the tracing variables to the Environment variables field." width="480" />
+    <DarkLightImage lightSrc="/images/claude-tag-create-environment.png" alt="Create an Anthropic-hosted environment dialog named Claude Tag Environment, with the tracing variables entered and the Environment variables field highlighted" caption="The environment dialog with the tracing variables filled in." width="480" />
 
     <Note>
       These variables are available to every session that uses this environment. Nothing is traced yet; that happens in the next step.
@@ -56,7 +56,7 @@ This quickstart shows how to configure an Anthropic-hosted environment so Claude
   <Step title="Assign the environment to Claude Tag">
     This is the step that turns tracing on. Go to [**Claude Tag**](https://claude.ai/admin-settings/claude-tag) in admin settings and find **Claude Tag's access**. Select the **Slack** tab, expand **Advanced**, and set **Environment** to the environment you created in step 2.
 
-    <DarkLightImage lightSrc="/images/claude-tag-environment-setting.png" alt="Advanced section of Claude Tag's access on the Slack tab, with the Environment dropdown highlighted" caption="Set Environment under Claude Tag's access → Slack → Advanced." />
+    <DarkLightImage lightSrc="/images/claude-tag-environment-setting.png" alt="Claude Tag's access page with the Slack tab selected and Advanced expanded, with the Environment dropdown highlighted" caption="Set Environment under Claude Tag's access → Slack → Advanced." />
 
     <Warning>
       **Every channel in the workspace is traced.** Setting the environment on the Slack workspace applies to every channel Claude works in, and traces include user prompts and tool inputs and outputs. If you only want to trace some channels, leave the workspace setting alone and instead select each channel in the left sidebar and set its Environment there.
@@ -74,7 +74,7 @@ This quickstart shows how to configure an Anthropic-hosted environment so Claude
   <Step title="View traces in Scorecard">
     Open the [**Records**](/features/records) page of your project in [Scorecard](https://app.scorecard.io). Each Claude Tag session appears as a record. Click one to open its trace detail panel and see the full session, including tool calls like Slack replies and reactions.
 
-    <DarkLightImage lightSrc="/images/claude-tag-records-light.png" darkSrc="/images/claude-tag-records-dark.png" alt="Scorecard Records table with one Claude Tag session record highlighted" caption="Each Claude Tag session arrives as a record." />
+    <DarkLightImage lightSrc="/images/claude-tag-records-light.png" darkSrc="/images/claude-tag-records-dark.png" alt="Scorecard Records page with a Claude Tag session record highlighted and its trace detail panel open, showing the user turn and Slack tool calls" caption="Each Claude Tag session arrives as a record. Selecting one opens its trace." />
 
     The trace detail panel breaks each session into four tabs: **Conversation**, **Timeline**, **Chat**, and **Debug**. See the [Claude Agent SDK tracing quickstart](/intro/claude-agent-sdk-tracing#steps) for a tour of each tab.
   </Step>
