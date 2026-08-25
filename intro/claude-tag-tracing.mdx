@@ -9,7 +9,7 @@ import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
 Claude Tag is [Claude working inside your team's Slack workspace](https://claude.com/docs/claude-tag/overview). Each thread Claude works in is a **session**: it starts when someone mentions `@Claude`, runs Claude Code in an Anthropic-hosted sandbox, and ends when the thread goes quiet. Anthropic's [How Claude Tag works](https://claude.com/docs/claude-tag/concepts/how-it-works) page covers the session lifecycle in detail.
 
-Because a session is Claude Code under the hood, the same OpenTelemetry tracing used for [Claude Agent SDK tracing](/intro/claude-agent-sdk-tracing) works here too. Every session shows up in Scorecard as one record with a full trace of user turns, agent reasoning, and tool calls.
+Because a session runs Claude Code, the same OpenTelemetry tracing used for [Claude Agent SDK tracing](/intro/claude-agent-sdk-tracing) works here too. Every session shows up in Scorecard as one record with a trace of user turns, agent reasoning, and tool calls.
 
 This quickstart shows how to configure an Anthropic-hosted environment so Claude Tag sessions are traced to Scorecard.
 
@@ -32,7 +32,7 @@ This quickstart shows how to configure an Anthropic-hosted environment so Claude
   </Step>
 
   <Step title="Create an Anthropic-hosted environment">
-    Go to [**Cloud environments**](https://claude.ai/admin-settings/cloud-environments) in your Claude admin settings and create a new Anthropic-hosted environment. Name it something like "Claude Tag Environment". Under **Network access**, pick a setting that lets sessions reach `tracing.scorecard.io`; the example below uses **Full access**.
+    Go to [**Cloud environments**](https://claude.ai/admin-settings/cloud-environments) in your Claude admin settings and create a new Anthropic-hosted environment. Name it something like "Claude Tag Environment". Under **Network access**, pick a setting that lets sessions reach `tracing.scorecard.io`. The example below uses **Full access**.
 
     In the **Environment variables** field, add the following, one per line as `KEY=value`. Substitute your API key and project ID from the previous step.
 
@@ -49,7 +49,7 @@ This quickstart shows how to configure an Anthropic-hosted environment so Claude
     <DarkLightImage lightSrc="/images/claude-tag-create-environment.png" alt="Create an Anthropic-hosted environment dialog named Claude Tag Environment, with the tracing variables entered and the Environment variables field highlighted" caption="The environment dialog with the tracing variables filled in." width="480" />
 
     <Note>
-      These variables are available to every session that uses this environment. Nothing is traced yet; that happens in the next step.
+      These variables are available to every session that uses this environment. Nothing is traced yet. That happens in the next step.
     </Note>
   </Step>
 
@@ -66,7 +66,7 @@ This quickstart shows how to configure an Anthropic-hosted environment so Claude
   </Step>
 
   <Step title="Talk to Claude in Slack">
-    Mention `@Claude` in a channel it's been invited to and give it a task. Nothing changes on the Slack side; the session is traced as it runs.
+    Mention `@Claude` in a channel it's been invited to and give it a task. Nothing changes on the Slack side. The session is traced as it runs.
 
     > @Claude summarize the open questions in this thread.
   </Step>
@@ -80,11 +80,11 @@ This quickstart shows how to configure an Anthropic-hosted environment so Claude
 
 ## What you'll see
 
-Each Claude Tag session becomes one record. Most records are small; a few are very large. That's because Claude Tag runs several kinds of sessions:
+Each Claude Tag session becomes one record. Record sizes vary a lot because Claude Tag runs several kinds of sessions:
 
 | Session | How it starts | What the record looks like |
 |---|---|---|
-| **Channel session** | Any new top-level message in a channel Claude is in | A few LLM calls, usually ending in a `mcp__slackbot__no_reply_needed` tool call. You get one of these for most messages in the channel, not only the ones addressed to Claude. |
+| **Channel session** | Any new top-level message in a channel Claude is in | A few LLM calls, usually ending in an `mcp__slackbot__no_reply_needed` tool call. You get one of these for most messages in the channel, not only the ones addressed to Claude. |
 | **Thread session** | The channel session hands a task to a thread, or someone replies in a thread Claude is working in | Tens to hundreds of LLM calls, sub-agent tasks, and tool calls (Slack replies, GitHub, Bash). Can run for hours and stitch together many traces. |
 | **DM** | Someone messages Claude directly | Similar to a thread session. |
 | **Routine** | A scheduled trigger fires | No Slack messages in the prompt. The routine's instructions are the prompt, and there's no channel on the record until Claude posts somewhere. |
