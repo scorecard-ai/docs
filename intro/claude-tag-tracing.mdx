@@ -78,6 +78,24 @@ This quickstart shows how to configure an Anthropic-hosted environment so Claude
   </Step>
 </Steps>
 
+## What you'll see
+
+Each Claude Tag session becomes one record. Most records are small; a few are very large. That's because Claude Tag runs several kinds of sessions:
+
+| Session | How it starts | What the record looks like |
+|---|---|---|
+| **Channel session** | Any new top-level message in a channel Claude is in | A few LLM calls, usually ending in a `mcp__slackbot__no_reply_needed` tool call. You get one of these for most messages in the channel, not only the ones addressed to Claude. |
+| **Thread session** | The channel session hands a task to a thread, or someone replies in a thread Claude is working in | Tens to hundreds of LLM calls, sub-agent tasks, and tool calls (Slack replies, GitHub, Bash). Can run for hours and stitch together many traces. |
+| **DM** | Someone messages Claude directly | Similar to a thread session. |
+| **Routine** | A scheduled trigger fires | No Slack messages in the prompt. The routine's instructions are the prompt, and there's no channel on the record until Claude posts somewhere. |
+
+Inside a record:
+
+- **User turns** are the raw Slack payload Claude receives: message text, author display names, `@handles`, Slack user IDs, channel IDs, thread participants, attachment file names, message edits, and reactions. In thread sessions this also includes the parent session's hand-off notes and Claude's own memory files for the channel.
+- **LLM request spans** carry the model, token counts, a system prompt preview, the model output, and tool results as they were fed back to the model.
+- **Tool spans** carry the tool name and full inputs and outputs: Slack reply text, Bash commands, file paths, GitHub calls.
+- **Identity** is limited to a hashed `user.id`, session IDs, and your `scorecard.project_id`. Unlike Claude Code CLI traces, there is no email or account ID. Your environment variables and Scorecard API key are not in the trace.
+
 ## Next Steps
 
 <CardGroup cols={2}>
