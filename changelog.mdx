@@ -7,6 +7,83 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="September 11, 2026">
+  ### Multiple graders per metric
+
+  Several people can now score the same [metric](/features/metrics) on a record, and each grader's score is kept separately, so one metric can carry independent reviews and you can see where graders disagree. A cell shows one score with a count badge when more than one grader has scored it. Open the card to page through each grader's value and reasoning, or click **Add my score** to add yours. Metric widgets get a grader-scope pill: **All** counts every grader's latest score as a vote, or pick one grader to see only their scores and what they have left to grade.
+
+  {/* TODO(screenshot): /images/changelog-multi-grader-scores-{light,dark}.png — score card popover with the grader pager (1 of 3) and Add my score, plus a metric widget with the grader-scope pill */}
+
+  ### Blind evaluations on the Compare page
+
+  Org members see compared records as **Model A**, **Model B**, and **Model C**, with identity taken from each run's System instead of record tags, so reviewers judge outputs without the system name in front of them. Admins see the System name and version, each grader's pick as an avatar under the option they chose with their reasoning, dashed **awaiting** marks for assigned reviewers who haven't graded yet, and a **Reviewers** column on the record picker with per-reviewer progress.
+
+  {/* TODO(screenshot): /images/changelog-blind-compare-{light,dark}.png — admin view with system names, grader avatars and awaiting marks beside the member view of the same comparison showing Model A/B */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Compare]** One comparison comment box covers every compared record. Per-record comments sit behind a **Comment on a single record** toggle.
+  - **[Compare]** Highlight and annotate text in the **Expected** column on the compare and record pages.
+  - **[Compare]** Comparison cards no longer show a **Scores** tab or an **Open** link, so existing grades don't influence preference picks.
+  - **[Compare]** Records keep their left/right slots by run order, the **Attachments** tab fills the card with file-type badges, and closing a comparison asks first.
+  - **[Records]** A **System** column (hidden by default) on the records table and a `system:` search filter narrow records to one system version. Members see the blind alias.
+  - **[Records]** The record page's trace chat can see your own annotations, so you can ask it about what you highlighted.
+  - **[Annotations]** Notes support markdown: bold, lists, and strikethrough.
+  - **[Clippy]** Clippy shows its reasoning live while it works. Finished reasoning collapses to one line you can expand.
+  - **[API]** [Upsert score](/api-reference/upsert-score) accepts an optional `userId` on human metrics to submit a score on behalf of a grader, and every score returned by the API carries the grader's `userId`.
+</Update>
+
+<Update label="September 4, 2026">
+  ### Code Mode for the hosted MCP server
+
+  The hosted [MCP server](/features/mcp) at `mcp.scorecard.io` now runs `scorecard-ai-mcp` 3.4.0. Its 31 per-endpoint tools are replaced by two: `search_docs` looks up the SDK, and `execute` runs TypeScript your agent writes against the SDK in a sandbox and returns only the result, so a cross-project query over large records completes in one call instead of timing out on multi-megabyte pages.
+
+  ### Bug Fixes and Improvements
+
+  - **[Compare]** Collapse either compared record to a slim rail to give the other the full width. Click the rail to bring it back.
+  - **[Compare]** Comparison cards have an **Attachments** tab listing the record's session files. It appears only when the session has files.
+  - **[Compare]** The compare search box remembers its query per project, so your filters are back when you return to the page.
+  - **[Annotations]** The add-annotation popover opens above the selection when there is no room below, and no longer discards a half-typed note when you click elsewhere. Comment cards can be dragged aside.
+  - **[Annotations]** Edit the note on your own annotations in place with the pencil on the comment card, instead of deleting and re-highlighting.
+  - **[Records]** Long file names and URLs in outputs wrap instead of pushing the panel behind a horizontal scrollbar.
+  - **[Export]** CSV and Excel exports of records and runs include an **Annotations** column.
+  - **[Clippy]** Clippy can read a record's trace. Ask why a record failed and it lists the spans and reads the ones it needs.
+  - **[Clippy]** A record open in the records list's side panel counts as the page you're on, so Clippy answers about that record.
+  - **[Clippy]** Clippy reports metric names instead of version labels when describing scores, renders markdown lists correctly, keeps the earlier conversation when you approve a tool call, and stays pinned to the bottom while a reply streams.
+  - **[Models]** The model catalog was refreshed. `gemini-3.8-flash` is the suggested Gemini pick, and Bedrock's suggested Llama is now Llama 4 Maverick.
+</Update>
+
+<Update label="August 28, 2026">
+  ### Bug Fixes and Improvements
+
+  - **[Compare]** Leave a general comment on either record in the scoring section of the [Compare](/features/a-b-comparison) page. Comments save as annotations on the record and appear in its annotation views.
+  - **[Compare]** When two compared records are scored on different exclusive metrics, each cell now names its own metric.
+  - **[Clippy]** **Clippy**, the in-app assistant, knows which [record](/features/records) or records list you have open, so you can ask about the record in front of you without giving its id.
+</Update>
+
+<Update label="August 21, 2026">
+  ### Compare three records at once
+
+  The **Compare** page now allows comparing up to three records, so you can judge three model or prompt versions in one pass instead of running pairwise comparisons back to back. When comparing three records, human float [metrics](/features/metrics) become a 1st/2nd/3rd ranking and human binary metrics become a best-winner pick.
+
+  {/* TODO(screenshot): /images/changelog-compare-three-records-{light,dark}.png — three record cards side by side, shared Expected column leading the row, 1st/2nd/3rd ranking panel below */}
+
+  ### Score per-model metrics in the preference panel
+
+  We now group metrics by their metric group on the Compare page. This is useful if you have metrics like "Model A preference" and "Model B preference" that you want to see on the same row.
+
+  {/* TODO(screenshot): /images/changelog-per-model-metrics-{light,dark}.png — preference panel showing a shared pairwise row, a group-paired per-model row, and a one-sided row with the other column empty */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Compare]** Shared human float metrics get a five-point preference scale: Strong A, Slight A, Equal, Slight B, Strong B. Each pick saves a matching pair of scores to the two records.
+  - **[Compare]** The preference panel names each side after the model that produced the record, taken from its `model:` tag, instead of by slot position. A record without a usable tag falls back to its run or record id.
+  - **[Compare]** Clicking a metric name in the preference panel opens its scoring guidelines, and record tags show next to the record id on the cards and on the panel's column headers.
+  - **[Compare]** Docx attachments render inline below a record's output on the compare cards, including tracked changes and Word comments. Filenames mentioned in the text are clickable chips and highlight-to-annotate works over the inline document.
+  - **[Records]** The **Add widget** menu greys out widgets already on the board. Saved or imported layouts that hold duplicates keep the first instance.
+  - **[API]** New endpoints for metric groups: [list](/api-reference/list-metric-groups) and [create](/api-reference/create-metric-group) them under a project, then [fetch](/api-reference/get-metric-group), [update](/api-reference/update-metric-group), or [archive](/api-reference/delete-metric-group) one by id.
+</Update>
+
 <Update label="August 14, 2026">
   ### Bug Fixes and Improvements
 
@@ -17,6 +94,24 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   - **[Projects]** The [project](/features/projects) list loads faster, and its testset and metric counts now count only your org's items.
   - **[Records]** Record counts on large projects load in well under a second.
   - **[Sessions]** Attachment lists load faster, most noticeably on sessions with hundreds of files.
+</Update>
+
+<Update label="August 7, 2026">
+  ### Read and annotate documents on a record
+
+  The record page's **Output** tab renders `.docx`, markdown, and plain-text attachments named in the output inline, with the same highlight-to-annotate layer as the Compare page, so you can review a generated document and comment on it without downloading it. Word files keep their tracked changes and comments.
+
+  {/* TODO(screenshot): /images/changelog-document-review-{light,dark}.png — record Output tab with a redline .docx rendered inline, tracked changes visible, and an annotation highlight with its hover card */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Records]** Any session attachment named in a record's output renders as a clickable chip that opens the preview.
+  - **[Records]** A record's **Expected** value sits beside the output in a collapsible column and renders docx, markdown, and text inline.
+  - **[Records]** The toolbar wraps and the table scrolls sideways when the details panel is open, instead of hiding behind it.
+  - **[Scores]** **Edit** on a completed score lets you change the value and reasoning of any [metric](/features/metrics) after grading, AI and heuristic included.
+  - **[Compare]** The compare chat answers at the comparison level and no longer cites individual trace spans.
+  - **[Overview]** A **Records** card shows the project's total record count, replacing the Testsets card.
+  - **[API]** [Upsert score](/api-reference/upsert-score) accepts a request with no `score`, which queues a human metric for manual grading and leaves it **pending**. AI and heuristic metrics still require a value.
 </Update>
 
 <Update label="July 31, 2026">
