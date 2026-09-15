@@ -7,6 +7,26 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="September 4, 2026">
+  ### Code Mode for the hosted MCP server
+
+  The hosted [MCP server](/features/mcp) at `mcp.scorecard.io` now runs `scorecard-ai-mcp` 3.4.0. Its 31 per-endpoint tools are replaced by two: `search_docs` looks up the SDK, and `execute` runs TypeScript your agent writes against the SDK in a sandbox and returns only the result, so a cross-project query over large records completes in one call instead of timing out on multi-megabyte pages.
+
+  ### Bug Fixes and Improvements
+
+  - **[Compare]** Collapse either compared record to a slim rail to give the other the full width. Click the rail to bring it back.
+  - **[Compare]** Comparison cards have an **Attachments** tab listing the record's session files. It appears only when the session has files.
+  - **[Compare]** The compare search box remembers its query per project, so your filters are back when you return to the page.
+  - **[Annotations]** The add-annotation popover opens above the selection when there is no room below, and no longer discards a half-typed note when you click elsewhere. Comment cards can be dragged aside.
+  - **[Annotations]** Edit the note on your own annotations in place with the pencil on the comment card, instead of deleting and re-highlighting.
+  - **[Records]** Long file names and URLs in outputs wrap instead of pushing the panel behind a horizontal scrollbar.
+  - **[Export]** CSV and Excel exports of records and runs include an **Annotations** column.
+  - **[Clippy]** Clippy can read a record's trace. Ask why a record failed and it lists the spans and reads the ones it needs.
+  - **[Clippy]** A record open in the records list's side panel counts as the page you're on, so Clippy answers about that record.
+  - **[Clippy]** Clippy reports metric names instead of version labels when describing scores, renders markdown lists correctly, keeps the earlier conversation when you approve a tool call, and stays pinned to the bottom while a reply streams.
+  - **[Models]** The model catalog was refreshed. `gemini-3.8-flash` is the suggested Gemini pick, and Bedrock's suggested Llama is now Llama 4 Maverick.
+</Update>
+
 <Update label="August 28, 2026">
   ### Bug Fixes and Improvements
 
