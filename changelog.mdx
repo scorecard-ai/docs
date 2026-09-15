@@ -19,6 +19,24 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
   - **[Sessions]** Attachment lists load faster, most noticeably on sessions with hundreds of files.
 </Update>
 
+<Update label="August 7, 2026">
+  ### Read and annotate documents on a record
+
+  The record page's **Output** tab renders `.docx`, markdown, and plain-text attachments named in the output inline, with the same highlight-to-annotate layer as the Compare page, so you can review a generated document and comment on it without downloading it. Word files keep their tracked changes and comments.
+
+  {/* TODO(screenshot): /images/changelog-document-review-{light,dark}.png — record Output tab with a redline .docx rendered inline, tracked changes visible, and an annotation highlight with its hover card */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Records]** Any session attachment named in a record's output renders as a clickable chip that opens the preview.
+  - **[Records]** A record's **Expected** value sits beside the output in a collapsible column and renders docx, markdown, and text inline.
+  - **[Records]** The toolbar wraps and the table scrolls sideways when the details panel is open, instead of hiding behind it.
+  - **[Scores]** **Edit** on a completed score lets you change the value and reasoning of any [metric](/features/metrics) after grading, AI and heuristic included.
+  - **[Compare]** The compare chat answers at the comparison level and no longer cites individual trace spans.
+  - **[Overview]** A **Records** card shows the project's total record count, replacing the Testsets card.
+  - **[API]** [Upsert score](/api-reference/upsert-score) accepts a request with no `score`, which queues a human metric for manual grading and leaves it **pending**. AI and heuristic metrics still require a value.
+</Update>
+
 <Update label="July 31, 2026">
   ### Bug Fixes and Improvements
 
