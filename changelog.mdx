@@ -7,6 +7,32 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="September 11, 2026">
+  ### Multiple graders per metric
+
+  Several people can now score the same [metric](/features/metrics) on a record, and each grader's score is kept separately, so one metric can carry independent reviews and you can see where graders disagree. A cell shows one score with a count badge when more than one grader has scored it. Open the card to page through each grader's value and reasoning, or click **Add my score** to add yours. Metric widgets get a grader-scope pill: **All** counts every grader's latest score as a vote, or pick one grader to see only their scores and what they have left to grade.
+
+  {/* TODO(screenshot): /images/changelog-multi-grader-scores-{light,dark}.png — score card popover with the grader pager (1 of 3) and Add my score, plus a metric widget with the grader-scope pill */}
+
+  ### Blind evaluations on the Compare page
+
+  Org members see compared records as **Model A**, **Model B**, and **Model C**, with identity taken from each run's System instead of record tags, so reviewers judge outputs without the system name in front of them. Admins see the System name and version, each grader's pick as an avatar under the option they chose with their reasoning, dashed **awaiting** marks for assigned reviewers who haven't graded yet, and a **Reviewers** column on the record picker with per-reviewer progress.
+
+  {/* TODO(screenshot): /images/changelog-blind-compare-{light,dark}.png — admin view with system names, grader avatars and awaiting marks beside the member view of the same comparison showing Model A/B */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Compare]** One comparison comment box covers every compared record. Per-record comments sit behind a **Comment on a single record** toggle.
+  - **[Compare]** Highlight and annotate text in the **Expected** column on the compare and record pages.
+  - **[Compare]** Comparison cards no longer show a **Scores** tab or an **Open** link, so existing grades don't influence preference picks.
+  - **[Compare]** Records keep their left/right slots by run order, the **Attachments** tab fills the card with file-type badges, and closing a comparison asks first.
+  - **[Records]** A **System** column (hidden by default) on the records table and a `system:` search filter narrow records to one system version. Members see the blind alias.
+  - **[Records]** The record page's trace chat can see your own annotations, so you can ask it about what you highlighted.
+  - **[Annotations]** Notes support markdown: bold, lists, and strikethrough.
+  - **[Clippy]** Clippy shows its reasoning live while it works. Finished reasoning collapses to one line you can expand.
+  - **[API]** [Upsert score](/api-reference/upsert-score) accepts an optional `userId` on human metrics to submit a score on behalf of a grader, and every score returned by the API carries the grader's `userId`.
+</Update>
+
 <Update label="September 4, 2026">
   ### Code Mode for the hosted MCP server
 
