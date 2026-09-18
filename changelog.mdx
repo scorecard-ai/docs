@@ -7,6 +7,20 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="September 18, 2026">
+  ### Bug Fixes and Improvements
+
+  - **[Records]** Only org admins can change a record's assignees. Members see the assignees as read-only chips.
+  - **[Records]** **Assign** moved out of the row-actions menu to a toolbar button, with assign and unassign as a toggle in one dialog.
+  - **[Records]** The row-actions menu has one **Export** section now, with the record formats behind a **Records** submenu.
+  - **[Annotations]** Members see only their own annotations and any written by an org admin, on the compare page, the record page, the records table, exports, and the API. Admins and org API keys still see every author.
+  - **[Compare]** Per-model Pass/Fail rows show the avatar of each grader who picked that value, and mark assigned reviewers who haven't graded yet. Admins only.
+  - **[Compare]** A comment you've typed survives a reload, and a per-record draft survives collapsing the box.
+  - **[Compare]** Clearing the search or closing a record card puts the page back to its starting state, after a confirmation.
+  - **[App]** Expired session tokens refresh on their own, so a machine whose clock runs behind no longer hits "Failed to load record" or "Couldn't save preference".
+  - **[API]** [Assign](/api-reference/assign-record-user) and [unassign](/api-reference/unassign-record-user) return 403 for a personal API key or OAuth token belonging to a non-admin. Org API keys are unaffected.
+</Update>
+
 <Update label="August 14, 2026">
   ### Bug Fixes and Improvements
 
