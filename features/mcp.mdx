@@ -10,13 +10,33 @@ import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
 Scorecard's MCP (Model Context Protocol) server lets you manage projects, create testsets, configure metrics, run evaluations, and analyze results through natural language in any MCP-compatible client.
 
-## Available Tools
+## How it works
 
-The MCP server has ~45 tools covering projects, testsets, testcases, systems, metrics, runs, records, scores, and annotations, plus documentation search. Each tool maps to a Scorecard API operation, so anything the SDK can do is available in natural language. The [full tool reference](#tool-reference) is at the bottom of this page.
+The server uses **Code Mode**: instead of one tool per API endpoint, it exposes two tools and lets your assistant write code against the [Scorecard TypeScript SDK](https://github.com/scorecard-ai/scorecard-node).
 
-<Frame caption="Scorecard MCP server tools listed in Claude Code.">
-  <img src="/images/mcp-tools-overview.png" alt="Scorecard MCP server tool listing showing ~45 available tools across Metrics, Scores, Systems, Annotations, and Docs." />
-</Frame>
+| Tool | What it does |
+| ---- | ------------ |
+| `search_docs` | Searches the SDK documentation for the right method and parameters. |
+| `execute` | Runs TypeScript your assistant writes against a pre-authenticated SDK client in a sandbox, and returns only what the code returns or logs. |
+
+A typical `execute` call looks like this:
+
+```typescript
+async function run(client) {
+  const results = [];
+  for await (const project of client.projects.list()) {
+    const runs = await client.runs.list(project.id, { limit: 1 });
+    results.push({ project: project.name, latestRun: runs.data[0]?.id ?? null });
+  }
+  return results;
+}
+```
+
+Because filtering and aggregation happen inside the sandbox, only the final result comes back to the conversation. A question that spans many projects, runs, or large records completes in a single call instead of paging multi-megabyte responses through your assistant's context.
+
+<Note>
+  Each `execute` call is independent: variables do not persist between calls. Individual API requests time out after 30 seconds and a whole `execute` call after about 5 minutes. The sandbox can only reach the Scorecard API, with no filesystem or other network access.
+</Note>
 
 ## Setting Up the MCP Server
 
@@ -45,9 +65,26 @@ Go to Claude Desktop settings and click the "Connectors" tab. Click "Add custom 
   caption="Adding the Scorecard MCP connector in Claude Desktop."
 />
 
+### Other clients
+
+Any client that supports remote MCP servers over Streamable HTTP can use `https://mcp.scorecard.io/mcp`. If your client cannot complete an OAuth flow, pass a [Scorecard API key](https://app.scorecard.io/settings) as a bearer token instead:
+
+```json
+{
+  "mcpServers": {
+    "scorecard": {
+      "url": "https://mcp.scorecard.io/mcp",
+      "headers": {
+        "Authorization": "Bearer ak_MyAPIKey"
+      }
+    }
+  }
+}
+```
+
 ### Local configuration
 
-You can run the MCP server locally via npx:
+You can also run the same server locally via npx:
 
 ```sh
 export SCORECARD_API_KEY="your_api_key"
@@ -61,7 +98,7 @@ For clients with a configuration JSON:
   "mcpServers": {
     "scorecard_ai": {
       "command": "npx",
-      "args": ["-y", "scorecard-ai-mcp", "--client=claude", "--tools=dynamic"],
+      "args": ["-y", "scorecard-ai-mcp"],
       "env": {
         "SCORECARD_API_KEY": "ak_MyAPIKey"
       }
@@ -69,6 +106,18 @@ For clients with a configuration JSON:
   }
 }
 ```
+
+<Warning>
+  The local server runs `execute` code in a Deno sandbox on your machine, so [Deno](https://deno.land) must be installed and on your `PATH`. Documentation search works offline from an index bundled with the package.
+</Warning>
+
+To restrict what the assistant can do, limit the `execute` tool with flags. For example, a read-only server:
+
+```json
+"args": ["-y", "scorecard-ai-mcp", "--code-allow-http-gets"]
+```
+
+You can also allow or block specific SDK methods with `--code-allowed-methods` and `--code-blocked-methods`, which take regular expressions matched against method names such as `records.delete`.
 
 ## Examples
 
@@ -94,6 +143,13 @@ Create two metrics in the "Support Bot Eval" project:
 ```
 Show me the latest run results for the "Support Bot Eval" project.
 Which testcases scored lowest on Response Accuracy?
+```
+
+### Compare across projects
+
+```
+For every project in my organization, find the most recent run and report the
+pass rate on each boolean metric. Rank the projects from best to worst.
 ```
 
 ### Review human feedback
@@ -123,93 +179,28 @@ to penalize responses that miss key details from the ideal response.
 
 ## Technical Details
 
-- Built on the [Model Context Protocol](https://modelcontextprotocol.io/) standard
+- Built on the [Model Context Protocol](https://modelcontextprotocol.io/) standard using the Streamable HTTP transport
 - Compatible with any MCP client (Claude Code, Claude Desktop, Cursor, and more)
-- Secured with OAuth authentication
-- Open source: [github.com/scorecard-ai/scorecard-mcp](https://github.com/scorecard-ai/scorecard-mcp)
+- Secured with OAuth authentication, or a Scorecard API key passed as a bearer token
+- The hosted server runs the [`scorecard-ai-mcp`](https://www.npmjs.com/package/scorecard-ai-mcp) package (3.4.0), whose source lives in the [scorecard-node](https://github.com/scorecard-ai/scorecard-node/tree/main/packages/mcp-server) repository
+- Anything the SDK can do is available: see the [API reference](/api-reference/overview) for the full surface
 
-## Tool reference
+## Migrating from the per-endpoint tools
 
-<AccordionGroup>
-  <Accordion title="Projects">
-    | Tool | Description |
-    | ---- | ----------- |
-    | `list_projects` | List all projects, paginated and ordered oldest first. |
-    | `create_projects` | Create a new project with a name and description. |
-  </Accordion>
+Earlier versions of the server exposed one tool per API operation, such as `list_projects` or `create_testsets`. Those tools no longer exist. Prompts written in natural language keep working unchanged, because the assistant now reaches the same operations through `execute`. If you referenced tool names directly, here is where each one went:
 
-  <Accordion title="Testsets">
-    | Tool | Description |
-    | ---- | ----------- |
-    | `list_testsets` | List the testsets in a project. |
-    | `get_testsets` | Retrieve a single testset by ID. |
-    | `create_testsets` | Create a testset, defining its JSON schema and the field mapping (inputs / expected / metadata). |
-    | `update_testsets` | Update a testset's name, description, schema, or field mapping. |
-    | `delete_testsets` | Delete a testset. |
-  </Accordion>
+| Old tool | SDK call inside `execute` |
+| -------- | ------------------------- |
+| `list_projects`, `create_projects` | `client.projects.list()`, `client.projects.create({...})` |
+| `list_testsets`, `get_testsets`, `create_testsets`, `update_testsets`, `delete_testsets` | `client.testsets.list(projectId)`, `.get(id)`, `.create(projectId, {...})`, `.update(id, {...})`, `.delete(id)` |
+| `list_testcases`, `get_testcases`, `create_testcases`, `update_testcases`, `delete_testcases` | `client.testcases.list(testsetId)`, `.get(id)`, `.create(testsetId, {...})`, `.update(id, {...})`, `.delete({ ids })` |
+| `list_systems`, `get_systems`, `upsert_systems`, `update_systems`, `delete_systems` | `client.systems.list(projectId)`, `.get(id)`, `.upsert(projectId, {...})`, `.update(id, {...})`, `.delete(id)` |
+| `get_systems_versions`, `upsert_systems_versions` | `client.systems.versions.get(id)`, `client.systems.versions.upsert(systemId, {...})` |
+| `list_metrics`, `get_metrics`, `create_metrics`, `update_metrics`, `delete_metrics` | `client.metrics.list(projectId)`, `.get(id)`, `.create(projectId, {...})`, `.update(id, {...})`, `.delete(id)` |
+| `list_runs`, `get_runs`, `create_runs` | `client.runs.list(projectId)`, `.get(id)`, `.create(projectId, {...})` |
+| `list_records`, `create_records`, `delete_records` | `client.records.list(runId)`, `.create(runId, {...})`, `.delete(id)` |
+| `upsert_scores` | `client.scores.upsert(metricConfigId, { recordId, ... })` |
+| `list_annotations` | `client.records.annotations.list(recordId)` |
+| `search_docs` | Unchanged |
 
-  <Accordion title="Testcases">
-    | Tool | Description |
-    | ---- | ----------- |
-    | `list_testcases` | List the testcases in a testset, paginated. |
-    | `get_testcases` | Retrieve a single testcase by ID. |
-    | `create_testcases` | Create up to 100 testcases in a testset, validated against its schema. |
-    | `update_testcases` | Replace the data of an existing testcase. |
-    | `delete_testcases` | Delete one or more testcases by ID. |
-  </Accordion>
-
-  <Accordion title="Systems">
-    | Tool | Description |
-    | ---- | ----------- |
-    | `list_systems` | List the systems (systems under test) in a project. |
-    | `get_systems` | Retrieve a single system by ID. |
-    | `upsert_systems` | Create a system, or update the existing one if a system with the same name exists. |
-    | `update_systems` | Update a system's name, description, or production version. |
-    | `delete_systems` | Delete a system definition (its versions are kept). |
-    | `get_systems_versions` | Retrieve a single system version by ID. |
-    | `upsert_systems_versions` | Create an immutable system version from a config snapshot. |
-  </Accordion>
-
-  <Accordion title="Metrics">
-    | Tool | Description |
-    | ---- | ----------- |
-    | `list_metrics` | List the metrics configured for a project. |
-    | `get_metrics` | Retrieve a single metric by ID. |
-    | `create_metrics` | Create a metric for evaluating outputs. |
-    | `update_metrics` | Update an existing metric. |
-    | `delete_metrics` | Delete a metric (also removes it from metric groups and monitors). |
-
-    <Note>
-      The server splits `create_metrics` and `update_metrics` into one variant per metric type, so the structure of the call depends on the metric's `evalType` (`ai`, `human`, or `heuristic`) and `outputType` (integer or boolean). Your client picks the right variant automatically based on the metric you describe.
-    </Note>
-  </Accordion>
-
-  <Accordion title="Runs">
-    | Tool | Description |
-    | ---- | ----------- |
-    | `list_runs` | List the runs in a project, most recent first. |
-    | `get_runs` | Retrieve a run by ID, including its status and scoring progress. |
-    | `create_runs` | Create a run against a testset with a chosen system version and set of metrics. |
-  </Accordion>
-
-  <Accordion title="Records and scores">
-    | Tool | Description |
-    | ---- | ----------- |
-    | `list_records` | List the records for a run, including all scores on each record. |
-    | `create_records` | Create a record capturing a system's inputs, outputs, and expected values. |
-    | `delete_records` | Delete a record by ID. |
-    | `upsert_scores` | Create or update a record's score for a given metric. |
-  </Accordion>
-
-  <Accordion title="Annotations">
-    | Tool | Description |
-    | ---- | ----------- |
-    | `list_annotations` | List the ratings and comments left on a record. |
-  </Accordion>
-
-  <Accordion title="Documentation">
-    | Tool | Description |
-    | ---- | ----------- |
-    | `search_docs` | Search Scorecard's SDK and API documentation across supported languages. |
-  </Accordion>
-</AccordionGroup>
+Record tags, record assignees, and session attachments were never exposed as tools but are available through `client.records.tags`, `client.records.assignees`, and `client.attachments`.
