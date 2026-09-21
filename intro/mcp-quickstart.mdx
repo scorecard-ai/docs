@@ -22,16 +22,16 @@ This quickstart uses Claude Desktop, but it also works with other MCP clients, l
   <Step title="Install the Scorecard MCP server in Claude">
     Open Claude and add the Scorecard MCP server using the remote configuration:
 
-    1. Open Claude settings
-    2. Navigate to the "MCP Servers" section
-    3. Add a new remote server with URL: `https://mcp.scorecard.io/mcp`
+    1. Open Claude Desktop settings and click the "Connectors" tab
+    2. Click "Add custom connector" and paste the URL: `https://mcp.scorecard.io/mcp`
+    3. Click "Add", then "Connect"
     4. Complete the OAuth authentication flow to connect your Scorecard account
 
     <Note>
       The remote MCP server requires no local dependencies or API key management. Authentication happens securely through your browser.
     </Note>
 
-    Once connected, Claude will have access to all Scorecard API capabilities through natural language.
+    Once connected, Claude has two tools: `search_docs` to look up the Scorecard SDK, and `execute` to run code against it. Together they cover the whole Scorecard API, so you only need to describe what you want in natural language.
   </Step>
 
   <Step title="Create a project">
@@ -47,7 +47,7 @@ This quickstart uses Claude Desktop, but it also works with other MCP clients, l
     />
 
     <Note>
-      Claude will automatically use the appropriate MCP tools (like `create_projects`, `list_projects`) based on your natural language request.
+      Behind the scenes, Claude writes a short TypeScript snippet against the Scorecard SDK and runs it with the `execute` tool. Expand the tool call in the conversation to see the code it ran.
     </Note>
   </Step>
 
@@ -81,8 +81,6 @@ This quickstart uses Claude Desktop, but it also works with other MCP clients, l
     >
     > 1. "Response Accuracy" (integer) - Measures how well the response answers the customer's question compared to the ideal response
     > 2. "Tone Appropriateness" (boolean) - Checks if the response uses professional, empathetic language appropriate for customer support
-    >
-    > Use GPT-4o as the evaluator with temperature 0 for consistency.
 
     <DarkLightImage
       lightSrc="/images/mcp-quickstart-create-metrics-light.png"
@@ -92,7 +90,7 @@ This quickstart uses Claude Desktop, but it also works with other MCP clients, l
     />
 
     <Note>
-      Claude's initial tool call to `create_metrics` failed because it used the wrong arguments, but it was able to eventually succeed by reading the documentation and trying again.
+      If Claude is unsure how to call the SDK, it runs `search_docs` first to look up the right method and parameters, then tries again. A failed first attempt followed by a corrected one is normal.
     </Note>
   </Step>
 
@@ -113,7 +111,7 @@ This quickstart uses Claude Desktop, but it also works with other MCP clients, l
 
     > Add 5 more testcases covering edge cases like angry customers and off-topic questions.
 
-    The MCP server gives Claude access to the [full Scorecard API](/api-reference), so you can manage your entire evaluation workflow conversationally.
+    The MCP server gives Claude access to the [full Scorecard API](/api-reference/overview), so you can manage your entire evaluation workflow conversationally.
   </Step>
 </Steps>
 
@@ -132,7 +130,7 @@ This quickstart uses Claude Desktop, but it also works with other MCP clients, l
 </Tip>
 
 <Tip>
-**Iterate conversationally**: Made a mistake? Just ask Claude to fix it: "Update that metric to use temperature 0.1 instead" or "Add a new field called 'priority' to the testset"
+**Iterate conversationally**: Made a mistake? Just ask Claude to fix it: "Make that metric stricter about factual details" or "Add a new field called 'priority' to the testset"
 </Tip>
 
 ## Troubleshooting
@@ -152,6 +150,14 @@ This quickstart uses Claude Desktop, but it also works with other MCP clients, l
 
   <Accordion title="Claude says it can't find MCP tools.">
     Verify the MCP server is connected and enabled in Claude settings. You should see "Scorecard" listed in your active MCP servers.
+  </Accordion>
+
+  <Accordion title="Only two tools show up.">
+    That is expected. The server exposes `search_docs` and `execute`, and Claude reaches every Scorecard API operation by writing code for `execute`. See [How it works](/features/mcp#how-it-works).
+  </Accordion>
+
+  <Accordion title="The local server says Deno is required.">
+    The local `npx scorecard-ai-mcp` server runs code in a Deno sandbox on your machine. Install [Deno](https://deno.land) and make sure it is on your `PATH`, then restart your client. The hosted server at `https://mcp.scorecard.io/mcp` has no local requirements.
   </Accordion>
 
   <Accordion title="I can't connect to remote MCP servers.">
