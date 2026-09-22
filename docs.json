@@ -243,6 +243,16 @@
             ]
           },
           {
+            "group": "Metric Groups",
+            "pages": [
+              "api-reference/create-metric-group",
+              "api-reference/list-metric-groups",
+              "api-reference/get-metric-group",
+              "api-reference/update-metric-group",
+              "api-reference/delete-metric-group"
+            ]
+          },
+          {
             "group": "Runs",
             "pages": [
               "api-reference/create-run",
