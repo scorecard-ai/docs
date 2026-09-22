@@ -24,7 +24,7 @@ A **Record** is an individual test execution within a run. Each record contains:
 - **Scores**: Evaluation results from each metric
 - **Status**: Whether scoring is pending, completed, or errored
 
-Records are created when you run evaluations via the API, Playground, or from traces.
+Records are created when you run evaluations via the API, a Kickoff Run, or from traces.
 
 ## Customizing the Table
 
@@ -32,7 +32,7 @@ Click **Edit Table** to customize which columns appear and their order. You can 
 
 - **Base columns**: ID, Created By, Created At
 - **Data fields**: Inputs, Outputs, Expected
-- **Source**: How the record was created (API, Playground, Kickoff, Trace)
+- **Source**: How the record was created (API, Kickoff, Trace). Records created before the Playground was retired may still show **Playground**.
 - **Metrics**: Score columns for each metric in your project
 
 <DarkLightImage

@@ -113,6 +113,18 @@
     {
       "source": "/features/best-in-class-metrics",
       "destination": "/features/metrics"
+    },
+    {
+      "source": "/features/playground",
+      "destination": "/features/prompts"
+    },
+    {
+      "source": "/features/endpoints",
+      "destination": "/intro/sdk-quickstart"
+    },
+    {
+      "source": "/features/multi-turn-simulation",
+      "destination": "/intro/sdk-quickstart"
     }
   ],
   "navigation": {
@@ -155,7 +167,6 @@
           {
             "group": "Core features",
             "pages": [
-              "features/playground",
               "features/metrics",
               "features/tracing",
               "features/runs",
@@ -170,9 +181,7 @@
               "features/sdk-tracing",
               "features/mcp",
               "features/synthetic-data-generation",
-              "features/multi-turn-simulation",
               "features/a-b-comparison",
-              "features/endpoints",
               "features/ai-sdk-wrapper",
               "features/github-actions",
               "features/ai-guardrails",
