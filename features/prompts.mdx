@@ -5,7 +5,7 @@ description: "Create, version, test, and deploy prompts with integrated evaluati
 
 import { DarkLightImage } from '/snippets/dark-light-image.jsx';
 
-Prompts in Scorecard are configurable templates that generate inputs for language models. They support dynamic variable substitution, multi-message conversations, and testing in the playground.
+Prompts in Scorecard are configurable templates that generate inputs for language models. They support dynamic variable substitution and multi-message conversations.
 
 <DarkLightImage
   lightSrc="/images/prompt-details-light.png"
@@ -83,7 +83,7 @@ You can mark any version as production by clicking the **"Publish"** button, but
   width="400"
 />
 
-Before publishing to production, test a new version in the playground to be confident that it behaves as expected and won't regress on any testcases.
+Before publishing to production, test a new version with a [Kickoff Run](/features/runs#kickoff-run-from-the-ui) to be confident that it behaves as expected and won't regress on any testcases.
 
 ## SDK Integration
 
@@ -228,5 +228,5 @@ print(f"New prompt version created: {prompt_version.id}")
 </CodeGroup>
 
 <Info>
-Ready to evaluate your prompts? Follow the [Playground guide](/features/playground) to test your prompts on Testsets.
+Ready to evaluate your prompts? Follow the [Runs guide](/features/runs) to test your prompts on Testsets.
 </Info>

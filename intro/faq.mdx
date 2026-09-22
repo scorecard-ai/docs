@@ -44,7 +44,7 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
 
     - **Expert judgment at scale**: Instead of waiting for SMEs to manually label production cases, encode their knowledge into [Critic Agent Metrics](/features/metrics) that act as **reward models** — applying expert judgment consistently across every scenario automatically.
     - **Fast feedback loops**: Evaluate your agent through **10,000+ scenarios in minutes**. Identify weaknesses, iterate, and validate improvements — all in the same day.
-    - **Broad scenario coverage**: Test against **tool-calling workflows**, **edge cases and adversarial inputs**, **multi-turn conversations** *(coming soon)*, and **enterprise environments** *(coming soon)*.
+    - **Broad scenario coverage**: Test against **tool-calling workflows**, **edge cases and adversarial inputs**, and **enterprise environments** *(coming soon)*.
 
     The result: your team's bottleneck moves from **feedback** (slow, getting slower) to **building** (fast, getting faster). Scorecard's evaluation data also serves as high-quality training data for **RLHF and reinforcement learning** pipelines.
   </Accordion>
@@ -76,9 +76,8 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     - Monitor production performance through tracing and observability
     - Create test cases from production failures for regression testing
     - Iterate on prompts, tools, and configurations with quantitative feedback
-    - Multi-turn simulations test conversational improvements
 
-    See our [Multi-turn Simulation](/features/multi-turn-simulation) and [A/B Comparison](/features/a-b-comparison) docs for specific improvement workflows.
+    See our [A/B Comparison](/features/a-b-comparison) docs for specific improvement workflows.
   </Accordion>
 </AccordionGroup>
 
@@ -95,17 +94,6 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     Scorecard implements rate limiting to ensure platform stability and fair usage across all customers. Rate limits vary by plan tier, with enterprise customers receiving custom limits based on their specific requirements.
     
     Rate limit information is included in API response headers for monitoring usage. If you need higher limits for your use case, contact support to discuss your requirements.
-  </Accordion>
-
-  <Accordion title="What is the playbook text limit?">
-    **Sim Agent Playbooks** (persona instructions for multi-turn simulation) have the following limits:
-    
-    - **Maximum playbook length**: 50KB of text
-    - **Template variables**: Up to 100 variables per playbook
-    - **Conversation turns**: Maximum 100 turns per simulation (safety limit to prevent infinite loops)
-    - **Stop conditions**: Multiple stop conditions can be combined (max turns, time, or content-based)
-    
-    Playbooks support Jinja2 templating for dynamic content and can reference any field from your test cases. For example: `{{item_to_return}}`, `{{customer_name}}`, etc.
   </Accordion>
 
   <Accordion title="How do I create test cases?">
@@ -228,15 +216,13 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     Yes! Scorecard is designed to test complex AI agents, not just simple prompts. Our platform supports:
 
     **Agentic Capabilities**:
-    - **Multi-turn conversations**: Test agents across realistic conversation flows using Sim Agents
     - **Tool-calling agents**: Evaluate agents that use function calling and API integrations
     - **Multi-step workflows**: Version complete agent configurations including prompts, tools, and routing logic
-    - **Agent APIs**: Test deployed agent endpoints without code changes
+    - **Agent APIs**: Evaluate deployed agents by calling them from your own code with the SDK
 
     **How It Works**:
     - Use **Systems** to version your complete agent configuration (prompts + tools + settings)
-    - Use **Multi-turn Simulation** to test conversational agents with automated user personas (Sim Agents)
-    - Use **Custom Endpoints** to evaluate agent APIs and HTTP endpoints
+    - Use the **SDK** to run your agent against a testset and record every response
     - Apply metrics to agent outputs just like any other evaluation
     - Use **Tracing** to observe and debug multi-step agent executions
 
@@ -346,7 +332,7 @@ import { Accordion, AccordionGroup, Card } from "@mintlify/components";
     - Unlimited users
     - Includes 1M scores per month, then $1 per 5K additional
     - Test set management
-    - Prompt playground access
+    - Prompt management and versioning
     - Priority support
     
     **Enterprise** (Custom pricing):

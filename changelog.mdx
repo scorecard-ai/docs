@@ -7,6 +7,16 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="September 21, 2026">
+  ### Bug Fixes and Improvements
+
+  - **[Playground]** The Playground has been removed. Test a prompt version against a testset with a [Kickoff Run](/features/runs#kickoff-run-from-the-ui) instead.
+  - **[Endpoints]** Custom Endpoints have been removed. To evaluate an HTTP API, call it from your own code and record the result with the [SDK](/intro/sdk-quickstart).
+  - **[Sim Agents]** Sim Agents and multi-turn simulation have been removed, along with the `POST /agents/{systemVersionId}/simulate` API endpoint. The Python SDK's `multi_turn_simulation()` helper depends on that endpoint and no longer works.
+  - **[Records]** Runs and records created by these surfaces are unchanged and still visible on the [Records](/features/records) page. Older records keep their **Playground** source label.
+  - **[Systems]** Systems that backed a Sim Agent or a Custom Endpoint remain in the database and are reachable through the REST API, but no longer appear in the Systems list.
+</Update>
+
 <Update label="August 14, 2026">
   ### Bug Fixes and Improvements
 
