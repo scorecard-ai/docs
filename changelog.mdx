@@ -7,6 +7,34 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="September 25, 2026">
+  ### Customizable project overview
+
+  The [project](/features/projects) overview is now a board of widgets you arrange yourself, so each project opens on the numbers your team checks most. Add the **Volume**, **Assigned to**, and per-metric widgets from the Records page, or the new **Records analysis** widget with AI insights. Reorder and resize them, and scope all of them with one time range picker.
+
+  {/* TODO(screenshot): /images/changelog-project-overview-{light,dark}.png — project overview board with Volume, Records analysis, and a metric widget at different sizes */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Records]** Save the current columns and widgets as the **project default** from the **Actions** menu, or reset your view to it. People opening the project for the first time start with that layout.
+  - **[Records]** Members no longer see grades other reviewers gave on the same record, in the app or through the records API. Admins still see every score.
+  - **[Records]** Admins can add their own grade after an assigned reviewer has graded, using the **Add my score** button in the record panel.
+  - **[Records]** Sections in the record panel start collapsed. Scores and Annotations show their counts in the header, and sections you open stay open as you move between records.
+  - **[Records]** [Metric](/features/metrics) widgets for integer and float metrics show the average score.
+  - **[Records]** The **Volume** widget is removed from the Records overview. An empty overview has quick-add buttons for **Assigned to** and your first two metrics.
+  - **[Tables]** Paginated tables (Records, Runs, Testsets, Analysis, Traces) show the total row count and your position, e.g. `1–10 of 48`.
+  - **[Compare]** The **Compare** page compares exactly two records. Links with three record IDs open the first two.
+  - **[Compare]** Drag the borders between the record cards and the **Expected** column to resize them.
+  - **[Compare]** Each record card shows a **Completed** or **Pending** badge for your own grading on that record.
+  - **[Compare]** After you pick a record, the other slot only lists records that share a tag with it. `model:` tags don't count.
+  - **[Compare]** Tag chips and score badges in the record picker still work as filters on records already in the comparison.
+  - **[Annotations]** Highlighting text shows a small comment icon instead of opening the comment box right away.
+  - **[Metrics]** The 1–5 passing threshold picker has numbered cells, highlights the passing range, and shows a `Pass: 4–5 · Fail: 1–3` legend. It also works with arrow keys.
+  - **[Metrics]** Toasts, dialogs, and pages show metric, metric group, and testset names instead of IDs.
+  - **[Models]** Llama 4 Maverick (`us.meta.llama4-maverick-17b-instruct-v1:0`) now appears in the Bedrock model selector.
+  - **[Projects]** Project links no longer 404 for users who belong to more than 10 organizations.
+</Update>
+
 <Update label="September 21, 2026">
   ### Bug Fixes and Improvements
 
