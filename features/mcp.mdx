@@ -187,7 +187,9 @@ to penalize responses that miss key details from the ideal response.
 
 ## Migrating from the per-endpoint tools
 
-Earlier versions of the server exposed one tool per API operation, such as `list_projects` or `create_testsets`. Those tools no longer exist. Prompts written in natural language keep working unchanged, because the assistant now reaches the same operations through `execute`. If you referenced tool names directly, here is where each one went:
+Earlier versions of the server exposed one tool per API operation, such as `list_projects` or `create_testsets`. Those tools no longer exist. Prompts written in natural language keep working unchanged, because the assistant now reaches the same operations through `execute`. If you referenced tool names directly, the table below shows where each one went.
+
+<Accordion title="Old tool → SDK call mapping">
 
 | Old tool | SDK call inside `execute` |
 | -------- | ------------------------- |
@@ -204,3 +206,5 @@ Earlier versions of the server exposed one tool per API operation, such as `list
 | `search_docs` | Unchanged |
 
 Record tags, record assignees, and session attachments were never exposed as tools but are available through `client.records.tags`, `client.records.assignees`, and `client.attachments`.
+
+</Accordion>
