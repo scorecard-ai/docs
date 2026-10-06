@@ -1,226 +1,52 @@
 ---
-title: "Custom LLM Providers"
-description: "Scorecard supports multiple AI providers through our AI proxy infrastructure, allowing you to easily configure and switch between different LLM services."
+title: "Model providers"
+description: "Add your own model provider keys so AI metrics, prompts, and trace chat run on the models you choose."
 ---
 
-## Overview
+Scorecard calls a language model to judge [AI metrics](/features/metrics#ai-metrics), to run [prompts](/features/prompts) in a Kickoff Run, and to answer questions in a record's **Chat** tab. If a metric's model has no provider key in your organization, Scorecard scores it with its default model.
 
-Scorecard's AI proxy infrastructure provides seamless integration with all major AI providers, enabling you to configure multiple providers, switch between models effortlessly, and maintain consistent API calls across different services.
+## Add a provider key
 
-<Note>
-Configure your provider API keys in [organization settings](https://app.scorecard.io/settings) to get started with any of the supported providers below.
-</Note>
+1. Open **Settings → AI Providers**.
+2. Click the pencil next to a provider and paste your key. AWS Bedrock also asks for a key ID, and Google Vertex AI for a project ID.
+3. Click **Save Changes**.
 
-## Supported AI Providers
+| Provider | Models |
+| --- | --- |
+| OpenAI | GPT models |
+| Anthropic | Claude models |
+| Google | Gemini models through the Gemini API |
+| Google Vertex AI | Gemini, and partner models such as Claude, through your Google Cloud project |
+| AWS Bedrock | Models hosted in your AWS account, such as Claude and Llama |
+| Groq | Open models served by Groq |
 
-Choose from our comprehensive selection of AI providers, each offering unique strengths and model capabilities:
+The provider's models then appear in every model picker, with recommended models listed first and **Show all models** for the rest. Delete a key with the trash icon.
 
+## Add an Azure OpenAI deployment
+
+Open **Settings → Custom Models** and click **Add Custom Model**. Choose **Azure OpenAI**, give it a label and your API key, and describe the deployment:
+
+```json
+{
+  "model": "your_deployment_name",
+  "api_base": "https://your-resource.openai.azure.com",
+  "api_version": "2023-07-01-preview"
+}
+```
+
+Custom models appear in model pickers under **Custom**.
+
+## Data handling
+
+Requests to a provider you've added use your key, so that provider's terms and data retention apply. See [Security and privacy](/features/security-and-privacy) for how Scorecard handles your data.
+
+## Next steps
 
 <CardGroup cols={2}>
-  <Card title="OpenAI" href="https://openai.com">
-    <div className="flex flex-col items-center -mt-4">
-      <div className="mb-4">
-        <img className="hidden dark:block w-8 h-8 object-contain" src="/images/providers/openai.png" alt="OpenAI logo" style={{filter: 'brightness(0) invert(1)'}} />
-        <img className="block dark:hidden w-8 h-8 object-contain" src="/images/providers/openai.png" alt="OpenAI logo" />
-      </div>
-      <p className="text-center">Access OpenAI language models for various use cases.</p>
-    </div>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Choose the judge model for each AI metric.
   </Card>
-  
-  <Card title="Anthropic" href="https://www.anthropic.com">
-    <div className="flex flex-col items-center -mt-4">
-      <div className="mb-4">
-        <img className="hidden dark:block w-8 h-8 object-contain" src="/images/providers/anthropic.png" alt="Anthropic logo" style={{filter: 'brightness(0) invert(1)'}} />
-        <img className="block dark:hidden w-8 h-8 object-contain" src="/images/providers/anthropic.png" alt="Anthropic logo" />
-      </div>
-      <p className="text-center">Integrate Claude models for advanced reasoning, analysis, and creative tasks.</p>
-    </div>
-  </Card>
-  
-  <Card title="Google" href="https://ai.google.dev">
-    <div className="flex flex-col items-center -mt-4">
-      <div className="mb-4">
-        <img className="w-8 h-8 object-contain" src="/images/providers/google.png" alt="Google logo" />
-      </div>
-      <p className="text-center">Utilize Gemini models and other Google AI services.</p>
-    </div>
-  </Card>
-  
-  <Card title="Vertex AI" href="https://cloud.google.com/vertex-ai">
-    <div className="flex flex-col items-center -mt-4">
-      <div className="mb-4">
-        <img className="w-8 h-8 object-contain" src="/images/providers/google.png" alt="Google logo" />
-      </div>
-      <p className="text-center">Access enterprise-grade AI models through Google Cloud's Vertex AI platform.</p>
-    </div>
-  </Card>
-  
-  <Card title="Groq" href="https://groq.com">
-    <div className="flex flex-col items-center -mt-4">
-      <div className="mb-4">
-        <img className="hidden dark:block w-8 h-8 object-contain" src="/images/providers/groq.png" alt="Groq logo" style={{filter: 'brightness(0) invert(1)'}} />
-        <img className="block dark:hidden w-8 h-8 object-contain" src="/images/providers/groq.png" alt="Groq logo" />
-      </div>
-      <p className="text-center">Ultra-high-speed inference for supported models with exceptional performance and low latency.</p>
-    </div>
-  </Card>
-  
-  <Card title="AWS Bedrock" href="https://aws.amazon.com/bedrock/">
-    <div className="flex flex-col items-center -mt-4">
-      <div className="mb-4">
-        <img className="w-8 h-8 object-contain" src="/images/providers/aws.png" alt="AWS logo" />
-      </div>
-      <p className="text-center">Access Amazon's managed AI services with enterprise-grade security and compliance.</p>
-    </div>
+  <Card title="Prompts" icon="message-square" href="/features/prompts">
+    Pick the model a prompt runs on.
   </Card>
 </CardGroup>
-
-## Extended Model Access
-
-Through our integrated providers, you gain access to an even broader ecosystem of cutting-edge models:
-
-<Tabs>
-  <Tab title="Via Groq">
-    Access additional high-performance models through Groq's lightning-fast inference:
-    
-    <CardGroup cols={3}>
-      <Card>
-        <div className="flex items-center">
-          <img className="w-5 h-5 mr-2" src="/images/providers/mistral.png" alt="Mistral logo" />
-          <a href="https://mistral.ai" target="_blank" className="font-medium hover:underline">Mistral AI</a>
-        </div>
-        <p className="text-sm mt-1">Efficient multilingual models</p>
-      </Card>
-      
-      <Card>
-        <div className="flex items-center">
-          <img className="w-5 h-5 mr-2" src="/images/providers/meta.png" alt="Meta logo" />
-          <a href="https://ai.meta.com" target="_blank" className="font-medium hover:underline">Meta</a>
-        </div>
-        <p className="text-sm mt-1">Open-source language models</p>
-      </Card>
-      
-      <Card>
-        <div className="flex items-center">
-          <img className="w-5 h-5 mr-2" src="/images/providers/cohere.jpeg" alt="Cohere logo" />
-          <a href="https://cohere.com" target="_blank" className="font-medium hover:underline">Cohere</a>
-        </div>
-        <p className="text-sm mt-1">Text generation and embeddings</p>
-      </Card>
-    </CardGroup>
-  </Tab>
-  
-  <Tab title="Via AWS Bedrock">
-    AWS Bedrock provides managed access to foundation models from multiple providers:
-    
-    <CardGroup cols={2}>
-      <Card>
-        <div className="flex items-center">
-          <img className="block dark:hidden w-5 h-5 mr-2" src="/images/providers/anthropic.png" alt="Anthropic logo" />
-          <img className="hidden dark:block w-5 h-5 mr-2" src="/images/providers/anthropic.png" alt="Anthropic logo" style={{filter: 'invert(1)'}} />
-          <a href="https://www.anthropic.com" target="_blank" className="font-medium hover:underline">Anthropic</a>
-        </div>
-        <p className="text-sm mt-1">Advanced reasoning and analysis models</p>
-      </Card>
-      
-      <Card>
-        <div className="flex items-center">
-          <img className="w-5 h-5 mr-2" src="/images/providers/cohere.jpeg" alt="Cohere logo" />
-          <a href="https://cohere.com" target="_blank" className="font-medium hover:underline">Cohere</a>
-        </div>
-        <p className="text-sm mt-1">Text generation and embeddings</p>
-      </Card>
-      
-      <Card>
-        <div className="flex items-center">
-          <img className="w-5 h-5 mr-2" src="/images/providers/meta.png" alt="Meta logo" />
-          <a href="https://ai.meta.com" target="_blank" className="font-medium hover:underline">Meta</a>
-        </div>
-        <p className="text-sm mt-1">Open-source language models</p>
-      </Card>
-      
-      <Card>
-        <div className="flex items-center">
-          <img className="w-5 h-5 mr-2" src="/images/providers/mistral.png" alt="Mistral logo" />
-          <a href="https://mistral.ai" target="_blank" className="font-medium hover:underline">Mistral AI</a>
-        </div>
-        <p className="text-sm mt-1">Efficient multilingual models</p>
-      </Card>
-    </CardGroup>
-  </Tab>
-  
-  <Tab title="Via Google Vertex AI">
-    Google Vertex AI provides enterprise-grade access to Google's AI models and third-party models:
-    
-    <CardGroup cols={2}>
-      <Card>
-        <div className="flex items-center">
-          <img className="w-5 h-5 mr-2" src="/images/providers/google.png" alt="Google logo" />
-          <a href="https://ai.google.dev" target="_blank" className="font-medium hover:underline">Google AI</a>
-        </div>
-        <p className="text-sm mt-1">Gemini and PaLM models</p>
-      </Card>
-      
-      <Card>
-        <div className="flex items-center">
-          <img className="block dark:hidden w-5 h-5 mr-2" src="/images/providers/anthropic.png" alt="Anthropic logo" />
-          <img className="hidden dark:block w-5 h-5 mr-2" src="/images/providers/anthropic.png" alt="Anthropic logo" style={{filter: 'invert(1)'}} />
-          <a href="https://www.anthropic.com" target="_blank" className="font-medium hover:underline">Anthropic</a>
-        </div>
-        <p className="text-sm mt-1">Claude models via Vertex AI</p>
-      </Card>
-      
-      <Card>
-        <div className="flex items-center">
-          <img className="w-5 h-5 mr-2" src="/images/providers/meta.png" alt="Meta logo" />
-          <a href="https://ai.meta.com" target="_blank" className="font-medium hover:underline">Meta</a>
-        </div>
-        <p className="text-sm mt-1">Llama models via Vertex AI</p>
-      </Card>
-      
-      <Card>
-        <div className="flex items-center">
-          <img className="w-5 h-5 mr-2" src="/images/providers/mistral.png" alt="Mistral logo" />
-          <a href="https://mistral.ai" target="_blank" className="font-medium hover:underline">Mistral AI</a>
-        </div>
-        <p className="text-sm mt-1">Mistral models via Vertex AI</p>
-      </Card>
-    </CardGroup>
-  </Tab>
-</Tabs>
-
-## Key Benefits
-
-<AccordionGroup>
-  <Accordion title="Easy Provider Management">
-    Configure multiple AI providers from a single interface using standardized API key management. No need to handle different authentication methods or API formats.
-  </Accordion>
-  
-  <Accordion title="Seamless Model Switching">
-    Switch between different AI models and providers without changing your implementation. Test and compare models effortlessly to find the best fit for your use case.
-  </Accordion>
-  
-  <Accordion title="Unified Integration">
-    Use consistent API calls regardless of the underlying AI provider through our proxy layer. Your code remains clean and provider-agnostic.
-  </Accordion>
-  
-  <Accordion title="Cost Optimization">
-    Compare costs across providers and models to optimize your AI spend. Easily switch to more cost-effective options as they become available.
-  </Accordion>
-</AccordionGroup>
-
-## Getting Started
-
-<Steps>
-  <Step title="Add Provider Credentials">
-    Navigate to your [organization settings](https://app.scorecard.io/settings) and add API keys for your desired providers.
-  </Step>
-  
-  <Step title="Create or Update Prompts">
-    When creating [prompts](/features/prompts), select from any of the available models across all configured providers.
-  </Step>
-  
-  <Step title="Test and Compare">
-    Use Scorecard's [A/B comparison features](/features/a-b-comparison) to evaluate performance across different providers and models.
-  </Step>
-</Steps>
