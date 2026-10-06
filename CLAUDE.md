@@ -27,13 +27,45 @@ This is a Mintlify-based documentation site for Scorecard AI. The repository str
 - **docs.json**: Main configuration file defining navigation, styling, and site structure
 - **openapi.yaml**: OpenAPI 3.1.0 specification for the Scorecard API v2
 - **changelog.mdx**: Weekly product updates in a standardized format
-- **MDX documentation files** organized by topic:
-  - `/intro/`: Introduction and getting started guides
-  - `/features/`: Feature documentation
-  - `/how-to-use-scorecard/`: Tutorials and guides
-  - `/api-reference/`: Auto-generated API documentation from OpenAPI spec
+- **MDX documentation files** organized by type. The navigation in `docs.json`, not the folder, decides where a page appears:
+  - `/intro/`: Overview, quickstarts, concepts, FAQ, and some older integration and guide pages
+  - `/features/`: One page per product area (tracing, records, testsets, metrics, runs, review, admin)
+  - `/integrations/`: How to send traces from a specific SDK, framework, or agent
+  - `/guides/`: Task-focused recipes that combine several features
+  - `/api-reference/`: Auto-generated API documentation from the OpenAPI spec
 - **Images**: Stored in `/images/` subdirectories organized by feature/topic
-- **Snippets**: Reusable React components in `/snippets/` (e.g., dark-light-image.jsx)
+- **Snippets**: Reusable components in `/snippets/`: `dark-light-image.jsx` and `claude-code-env.mdx` (the Claude Code tracing environment variables, used on several pages)
+
+### Navigation
+
+The **Documentation** tab follows the user's journey: Get started, Trace, Evaluate, Review, Automate, Guides, Administration. The **Integrations** tab holds one page per tracing integration. Keep groups short (two to six pages) and add new pages to the group that matches the job they help with.
+
+### URLs are stable
+
+Page paths are linked from the Scorecard app, partner docs (Vercel AI SDK, OpenAI Agents SDK), and old changelog entries, so don't rename or move a page without a redirect in `docs.json`. When you remove a page, redirect it to the page that now covers its topic. Redirect destinations without an `#anchor` pass `mintlify broken-links`; destinations with one fail it if anything in the docs links to the source.
+
+The app links to these pages and anchors; keep them working:
+
+- `intro/`: `tracing-quickstart` (`#sdk-wrappers-for-deeper-integration`), `sdk-quickstart`, `claude-agent-sdk-tracing`, `langchain-quickstart`, and the redirected `ui-quickstart`, `metrics-quickstart`, `mcp-quickstart`, `quickstart`
+- `features/`: `tracing`, `testsets` (`#importing-from-a-file`), `metrics`, `runs`, `prompts`, `projects`, `mcp`, `ai-sdk-wrapper`, `github-actions` (`#setup-the-github-integration`), and the redirected `systems`, `analysis`, `monitoring`
+
+When a heading an app link points to changes, keep the old anchor with an empty `<a id="old-anchor" />` above the new heading.
+
+### Images
+
+The `check-unused-images` workflow fails if any file in `/images/` isn't referenced by an MDX page. Delete images when you stop using them, and add both light and dark versions when you add one.
+
+## Writing Guidelines
+
+- **Verify against the product.** Check behavior and UI labels in the product code before documenting them. Don't describe features that are internal, flagged off, or planned.
+- **Lead with the task.** Start pages with what the reader can do, then show how. Keep explanation short and link to [Core concepts](/intro/concepts) for background.
+- **Sentence case** for titles and headings. Task pages start with a verb ("Push scores from your code"); reference pages use a noun ("Metrics").
+- **UI labels in bold**, exactly as the app shows them: **Score Records**, **Add Metric**. Product nouns stay lowercase in prose: testset, testcase, record, run, metric, system version.
+- **No marketing language** in docs pages: no "powerful", "seamless", "simply", emojis, or unverifiable claims. Use the `humanize` skill on new prose.
+- **Code samples run as written.** Include imports and environment variables, show Python and TypeScript in a `CodeGroup` when both SDKs support the feature, and use the current SDK method signatures. `run_and_evaluate` always passes `(inputs, system_version)` in Python.
+- **Every page** has a `title` and a one-sentence `description` (it feeds search and `llms.txt`) and ends with a `## Next steps` `CardGroup` of two to four links. Hub pages that are already lists of links (Overview, FAQ, Integrations overview), Security and privacy, and the changelog don't need one.
+- **Integration pages** follow one shape: what it traces, prerequisites, install, configure, verify on the Records page, what's captured, troubleshooting, next steps.
+- **Don't repeat setup blocks.** Link to the page that owns a topic, or use a snippet from `/snippets/`.
 
 ## Changelog Format Guidelines
 
