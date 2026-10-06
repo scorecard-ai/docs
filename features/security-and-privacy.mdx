@@ -21,5 +21,13 @@ Scorecard AI takes extensive measures to ensure the confidentiality, integrity, 
 * **Data Erasure:** We erase data upon request or when it reaches its designated retention period, ensuring that outdated information isn’t stored unnecessarily.
 * **Physical Security:** Our cloud service providers ensure the physical security of the infrastructure where your data is stored using industry-standard encryption.
 
+## Truffle (AI Assistant)
+
+Truffle, Scorecard's in-app assistant, answers your questions with a large language model. To do that, it sends your message and the parts of your project it needs, like the record you're looking at and its trace, to a model provider through [OpenRouter](https://openrouter.ai).
+
+* **No Retention by Model Providers:** We only allow providers with a zero data retention policy. They don't store your data after the request, and they don't train on it.
+* **Provider and Region Can Vary:** OpenRouter picks among the allowed providers for each request, so we don't guarantee a specific provider or region.
+* **Your Conversations Stay in Scorecard:** We store your Truffle chats so you can pick them back up later. Deleting your organization deletes them.
+
 ## Scorecard with Self-Hosted Data
 Are you dealing with very sensitive data, require specialized security arrangements, or have specific compliance needs? [Send us an email](mailto:team@scorecard.io) and we're happy to discuss data-plane self-hosting solutions to support your team's needs!
