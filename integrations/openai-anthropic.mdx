@@ -1,0 +1,182 @@
+---
+title: "OpenAI and Anthropic"
+description: "Trace calls made with the OpenAI and Anthropic SDKs by wrapping the client with Scorecard's wrap(), or by pointing an OpenAI-compatible client at the LLM proxy."
+---
+
+Wrap your client once and its Chat Completions (OpenAI) and Messages (Anthropic) calls are traced, including streaming. Calls made inside a span you open nest under it, so a multi-step request shows as one trace.
+
+## Prerequisites
+
+Set `SCORECARD_API_KEY` and `SCORECARD_PROJECT_ID` as in the [Tracing quickstart](/intro/tracing-quickstart), along with your provider's API key.
+
+## Install
+
+<CodeGroup>
+```bash Python
+pip install "scorecard-ai[otel]"
+```
+
+```bash TypeScript
+npm install scorecard-ai
+```
+</CodeGroup>
+
+In Python, the `otel` extra is required; without it, `wrap()` raises an `ImportError`.
+
+## Wrap the client
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from scorecard_ai import wrap
+
+client = wrap(OpenAI(), {"service_name": "support-agent"})  # reads SCORECARD_API_KEY and SCORECARD_PROJECT_ID
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Hello!"}],
+)
+```
+
+```typescript TypeScript
+import OpenAI from "openai";
+import { wrap } from "scorecard-ai";
+
+const client = wrap(new OpenAI(), { serviceName: "support-agent" }); // reads SCORECARD_API_KEY and SCORECARD_PROJECT_ID
+
+const response = await client.chat.completions.create({
+  model: "gpt-4o-mini",
+  messages: [{ role: "user", content: "Hello!" }],
+});
+```
+</CodeGroup>
+
+Anthropic works the same way: `wrap(Anthropic())` in Python or `wrap(new Anthropic())` in TypeScript, then call `messages.create` as usual. OpenAI-compatible clients built on the `openai` package, such as Groq, Together, or OpenRouter, work too.
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `api_key` / `apiKey` | `SCORECARD_API_KEY` | Your Scorecard API key |
+| `project_id` / `projectId` | `SCORECARD_PROJECT_ID` | The numeric project ID traces go to |
+| `service_name` / `serviceName` | `llm-app` | The OpenTelemetry service name |
+| `endpoint` | `https://tracing.scorecard.io/otel/v1/traces` | The OTLP endpoint |
+
+## Verify
+
+Run your app and open your project's **Records** page. Each call appears as a record within a minute.
+
+## What's traced
+
+| Client | Python | TypeScript |
+| --- | --- | --- |
+| OpenAI | `chat.completions.create`, with or without streaming | `chat.completions.create` |
+| Anthropic | `messages.create`, with or without streaming | `messages.create`, with or without streaming |
+
+Each call becomes a span with the model, messages, completion, and token counts.
+
+<Warning>
+  In Python, other OpenAI methods named `create`, such as `responses.create` and `embeddings.create`, raise an `AttributeError` when called through a wrapped client. Make those calls with an unwrapped client, and trace the Responses API with [OpenLLMetry](/intro/langchain-quickstart) or [OpenTelemetry](/integrations/opentelemetry).
+</Warning>
+
+In TypeScript, use `messages.create` with `stream: true` instead of `messages.stream`. Through a wrapped client, `messages.stream` returns an object you must `await` and read with `for await`, and helpers such as `.finalMessage()` aren't available.
+
+## Group calls into one trace
+
+An agent makes several model calls per request. Open a parent span around the request so they nest into one trace, and therefore one record:
+
+<CodeGroup>
+```python Python
+from opentelemetry import trace
+
+tracer = trace.get_tracer("support-agent")
+
+
+def handle(question: str) -> str:
+    with tracer.start_as_current_span("agent.run") as span:
+        span.set_attribute("openinference.span.kind", "AGENT")
+        span.set_attribute("input.value", question)
+        return run_agent(question)  # wrapped client calls happen in here
+```
+
+```typescript TypeScript
+import { trace } from "@opentelemetry/api";
+
+const tracer = trace.getTracer("support-agent");
+
+async function handle(question: string): Promise<string> {
+  return tracer.startActiveSpan("agent.run", async (span) => {
+    try {
+      span.setAttribute("openinference.span.kind", "AGENT");
+      span.setAttribute("input.value", question);
+      return await runAgent(question); // wrapped client calls happen in here
+    } finally {
+      span.end();
+    }
+  });
+}
+```
+</CodeGroup>
+
+Mark the parent span as an agent and set `input.value` to the request. Don't set an output on the parent span: Scorecard builds the conversation from the model call spans, in the order they start. For conversations that span several requests, add a [session ID](/features/tracing#group-traces-into-sessions).
+
+## LLM proxy
+
+If you can't add a dependency, point an OpenAI-compatible client at Scorecard's proxy. It forwards each request to the provider and records a trace.
+
+<CodeGroup>
+```python Python
+import os
+
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://llm.scorecard.io",
+    default_headers={
+        "x-scorecard-api-key": os.environ["SCORECARD_API_KEY"],
+        "x-scorecard-project-id": os.environ["SCORECARD_PROJECT_ID"],
+    },
+)
+```
+
+```typescript TypeScript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://llm.scorecard.io",
+  defaultHeaders: {
+    "x-scorecard-api-key": process.env.SCORECARD_API_KEY ?? "",
+    "x-scorecard-project-id": process.env.SCORECARD_PROJECT_ID ?? "",
+  },
+});
+```
+</CodeGroup>
+
+Your provider key stays the client's normal API key.
+
+- `x-scorecard-project-id` must be the numeric project ID.
+- Each call becomes its own trace, with no nesting or sessions. Use `wrap()` when you need those.
+- The proxy adds a network hop. If your app already sets a base URL, such as an Azure OpenAI endpoint or a gateway, keep it and use `wrap()` instead.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The last call in a script doesn't appear">
+    Spans are sent as each call finishes, but a short script can exit before the last one goes out. In Python, end the script with `trace.get_tracer_provider().force_flush()` (`from opentelemetry import trace`). Long-running servers don't need this.
+  </Accordion>
+  <Accordion title="Nothing arrives, and my app already uses OpenTelemetry">
+    `wrap()` registers its own global tracer provider, so if your app already registers one, spans don't reach Scorecard. Add a Scorecard exporter to your existing provider instead, as described in [OpenTelemetry](/integrations/opentelemetry#add-scorecard-to-an-existing-setup).
+  </Accordion>
+  <Accordion title="Other errors">
+    See [Tracing troubleshooting](/features/tracing#troubleshooting).
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Tracing" icon="activity" href="/features/tracing">
+    Sessions, tags, metadata, and troubleshooting.
+  </Card>
+  <Card title="Link traces to runs" icon="link" href="/features/sdk-tracing">
+    Attach these traces to evaluation records.
+  </Card>
+</CardGroup>

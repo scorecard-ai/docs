@@ -1,0 +1,54 @@
+---
+title: "Integrations"
+description: "Send traces to Scorecard from agent SDKs, coding agents, model SDKs, frameworks, or any OpenTelemetry setup."
+---
+
+Every integration sends standard [OpenTelemetry](https://opentelemetry.io) traces to Scorecard. Not sure which to use? Ask your coding agent to "Add Scorecard tracing" after installing [Scorecard's agent skills](/intro/ai-assisted-setup), and it picks one for your stack.
+
+## Agents
+
+<CardGroup cols={2}>
+  <Card title="Claude Agent SDK and Claude Code" icon="bot" href="/intro/claude-agent-sdk-tracing">
+    Environment variables only. Each conversation becomes one record.
+  </Card>
+  <Card title="Claude Tag" icon="slack" href="/intro/claude-tag-tracing">
+    Trace Claude in Slack from your Claude admin settings.
+  </Card>
+  <Card title="Other coding agents" icon="terminal" href="/integrations/coding-agents">
+    Codex, Gemini CLI, OpenCode, and Goose.
+  </Card>
+</CardGroup>
+
+## SDKs and frameworks
+
+<CardGroup cols={2}>
+  <Card title="OpenAI and Anthropic" icon="sparkles" href="/integrations/openai-anthropic">
+    Wrap your client with `wrap()`, or point it at the LLM proxy.
+  </Card>
+  <Card title="Vercel AI SDK" icon="triangle" href="/features/ai-sdk-wrapper">
+    Wrap the `ai` module with `wrapAISDK()`.
+  </Card>
+  <Card title="LangChain, LlamaIndex, CrewAI, and more" icon="link" href="/intro/langchain-quickstart">
+    One OpenLLMetry init call traces the framework and the model calls under it.
+  </Card>
+  <Card title="OpenTelemetry" icon="activity" href="/integrations/opentelemetry">
+    Any language, custom spans, or an existing OpenTelemetry setup.
+  </Card>
+</CardGroup>
+
+## Which one should I use?
+
+| If your agent uses | Use |
+| --- | --- |
+| The Claude Agent SDK, or you want to trace Claude Code itself | [Claude Agent SDK and Claude Code](/intro/claude-agent-sdk-tracing) |
+| Claude in Slack | [Claude Tag](/intro/claude-tag-tracing) |
+| Codex, Gemini CLI, OpenCode, or Goose | [Other coding agents](/integrations/coding-agents) |
+| A framework such as LangChain, LangGraph, LlamaIndex, CrewAI, LiteLLM, or the OpenAI Agents SDK | [LangChain and other frameworks](/intro/langchain-quickstart) |
+| The Vercel AI SDK | [Vercel AI SDK](/features/ai-sdk-wrapper) |
+| The OpenAI or Anthropic SDK directly | [`wrap()`](/integrations/openai-anthropic) |
+| Go, Java, .NET, Rust, Ruby, raw HTTP calls, or a hand-written agent loop | [OpenTelemetry](/integrations/opentelemetry) |
+| An OpenAI-compatible client you can't change beyond its base URL | [LLM proxy](/integrations/openai-anthropic#llm-proxy) |
+
+If your app uses a framework on top of a model SDK, trace the framework: it captures both layers.
+
+See [Tracing](/features/tracing) for how Scorecard routes traces to projects, groups them into sessions, and reads tags and metadata.

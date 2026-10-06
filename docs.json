@@ -135,7 +135,7 @@
     },
     {
       "source": "/features/monitoring",
-      "destination": "/features/records"
+      "destination": "/features/records#score-records"
     },
     {
       "source": "/features/analysis",
@@ -228,15 +228,25 @@
         "tab": "Integrations",
         "groups": [
           {
+            "group": "Overview",
+            "pages": ["integrations/overview"]
+          },
+          {
             "group": "Agents",
             "pages": [
               "intro/claude-agent-sdk-tracing",
-              "intro/claude-tag-tracing"
+              "intro/claude-tag-tracing",
+              "integrations/coding-agents"
             ]
           },
           {
             "group": "SDKs and frameworks",
-            "pages": ["features/ai-sdk-wrapper", "intro/langchain-quickstart"]
+            "pages": [
+              "integrations/openai-anthropic",
+              "features/ai-sdk-wrapper",
+              "intro/langchain-quickstart",
+              "integrations/opentelemetry"
+            ]
           }
         ]
       },
