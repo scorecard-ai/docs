@@ -130,8 +130,16 @@
       "destination": "/intro/sdk-quickstart"
     },
     {
+      "source": "/features/synthetic-data-generation",
+      "destination": "/features/testsets"
+    },
+    {
+      "source": "/features/ai-guardrails",
+      "destination": "/features/push-scores"
+    },
+    {
       "source": "/features/systems",
-      "destination": "/features/runs"
+      "destination": "/features/runs#systems-and-versions"
     },
     {
       "source": "/features/monitoring",
@@ -192,12 +200,10 @@
             "group": "Evaluate",
             "pages": [
               "features/testsets",
-              "features/synthetic-data-generation",
               "features/metrics",
               "features/runs",
               "features/sdk-tracing",
               "features/push-scores",
-              "features/ai-guardrails",
               "features/prompts"
             ]
           },

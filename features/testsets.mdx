@@ -1,404 +1,177 @@
 ---
 title: "Testsets"
-description: "Use Testsets to create curated datasets for evaluating your AI agents"
+description: "Build the testcases you evaluate your agent on: create them in the UI, import files or transcripts, generate them with AI, or manage them from code."
 ---
 
-import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
-A **Testset** is a collection of **Testcases** used to evaluate the performance of an AI agent across various inputs and scenarios. Think of it as a curated dataset specifically designed for testing AI agents. Testsets belong to a central theme like "Core Functionality", "Edge Cases", or "Customer Support Queries".
+A **testset** is a collection of **testcases** that you run your agent on, so every version is measured against the same inputs. Each testcase holds the inputs your agent receives and, optionally, the expected output that metrics compare against.
 
-A **Testcase** is an individual test data point containing inputs, expected outputs, and metadata used for evaluation.
+## Create a testset
 
-<DarkLightImage
-  lightSrc="/images/testset-details-light.png"
-  caption='Testset details page showing eight Testcases for a "Message tone rewriter" AI agent.'
-  alt="Screenshot of the testset details page in the UI."
-/>
+On your project's **Testsets** page, click **New Testset** and give it a name and description. Check **Add example Testcases?** to have Scorecard write three starter testcases from the description.
 
-## Create a Testset
+You can also create testsets by [importing a transcript](#import-from-a-transcript) or [from code](#manage-testsets-from-code).
 
-Go to the Testsets page in your project and click the **"New Testset"** button to create a new, empty Testset.
+<a id="understanding-input-fields" />
 
-<Tip>
-Checking "Add example Testcases" will automatically generate 3 sample Testcases using AI based on your Testset's description. This provides a starting point for your Testset.
-</Tip>
+## Define the schema
 
-<DarkLightImage
-  lightSrc="/images/testset-create-light.png"
-  caption="Create testset modal with AI generation option"
-  alt="Screenshot of the create testset modal in the UI."
-/>
+A testset's schema lists its fields. Each field has a type (**String**, **Number**, **Boolean**, **Object**, or **Array**) and a role:
 
+| Role | Used for |
+| --- | --- |
+| **Input** | Sent to your agent. Match the names and shape your agent expects. |
+| **Expected outputs** | The ideal result. Metrics read these fields as `{{ expected.<field> }}`. |
+| **Metadata** | Stored with the testcase for analysis, such as difficulty or source. Not sent to your agent or used in scoring. |
 
-### Testset schema
-
-Each Testset has a _schema_, which defines which fields a Testcase has, the type of each field, and the role each field plays in evaluation.
-
-- <span className="text-blue-500 font-bold">Input fields</span> are sent to your AI agent.
-- <span className="text-green-500 font-bold">Expected fields</span> are expected or ideal outputs, which metrics compare your agent's output to.
-- <span className="dark:text-gray-400 text-gray-600 font-bold">Metadata fields</span> are additional context for analysis, not used by evaluation or your agent.
-
-You can update the schema of a Testset by clicking the **"Edit Schema"** button in the Testset actions menu.
-
-This allows you to add or remove fields, modify field types, and update field descriptions. Existing Testcases are not modified, but are validated against the new schema.
+Open **Edit Schema** from the testset's menu to add, remove, or change fields in the **Fields** tab, or edit the JSON Schema directly in **Raw Schema**. Every testset needs at least one input. Existing testcases are kept and checked against the new schema.
 
 <DarkLightImage
   lightSrc="/images/testset-schema-edit-light.png"
-  caption="Testset schema editor."
-  alt="Screenshot of the testset schema editor in the UI."
+  caption="Each field has a name, role, type, and description."
+  alt="Edit Schema dialog listing input, expected output, and metadata fields"
+  width="640"
 />
 
-### With the SDK
+## Add testcases
 
-You can also [create](/api-reference/create-testset) and [update](/api-reference/update-testset) Testsets with the Scorecard SDK.
+### In the UI
 
-You define a Testset's schema using the [JSON Schema](https://json-schema.org/understanding-json-schema/about) format.
+Click **Add Testcase** on the testset page and fill in the fields. You can edit any field later directly in the testcase table.
 
-For example, here's a schema for a customer support system:
+<a id="importing-from-a-file" />
 
-```json expandable
-{
-  "type": "object",
-  "title": "Customer Support Schema",
-  "properties": {
-    "userQuery": {
-      "type": "string",
-      "description": "The customer's question or request"
-    },
-    "context": {
-      "type": "string", 
-      "description": "Additional context about the customer"
-    },
-    "ideal": {
-      "type": "string",
-      "description": "The ideal response from support"
-    },
-    "expectedSentiment": {
-      "type": "string",
-      "description": "The expected predicted sentiment of the user query."
-    },
-    "difficulty": {
-      "type": "number",
-      "description": "How difficult the customer support request is to solve (1-10)"
-    }
-  },
-  "required": ["userQuery", "ideal"]
-}
-```
+### Import from a file
 
-**Supported Data Types**
-
-- **`string`**: Text content
-- **`number`**: Numeric values (integers or floats)
-- **`boolean`**: either `true` or `false`
-- **`object`**: Nested JSON objects
-- **`array`**: Lists of JSON values
-
-You also need to define the _field mapping_ when creating a Testset with the SDK.
-
-A field mapping categorizes schema fields by their role in evaluation.
-
-For example, here's a field mapping for the customer support schema above:
-
-```json
-{
-  "inputs": ["userQuery", "context"],
-  "expected": ["ideal", "expectedSentiment"],
-  "metadata": ["difficulty"]
-}
-```
-
-### Understanding Input Fields
-
-**Input fields** contain the actual data that gets sent to your AI system, workflow, or agent during testing. These should match exactly what your system expects to receive in production.
-
-<Tip>
-**Quick tip**: Your input fields should match what goes INTO your AI system. Think about:
-- What do users type into your UI?
-- What data does your API receive?
-- What would a user or another system send to trigger your workflow?
-
-If you're unsure, ask an engineer on your team: "What JSON/data do we send to our AI system?"
-</Tip>
-
-#### Common patterns for structuring inputs
-
-<Tabs>
-  <Tab title="Chatbot/LLM">
-    For conversational AI systems:
-    ```json
-    {
-      "user_message": "How do I reset my password?",
-      "conversation_history": [...],
-      "system_prompt": "You are a helpful assistant"
-    }
-    ```
-  </Tab>
-
-  <Tab title="AI Agent/Workflow">
-    For multi-step AI workflows or agents:
-    ```json
-    {
-      "task_description": "Analyze this document and extract key points",
-      "input_data": "Document content or reference",
-      "workflow_parameters": {
-        "mode": "detailed",
-        "output_format": "bullet_points"
-      }
-    }
-    ```
-  </Tab>
-
-  <Tab title="API Endpoint">
-    For AI-powered API endpoints:
-    ```json
-    {
-      "query": "Find similar products",
-      "filters": {"category": "electronics"},
-      "max_results": 10
-    }
-    ```
-  </Tab>
-
-  <Tab title="Document Processing">
-    For document analysis systems:
-    ```json
-    {
-      "document_content": "Full text or path to document",
-      "extraction_query": "What are the payment terms?",
-      "document_type": "contract"
-    }
-    ```
-  </Tab>
-</Tabs>
-
-<Tip>
-Your input fields should mirror your production system's interface. If your system expects a single prompt string, use a single string field. If it expects structured JSON with multiple parameters, reflect that structure in your schema.
-</Tip>
-
-#### Simple Testcase Schema Examples
-
-The following examples show complete testcase schemas with both input and expected fields. The field mapping below each schema identifies which fields are inputs vs expected outputs.
-
-<Tabs>
-  <Tab title="Basic Chatbot">
-    ```json
-    {
-      "type": "object",
-      "properties": {
-        "user_message": {
-          "type": "string",
-          "description": "What the user types in the chat box"
-        },
-        "expected_response": {
-          "type": "string",
-          "description": "What the bot should say back"
-        }
-      }
-    }
-    ```
-    **Field mapping:**
-    ```json
-    {
-      "inputs": ["user_message"],
-      "expected": ["expected_response"]
-    }
-    ```
-  </Tab>
-
-  <Tab title="Document Q&A System">
-    ```json
-    {
-      "type": "object",
-      "properties": {
-        "question": {
-          "type": "string",
-          "description": "The question about the document"
-        },
-        "document": {
-          "type": "string",
-          "description": "The document text to search through"
-        },
-        "expected_answer": {
-          "type": "string",
-          "description": "The correct answer from the document"
-        }
-      }
-    }
-    ```
-    **Field mapping:**
-    ```json
-    {
-      "inputs": ["question", "document"],
-      "expected": ["expected_answer"]
-    }
-    ```
-  </Tab>
-
-  <Tab title="AI Agent/Workflow">
-    ```json
-    {
-      "type": "object",
-      "properties": {
-        "task_description": {
-          "type": "string",
-          "description": "What you want the AI agent to do"
-        },
-        "input_data": {
-          "type": "string",
-          "description": "Any data the agent needs to complete the task"
-        },
-        "expected_output": {
-          "type": "string",
-          "description": "What the agent should produce"
-        }
-      }
-    }
-    ```
-    **Field mapping:**
-    ```json
-    {
-      "inputs": ["task_description", "input_data"],
-      "expected": ["expected_output"]
-    }
-    ```
-  </Tab>
-</Tabs>
-
-<Note>
-The key is matching your test inputs to your actual system. If your system takes a single text field, use a single text field. If it takes multiple parameters, include those as separate fields.
-</Note>
-
-## Create and edit Testcases
-
-### From the UI
-
-Click the **"New Testcase"** button to create a new Testcase matching your Testset's schema.
-
-<DarkLightImage
-  lightSrc="/images/testcase-create-light.png"
-  caption="Testcase creation modal."
-  alt="Screenshot of the testcase creation modal in the UI."
-/>
-
-You can edit a particular Testcase's fields from the Testcase table, or from the Testcase details page.
-
-<DarkLightImage
-  lightSrc="/images/testcase-details-light.png"
-  caption="Testcase details page."
-  alt="Screenshot of the testcase details page in the UI."
-/>
-
-### Importing from a file
-
-The Scorecard UI supports importing Testcases in CSV, TSV, JSON, and JSONL formats. Scorecard automatically maps your file's columns to the testset's schema fields and validates data.
-
-<Tip>
-  **Upsert behavior**: If your file includes testcases with IDs that already exist in the testset, those testcases will be updated with the new values rather than creating duplicates. This makes it easy to bulk-update existing testcases by re-uploading a modified file.
-</Tip>
+Choose **Upload Testcases** from the testset's menu and drop a CSV, TSV, JSON, or JSONL file. Columns are matched to schema fields by name; the examples below fit a new testset's default fields. A row whose `id`, `testcase_id`, or `testcaseId` matches an existing testcase updates that testcase instead of adding a copy, so you can edit a testset in a spreadsheet and upload it again. This works when the ID column isn't one of your schema's fields and every ID in the file is unique.
 
 <CodeGroup>
-```csv CSV
-userQuery,context,ideal,category
-"How do I cancel my order?","Order placed 1 hour ago","You can cancel orders within 2 hours...","cancellation"
-"Where is my package?","Order shipped yesterday","Track your package using the link...","tracking"
+```csv testcases.csv
+userQuery,context,ideal
+"How do I cancel my order?","Order placed 1 hour ago","You can cancel within 2 hours from Orders > Cancel."
+"Where is my package?","Shipped yesterday","Use the tracking link in your shipping email."
 ```
 
-```tsv TSV
-userQuery	context	ideal	category
-How do I cancel my order?	Order placed 1 hour ago	You can cancel orders within 2 hours...	cancellation
-Where is my package?	Order shipped yesterday	Track your package using the link...	tracking
-```
-
-```json JSON
-[
-    {
-        "userQuery": "Is my order eligible for expedited shipping?",
-        "context": "Order placed 1 hour ago",
-        "ideal": "Expedited shipping is available for orders over $50...",
-        "category": "shipping"
-    },
-    {
-        "userQuery": "How do I cancel my order?",
-        "context": "Order placed 1 hour ago. Order shipped yesterday.",
-        "ideal": "You can cancel orders within 2 hours...",
-        "category": "cancellation"
-    }
-]
-```
-
-```jsonl JSONL
-{"userQuery": "Is my order eligible for expedited shipping?", "context": "Order placed 1 hour ago", "ideal": "Expedited shipping is available for orders over $50...", "category": "shipping"}
-{"userQuery": "How do I cancel my order?", "context": "Order placed 1 hour ago. Order shipped yesterday.", "ideal": "You can cancel orders within 2 hours...", "category": "cancellation"}
+```jsonl testcases.jsonl
+{"userQuery": "How do I cancel my order?", "context": "Order placed 1 hour ago", "ideal": "You can cancel within 2 hours from Orders > Cancel."}
+{"userQuery": "Where is my package?", "context": "Shipped yesterday", "ideal": "Use the tracking link in your shipping email."}
 ```
 </CodeGroup>
 
-### Using the API
+### Generate with AI
 
-With our SDKs, you can [create](/api-reference/create-multiple-testcases), [update](/api-reference/update-testcase), and [delete](/api-reference/delete-multiple-testcases) Testcases.
+Select up to three testcases as examples, click **Generate**, and optionally describe what to cover. Scorecard writes 1 to 10 new testcases that follow your schema, and you review them before they're saved.
 
-## Export Testset
+<DarkLightImage
+  lightSrc="/images/generate-testcases-light.png"
+  darkSrc="/images/generate-testcases-dark.png"
+  caption="Generate testcases from selected examples."
+  alt="Generate Testcases dialog with example testcases and generation instructions"
+  width="640"
+/>
 
-You can export a Testset's Testcases to a CSV file by clicking the **Export as CSV** button in the Testset's details page.
+### Import from a transcript
 
-## Other Testset features
+**Import from transcript** on the Testsets page takes an agent session transcript, such as a Claude Code `session.jsonl`, up to 2 MB. Scorecard finds the moments where the agent should have acted differently and turns each one into a testcase in a new testset, with the prompt as the input and the expected behavior as the expected output. Add optional guidance to focus the analysis. It takes a few minutes and keeps running if you close the dialog.
 
-**Testset tags**
+<DarkLightImage
+  lightSrc="/images/changelog-transcript-import-light.png"
+  darkSrc="/images/changelog-transcript-import-dark.png"
+  caption="Create a testset from an agent session transcript."
+  alt="Import from transcript dialog with a file drop zone, a paste field, and an optional guidance input"
+  width="640"
+/>
 
-You can add custom tags to your Testsets to categorize them. For example, `regression` or `edge-cases`.
+## Manage testsets from code
 
-**Duplicate Testset**
+Create a testset with a JSON Schema and a field mapping, then add testcases in batches of up to 100. These examples assume `PROJECT_ID` holds your project ID:
 
-You can create a copy of a Testset by clicking the **"Duplicate"** button in the Testset actions menu.
+<CodeGroup>
+```python Python
+from scorecard_ai import Scorecard
 
-This maintains original field mappings, so it's useful for creating variants of your Testsets without having to recreate the schema.
+scorecard = Scorecard()
 
-## Best practices
+testset = scorecard.testsets.create(
+    PROJECT_ID,
+    name="Support questions",
+    description="Common, edge, and risky support questions.",
+    json_schema={
+        "type": "object",
+        "properties": {
+            "question": {"type": "string"},
+            "idealAnswer": {"type": "string"},
+            "category": {"type": "string"},
+        },
+        "required": ["question"],
+    },
+    field_mapping={"inputs": ["question"], "expected": ["idealAnswer"], "metadata": ["category"]},
+)
 
-**Testset strategy by use case**
+scorecard.testcases.create(
+    testset.id,
+    items=[
+        {"json_data": {"question": "How do I reset my password?", "idealAnswer": "Settings > Security > Reset password.", "category": "account"}},
+        {"json_data": {"question": "Can I get a refund after 30 days?", "idealAnswer": "No. Refunds are available for 30 days.", "category": "billing"}},
+    ],
+)
+```
 
-<AccordionGroup>
-  <Accordion title="Hillclimbing Testsets" icon="trending-up">
-    **Purpose**: Iterative improvement and development
-    
-    **Size**: 5-20 Testcases
-    
-    **Content**: Your favorite prompts and edge cases that matter most
-    
-    **Usage**: Quick feedback during development cycles
-  </Accordion>
+```typescript TypeScript
+import Scorecard from "scorecard-ai";
 
-  <Accordion title="Regression Testsets" icon="shield-check">
-    **Purpose**: Ensure new changes don't break existing functionality
-    
-    **Size**: 50-100 Testcases
-    
-    **Content**: Representative examples of core use cases
-    
-    **Usage**: Run regularly (nightly builds, CI/CD pipelines)
-  </Accordion>
+const scorecard = new Scorecard();
 
-  <Accordion title="Launch Evaluation Testsets" icon="rocket">
-    **Purpose**: Comprehensive testing before major releases
-    
-    **Size**: 100+ Testcases
-    
-    **Content**: Broad coverage of all use cases and edge cases
-    
-    **Usage**: Pre-launch validation and confidence building
-  </Accordion>
+const testset = await scorecard.testsets.create(PROJECT_ID, {
+  name: "Support questions",
+  description: "Common, edge, and risky support questions.",
+  jsonSchema: {
+    type: "object",
+    properties: {
+      question: { type: "string" },
+      idealAnswer: { type: "string" },
+      category: { type: "string" },
+    },
+    required: ["question"],
+  },
+  fieldMapping: { inputs: ["question"], expected: ["idealAnswer"], metadata: ["category"] },
+});
 
-  <Accordion title="Must-Pass Testsets" icon="triangle-alert">
-    **Purpose**: Critical functionality that must never fail
-    
-    **Size**: Variable (focus on precision over coverage)
-    
-    **Content**: High-precision Testcases for essential features
-    
-    **Usage**: Early checks in deployment pipelines
-  </Accordion>
-</AccordionGroup>
+await scorecard.testcases.create(testset.id, {
+  items: [
+    { jsonData: { question: "How do I reset my password?", idealAnswer: "Settings > Security > Reset password.", category: "account" } },
+    { jsonData: { question: "Can I get a refund after 30 days?", idealAnswer: "No. Refunds are available for 30 days.", category: "billing" } },
+  ],
+});
+```
+</CodeGroup>
 
-<Warning>
-Remember that testcase data may contain sensitive information. Follow your organization's data handling policies and avoid including PII, secrets, or confidential data in Testsets.
-</Warning>
+The field mapping needs all three keys; use `[]` for a role with no fields. Schemas support the JSON Schema keywords `type`, `properties`, `required`, `additionalProperties`, `items`, `enum`, and `anyOf`. Testcases that don't match the schema are still saved, with their validation errors.
+
+Then run on the testset with `run_and_evaluate(..., testset_id=testset.id)`. See [Runs](/features/runs).
+
+## Other actions
+
+- **Duplicate** a testset to make a variant with the same schema, or **Copy to** another testset to copy selected testcases.
+- **Move to Project** moves a testset to another project.
+- **Export as CSV** or **Export as Excel (XLSX)** from the testset's menu.
+- Deleting testcases removes them permanently. Deleting a testset archives it.
+
+## Design tips
+
+- **Start small and real.** 10 to 20 testcases that cover common requests, edge cases, and risky ones tell you more than hundreds of near-duplicates.
+- **Grow from failures.** When you find a bad record on the Records page, add a testcase for it so the fix stays fixed.
+- **Keep sets for different jobs.** A small set for every pull request, a larger regression set nightly, and a must-pass set for critical behavior.
+- **Leave out secrets and personal data.** Testcases are visible to everyone in your organization.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Define how outputs are scored against your testcases.
+  </Card>
+  <Card title="Runs" icon="play" href="/features/runs">
+    Run your agent on a testset from code or the UI.
+  </Card>
+</CardGroup>
