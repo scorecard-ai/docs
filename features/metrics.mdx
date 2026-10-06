@@ -1,325 +1,198 @@
 ---
 title: "Metrics"
+description: "Define what good looks like for your agent and score records with AI judges, human reviewers, or your own code."
 ---
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
-<Note>
-  Metrics serve as benchmarks for assessing the quality of LLM responses, while scoring is the process of applying these metrics to generate actionable insights about your LLM application.
-</Note>
+A **metric** turns one quality you care about, such as correctness, tone, or safety, into a repeatable score. Scorecard applies metrics to records and tracks the results across runs and over time.
 
-When evaluating LLM applications, you start with a "vibe check"—manually testing prompts to see if responses make sense. As your application evolves, you need a systematic way to quantify and consistently measure response quality. Metrics provide this standard of measurement for LLM evaluation.
+Every metric has:
 
-## Assess Your LLM Quality With Scorecard's Metrics
-
-Scorecard's metric system is organized into three main components:
-
-- **Metrics**: Individual evaluation criteria that assess specific aspects of your LLM's performance
-- **Metric Groups**: Collections of related metrics for comprehensive evaluation
-- **Templates**: Pre-built metric configurations you can copy and customize
-
-Scorecard assists you in several ways in defining and organizing metrics for LLM evaluation.
-
-### Metric Templates
-
-Our Scorecard Core Metrics represent industry-standard benchmarks for LLM performance, validated by our team of evaluation experts. Explore these templates on the Metrics page under "Templates".
+| Setting | Options |
+| --- | --- |
+| **Evaluation Type** | **AI**: a judge model scores each record from your guidelines. **Human**: a reviewer scores each record. **Heuristic (SDK)**: your Python or TypeScript function scores each record. |
+| **Output Type** | **Boolean** (pass or fail), **Integer (1-5)**, or **Float (0.0-1.0)** |
+| **Passing Threshold** | For Integer and Float metrics, the lowest score that passes |
+| **Evaluation Guidelines** | Instructions for the judge model or the human reviewer |
 
 <DarkLightImage
-  caption="Overview of Scorecard Core Metrics in Templates"
-  alt="Overview of Scorecard Core Metrics in Templates"
-  lightSrc="/images/metrics/metrics-templates-light.png"
-  darkSrc="/images/metrics/metrics-templates-dark.png"
-/>
-
-Copy any template and customize it for your specific use case.
-
-<DarkLightImage
-  caption="Metric Template to Copy"
-  alt="Metric Template to Copy"
-  lightSrc="/images/metrics/metrics-template-light.png"
-  darkSrc="/images/metrics/metrics-template-dark.png"
-/>
-
-#### MLflow-Inspired Metrics
-
-Scorecard provides support for MLflow-style metrics with additional capabilities like aggregation, A/B comparison, and iteration. Available metrics include:
-
-- **Relevance**: Evaluates how well the response aligns with the input and context
-- **Answer Relevance**: Assesses relevance and applicability to the specific query
-- **Faithfulness**: Measures factual consistency with provided context
-- **Answer Correctness**: Evaluates accuracy against ground truth
-- **Answer Similarity**: Assesses semantic similarity to expected responses
-
-View full prompts on the Metrics page or in the [MLflow GitHub repository](https://github.com/mlflow/mlflow/blob/master/mlflow/metrics/genai/prompts/v1.py).
-
-#### RAGAS-Inspired Metrics for RAG Pipelines
-
-Scorecard provides RAGAS-style metrics for evaluating Retrieval Augmented Generation (RAG) systems:
-
-**Component-Wise:**
-- **Faithfulness**: Factual consistency with context
-- **Answer Relevancy**: Pertinence to the prompt
-- **Context Recall**: Retrieved context alignment with expected response
-- **Context Precision**: Ranking of ground-truth relevant items
-- **Context Relevancy**: Relevance of retrieved context to query
-
-**End-to-End:**
-- **Answer Semantic Similarity**: Semantic resemblance to ground truth
-- **Answer Correctness**: Accuracy compared to ground truth
-
-View full prompts on the Metrics page or in the [RAGAS GitHub repository](https://github.com/explodinggradients/ragas/tree/main/src/ragas/metrics).
-
-<Note>
-  Templates for common MLflow and RAGAS metrics are available under Templates. Copy a template (e.g., Relevance, Faithfulness) and tailor the guidelines to your domain.
-</Note>
-
-### Define Custom Metrics for Your LLM Use Case
-
-<DarkLightImage
-  caption="Adding a New Custom Metric"
-  alt="Adding a New Custom Metric"
   lightSrc="/images/metrics/metrics-overview-light.png"
   darkSrc="/images/metrics/metrics-overview-dark.png"
+  caption="The Metrics page lists your metrics and metric groups."
+  alt="Metrics page with metric cards and the Metrics and Metric Groups tabs"
 />
 
-On the Metrics page, click "\+ New Metric" to create a custom metric. Configure:
+## Start from a template
 
-- **Metric Name**: Human-readable name
-- **Metric Guidelines**: Natural language instructions for evaluation
-- **Evaluation Type**:
-  - **AI**: Uses Metric Guidelines as prompt for an AI model
-  - **Human**: Manual evaluation by subject-matter experts
-  - **Heuristic (Code)**: Custom Python or TypeScript logic (see [Heuristic Metrics](#heuristic-metrics))
-- **Output Type**: Boolean, Integer (1-5), or Float (0.0-1.0)
+The Metrics page lists ready-made AI metrics below your own, each marked **Template**. Click **Add Metric** to add one to your project, then edit its guidelines for your domain.
 
-<DarkLightImage
-  caption="New Custom Metric"
-  alt="New Custom Metric"
-  lightSrc="/images/metrics/metrics-create-a-light.png"
-  darkSrc="/images/metrics/metrics-create-a-dark.png"
-/>
+| Template | Output type |
+| --- | --- |
+| Hallucination Detection | Integer (1-5) |
+| Response Completeness | Integer (1-5) |
+| User Intent Fulfillment | Integer (1-5) |
+| Coherency | Integer (1-5) |
+| Conciseness | Integer (1-5) |
+| Source Attribution Quality | Integer (1-5) |
+| Bias | Integer (1-5) |
+| Personally Identifiable Information | Boolean |
+| Content Moderation | Boolean |
 
-### Output Types
+Integer templates pass at 4 or higher. Templates read the whole record, so they work on traced records and on evaluation results alike.
 
-#### Boolean Output Type
+## Create a metric
 
-- **Range**: true/false
-- **Pass/Fail**: Direct pass/fail representation
-- **Use cases**: Format checks, refusals, policy/guardrails, presence/absence
-- **Aggregation**: Pass ratios and counts
+Click **New Metric**, choose the evaluation type and output type, set the passing threshold, and write your guidelines. Say what to reward, what to penalize, and include a short example if the call is subtle. Click **Create Metric** to save it.
 
-Example model output for a boolean metric:
+### AI metrics
 
-```json
-{
-  "reasoning": "The model correctly refused unsafe content.",
-  "binaryScore": true
-}
-```
+- **Basic** mode turns your guidelines into an evaluation prompt for you.
+- **Advanced** mode lets you edit the full prompt template in Jinja, with a live preview against a testset or a run.
 
-#### Integer Output Type
+Only the prompt template is rendered as Jinja. Guidelines are inserted as plain text, so put any `{{ ... }}` variables in an Advanced-mode template. The template can use these variables:
 
-- **Range**: 1–5 (higher is better)
-- **Pass/Fail**: Set a `passingThreshold` (e.g., 4). Passes if `intScore ≥ threshold`
-- **Use cases**: Rubric-based quality judgments (helpfulness, factuality, completeness)
-- **Aggregation**: Means and distributions
+| Variable | Contains |
+| --- | --- |
+| `{{ inputs.<field> }}` | One input field, from a testcase or your SDK call |
+| `{{ outputs.<field> }}` | One output field your system returned |
+| `{{ expected.<field> }}` | One expected output field from the testcase |
+| `{{ allInputs }}`, `{{ allOutputs }}`, `{{ allExpected }}` | All inputs, outputs, or expected outputs as JSON. For traced records, `allInputs` and `allOutputs` hold the full trace. |
+| `{{ guidelines }}` | The metric's guidelines |
+| `{{ gradingInstructionsAndExamples }}` | Scorecard's instructions for the score format. Put it last. |
 
-Example model output for an integer metric:
-
-```json
-{
-  "reasoning": "Mostly correct but missing minor details.",
-  "intScore": 4
-}
-```
-
-#### Float Output Type
-
-Normalized score between 0.0 and 1.0 for graded, continuous measurement.
-
-- **Range**: 0.0–1.0 (higher is better)
-- **Pass/Fail**: Set a `passingThreshold` (e.g., 0.90). Passes if `floatScore ≥ threshold`
-- **Use cases**: Semantic similarity, confidence/uncertainty, coverage, quality scores
-- **Aggregation**: Means for trend tracking
-
-Example model output for a float metric:
-
-```json
-{
-  "reasoning": "The response is mostly correct with minor omissions.",
-  "floatScore": 0.87
-}
-```
-
-## Automated Scoring
-
-As testsets grow, manual evaluation becomes time-consuming. Subject-matter experts (SMEs) can become bottlenecks as the number of testcases increases. Scorecard's AI-powered scoring automates evaluation, allowing SMEs to focus on complex edge cases while the system handles well-defined metrics.
-
-### AI-Based Metrics
-
-When creating a metric, select "AI" as the evaluation type for automated scoring.
-
-<DarkLightImage
-  caption="New Metric With AI-Scoring"
-  alt="New Metric With AI-Scoring"
-  lightSrc="/images/metrics/metrics-create-b-light.png"
-  darkSrc="/images/metrics/metrics-create-b-dark.png"
-/>
-
-#### Configuration Modes
-
-- **Basic Mode**: Define metric guidelines using natural language instructions
-- **Advanced Mode**: Modify the full prompt template for sophisticated evaluation logic
-
-<Warning>
-  Be very specific with metric guidelines—they form the core instruction for AI scoring.
-</Warning>
-
-#### Evaluation Settings
-
-Configure AI evaluation parameters:
-
-- **Model Selection**: Choose models like GPT-4o
-- **Temperature**: Control randomness (typically 0 for consistency)
-- **Additional Parameters**: Model-specific settings
-
-### Automatic Scoring
-
-When you score records (from the testset page, the Records page, or through GitHub Actions), AI and Heuristic metrics are evaluated automatically. You can view scoring progress and results on the Records page.
-
-<Tip>
-  New to Scorecard? See the [UI Quickstart](/intro/ui-quickstart) to learn how to score your first records.
-</Tip>
-
-<DarkLightImage
-  caption="Run Scoring in the Scorecard UI"
-  alt="Run Scoring in the Scorecard UI"
-  lightSrc="/images/metrics/metrics-run-light.png"
-  darkSrc="/images/metrics/metrics-run-dark.png"
-/>
-
-If needed, you can score again by selecting records and clicking "Score Records".
-
-#### Score Explanations
-
-Scorecard provides explanations for each score, helping you understand and validate the AI's evaluation reasoning.
-
-<DarkLightImage
-  caption="Score Explained by the Scorecard AI Model"
-  alt="Score Explained by the Scorecard AI Model"
-  lightSrc="/images/metrics/metrics-scores-detail-light.png"
-  darkSrc="/images/metrics/metrics-scores-detail-dark.png"
-/>
-
-### Heuristic Metrics (Code-Based Evaluation)
-
-Write custom evaluation logic in Python or TypeScript for deterministic, rule-based scoring:
-
-- Checking for specific keywords or patterns
-- Validating JSON structure or format
-- Computing text similarity scores
-- Measuring response length or complexity
-- Custom business logic checks
-
-#### Creating a Heuristic Metric
-
-Select **Heuristic** as the evaluation type to access the code editor.
-
-<DarkLightImage
-  caption="Creating a heuristic metric with Python code"
-  alt="Screenshot of the create metric modal with Python heuristic code"
-  lightSrc="/images/changelog-heuristic-metric-light.png"
-  darkSrc="/images/changelog-heuristic-metric-dark.png"
-/>
-
-#### Writing Heuristic Code
-
-Your code receives the record data and must return a score. Here's the structure:
-
-<Tabs>
-  <Tab title="Python">
-
-```python
-def score(inputs: dict, outputs: dict, expected: dict) -> dict:
-    """
-    Evaluate the output and return a score.
-    
-    Args:
-        inputs: The input fields from the testcase
-        outputs: The generated output from your system
-        expected: The expected output fields from the testcase
-    
-    Returns:
-        A dict with 'score' (bool, int 1-5, or float 0.0-1.0) 
-        and optional 'reasoning'
-    """
-    # Example: Check if output contains expected keyword
-    output_text = outputs.get("response", "")
-    expected_keyword = expected.get("keyword", "")
-    
-    if expected_keyword.lower() in output_text.lower():
-        return {"score": True, "reasoning": "Keyword found in response"}
-    else:
-        return {"score": False, "reasoning": "Keyword not found"}
-```
-
-  </Tab>
-  <Tab title="TypeScript">
-
-```typescript
-function score(
-  inputs: Record<string, any>,
-  outputs: Record<string, any>,
-  expected: Record<string, any>
-): { score: boolean | number; reasoning?: string } {
-  // Example: Check response length
-  const response = outputs.response || "";
-  const minLength = expected.minLength || 100;
-  
-  if (response.length >= minLength) {
-    return { score: true, reasoning: `Response meets minimum length of ${minLength}` };
-  } else {
-    return { score: false, reasoning: `Response too short: ${response.length} < ${minLength}` };
-  }
-}
-```
-
-  </Tab>
-</Tabs>
-
-#### Secure Sandbox Execution
-
-Code runs in a secure, isolated sandbox ensuring:
-
-- **Safety**: No external resource access
-- **Consistency**: Deterministic results
-- **Performance**: Optimized execution
+Jinja control flow works too, for example `{% if inputs.context %}Context: {{ inputs.context }}{% endif %}`.
 
 <Note>
-  The sandbox has limited access to external libraries. Common utilities like string manipulation and JSON parsing are available. Contact support if you need specific libraries for your use case.
+  The preview fills expected values only into `labels`, so `{{ expected.<field> }}` looks empty there but is filled when records are scored. Don't use `{{ labels }}` or `{{ metadata }}` in templates: they're empty at scoring time.
 </Note>
 
-### Metric Groups
+Choose the judge under **Model**. The list shows models from providers your organization has added a key for under **Settings → AI Providers**, plus any custom models. If the chosen model's provider has no key in your organization, Scorecard scores with its default model. See [Model providers](/features/custom-provider).
 
-Group related metrics for consistent, repeatable evaluation. Metric Groups let you apply multiple metrics when scoring without manual selection each time. Create groups for specific use cases like RAG applications or translation tasks.
+### Human metrics
 
-<DarkLightImage
-  caption="Overview of Metric Groups"
-  alt="Overview of Metric Groups"
-  lightSrc="/images/metrics/metric-groups-light.png"
-  darkSrc="/images/metrics/metrics-groups-dark.png"
-/>
+Human metrics get a pending score on every record in a run that uses them. Reviewers fill them in from the Records page or the [Compare page](/features/a-b-comparison), and several reviewers can score the same record. See [Human review](/features/human-review).
 
-View and create Metric Groups on the Metrics page under "Metric Groups". Provide:
+### Heuristic metrics
 
-- **Name**: Human-readable identifier
-- **Description**: Short summary of the group's purpose
+Write a function named `handler` in the metric editor. Scorecard calls it once per record. Return the score field for the metric's output type, as listed in [Scores and passing](#scores-and-passing), with an optional `reasoning` string:
 
-<DarkLightImage
-  caption="Defining a New Metric Group"
-  alt="Defining a New Metric Group"
-  lightSrc="/images/metrics/metrics-create-group-light.png"
-  darkSrc="/images/metrics/metrics-create-group-dark.png"
-/>
+<CodeGroup>
+```python Python
+def handler(*, inputs, outputs, expected, **kwargs):
+    """kwargs also holds record_id, testcase_id, run_id, and metric_id."""
+    response = str(outputs.get("response", ""))
+    keyword = str(expected.get("keyword", ""))
 
-Click "Select Metrics" to choose which metrics to include in the group.
+    if keyword.lower() in response.lower():
+        return {"binaryScore": True, "reasoning": "Keyword found in response"}
+    return {"binaryScore": False, "reasoning": f"Missing keyword: {keyword}"}
+```
+
+```typescript TypeScript
+async function handler(args: {
+  inputs: Record<string, unknown>;
+  outputs: Record<string, unknown>;
+  expected: Record<string, unknown>;
+  recordId: string;
+  testcaseId: string | null;
+  runId: string;
+  metricId: string;
+}) {
+  const response = String(args.outputs.response ?? "");
+  const keyword = String(args.expected.keyword ?? "");
+
+  if (response.toLowerCase().includes(keyword.toLowerCase())) {
+    return { binaryScore: true, reasoning: "Keyword found in response" };
+  }
+  return { binaryScore: false, reasoning: `Missing keyword: ${keyword}` };
+}
+```
+</CodeGroup>
+
+- Declare the function with `def handler(` or `function handler(`. Arrow functions aren't recognized.
+- Each call has about 3 seconds. Network access is off unless you check **Allow Internet Access**.
+- Use the standard library. Python has `json`, `re`, and `math` imported for you; other packages aren't guaranteed.
+- Heuristic code is written in the metric editor. Metrics created through the API can't hold code, so to score with code that runs elsewhere, [push scores from your code](/features/push-scores) to a human metric instead.
+
+### Create metrics from code
+
+These examples assume `scorecard = Scorecard()` and `PROJECT_ID` set to your project ID:
+
+<CodeGroup>
+```python Python
+metric = scorecard.metrics.create(
+    PROJECT_ID,
+    name="Answer matches reference",
+    eval_type="ai",
+    output_type="boolean",
+    prompt_template=(
+        "Question: {{ inputs.question }}\n"
+        "Answer: {{ outputs.answer }}\n"
+        "Reference: {{ expected.idealAnswer }}\n\n"
+        "Pass if the answer states the same facts as the reference. Wording can differ.\n\n"
+        "{{ gradingInstructionsAndExamples }}"
+    ),
+)
+```
+
+```typescript TypeScript
+const metric = await scorecard.metrics.create(PROJECT_ID, {
+  name: "Answer matches reference",
+  evalType: "ai",
+  outputType: "boolean",
+  promptTemplate:
+    "Question: {{ inputs.question }}\n" +
+    "Answer: {{ outputs.answer }}\n" +
+    "Reference: {{ expected.idealAnswer }}\n\n" +
+    "Pass if the answer states the same facts as the reference. Wording can differ.\n\n" +
+    "{{ gradingInstructionsAndExamples }}",
+});
+```
+</CodeGroup>
+
+Through the API, AI metrics default to `gpt-4o` as the judge. Set `eval_model_name` (`evalModelName`) to choose another model.
+
+### Write reliable metrics
+
+- **Score one thing per metric.** "Correct and polite" hides which half failed. Make two metrics and group them.
+- **Prefer Boolean for hard rules** such as format, refusals, or leaked data, and Integer for judgment calls on a rubric.
+- **Pilot on 10 to 20 records**, read the reasoning, and tighten the wording where the judge disagrees with you.
+- **Check the judge against people.** Add a human metric with the same guidelines, have reviewers grade a sample, and compare the two. Where they disagree, fix the guidelines before you trust the AI metric on its own.
+
+## Scores and passing
+
+| Output type | Score | Passes when |
+| --- | --- | --- |
+| Boolean | `{"binaryScore": true, "reasoning": "..."}` | The score is `true` |
+| Integer | `{"intScore": 4, "reasoning": "..."}` | The score is at or above the threshold (default 4) |
+| Float | `{"floatScore": 0.87, "reasoning": "..."}` | The score is at or above the threshold |
+
+New Float metrics default to a threshold of 0.5 in the app and 0.9 through the API, so set it explicitly. A run's passing rate counts passed and failed scores and leaves out pending ones and errors.
+
+## When metrics run
+
+- **Records added to a run** are scored with every metric on that run as soon as they're created, whether they come from the SDK, the API, a Kickoff Run, or GitHub Actions.
+- **Traced records** aren't scored by default. Score them with **Score Records** on the [Records](/features/records) page, or [score a stream of traces as they arrive](/features/tracing#score-traces).
+- **To re-score**, after editing a metric for example, use **Score Records** on the Records page or **Re-run Scoring** on a run. Re-scoring uses the latest version of each metric and never overwrites a completed human score.
+
+## Metric groups
+
+A metric group is a named set of metrics you apply together, for example everything you check on a RAG answer. Create one on the **Metric Groups** tab with **New Metric Group**, then select it when you start a [Kickoff Run](/features/runs#start-a-run-from-the-ui). On the Compare page, a group can show one Pass and Fail control per side. See [Score the pair](/features/a-b-comparison#score-the-pair).
+
+## Versions and deletion
+
+Changing a metric's configuration creates a new version, listed under **Version History** on the metric's page. Runs keep the versions they were scored with, and re-scoring uses the latest one.
+
+Deleting a metric archives it and removes it from its groups. Its scores stop showing in the app but are still returned by the API and in exports.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Runs" icon="play" href="/features/runs">
+    Score your agent on a testset.
+  </Card>
+  <Card title="Human review" icon="users" href="/features/human-review">
+    Collect grades from your team.
+  </Card>
+</CardGroup>
