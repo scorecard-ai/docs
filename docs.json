@@ -196,13 +196,14 @@
               "features/metrics",
               "features/runs",
               "features/sdk-tracing",
+              "features/push-scores",
               "features/ai-guardrails",
               "features/prompts"
             ]
           },
           {
             "group": "Review",
-            "pages": ["features/a-b-comparison"]
+            "pages": ["features/human-review", "features/a-b-comparison"]
           },
           {
             "group": "Automate",
