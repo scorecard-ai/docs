@@ -1,0 +1,128 @@
+---
+title: "Push scores from your code"
+description: "Record results from guardrails, unit checks, external evaluators, or batch jobs as Scorecard scores, and queue records for human review."
+---
+
+Some checks run outside Scorecard: a guardrail that blocks a reply, a JSON schema check in your test suite, an evaluator from another library, or a label from your own review tool. Push their results to Scorecard as scores so they sit next to your other metrics on every record.
+
+## 1. Create a metric for the check
+
+Push scores to a metric with the **Human** evaluation type. Scorecard never scores human metrics on its own, so the values you push stay as they are.
+
+<Warning>
+  Don't push scores to AI or heuristic metrics. Scorecard scores those itself and can overwrite your value. A heuristic metric created through the API has no code, so its scoring fails and replaces your score with an error.
+</Warning>
+
+<CodeGroup>
+```python Python
+from scorecard_ai import Scorecard
+
+scorecard = Scorecard()
+
+metric = scorecard.metrics.create(
+    PROJECT_ID,
+    name="PII blocked",
+    eval_type="human",
+    output_type="boolean",
+    guidelines="Scored by the output guardrail. Passes when no personal data reaches the user.",
+)
+```
+
+```typescript TypeScript
+import Scorecard from "scorecard-ai";
+
+const scorecard = new Scorecard();
+
+const metric = await scorecard.metrics.create(PROJECT_ID, {
+  name: "PII blocked",
+  evalType: "human",
+  outputType: "boolean",
+  guidelines: "Scored by the output guardrail. Passes when no personal data reaches the user.",
+});
+```
+</CodeGroup>
+
+Create the metric once, or look it up by name, so re-running your script doesn't add duplicates. These examples assume `PROJECT_ID` holds your project ID.
+
+## 2. Create a run and records
+
+A run groups the records you score. Each metric on the run has a metric config ID, which `scores.upsert` takes. The run returns them in `metric_version_ids` (`metricVersionIds`), sorted by metric ID rather than in the order you passed.
+
+<CodeGroup>
+```python Python
+run = scorecard.runs.create(PROJECT_ID, metric_ids=[metric.id])
+config_id = run.metric_version_ids[0]
+# With several metrics: dict(zip(sorted(metric_ids, key=int), run.metric_version_ids))
+
+record = scorecard.records.create(
+    run.id,
+    inputs={"userMessage": "Please send my SSN 123-45-6789 to support."},
+    outputs={"response": "I've removed your personal details and passed your request to support."},
+    expected={},
+)
+```
+
+```typescript TypeScript
+const run = await scorecard.runs.create(PROJECT_ID, { metricIds: [metric.id] });
+const configId = run.metricVersionIds[0];
+
+const record = await scorecard.records.create(run.id, {
+  inputs: { userMessage: "Please send my SSN 123-45-6789 to support." },
+  outputs: { response: "I've removed your personal details and passed your request to support." },
+  expected: {},
+});
+```
+</CodeGroup>
+
+`expected` is required; pass `{}` when there's nothing to compare against.
+
+## 3. Upsert the score
+
+<CodeGroup>
+```python Python
+scorecard.scores.upsert(
+    config_id,
+    record_id=record.id,
+    score={"binaryScore": True, "reasoning": "The output rail redacted the SSN."},
+)
+```
+
+```typescript TypeScript
+await scorecard.scores.upsert(configId, {
+  recordId: record.id,
+  score: { binaryScore: true, reasoning: "The output rail redacted the SSN." },
+});
+```
+</CodeGroup>
+
+Use the field that matches the metric's output type, and always include `reasoning`:
+
+| Output type | `score` |
+| --- | --- |
+| Boolean | `{"binaryScore": true, "reasoning": "..."}` |
+| Integer | `{"intScore": 4, "reasoning": "..."}` |
+| Float | `{"floatScore": 0.87, "reasoning": "..."}` |
+
+Upserting the same record and metric config again with the same credentials replaces that score, so retries are safe.
+
+## Queue records for human review
+
+To have people grade records your code created, add a human metric to the run and leave the score out. Each record gets a pending score that reviewers fill in on the Records or Compare page. Assign the records to reviewers to build their queue. See [Human review](/features/human-review).
+
+- Upserting with no `score` resets a human metric to pending on that record and clears every reviewer's value for it.
+- To record a score on behalf of a specific reviewer, pass `user_id` (`userId`) with the member's user ID. This works for human metrics only; see [SDK support](/api-reference/overview#sdks) for your language.
+
+## Example: guardrails
+
+Guardrail libraries such as [NeMo Guardrails](https://github.com/NVIDIA/NeMo-Guardrails) and [Guardrails AI](https://github.com/guardrails-ai/guardrails) decide at runtime whether to block or rewrite a message. Create one Boolean human metric per rail. For each interaction, create a record as in step 2 and upsert one score per rail that ran. You can then filter records by each rail's pass or fail status with `metric_status:` and track how often it fires with a metric widget on the Records page.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Upsert score API" icon="code" href="/api-reference/upsert-score">
+    Request and response reference.
+  </Card>
+  <Card title="Human review" icon="users" href="/features/human-review">
+    Assign records and collect grades from your team.
+  </Card>
+</CardGroup>

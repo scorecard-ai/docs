@@ -1,0 +1,79 @@
+---
+title: "Human review"
+description: "Have your team grade and annotate records: create human metrics, assign records to reviewers, collect scores from several graders, and keep reviews blind."
+---
+
+Use human review to grade outputs where quality is a judgment call, to build a gold-standard set of labeled records, or to check that an AI metric agrees with your experts.
+
+## Set up a review
+
+<Steps>
+  <Step title="Create a human metric">
+    On the **Metrics** page, click **New Metric** and choose **Human** as the evaluation type. Write guidelines a reviewer can apply consistently: what passes, what fails, and an example of each. Reviewers can open them while grading.
+  </Step>
+  <Step title="Add the metric to records">
+    Include the metric in a run, from [code](/features/runs#run-from-code) or a [Kickoff Run](/features/runs#start-a-run-from-the-ui), or select existing records and use **Score Records**. Each record gets a pending score for the metric.
+  </Step>
+  <Step title="Assign reviewers">
+    As an organization admin, select records on the [Records](/features/records) page, click **Assign**, and choose members. Each reviewer sees their queue with **Assigned to Me**.
+  </Step>
+  <Step title="Grade">
+    Reviewers open each record and add their scores, or compare two records side by side on the [Compare page](/features/a-b-comparison).
+  </Step>
+</Steps>
+
+## Grade a record
+
+Open a record and find the metric in its **Scores** section. Click **Add score...**, or **Add my score** if someone has already graded it. The form shows the metric's guidelines, the score control (**Pass** or **Fail**, 1 to 5, or a value from 0.0 to 1.0), and a required **Reasoning** field. Click **Save score**.
+
+You can change your own score later with **Edit**. A half-written score is kept if you click away.
+
+Any member can grade any record. Assignments build each reviewer's queue but don't restrict who can grade.
+
+## Several reviewers per metric
+
+Each reviewer's score is stored separately, so one metric on one record can collect several independent grades. A score cell shows a count when more than one person has graded it; open it to page through each grader's value and reasoning.
+
+- On the Records page, metric widgets have a **Scored by** control to show every grader's votes or one person's.
+- Run pages count one score per record: the most recent completed one.
+
+## What reviewers can see
+
+Reviews stay independent:
+
+- **Members** see their own scores and annotations, plus those from admins and automated metrics. Other reviewers' grades appear as pending. This applies in the app and in the API when called with the member's own credentials.
+- **Admins** and organization API keys see every grader's scores and annotations.
+
+On the Compare page, members also see the systems being compared as **Model A** and **Model B** rather than by name. See [Blind review](/features/a-b-comparison#blind-review).
+
+## Annotate
+
+Annotations capture feedback that doesn't fit a metric:
+
+- **Highlight** text in an output or expected value, click the comment icon, and write a note. Notes support Markdown.
+- **Rate** a record or a single step in the conversation with thumbs up or down and an optional comment.
+
+Only the author can edit an annotation. Turn on the **Annotations** column on the Records page to see counts and ratings in the table, and use **Export → Annotations (JSON)** to download them with the trace, each attached to the span it was made on.
+
+## Track progress
+
+- Filter with `metric_status:<metric>:pending` to find records still waiting for a grade, or `assigned.to:` for one reviewer's queue.
+- Add the **Assigned to** widget to the Records or project overview to see open work by reviewer.
+- On the Compare page, admins can add the **Reviewers** column to see who has graded each record.
+
+## From code
+
+- Create records with a human metric on their run to queue them for review. See [Push scores from your code](/features/push-scores#queue-records-for-human-review).
+- Assign and unassign reviewers with the [assignee endpoints](/api-reference/assign-record-user). They require an admin's credentials or an organization API key.
+- Read annotations with [List annotations](/api-reference/list-annotations).
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Compare and blind review" icon="columns-2" href="/features/a-b-comparison">
+    Judge two outputs side by side without knowing which system made them.
+  </Card>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Write guidelines reviewers can apply consistently.
+  </Card>
+</CardGroup>
