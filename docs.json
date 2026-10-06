@@ -147,7 +147,7 @@
     },
     {
       "source": "/features/analysis",
-      "destination": "/features/a-b-comparison"
+      "destination": "/features/a-b-comparison#compare-runs"
     },
     {
       "source": "/features/trace-to-testcase",
