@@ -44,9 +44,12 @@
       "measurementId": "G-Y98MZSSCE3"
     }
   },
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude"]
+  },
   "api": {
     "examples": {
-      "languages": ["javascript", "python", "go", "curl"]
+      "languages": ["javascript", "python", "curl"]
     }
   },
   "redirects": [
@@ -120,11 +123,31 @@
     },
     {
       "source": "/features/endpoints",
-      "destination": "/intro/sdk-quickstart"
+      "destination": "/features/runs"
     },
     {
       "source": "/features/multi-turn-simulation",
       "destination": "/intro/sdk-quickstart"
+    },
+    {
+      "source": "/features/systems",
+      "destination": "/features/runs"
+    },
+    {
+      "source": "/features/monitoring",
+      "destination": "/features/records"
+    },
+    {
+      "source": "/features/analysis",
+      "destination": "/features/a-b-comparison"
+    },
+    {
+      "source": "/features/trace-to-testcase",
+      "destination": "/features/testsets"
+    },
+    {
+      "source": "/features/privacy-by-design",
+      "destination": "/features/security-and-privacy"
     }
   ],
   "navigation": {
@@ -144,57 +167,73 @@
     },
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Introduction",
-            "pages": ["intro/overview", "intro/what-is-scorecard", "intro/faq"]
-          },
-          {
-            "group": "Quickstarts",
+            "group": "Get started",
             "pages": [
+              "intro/overview",
+              "intro/what-is-scorecard",
+              "intro/tracing-quickstart",
               "intro/ui-quickstart",
               "intro/sdk-quickstart",
-              "intro/tracing-quickstart",
-              "intro/claude-agent-sdk-tracing",
-              "intro/claude-tag-tracing",
-              "intro/langchain-quickstart",
               "intro/metrics-quickstart",
               "intro/mcp-quickstart",
-              "intro/rag-quickstart"
+              "intro/faq"
             ]
           },
           {
-            "group": "Core features",
+            "group": "Trace",
+            "pages": ["features/tracing", "features/records"]
+          },
+          {
+            "group": "Evaluate",
             "pages": [
-              "features/metrics",
-              "features/tracing",
-              "features/runs",
-              "features/records",
               "features/testsets",
+              "features/synthetic-data-generation",
+              "features/metrics",
+              "features/runs",
+              "features/sdk-tracing",
+              "features/ai-guardrails",
               "features/prompts"
             ]
           },
           {
-            "group": "Advanced features",
-            "pages": [
-              "features/sdk-tracing",
-              "features/mcp",
-              "features/synthetic-data-generation",
-              "features/a-b-comparison",
-              "features/ai-sdk-wrapper",
-              "features/github-actions",
-              "features/ai-guardrails",
-              "features/custom-provider",
-              "features/projects"
-            ]
+            "group": "Review",
+            "pages": ["features/a-b-comparison"]
           },
           {
-            "group": "Governance, Risk, and Compliance",
+            "group": "Automate",
+            "pages": ["features/github-actions", "features/mcp"]
+          },
+          {
+            "group": "Guides",
+            "pages": ["intro/rag-quickstart"]
+          },
+          {
+            "group": "Administration",
             "pages": [
+              "features/projects",
+              "features/custom-provider",
               "features/enterprise-authentication",
               "features/security-and-privacy"
             ]
+          }
+        ]
+      },
+      {
+        "tab": "Integrations",
+        "groups": [
+          {
+            "group": "Agents",
+            "pages": [
+              "intro/claude-agent-sdk-tracing",
+              "intro/claude-tag-tracing"
+            ]
+          },
+          {
+            "group": "SDKs and frameworks",
+            "pages": ["features/ai-sdk-wrapper", "intro/langchain-quickstart"]
           }
         ]
       },
