@@ -127,7 +127,7 @@
     },
     {
       "source": "/features/multi-turn-simulation",
-      "destination": "/intro/sdk-quickstart"
+      "destination": "/guides/multi-turn-conversations"
     },
     {
       "source": "/features/synthetic-data-generation",
@@ -217,7 +217,7 @@
           },
           {
             "group": "Guides",
-            "pages": ["intro/rag-quickstart"]
+            "pages": ["intro/rag-quickstart", "guides/multi-turn-conversations"]
           },
           {
             "group": "Administration",

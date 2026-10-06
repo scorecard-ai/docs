@@ -1,332 +1,141 @@
 ---
-title: "RAG Quickstart"
-description: "Evaluate a Retrieval Augmented Generation (RAG) agent with Scorecard in minutes."
-mode: "center"
+title: "Evaluate a RAG pipeline"
+description: "Score a retrieval-augmented generation pipeline on whether answers are grounded in the retrieved context, correct, and built on the right documents."
 ---
 
-RAG pairs retrieval with generation so your LLM can answer using fresh, domain‑specific context. This quickstart shows how to evaluate a simple RAG loop using Scorecard’s SDK, then highlights how to extend to retrieval‑only and end‑to‑end tests.
+A retrieval-augmented generation (RAG) pipeline can fail in retrieval, by missing the right documents, or in generation, by ignoring or contradicting them. Score each part, plus the final answer, so you know which one to fix.
 
-<Frame caption="Schema of a Production RAG System">
-  ![Schema of a Production RAG System](/images/rag/1.png)
+<Frame caption="What each kind of RAG metric compares.">
+  ![Retrieval-only metrics compare the query with the retrieved context, generation-only metrics compare the context with the response, and end-to-end metrics compare the response with the ideal response](/images/rag/4.png)
 </Frame>
 
-We’ll simplify to the core pieces you need to test:
+| Check | Compares | Example metric |
+| --- | --- | --- |
+| Retrieval | The query and the retrieved documents | Did retrieval return the documents that answer the question? |
+| Generation | The retrieved documents and the answer | Is every claim in the answer supported by the context? |
+| End to end | The answer and the ideal answer | Does the answer state the same facts as the reference? |
 
-<Frame caption="Simplified Schema of a Production RAG System">
-  ![Simplified Schema of a Production RAG System](/images/rag/2.png)
-</Frame>
+## 1. Return the retrieved context
 
-<Info>
-  Already familiar with the SDK? You can reuse patterns from the [SDK Quickstart](/intro/quickstart) and [Tracing Quickstart](/intro/tracing-quickstart).
-</Info>
+Have your system return what it retrieved alongside the answer, so metrics can read both:
 
-## Steps
+<CodeGroup>
+```python Python
+def run_system(inputs: dict, _system_version) -> dict:
+    docs = retriever.search(inputs["query"], k=4)  # your retriever
+    answer = generate(inputs["query"], docs)  # your generator
+    return {
+        "answer": answer,
+        "context": "\n\n".join(doc.text for doc in docs),
+        "retrievedIds": [doc.id for doc in docs],
+    }
+```
 
-<Steps>
-  <Step title="Setup accounts">
-    Create a [Scorecard account](https://app.scorecard.io/dashboard), then set your API key as an environment variable.
+```typescript TypeScript
+async function runSystem(inputs: { query: string }) {
+  const docs = await retriever.search(inputs.query, { k: 4 }); // your retriever
+  const answer = await generate(inputs.query, docs); // your generator
+  return {
+    answer,
+    context: docs.map((doc) => doc.text).join("\n\n"),
+    retrievedIds: docs.map((doc) => doc.id),
+  };
+}
+```
+</CodeGroup>
 
-    <CodeGroup>
+## 2. Build testcases
 
-    ```sh
-    export SCORECARD_API_KEY="your_scorecard_api_key"
-    ```
+Each testcase needs a query and an ideal answer. To score retrieval, also list the IDs of the documents that should be retrieved.
 
-    </CodeGroup>
-  </Step>
-  <Step title="Install SDK (and OpenAI optionally)">
-    Install the Scorecard SDK. Optionally add OpenAI if you want a realistic generator.
+```jsonl testcases.jsonl
+{"query": "What is the refund window?", "idealAnswer": "30 days from delivery.", "relevantIds": ["policy-refunds"]}
+{"query": "Do you ship to Canada?", "idealAnswer": "Yes, in 5 to 7 business days.", "relevantIds": ["shipping-international"]}
+```
 
-    <CodeGroup>
+Map `query` as an input and `idealAnswer` and `relevantIds` as expected outputs. Include questions your documents can't answer, and check that your system says so instead of guessing. See [Testsets](/features/testsets) for importing the file.
 
-    ```sh Python (pip)
-    pip install scorecard-ai openai
-    ```
+## 3. Create the metrics
 
-    
-    ```sh JavaScript (npm)
-    npm install scorecard-ai openai
-    ```
+Create each AI metric on the **Metrics** page, switch its guidelines to **Advanced**, and paste the text into **Prompt Template**. Basic mode doesn't fill in `{{ ... }}` variables.
 
-    </CodeGroup>
-  </Step>
-  <Step title="Create a minimal RAG system">
-    We’ll evaluate a simple function that takes a query and retrievedContext and produces an answer. This mirrors a typical RAG loop where retrieval is done upstream and passed to the generator.
+**Groundedness** (AI, Boolean). It needs no ideal answer, so it also works on testcases you haven't labeled:
 
-    <Tabs>
-      <Tab title="Python">
-        <CodeGroup>
+```text
+Context given to the assistant:
+{{ outputs.context }}
 
-        ```py Python wrap
-        from openai import OpenAI
-        
-        # Uses OPENAI_API_KEY from environment
-        openai = OpenAI()
-        
-        # Example input shape:
-        # {"query": "What is RAG?", "retrievedContext": "..."}
-        def run_system(inputs: dict) -> dict:
-            messages = [
-                {"role": "system", "content": "Answer using only the provided context."},
-                {"role": "user", "content": f"Context:\n{inputs['retrievedContext']}\n\nQuestion: {inputs['query']}"},
-            ]
-            resp = openai.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=messages,
-                temperature=0,
-            )
-            return {"answer": resp.choices[0].message.content}
-        ```
+Answer: {{ outputs.answer }}
 
-        </CodeGroup>
-      </Tab>
-      <Tab title="JavaScript">
-        <CodeGroup>
+Pass if every claim in the answer is supported by the context. Fail if the answer states anything the context doesn't support.
 
-        ```js JavaScript wrap
-        import OpenAI from 'openai';
-        
-        // Uses OPENAI_API_KEY from environment
-        const openai = new OpenAI();
-        
-        // Example input shape:
-        // { query: "What is RAG?", retrievedContext: "..." }
-        export async function runSystem(inputs) {
-          const messages = [
-            { role: 'system', content: 'Answer using only the provided context.' },
-            { role: 'user', content: `Context:\n${inputs.retrievedContext}\n\nQuestion: ${inputs.query}` },
-          ];
-          const resp = await openai.chat.completions.create({
-            model: 'gpt-4o-mini',
-            messages,
-            temperature: 0,
-          });
-          return { answer: resp.choices[0].message.content };
-        }
-        ```
+{{ gradingInstructionsAndExamples }}
+```
 
-        </CodeGroup>
-      </Tab>
-    </Tabs>
-  </Step>
-  <Step title="Setup Scorecard client and Project">
-    <CodeGroup>
+**Answer correctness** (AI, Integer 1-5):
 
-    ```py Python
-    from scorecard_ai import Scorecard
-    scorecard = Scorecard()  # API key read from env
-    PROJECT_ID = "123"  # Replace with your Project ID
-    ```
+```text
+Question: {{ inputs.query }}
+Answer: {{ outputs.answer }}
+Ideal answer: {{ expected.idealAnswer }}
 
-    
-    ```js JavaScript
-    import Scorecard from 'scorecard-ai';
-    const scorecard = new Scorecard(); // API key read from env
-    const PROJECT_ID = '123'; // Replace with your Project ID
-    ```
+Score 5 if the answer states the same facts as the ideal answer, and 1 if it contradicts it or misses the point. Wording can differ.
 
-    </CodeGroup>
-  </Step>
-  <Step title="Create RAG testcases">
-    Each testcase contains the user `query`, the `retrievedContext` you expect to be used, and the `idealAnswer` for judging correctness.
+{{ gradingInstructionsAndExamples }}
+```
 
-    <CodeGroup>
+**Retrieval recall** (Heuristic, Float). Choose **Heuristic (SDK)** as the evaluation type and paste this function into the editor. It scores the share of relevant documents that were retrieved:
 
-    ```py Python
-    testcases = [
-        {
-            "inputs": {
-                "query": "What does RAG stand for?",
-                "retrievedContext": "RAG stands for Retrieval Augmented Generation.",
-            },
-            "expected": {
-                "idealAnswer": "Retrieval Augmented Generation",
-            },
-        },
-        {
-            "inputs": {
-                "query": "Why use retrieval?",
-                "retrievedContext": "Retrieval injects fresh, domain‑specific context into the LLM.",
-            },
-            "expected": {
-                "idealAnswer": "To ground the model on current and domain data.",
-            },
-        },
-    ]
-    ```
+```python
+def handler(*, inputs, outputs, expected, **kwargs):
+    relevant = set(expected.get("relevantIds", []))
+    retrieved = set(outputs.get("retrievedIds", []))
+    if not relevant:
+        return {"floatScore": 1.0, "reasoning": "No relevant documents labeled"}
+    found = relevant & retrieved
+    return {"floatScore": len(found) / len(relevant), "reasoning": f"Retrieved {len(found)} of {len(relevant)} relevant documents"}
+```
 
-    
-    ```js JavaScript
-    const testcases = [
-      {
-        inputs: {
-          query: 'What does RAG stand for?',
-          retrievedContext: 'RAG stands for Retrieval Augmented Generation.',
-        },
-        expected: {
-          idealAnswer: 'Retrieval Augmented Generation',
-        },
-      },
-      {
-        inputs: {
-          query: 'Why use retrieval?',
-          retrievedContext: 'Retrieval injects fresh, domain‑specific context into the LLM.',
-        },
-        expected: {
-          idealAnswer: 'To ground the model on current and domain data.',
-        },
-      },
-    ];
-    ```
+The **Hallucination Detection** and **Source Attribution Quality** [templates](/features/metrics#start-from-a-template) are good starting points too.
 
-    </CodeGroup>
-  </Step>
-  <Step title="Create AI judge metrics">
-    Define two metrics: one for context‑use (boolean) and one for answer correctness (1–5). These use Jinja placeholders to reference testcase inputs and system outputs.
+## 4. Run the evaluation
 
-    <CodeGroup>
+Run your system on the testset with the three metrics, as in the [Evaluation quickstart](/intro/sdk-quickstart):
 
-    ```py Python wrap
-    context_use_metric = scorecard.metrics.create(
-        project_id=PROJECT_ID,
-        name="Context use",
-        description="Does the answer rely only on retrieved context?",
-        eval_type="ai",
-        output_type="boolean",
-        prompt_template="""
-          Evaluate if the answer uses only the provided context and does not hallucinate.
-          Context: {{ inputs.retrievedContext }}
-          Answer: {{ outputs.answer }}
-    
-          {{ gradingInstructionsAndExamples }}
-        """,
-    )
-    
-    correctness_metric = scorecard.metrics.create(
-        project_id=PROJECT_ID,
-        name="Answer correctness",
-        description="How correct is the answer vs the ideal (1–5)?",
-        eval_type="ai",
-        output_type="int",
-        prompt_template="""
-          Compare the answer to the ideal answer and score 1–5 (5 = exact).
-          Question: {{ inputs.query }}
-          Context: {{ inputs.retrievedContext }}
-          Answer: {{ outputs.answer }}
-          Ideal: {{ expected.idealAnswer }}
-    
-          {{ gradingInstructionsAndExamples }}
-        """,
-    )
-    ```
+<CodeGroup>
+```python Python
+run = run_and_evaluate(
+    client=scorecard,
+    project_id=PROJECT_ID,
+    testset_id=TESTSET_ID,
+    metric_ids=[GROUNDEDNESS_ID, CORRECTNESS_ID, RECALL_ID],  # IDs of the three metrics from step 3
+    system=run_system,
+)
+```
 
-    
-    ```js JavaScript wrap
-    const contextUseMetric = await scorecard.metrics.create({
-      projectId: PROJECT_ID,
-      name: 'Context use',
-      description: 'Does the answer rely only on retrieved context?',
-      evalType: 'ai',
-      outputType: 'boolean',
-      promptTemplate:
-        'Evaluate if the answer uses only the provided context and does not hallucinate.\n' +
-        'Context: {{ inputs.retrievedContext }}\n' +
-        'Answer: {{ outputs.answer }}\n\n' +
-        '{{ gradingInstructionsAndExamples }}',
-    });
-    
-    const correctnessMetric = await scorecard.metrics.create({
-      projectId: PROJECT_ID,
-      name: 'Answer correctness',
-      description: 'How correct is the answer vs the ideal (1–5)?',
-      evalType: 'ai',
-      outputType: 'int',
-      promptTemplate:
-        'Compare the answer to the ideal answer and score 1–5 (5 = exact).\n' +
-        'Question: {{ inputs.query }}\n' +
-        'Context: {{ inputs.retrievedContext }}\n' +
-        'Answer: {{ outputs.answer }}\n' +
-        'Ideal: {{ expected.idealAnswer }}\n\n' +
-        '{{ gradingInstructionsAndExamples }}',
-    });
-    ```
+```typescript TypeScript
+const run = await runAndEvaluate(scorecard, {
+  projectId: PROJECT_ID,
+  testsetId: TESTSET_ID,
+  metricIds: [GROUNDEDNESS_ID, CORRECTNESS_ID, RECALL_ID], // IDs of the three metrics from step 3
+  system: runSystem,
+});
+```
+</CodeGroup>
 
-    </CodeGroup>
-  </Step>
-  <Step title="Run and evaluate">
-    Use the helper to execute your RAG function across testcases and record scores in Scorecard.
+Read the results together. Low recall with good groundedness points to retrieval; good recall with poor groundedness points to the prompt or model. Change one part at a time and run again to [compare](/features/a-b-comparison#compare-runs).
 
-    <CodeGroup>
+## Score production traffic
 
-    ```py Python wrap
-    from scorecard_ai.lib import run_and_evaluate
-    
-    run = run_and_evaluate(
-        client=scorecard,
-        project_id=PROJECT_ID,
-        testcases=testcases,
-        metric_ids=[context_use_metric.id, correctness_metric.id],
-        system=lambda inputs, _version: run_system(inputs),
-    )
-    print(f"Go to {run['url']} to view your scored results.")
-    ```
+[Trace](/features/tracing) your pipeline so each request shows its retrieval and generation steps. Traced records hold the whole trace rather than named output fields, so score them with a metric that reads `{{ allInputs }}` and `{{ allOutputs }}`, such as the Hallucination Detection template. To score every request as it arrives, see [Score traces](/features/tracing#score-traces).
 
-    
-    ```js JavaScript wrap
-    import { runAndEvaluate } from 'scorecard-ai';
-    
-    const run = await runAndEvaluate(scorecard, {
-      projectId: PROJECT_ID,
-      testcases,
-      metricIds: [contextUseMetric.id, correctnessMetric.id],
-      system: runSystem,
-    });
-    console.log(`Go to ${run.url} to view your scored results.`);
-    ```
+## Next steps
 
-    </CodeGroup>
-  </Step>
-  <Step title="Analyze results">
-    Review the run’s per‑metric stats, per‑record scores, and trends. Use this to iterate on prompts, retrieval parameters, and re‑run.
-
-    <DarkLightImage lightSrc="/images/quickstart-run-light.png" caption="Viewing results in the Scorecard UI." alt="Screenshot of viewing results in the Scorecard UI." />
-  </Step>
-</Steps>
-
-## Retrieval‑only and end‑to‑end tests
-
-Beyond the simple loop above, you may separately evaluate retrieval quality (precision/recall/F1, MRR, NDCG) and combine with generation for end‑to‑end scoring.
-
-<Frame caption="Retrieval-Only LLM Testing in a RAG System">
-  ![Retrieval-Only LLM Testing in a RAG System](/images/rag/3.png)
-</Frame>
-
-<Frame caption="Different Types of Testing in a RAG System">
-  ![Different Types of Testing in a RAG System](/images/rag/4.png)
-</Frame>
-
-<Tip>
-  **Retrieval metrics in practice**
-
-  - **Precision**: Of the retrieved items, how many are relevant?
-  - **Recall**: Of the relevant items, how many were retrieved?
-  - **F1**: Harmonic mean of precision and recall.
-  - **MRR**: Average reciprocal rank of the first relevant item.
-  - **NDCG**: Gain discounted by rank, normalized to the ideal ordering.
-
-  **Ground‑truth dataset checklist**
-
-  - Define representative queries (cover intents, edge cases, and long‑tail).
-  - For each query, collect relevant documents/chunks; annotate relevance (binary or graded).
-  - Include plausible hard negatives to stress the retriever.
-  - Write labeling guidelines; consider inter‑annotator agreement.
-  - Split into dev/test; iterate on retriever, then re‑score.
-</Tip>
-
-![Trigger a run](/images/trigger-run-dark.png)
-
-<Note>
-  To operationalize RAG quality on live traffic, instrument traces ([Tracing Quickstart](/intro/tracing-quickstart)). Scorecard will sample spans, extract prompts/completions, and create Runs automatically.
-</Note>
-
-Scorecard works alongside RAG frameworks like [LlamaIndex](https://www.llamaindex.ai/) and [LangChain](https://www.langchain.com/).
+<CardGroup cols={2}>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Template variables, heuristic metrics, and judge models.
+  </Card>
+  <Card title="Runs" icon="play" href="/features/runs">
+    Trials, system versions, and reading results.
+  </Card>
+</CardGroup>

@@ -1,30 +1,131 @@
 ---
-title: "API Reference"
-description: "Browse the API documentation and integrate with Scorecard's API endpoints."
-mode: "center"
+title: "API overview"
+sidebarTitle: "Overview"
+description: "Base URL, authentication, SDKs, pagination, errors, and limits for the Scorecard REST API."
 ---
 
-## Get access to the Scorecard API
+The Scorecard REST API manages projects, testsets, metrics, runs, records, and scores. The Python and TypeScript SDKs have typed methods for the endpoints, with the exceptions noted below, and the [MCP server](/features/mcp) exposes the same API to AI assistants.
 
-[Create a Scorecard account](https://accounts.scorecard.io/sign-up?redirect_url=https%3A%2F%2Fapp.scorecard.io%2F) and find your organization's `SCORECARD_API_KEY` in [settings](https://app.scorecard.io/settings).
+## Base URL
 
-## Use Scorecard's SDKs
+```
+https://api2.scorecard.io/api/v2
+```
 
-<CardGroup cols={3}>
-  <Card title="Python SDK" icon="python" href="https://github.com/scorecard-ai/scorecard-python">
-    `pip install scorecard-ai` to interact with our API.
+The SDKs read an override from `SCORECARD_BASE_URL`. You only need it for a dedicated or self-hosted deployment.
+
+## Authentication
+
+Send your API key as a bearer token:
+
+```bash
+curl https://api2.scorecard.io/api/v2/projects \
+  -H "Authorization: Bearer $SCORECARD_API_KEY"
+```
+
+Organization admins create keys under **Settings → Scorecard API Keys** in the [Scorecard app](https://app.scorecard.io/settings). Keys start with `ak_` and are shown once, so store them in a secret manager or environment variable. The API is for server-side use: browsers on other origins are blocked.
+
+An organization API key acts with admin permissions. It can assign records and read every reviewer's scores and annotations, including during a [blind review](/features/a-b-comparison#blind-review).
+
+## SDKs
+
+<CodeGroup>
+```bash Python
+pip install scorecard-ai
+```
+
+```bash TypeScript
+npm install scorecard-ai
+```
+</CodeGroup>
+
+<CodeGroup>
+```python Python
+from scorecard_ai import Scorecard
+
+client = Scorecard()  # reads SCORECARD_API_KEY
+
+for project in client.projects.list():
+    print(project.id, project.name)
+```
+
+```typescript TypeScript
+import Scorecard from "scorecard-ai";
+
+const client = new Scorecard(); // reads SCORECARD_API_KEY
+
+for await (const project of client.projects.list()) {
+  console.log(project.id, project.name);
+}
+```
+</CodeGroup>
+
+The SDKs time out requests after 60 seconds and retry connection errors, 408, 409, 429, and 5xx responses twice with backoff. Source and issue trackers: [scorecard-python](https://github.com/scorecard-ai/scorecard-python) and [scorecard-node](https://github.com/scorecard-ai/scorecard-node).
+
+<Note>
+  The TypeScript SDK on npm (3.4.0) doesn't include metric group methods or the `userId` option on score upsert yet. Call those endpoints directly or use the Python SDK (3.10.0 or later).
+</Note>
+
+## Pagination
+
+Most list endpoints are cursor-based. Pass `limit` (default 20) and, for the next page, the `nextCursor` from the previous response as `cursor`:
+
+```json
+{
+  "data": [ ... ],
+  "nextCursor": "125",
+  "hasMore": true
+}
+```
+
+The largest page size depends on the endpoint (100 for testcases and attachments; 250 for projects, runs, metrics, and systems; 500 for testsets and records). Larger values are reduced to the maximum. The SDKs page for you when you iterate over a list. The annotation, tag, and assignee lists for a record aren't paginated and return everything in `data`.
+
+## Errors
+
+Errors return a JSON body with a machine-readable `code`:
+
+```json
+{
+  "code": "VALIDATION_ERROR",
+  "message": "Invalid input",
+  "details": { "name": ["Required"] }
+}
+```
+
+| Status | `code` | Meaning |
+| --- | --- | --- |
+| 400 | `VALIDATION_ERROR` | The request body or parameters are invalid. `details` lists the fields. |
+| 401 | `UNAUTHENTICATED` | The API key is missing, invalid, expired, or revoked. |
+| 403 | `UNAUTHORIZED` | Your role can't perform this action, such as assigning records as a non-admin. |
+| 404 | `NOT_FOUND` | The resource doesn't exist or belongs to another organization. |
+| 409 | `CONFLICT` | The request conflicts with existing data. |
+| 413 | `VALIDATION_ERROR` | The request body is too large. |
+| 500 | `SERVICE_ERROR` | Something went wrong on Scorecard's side. Retry, and contact support if it persists. |
+
+## IDs and deletes
+
+- IDs are strings. Projects, testsets, testcases, metrics, runs, and records use numeric strings such as `"314"`. Systems, system versions, metric configs, and attachments use UUIDs.
+- Deleting a testset, metric, metric group, run, record, or system archives it. Deleting testcases or attachments removes them permanently.
+
+## Limits
+
+| Limit | Value |
+| --- | --- |
+| Request body | 5 MB, or 15 MB when creating records |
+| Testcases per create request | 100 |
+| Tags per record | 50, each up to 64 characters of letters, digits, spaces, and `_ - : .` |
+| Assignees per record | 50 |
+| Attachment size | 100 MB per file |
+
+Scorecard doesn't apply per-key rate limits. Contact [support@scorecard.io](mailto:support@scorecard.io) before sending sustained high volumes.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Evaluation quickstart" icon="flask-conical" href="/intro/sdk-quickstart">
+    Create metrics and a run from code.
   </Card>
-
-  <Card title="Node.js SDK" icon="node-js" href="https://github.com/scorecard-ai/scorecard-node">
-    `npm install scorecard-ai` to interact with our API.
+  <Card title="Push scores from your code" icon="upload" href="/features/push-scores">
+    Record results from checks that run outside Scorecard.
   </Card>
 </CardGroup>
-
-### Reporting issues
-
-Please report any issues or feature requests with the SDKs or documentation on GitHub:
-
-* [File issue with Python SDK](https://github.com/scorecard-ai/scorecard-python/issues)
-* [File issue with Node.js SDK](https://github.com/scorecard-ai/scorecard-node/issues)
-
-The Scorecard team supports you in your LLM evaluation journey. Feel free to [email us](mailto:team@scorecard.io); we're here to help!

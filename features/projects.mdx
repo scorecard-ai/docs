@@ -1,50 +1,50 @@
 ---
-title: "Organizations & Projects"
-description: "Manage your team's evaluation work with Organizations and Projects"
+title: "Organizations and projects"
+description: "How organizations, members, roles, projects, and API keys work in Scorecard."
 ---
 
-import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+An **organization** is your team's workspace. It holds your members, API keys, and model provider keys. Inside it, **projects** hold the records, testsets, metrics, runs, and systems for one agent or use case. Every member of an organization can open every project in it.
 
-Scorecard uses a hierarchical structure to organize your evaluation work: **Organizations** contain multiple **Projects**, and each Project contains your testsets, metrics, runs, and results.
+## Members and roles
 
-## Organizations
+Use the organization menu in the header to switch organizations, invite members, and change their roles. Scorecard has two roles:
 
-Organizations are the top-level entity in Scorecard that enables team collaboration and workspace isolation.
+| Role | Can |
+| --- | --- |
+| **Admin** | Everything a member can, plus: create API keys, assign records to reviewers, set reviewer aliases, and see every reviewer's scores, annotations, and the real system names in blind reviews |
+| **Member** | Create and edit projects, testsets, metrics, prompts, and runs; score and annotate records |
 
-All members of an organization can access all projects within that organization. API keys are scoped to a specific _organization_, not user or project.
-
-<DarkLightImage
-  lightSrc="/images/org-member-modal.png"
-  caption="Organization member management dialog with a few users."
-  alt="Screenshot of the organization member management dialog with a few users."
-/>
+Members see only their own grades and annotations, plus admins' and automated scores. See [What reviewers can see](/features/human-review#what-reviewers-can-see).
 
 ## Projects
 
-Each project serves as a container for:
+Open the project selector in the header to switch projects or click **Create Project**. The setup wizard asks how data will arrive (a testset, traces, or the SDK) and suggests starting metrics. New organizations also get an **Example Project** with a sample agent, testset, metrics, and a scored run.
 
-- **Testsets**: Collections of Testcases for evaluation
-- **Metrics**: Custom evaluation criteria and scoring methods 
-- **Records**: Evaluation executions and their results, traces and logs
+A project's ID is the number in its URL, for example `314` in `app.scorecard.io/projects/314/records`. You need it to route [traces](/features/tracing#route-traces-to-a-project) and to call the API.
 
-<DarkLightImage
-  lightSrc="/images/projects-overview-light.png"
-  darkSrc="/images/projects-overview-dark.png"
-  caption="Projects overview page for an organization."
-  alt="Screenshot of the projects overview page with two projects."
-/>
+- **Rename** a project by editing its name on the project's **Overview** page.
+- **Delete** it from the **⋯** menu on the Overview page.
+- **Move** testsets and metrics to another project with **Move to Project** in their menus.
 
-### Creating a New Project
+### Project overview
 
-To create a project, click **"Create Project"** in the projects menu and go through the steps.
+The **Overview** page is a board of widgets you arrange: **Records analysis** for AI-found patterns in recent records, **Assigned to** for open review work, and a pass-rate widget for any metric. Click **Customize** to add, remove, resize, and reorder widgets, and use **Show records from** to set the time range for all of them. The layout is saved in your browser.
 
-<Tip>
-Choose a descriptive project name for the system or use case you're evaluating, such as "Customer Support Chatbot" or "Product Recommendation Engine."
-</Tip>
+## API keys
 
-<DarkLightImage
-  lightSrc="/images/project-create-light.png"
-  darkSrc="/images/project-create-dark.png"
-  caption="Creating a new project."
-  alt="Screenshot of the create project modal in the UI."
-/>
+Admins create keys under **Settings → Scorecard API Keys**. Each key starts with `ak_` and is shown once, so copy it to a secret manager right away. Every new organization also starts with a **Default API key**.
+
+- Keys belong to the organization, not to a person, and act with admin permissions.
+- Revoke a key from the same page. Revocation can take up to two minutes to apply everywhere.
+- **Settings → Tracing URL** shows the OpenTelemetry endpoint for your account.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Model providers" icon="key-round" href="/features/custom-provider">
+    Add provider keys for judge models and prompts.
+  </Card>
+  <Card title="SSO" icon="lock" href="/features/enterprise-authentication">
+    Sign in through your identity provider.
+  </Card>
+</CardGroup>

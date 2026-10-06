@@ -1,0 +1,119 @@
+---
+title: "Evaluate multi-turn conversations"
+description: "Score chat agents on whole conversations: review real conversations grouped by session, or simulate conversations with an LLM playing your user."
+---
+
+A chat agent can answer each message well and still fail the conversation by losing context, looping, or never resolving the request. Score the conversation as a whole, in one of two ways:
+
+- **Review real conversations** by tracing each turn with a session ID, so every conversation becomes one record.
+- **Simulate conversations** before you ship, with an LLM playing a user who has a persona and a goal.
+
+## Review real conversations
+
+Give every trace in a conversation the same [session ID](/features/tracing#group-traces-into-sessions). Scorecard merges them into one record whose **Conversation** tab shows every turn. Claude Code and the Claude Agent SDK set the session ID for you.
+
+To score these records, use AI metrics whose prompt template reads `{{ allInputs }}` and `{{ allOutputs }}`, as new AI metrics do by default. Then select records on the [Records](/features/records) page and click **Score Records**.
+
+## Simulate conversations
+
+Each testcase describes a simulated user. Your `system` function plays the conversation between that user and your agent, and returns the transcript, so `run_and_evaluate` records one scored conversation per testcase.
+
+### 1. Describe the users
+
+Create a testset whose inputs describe each simulated user:
+
+| Field | Example |
+| --- | --- |
+| `persona` | "An impatient customer who writes short messages." |
+| `goal` | "Find out whether opened headphones can be returned." |
+
+Vary the personas, from cooperative to confused to adversarial, and include goals your agent can't fulfill.
+
+### 2. Create the metric
+
+Create an AI Boolean metric that reads the whole transcript: switch its guidelines to **Advanced** and paste this into **Prompt Template**. Note its ID for the script.
+
+```text
+Customer goal: {{ inputs.goal }}
+
+Conversation:
+{{ outputs.conversation }}
+
+Pass if the agent gave the customer what they needed by the end of the conversation, without making up facts. Fail otherwise.
+
+{{ gradingInstructionsAndExamples }}
+```
+
+Add more metrics for other qualities, such as tone or staying on topic, or a heuristic metric on `turns` to catch conversations that drag on.
+
+### 3. Write and run the simulation
+
+This example uses OpenAI for the simulated user. Replace `my_agent` with a call to your agent that takes the message history and returns its reply, and set `GOAL_METRIC_ID` to the metric from step 2.
+
+```python simulate.py
+from openai import OpenAI
+from scorecard_ai import Scorecard
+from scorecard_ai.lib import run_and_evaluate
+
+scorecard = Scorecard()
+openai = OpenAI()
+MAX_TURNS = 6
+
+
+def simulated_user(persona: str, goal: str, history: list[dict]) -> str:
+    """Write the user's next message, or DONE once the goal is met."""
+    # From the simulated user's side, the agent's messages are the incoming ones.
+    flipped = [{"role": "assistant" if m["role"] == "user" else "user", "content": m["content"]} for m in history]
+    response = openai.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": f"You are a customer. {persona} Your goal: {goal} "
+                "Write only your next message. Reply DONE once your goal is met.",
+            },
+            *(flipped or [{"role": "user", "content": "Start the conversation."}]),
+        ],
+    )
+    return response.choices[0].message.content
+
+
+def run_system(inputs: dict, _system_version) -> dict:
+    history: list[dict] = []
+    for _ in range(MAX_TURNS):
+        message = simulated_user(inputs["persona"], inputs["goal"], history)
+        if "DONE" in message:
+            break
+        history.append({"role": "user", "content": message})
+        history.append({"role": "assistant", "content": my_agent(history)})
+    transcript = "\n".join(f"{m['role']}: {m['content']}" for m in history)
+    return {"conversation": transcript, "turns": len(history) // 2}
+
+
+run = run_and_evaluate(
+    client=scorecard,
+    project_id=PROJECT_ID,
+    testset_id=TESTSET_ID,
+    metric_ids=[GOAL_METRIC_ID],
+    system=run_system,
+)
+print(run["url"])
+```
+
+## Tips
+
+- **Start with few turns.** Each turn costs two model calls. Raise `MAX_TURNS` once the setup works.
+- **Repeat each conversation.** Simulated users vary, so pass `trials=3` to `run_and_evaluate` and look at the spread.
+- **Trace the agent too.** [Link traces](/features/sdk-tracing) to see every model and tool call behind a failed conversation.
+- **Have people grade a sample.** Add a human metric and review a few conversations on the [Compare page](/features/a-b-comparison) to check that your AI metric agrees with you.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Runs" icon="play" href="/features/runs">
+    Trials, versions, and reading results.
+  </Card>
+  <Card title="Human review" icon="users" href="/features/human-review">
+    Grade conversations as a team.
+  </Card>
+</CardGroup>

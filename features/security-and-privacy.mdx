@@ -1,6 +1,6 @@
 ---
-title: "Security & Privacy"
-description: Preserving the privacy of our clients and ensuring secure processes is of top priority at Scorecard. 
+title: "Security and privacy"
+description: "How Scorecard secures your data: SOC 2, encryption, access control, and what data Scorecard receives from your agent."
 ---
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
@@ -23,3 +23,16 @@ Scorecard AI takes extensive measures to ensure the confidentiality, integrity, 
 
 ## Scorecard with Self-Hosted Data
 Are you dealing with very sensitive data, require specialized security arrangements, or have specific compliance needs? [Send us an email](mailto:team@scorecard.io) and we're happy to discuss data-plane self-hosting solutions to support your team's needs!
+
+## Access control
+
+* **Organization isolation:** Every project, record, and API key belongs to one organization, and a key only grants access to its own organization's data.
+* **Roles:** Members are admins or members, and only admins can create API keys or assign review work. See [Organizations and projects](/features/projects#members-and-roles).
+* **Single sign-on:** Enterprise customers can require SAML SSO through their identity provider. See [SSO](/features/enterprise-authentication).
+* **API keys:** Keys are created by admins, shown once, and can be revoked at any time from **Settings**.
+
+## Data you send to Scorecard
+
+* **Traces and records** contain whatever your instrumentation captures, which often includes prompts, model outputs, and tool inputs and outputs. You can turn off content capture in most instrumentation, for example by leaving out the `OTEL_LOG_*` variables for Claude Code.
+* **Personal data** isn't detected or redacted automatically. Redact it before you send traces or records if your policies require it.
+* **Scoring:** when an AI metric scores a record, Scorecard sends the record's content to the judge model's provider, using your organization's [provider key](/features/custom-provider) if you've added one.
