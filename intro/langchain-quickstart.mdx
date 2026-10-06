@@ -1,146 +1,159 @@
 ---
-title: "LangChain Tracing"
-description: "Trace your LangChain applications with Scorecard using OpenLLMetry."
+title: "LangChain, LlamaIndex, CrewAI, and more"
+sidebarTitle: "LangChain and other frameworks"
+description: "Trace LangChain, LangGraph, LlamaIndex, CrewAI, LiteLLM, the OpenAI Agents SDK, and the model SDKs under them with one OpenLLMetry init call."
 ---
 
-import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+[OpenLLMetry](https://github.com/traceloop/openllmetry) is an open-source set of OpenTelemetry instrumentations. One init call traces your framework and the model SDKs it calls, and Scorecard receives the traces. You don't need a Traceloop account.
 
-This quickstart shows how to instrument your [LangChain](https://www.langchain.com/) application using [OpenLLMetry](https://github.com/traceloop/openllmetry) and Scorecard for observability, debugging, and evaluation.
+It covers LangChain, LangGraph, LlamaIndex, CrewAI, Haystack, LiteLLM, and the OpenAI Agents SDK, along with OpenAI, Anthropic, AWS Bedrock, Google Gemini, Cohere, Mistral, and other providers. See the [OpenLLMetry repository](https://github.com/traceloop/openllmetry) for the full list.
 
-<Info>
-  **Looking for general tracing guidance?** Check out the [Tracing Quickstart](/intro/tracing-quickstart) for an overview of tracing concepts and alternative integration methods.
-</Info>
+## Install
 
-## Steps
+<CodeGroup>
+```bash Python
+pip install traceloop-sdk
+```
 
-<Steps>
-  <Step title="Install dependencies">
-    Install the Traceloop SDK and the LangChain instrumentation package.
+```bash TypeScript
+npm install @traceloop/node-server-sdk
+```
+</CodeGroup>
 
-    ```bash
-    pip install traceloop-sdk opentelemetry-instrumentation-langchain
-    ```
-  </Step>
+The Python package includes the instrumentations for every library it supports.
 
-  <Step title="Set up environment variables">
-    Configure the Traceloop SDK to send traces to Scorecard. Get your Scorecard API key from [Settings](https://app.scorecard.io/settings).
+## Initialize before your framework
 
-    ```bash
-    export TRACELOOP_API_KEY="<your_scorecard_api_key>"
-    export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel"
-    export SCORECARD_PROJECT_ID="<your-project-id>"
-    ```
+Put this at the top of your entry point. Instrumentation patches libraries when they're imported, so call it **before** importing your framework or model SDK.
 
-    <Note>
-      Replace `<your_scorecard_api_key>` with your actual Scorecard API key (starts with `ak_`).
-    </Note>
-  </Step>
+<CodeGroup>
+```python Python
+import os
 
-  <Step title="Initialize tracing">
-    Initialize the Traceloop SDK with LangChain instrumentation **before** importing LangChain modules.
+from traceloop.sdk import Traceloop
 
-    <Warning>
-      **Import order matters!** You must initialize Traceloop before importing any LangChain modules to ensure all calls are properly instrumented.
-    </Warning>
+os.environ.setdefault("TRACELOOP_METRICS_ENABLED", "false")  # Scorecard stores traces only
 
-    ```python highlight={1-12}
-    import os
-    from traceloop.sdk import Traceloop
-    from traceloop.sdk.instruments import Instruments
+Traceloop.init(
+    app_name="my-agent",
+    api_endpoint="https://tracing.scorecard.io/otel",
+    headers={"Authorization": f"Bearer {os.environ['SCORECARD_API_KEY']}"},
+    resource_attributes={"scorecard.project_id": os.environ["SCORECARD_PROJECT_ID"]},
+    disable_batch=True,
+    telemetry_enabled=False,
+)
 
-    # Set scorecard.project_id to route traces to a specific project (defaults to oldest project)
-    Traceloop.init(
-        disable_batch=True,
-        instruments={Instruments.LANGCHAIN},
-        resource_attributes={
-            "scorecard.project_id": os.getenv("SCORECARD_PROJECT_ID")
-        }
-    )
+# Import your framework after Traceloop.init
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
 
-    # Now import your LangChain modules
-    from langchain_openai import ChatOpenAI
-    from langchain_core.prompts import ChatPromptTemplate
-    ```
-  </Step>
+prompt = ChatPromptTemplate.from_messages([("system", "You are a helpful assistant."), ("user", "{input}")])
+chain = prompt | ChatOpenAI(model="gpt-4o-mini")
+print(chain.invoke({"input": "What is the capital of France?"}).content)
+```
 
-  <Step title="Run your LangChain application">
-    With tracing initialized, run your LangChain application. All LLM calls, chain executions, and agent actions are automatically traced.
+```typescript TypeScript
+import * as traceloop from "@traceloop/node-server-sdk";
+import OpenAI from "openai";
 
-    Here's a full example:
+// Set OTEL_RESOURCE_ATTRIBUTES=scorecard.project_id=<id> in the environment.
+traceloop.initialize({
+  appName: "my-agent",
+  baseUrl: "https://tracing.scorecard.io/otel",
+  headers: { Authorization: `Bearer ${process.env.SCORECARD_API_KEY}` },
+  disableBatch: true,
+  instrumentModules: { openAI: OpenAI },
+});
+```
+</CodeGroup>
 
-    ```python title="example.py" highlight={1-11} [expandable]
-    import os
-    from traceloop.sdk import Traceloop
-    from traceloop.sdk.instruments import Instruments
+- `disable_batch` (`disableBatch`) sends each span right away, which short scripts need. Drop it for busy servers.
+- `telemetry_enabled=False` turns off Traceloop's own anonymous usage reporting.
+- In Python, leave out `instruments=` to trace every installed library, or pass a set such as `{Instruments.LANGCHAIN, Instruments.OPENAI}` to limit it.
 
-    # Set scorecard.project_id to route traces to a specific project (defaults to oldest project)
-    Traceloop.init(
-        disable_batch=True,
-        instruments={Instruments.LANGCHAIN},
-        resource_attributes={
-            "scorecard.project_id": os.getenv("SCORECARD_PROJECT_ID")
-        }
-    )
+In TypeScript, pass the modules to instrument, because ES modules and bundlers can hide them from automatic patching. Each key in `instrumentModules` takes a specific shape, and the wrong one crashes at startup:
 
-    # Then import LangChain
-    from langchain_openai import ChatOpenAI
-    from langchain_core.prompts import ChatPromptTemplate
+| Key | Pass |
+| --- | --- |
+| `openAI` | The default export: `import OpenAI from "openai"` |
+| `anthropic` | The module namespace: `import * as anthropic from "@anthropic-ai/sdk"` |
+| `langchain` | The LangChain module namespaces, for example `{ chainsModule, agentsModule, toolsModule }` |
+| `llamaIndex`, `bedrock`, `cohere` | The module namespace: `import * as x from "..."` |
 
-    # Create a simple chain
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a helpful assistant."),
-        ("user", "{input}")
-    ])
+## Verify
 
-    model = ChatOpenAI(model="gpt-4o-mini")
-    chain = prompt | model
+Run your app and open your project's **Records** page. Each chain or agent run appears as a record within a minute.
 
-    # Run the chain - this will be traced
-    response = chain.invoke({"input": "What is the capital of France?"})
-    print(response.content)
-    ```
+## Configure with environment variables
 
-    <Note>
-      You may see `Failed to export batch` warnings in the console. These can be safely ignored - your traces are still being captured and sent to Scorecard successfully.
-    </Note>
+To keep the endpoint and key out of code, set them as environment variables instead. You still need the `Traceloop.init()` or `traceloop.initialize()` call.
 
-  </Step>
+```bash
+export TRACELOOP_BASE_URL="https://tracing.scorecard.io/otel"
+export TRACELOOP_HEADERS="Authorization=Bearer%20${SCORECARD_API_KEY}"
+export TRACELOOP_METRICS_ENABLED=false
+export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=${SCORECARD_PROJECT_ID}"
+```
 
-  <Step title="View traces in Scorecard">
-    Navigate to the **Records** page in [Scorecard](https://app.scorecard.io) to see your LangChain traces.
+Write the space in `TRACELOOP_HEADERS` as `%20`.
 
-    <Note>
-      It may take 1-2 minutes for traces to appear on the Records page.
-    </Note>
+## Name your steps
 
-    <DarkLightImage lightSrc="/images/records-traces-light.png" darkSrc="/images/records-traces-dark.png" alt="Records page showing LangChain traces" caption="Records page showing LangChain application traces" />
+Traceloop's decorators give agent steps readable names in the trace:
 
-    Click on any record to view the full trace details, including chain execution, LLM calls, and token usage.
+<CodeGroup>
+```python Python
+from traceloop.sdk.decorators import workflow
 
-    <DarkLightImage lightSrc="/images/record-details-trace-light.png" darkSrc="/images/record-details-trace-dark.png" alt="Trace details view" caption="Trace details with chain execution and LLM call data" />
-  </Step>
-</Steps>
 
-## What Gets Traced
+@workflow(name="answer_question")
+def answer(question: str) -> str:
+    ...
+```
 
-OpenLLMetry automatically captures comprehensive telemetry from your LangChain applications:
+```typescript TypeScript
+await traceloop.withWorkflow({ name: "answer_question" }, async () => {
+  // agent code
+});
+```
+</CodeGroup>
 
-| Trace Data | Description |
-|------------|-------------|
-| **LLM Calls** | Every LLM invocation with full prompt and completion |
-| **Chains** | Chain executions with inputs, outputs, and intermediate steps |
-| **Agents** | Agent reasoning steps, tool selections, and action outputs |
-| **Retrievers** | Document retrieval operations and retrieved content |
-| **Token Usage** | Input, output, and total token counts per LLM call |
-| **Errors** | Any failures with full error context and stack traces |
+For one record per conversation, set a [session ID](/features/tracing#group-traces-into-sessions) on a span you open around each turn. Traceloop association properties aren't read as session IDs.
 
-## Next Steps
+## What's captured
+
+| Data | Description |
+| --- | --- |
+| Model calls | Prompts, completions, model, and token counts |
+| Chains and workflows | Inputs, outputs, and intermediate steps |
+| Agents and tools | Tool selections, inputs, and results |
+| Retrievers | Retrieval calls and returned documents |
+| Errors | Failed steps with their error |
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Nothing is traced">
+    `Traceloop.init` ran after the framework was imported. Move it to the top of your entry point. If you load a `.env` file, load it before `Traceloop.init`.
+  </Accordion>
+  <Accordion title="Failed to export metrics batch: 404">
+    Metrics export is on. Set `TRACELOOP_METRICS_ENABLED=false`. "Failed to export batch" warnings at shutdown are harmless when spans still arrive.
+  </Accordion>
+  <Accordion title="Traces land in the oldest project">
+    Set `scorecard.project_id` as a resource attribute, through `resource_attributes` in Python or `OTEL_RESOURCE_ATTRIBUTES`.
+  </Accordion>
+  <Accordion title="I already send traces to Traceloop">
+    To send to both, set up OpenTelemetry with two exporters. See [OpenTelemetry](/integrations/opentelemetry#add-scorecard-to-an-existing-setup).
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Records" icon="database" href="/features/records">
-    Learn more about viewing and managing your traced records
+  <Card title="Records" icon="table" href="/features/records">
+    Find and review your traced records.
   </Card>
   <Card title="Metrics" icon="gauge" href="/features/metrics">
-    Create custom metrics to evaluate LangChain application performance
+    Score traced records with AI judges or reviewers.
   </Card>
 </CardGroup>

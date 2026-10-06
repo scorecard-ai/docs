@@ -1,0 +1,107 @@
+---
+title: "Other coding agents"
+description: "Trace Codex, Gemini CLI, OpenCode, and Goose sessions in Scorecard with their built-in OpenTelemetry settings."
+---
+
+Most coding agents can export OpenTelemetry traces. Point them at Scorecard to see each session's model calls and tool calls as a record. For Claude Code, see [Claude Agent SDK and Claude Code](/intro/claude-agent-sdk-tracing).
+
+All of these agents send prompts and tool output to Scorecard once content capture is on. The settings below turn it on with `log_user_prompt` (Codex), `logPrompts` (Gemini CLI), and `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` (Goose). Remove those lines to send structure and timings only, for example in repositories that handle secrets or customer data.
+
+Gemini CLI, OpenCode, and Goose read your key and project ID from these variables. Codex takes them in its config file:
+
+```bash
+export SCORECARD_API_KEY="ak_..."
+export SCORECARD_PROJECT_ID="314"
+```
+
+## Codex
+
+Codex reads tracing settings from `~/.codex/config.toml`, not environment variables. Add:
+
+```toml ~/.codex/config.toml
+[otel]
+log_user_prompt = true
+span_attributes = { "scorecard.project_id" = "314" }
+trace_exporter = { otlp-http = { endpoint = "https://tracing.scorecard.io/otel/v1/traces", protocol = "binary", headers = { "Authorization" = "Bearer ak_..." } } }
+```
+
+Use the full `/v1/traces` URL; Codex doesn't append it. This file holds your key, so keep it in your home directory and out of any repository.
+
+## Gemini CLI
+
+Add to `.gemini/settings.json` in your repository, or `~/.gemini/settings.json`:
+
+```json .gemini/settings.json
+{
+  "telemetry": {
+    "enabled": true,
+    "traces": true,
+    "target": "local",
+    "otlpProtocol": "http",
+    "otlpEndpoint": "https://tracing.scorecard.io/otel",
+    "logPrompts": true
+  }
+}
+```
+
+The settings file has no field for headers, so set the key and project in the environment:
+
+```bash
+export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer ${SCORECARD_API_KEY}"
+export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=${SCORECARD_PROJECT_ID}"
+```
+
+## OpenCode
+
+Set the standard OTLP variables:
+
+```bash
+export OTEL_EXPORTER_OTLP_ENDPOINT="https://tracing.scorecard.io/otel"
+export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer ${SCORECARD_API_KEY}"
+export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=${SCORECARD_PROJECT_ID}"
+```
+
+Then turn on OpenCode's AI SDK spans, which carry the prompts, responses, and tool calls, in `opencode.json` at your repository root or `~/.config/opencode/opencode.json`:
+
+```json opencode.json
+{ "experimental": { "openTelemetry": true } }
+```
+
+OpenCode also sends internal spans. The model calls are the `ai.streamText` spans and the tool calls are `ai.toolCall`.
+
+## Goose
+
+Goose follows the OpenTelemetry GenAI conventions. Set:
+
+```bash
+export OTEL_EXPORTER_OTLP_ENDPOINT="https://tracing.scorecard.io/otel"
+export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer ${SCORECARD_API_KEY}"
+export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=${SCORECARD_PROJECT_ID}"
+export OTEL_TRACES_EXPORTER=otlp
+export OTEL_METRICS_EXPORTER=none
+export OTEL_LOGS_EXPORTER=none
+export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true
+```
+
+## Other agents and harnesses
+
+For agents without a configurable exporter, such as Cursor or a harness you built yourself, open spans from the agent's hooks or loop as described in [OpenTelemetry](/integrations/opentelemetry#trace-an-agent-loop). [Scorecard's agent skills](/intro/ai-assisted-setup) include ready-made helpers for Cursor and for the Hermes and Pi agent harnesses.
+
+## Verify
+
+Start the agent with the settings loaded, give it a small task that reads a file, and open your project's **Records** page. The session should appear as one record with the agent's turn, its model calls, and a tool call for the file read.
+
+## Troubleshooting
+
+Codex needs the full `/v1/traces` URL; the other agents append it to the base URL. For other errors, see [Tracing troubleshooting](/features/tracing#troubleshooting).
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Tracing" icon="activity" href="/features/tracing">
+    Sessions, tags, and troubleshooting.
+  </Card>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Score your agent's sessions.
+  </Card>
+</CardGroup>

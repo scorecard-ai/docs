@@ -1,93 +1,124 @@
 ---
-title: "Claude Agent SDK Tracing"
-sidebarTitle: "Claude Agent SDK Tracing"
-description: "Trace your Claude Agent SDK applications with Scorecard."
-mode: "wide"
+title: "Claude Agent SDK and Claude Code"
+description: "Trace agents built on the Claude Agent SDK, and Claude Code sessions themselves, by setting environment variables, with no code changes."
 ---
 
-import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+import { DarkLightImage } from "/snippets/dark-light-image.jsx";
+import ClaudeCodeEnv from "/snippets/claude-code-env.mdx";
 
-The Claude Agent SDK is Anthropic's framework for building AI agents that can reason, use tools, and complete multi-step tasks. It includes built-in support for OpenTelemetry tracing, making it easy to capture detailed telemetry from your agent workflows.
+Claude Code, and the [Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk) that runs it, export OpenTelemetry traces on their own. Point them at Scorecard with environment variables and every conversation shows up as one record, with each user turn, model call, tool call, and sub-agent.
 
-This quickstart shows how to send traces from your Claude Agent SDK (Python v0.1.18+, TypeScript v0.1.71+) applications to Scorecard for observability, debugging, and evaluation.
+## Prerequisites
 
-<Info>
-  **Using the standard Anthropic SDK?** Check out the general [Tracing Quickstart](/intro/tracing-quickstart) for the proxy method that works with any Anthropic client.
-</Info>
+- A Scorecard API key and project ID. See the [Tracing quickstart](/intro/tracing-quickstart).
+- For the Agent SDK: Python `claude-agent-sdk` 0.1.18 or later, or TypeScript `@anthropic-ai/claude-agent-sdk` 0.1.71 or later.
 
-## Steps
+## Set the environment variables
 
-<Steps>
-  <Step title="Set up environment variables">
-    Configure the OpenTelemetry exporter to send traces to Scorecard. You'll need your Scorecard API key from [Settings](https://app.scorecard.io/settings).
+<ClaudeCodeEnv />
 
-    ```bash
-    export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <your_scorecard_api_key>"
-    export ENABLE_BETA_TRACING_DETAILED=1
-    export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
-    export OTEL_LOG_USER_PROMPTS=1
-    export OTEL_LOG_TOOL_DETAILS=1
-    export OTEL_LOG_TOOL_CONTENT=1
-    export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=<your-project-id>"
-    ```
+| Variable | Purpose |
+| --- | --- |
+| `OTEL_EXPORTER_OTLP_HEADERS` | Authenticates with your Scorecard API key |
+| `ENABLE_BETA_TRACING_DETAILED`, `BETA_TRACING_ENDPOINT` | Turn on Claude Code's detailed tracing and send it to Scorecard |
+| `OTEL_LOG_USER_PROMPTS` | Includes prompt text. Without it, records show timings and tool names but no prompts. |
+| `OTEL_LOG_TOOL_DETAILS`, `OTEL_LOG_TOOL_CONTENT` | Include tool inputs and outputs |
+| `OTEL_RESOURCE_ATTRIBUTES` | Routes traces to your project with `scorecard.project_id` |
 
-    <Note>
-      Replace `<your_scorecard_api_key>` with your actual Scorecard API key (starts with `ak_`), and `<your-project-id>` with the project you want traces to land in.
-    </Note>
+Leave out the three `OTEL_LOG_*` variables to send timings and structure without content.
 
-    <Warning>
-      If the project ID is wrong or invalid, traces will be sent to the **oldest project** in your organization.
-    </Warning>
-  </Step>
+## Claude Agent SDK
 
-  <Step title="Run your agent">
-    With the environment variables configured, run your Claude Agent SDK application. All agent activity is automatically traced.
+The SDK starts a Claude Code process, so that process needs the variables. Export them in your shell, or pass them in code:
 
-    ```python title="example.py" [expandable]
-    import anyio
-    from claude_agent_sdk import (
-        AssistantMessage,
-        TextBlock,
-        query,
-    )
+<CodeGroup>
+```python Python
+import asyncio
+import os
 
-    async def main():
-        async for message in query(prompt="What is 2 + 2?"):
-            if isinstance(message, AssistantMessage):
-                for block in message.content:
-                    if isinstance(block, TextBlock):
-                        print(f"Claude: {block.text}")
+from claude_agent_sdk import ClaudeAgentOptions, query
 
-    anyio.run(main)
-    ```
-  </Step>
+scorecard_env = {
+    "OTEL_EXPORTER_OTLP_HEADERS": f"Authorization=Bearer {os.environ['SCORECARD_API_KEY']}",
+    "ENABLE_BETA_TRACING_DETAILED": "1",
+    "BETA_TRACING_ENDPOINT": "https://tracing.scorecard.io/otel",
+    "OTEL_LOG_USER_PROMPTS": "1",
+    "OTEL_LOG_TOOL_DETAILS": "1",
+    "OTEL_LOG_TOOL_CONTENT": "1",
+    "OTEL_RESOURCE_ATTRIBUTES": f"scorecard.project_id={os.environ['SCORECARD_PROJECT_ID']}",
+}
 
-  <Step title="View traces in Scorecard">
-    Navigate to the [**Records**](/features/records) page in [Scorecard](https://app.scorecard.io) to see your agent traces. Click any record to open its trace detail panel, which breaks the trace into four tabs: **Conversation**, **Timeline**, **Chat**, and **Debug**.
 
-    <DarkLightImage lightSrc="/images/records-table-claude-sdk-light.png" darkSrc="/images/records-table-claude-sdk-dark.png" alt="Records page with a record selected, showing the trace detail panel" caption="Selecting a record opens its trace detail panel." />
+async def main() -> None:
+    async for message in query(prompt="What is 2 + 2?", options=ClaudeAgentOptions(env=scorecard_env)):
+        print(message)
 
-    The **Conversation** tab shows a chat-like replay of user messages, assistant responses, and tool calls.
 
-    <DarkLightImage lightSrc="/images/claude-sdk-conversation-view-light.png" darkSrc="/images/claude-sdk-conversation-view-dark.png" alt="Conversation tab showing user messages, assistant responses, and tool call results" caption="Conversation tab of an agent trace." />
+asyncio.run(main())
+```
 
-    The **Timeline** tab shows a Gantt chart-style breakdown of every span, so you can see how LLM calls and tool executions overlap and how long each takes.
+```typescript TypeScript
+import { query } from "@anthropic-ai/claude-agent-sdk";
 
-    <DarkLightImage lightSrc="/images/claude-sdk-trace-timeline-light.png" darkSrc="/images/claude-sdk-trace-timeline-dark.png" alt="Timeline tab showing span hierarchy with duration bars for LLM calls and tool executions" caption="Timeline tab of an agent trace." />
+const scorecardEnv = {
+  OTEL_EXPORTER_OTLP_HEADERS: `Authorization=Bearer ${process.env.SCORECARD_API_KEY}`,
+  ENABLE_BETA_TRACING_DETAILED: "1",
+  BETA_TRACING_ENDPOINT: "https://tracing.scorecard.io/otel",
+  OTEL_LOG_USER_PROMPTS: "1",
+  OTEL_LOG_TOOL_DETAILS: "1",
+  OTEL_LOG_TOOL_CONTENT: "1",
+  OTEL_RESOURCE_ATTRIBUTES: `scorecard.project_id=${process.env.SCORECARD_PROJECT_ID}`,
+};
 
-    The **Chat** tab lets you ask questions about the trace in natural language—what happened, why a step failed, or how it performed—and compare records side by side.
+// The env option replaces the process environment, so spread process.env to keep PATH and your keys.
+for await (const message of query({ prompt: "What is 2 + 2?", options: { env: { ...process.env, ...scorecardEnv } } })) {
+  if (message.type === "result" && message.subtype === "success") console.log(message.result);
+}
+```
+</CodeGroup>
 
-    <DarkLightImage lightSrc="/images/claude-sdk-chat-view-light.png" darkSrc="/images/claude-sdk-chat-view-dark.png" alt="Chat tab answering a natural-language question about the trace" caption="Chat tab: ask questions about a trace." />
+In Python, the variables you pass are added to the inherited environment. In TypeScript, `env` replaces it.
 
-    The **Debug** tab pairs the full span tree with a trace overview—duration, cost, tokens, and model—plus the raw span data for deeper inspection.
+## Claude Code
 
-    <DarkLightImage lightSrc="/images/claude-sdk-debug-view-light.png" darkSrc="/images/claude-sdk-debug-view-dark.png" alt="Debug tab showing the span tree alongside the trace overview dashboard" caption="Debug tab: span tree and trace overview." />
-  </Step>
-</Steps>
+To trace your own Claude Code sessions, or Claude Code running in CI, set the variables before `claude` starts:
+
+- **Your shell:** export them in your shell profile.
+- **CI:** set them on the job, building the header from a `SCORECARD_API_KEY` secret.
+- **All your sessions:** add them to the `env` block of `~/.claude/settings.json`:
+
+```json ~/.claude/settings.json
+{
+  "env": {
+    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer ak_...",
+    "ENABLE_BETA_TRACING_DETAILED": "1",
+    "BETA_TRACING_ENDPOINT": "https://tracing.scorecard.io/otel",
+    "OTEL_LOG_USER_PROMPTS": "1",
+    "OTEL_LOG_TOOL_DETAILS": "1",
+    "OTEL_LOG_TOOL_CONTENT": "1",
+    "OTEL_RESOURCE_ATTRIBUTES": "scorecard.project_id=314"
+  }
+}
+```
+
+Claude Code doesn't read these settings from a repository's `.claude/settings.json`, so keep them in your user settings or environment, out of version control.
+
+## View your traces
+
+Run your agent or start a Claude Code session, then open the project's **Records** page. Traces appear within a minute of the process exiting. Each conversation is one record: Claude Code tags every span with a session ID, so all of its traces merge.
+
+Open the record and click **View Full Details**. The **Conversation** tab replays the session: user turns, model replies, and tool calls with their results, with sub-agents nested under the `Agent` tool call that started them. Failed tool calls are marked with an error. **Chat** and **Debug** work as on any record; see [Open a record](/features/records#open-a-record).
+
+<DarkLightImage
+  lightSrc="/images/claude-sdk-conversation-view-light.png"
+  darkSrc="/images/claude-sdk-conversation-view-dark.png"
+  caption="The Conversation tab of a Claude Code session."
+  alt="Conversation tab showing a user turn followed by numbered tool-call steps"
+/>
 
 ## Anatomy of a trace
 
-Explore how a Claude Agent SDK trace is structured—spans, tool calls, model usage, and metadata—in this interactive demo:
+Explore how a Claude Agent SDK trace is structured, with its spans, tool calls, model usage, and metadata:
 
 <iframe
   className="w-full rounded-xl border-0"
@@ -96,17 +127,27 @@ Explore how a Claude Agent SDK trace is structured—spans, tool calls, model us
   title="Anatomy of a Claude Agent SDK trace"
 />
 
-<Info>
-  Tracing also works with the Claude Code CLI and [Claude Tag in Slack](/intro/claude-tag-tracing)!
-</Info>
+## Troubleshooting
 
-## Next Steps
+<AccordionGroup>
+  <Accordion title="No records appear">
+    Make sure the variables are set in the process that runs Claude Code. With the TypeScript SDK, pass them through `env`, and spread `process.env` so the process keeps its `PATH` and Anthropic credentials. Traces are sent when the process exits.
+  </Accordion>
+  <Accordion title="Records are in the wrong project">
+    Use your numeric project ID. See [Route traces to a project](/features/tracing#route-traces-to-a-project).
+  </Accordion>
+  <Accordion title="Records have no prompt or tool content">
+    Set `OTEL_LOG_USER_PROMPTS`, `OTEL_LOG_TOOL_DETAILS`, and `OTEL_LOG_TOOL_CONTENT`.
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Tracing Features" icon="chart-line" href="/features/tracing">
-    Learn about advanced tracing patterns and trace grouping
+  <Card title="Link traces to runs" icon="link" href="/features/sdk-tracing">
+    Score Agent SDK runs on a testset with the full trace attached.
   </Card>
-  <Card title="Metrics" icon="gauge" href="/features/metrics">
-    Create custom metrics to evaluate agent performance
+  <Card title="Claude Tag" icon="slack" href="/intro/claude-tag-tracing">
+    Trace Claude working in your Slack workspace.
   </Card>
 </CardGroup>

@@ -1,0 +1,191 @@
+---
+title: "OpenTelemetry"
+description: "Send traces to Scorecard from any language with an OTLP exporter, set the span attributes Scorecard reads, and trace a hand-written agent loop."
+---
+
+Use OpenTelemetry directly for Go, Java, .NET, Rust, or Ruby, for raw HTTP calls to a model, for a custom agent loop, or for an app that already has OpenTelemetry set up.
+
+## Environment variables
+
+Scorecard takes OTLP over HTTP, not gRPC; see [Endpoint](/features/tracing#endpoint) for the full settings. The standard OpenTelemetry environment variables work in every language:
+
+```bash
+export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="https://tracing.scorecard.io/otel/v1/traces"
+export OTEL_EXPORTER_OTLP_TRACES_PROTOCOL="http/protobuf"
+export OTEL_EXPORTER_OTLP_TRACES_HEADERS="Authorization=Bearer ${SCORECARD_API_KEY}"
+export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=${SCORECARD_PROJECT_ID}"
+export OTEL_SERVICE_NAME="my-agent"
+```
+
+## Set up an exporter
+
+<CodeGroup>
+```python Python
+# pip install opentelemetry-sdk opentelemetry-exporter-otlp-proto-http
+import os
+
+from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+provider = TracerProvider(
+    resource=Resource.create(
+        {"service.name": "my-agent", "scorecard.project_id": os.environ["SCORECARD_PROJECT_ID"]}
+    )
+)
+provider.add_span_processor(
+    BatchSpanProcessor(
+        OTLPSpanExporter(
+            endpoint="https://tracing.scorecard.io/otel/v1/traces",
+            headers={"Authorization": f"Bearer {os.environ['SCORECARD_API_KEY']}"},
+        )
+    )
+)
+trace.set_tracer_provider(provider)
+tracer = trace.get_tracer("my-agent")
+```
+
+```typescript TypeScript
+// npm install @opentelemetry/api @opentelemetry/sdk-trace-node @opentelemetry/sdk-trace-base @opentelemetry/exporter-trace-otlp-proto @opentelemetry/resources
+import { trace } from "@opentelemetry/api";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
+import { resourceFromAttributes } from "@opentelemetry/resources";
+import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
+
+const provider = new NodeTracerProvider({
+  resource: resourceFromAttributes({
+    "service.name": "my-agent",
+    "scorecard.project_id": process.env.SCORECARD_PROJECT_ID ?? "",
+  }),
+  spanProcessors: [
+    new BatchSpanProcessor(
+      new OTLPTraceExporter({
+        url: "https://tracing.scorecard.io/otel/v1/traces",
+        headers: { Authorization: `Bearer ${process.env.SCORECARD_API_KEY}` },
+      }),
+    ),
+  ],
+});
+provider.register();
+
+export const tracer = trace.getTracer("my-agent");
+```
+
+```go Go
+// go get go.opentelemetry.io/otel go.opentelemetry.io/otel/sdk go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp
+package main
+
+import (
+	"context"
+	"log"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+)
+
+func main() {
+	ctx := context.Background()
+
+	// Reads OTEL_EXPORTER_OTLP_TRACES_* and OTEL_RESOURCE_ATTRIBUTES from the environment.
+	exporter, err := otlptracehttp.New(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	res, err := resource.New(ctx, resource.WithFromEnv(), resource.WithTelemetrySDK())
+	if err != nil {
+		log.Fatal(err)
+	}
+	tp := sdktrace.NewTracerProvider(sdktrace.WithBatcher(exporter), sdktrace.WithResource(res))
+	otel.SetTracerProvider(tp)
+	defer tp.Shutdown(ctx)
+
+	// Your agent code here.
+}
+```
+</CodeGroup>
+
+The TypeScript example uses OpenTelemetry JS 2.x. With 1.x, use `new Resource({...})` and `provider.addSpanProcessor(...)` instead. For Java, .NET, Ruby, and Rust, use that language's OTLP HTTP exporter with the environment variables above; the Java agent and .NET auto-instrumentation read them without code changes.
+
+In scripts, flush before exiting with `provider.force_flush()` in Python or `await provider.forceFlush()` in TypeScript.
+
+## Attributes Scorecard reads
+
+Set the OpenTelemetry GenAI attributes on each model call so Scorecard can show the model, messages, and token counts:
+
+| Attribute | Example |
+| --- | --- |
+| `gen_ai.system` | `openai`, `anthropic` |
+| `gen_ai.request.model` | `gpt-4o-mini` |
+| `gen_ai.prompt.<i>.role`, `gen_ai.prompt.<i>.content` | `user`, `What is 2+2?` |
+| `gen_ai.completion.<i>.role`, `gen_ai.completion.<i>.content` | `assistant`, `4` |
+| `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens` | `12`, `3` |
+
+```python
+with tracer.start_as_current_span("chat gpt-4o-mini") as span:
+    span.set_attribute("gen_ai.system", "openai")
+    span.set_attribute("gen_ai.request.model", "gpt-4o-mini")
+    span.set_attribute("gen_ai.prompt.0.role", "user")
+    span.set_attribute("gen_ai.prompt.0.content", question)
+    answer = call_model(question)
+    span.set_attribute("gen_ai.completion.0.role", "assistant")
+    span.set_attribute("gen_ai.completion.0.content", answer)
+```
+
+For tool calls, set `tool.name`, `tool.parameters` (the arguments as JSON), and `tool.result`. Mark failed model and tool calls with span status `ERROR`.
+
+## Trace an agent loop
+
+Most agents run the same loop: take a request, call a model, run the tools it asks for, and repeat. Trace it with three kinds of spans and Scorecard shows each request as one conversation:
+
+```text
+invoke_agent support-agent      one per user request, with session.id and input.value
+├── chat gpt-4o-mini            one per model call, with gen_ai.* attributes
+├── execute_tool lookup_order   one per tool call, with tool.* attributes
+├── chat gpt-4o-mini
+└── ...
+```
+
+| Span | Attributes |
+| --- | --- |
+| `invoke_agent` | `gen_ai.operation.name=invoke_agent`, `gen_ai.agent.name`, `session.id`, `input.value` (the user's request), `openinference.span.kind=AGENT` |
+| `chat` | `gen_ai.operation.name=chat`, the model attributes above, `openinference.span.kind=LLM` |
+| `execute_tool` | `gen_ai.operation.name=execute_tool`, `tool.name`, `tool.parameters`, `tool.result`, `openinference.span.kind=TOOL` |
+
+The **Conversation** tab reads these spans in start order, so put the final answer on the last `chat` span, not on `invoke_agent`.
+
+## Add Scorecard to an existing setup
+
+If your app already registers a tracer provider, don't create a second one. Add a span processor with a Scorecard exporter to the provider you have, and keep your existing exporters:
+
+```python
+provider.add_span_processor(
+    BatchSpanProcessor(
+        OTLPSpanExporter(
+            endpoint="https://tracing.scorecard.io/otel/v1/traces",
+            headers={"Authorization": f"Bearer {os.environ['SCORECARD_API_KEY']}"},
+        )
+    )
+)
+```
+
+Put `scorecard.project_id` on the resource. If the resource is shared with other backends, set it as an attribute on each trace's root span instead.
+
+## Verify
+
+Run your app and open your project's **Records** page. Each trace appears as a record within a minute. If nothing arrives, see [Tracing troubleshooting](/features/tracing#troubleshooting).
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Tracing" icon="activity" href="/features/tracing">
+    Project routing, sessions, tags, and metadata.
+  </Card>
+  <Card title="Link traces to runs" icon="link" href="/features/sdk-tracing">
+    Attach traces to evaluation records.
+  </Card>
+</CardGroup>

@@ -1,0 +1,9 @@
+```bash
+export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer ${SCORECARD_API_KEY}"
+export ENABLE_BETA_TRACING_DETAILED=1
+export BETA_TRACING_ENDPOINT="https://tracing.scorecard.io/otel"
+export OTEL_LOG_USER_PROMPTS=1
+export OTEL_LOG_TOOL_DETAILS=1
+export OTEL_LOG_TOOL_CONTENT=1
+export OTEL_RESOURCE_ATTRIBUTES="scorecard.project_id=${SCORECARD_PROJECT_ID}"
+```

@@ -1,187 +1,92 @@
 ---
-title: "Vercel AI SDK Quick Start"
-description: "Automatically trace and monitor your Vercel AI SDK applications with zero manual instrumentation"
+title: "Vercel AI SDK"
+description: "Trace every generateText, streamText, generateObject, streamObject, and embedding call in a Vercel AI SDK app by wrapping the ai module."
 ---
 
-The Scorecard AI SDK Wrapper provides automatic tracing and monitoring for applications built with [Vercel's AI SDK](https://sdk.vercel.ai/). By wrapping your AI SDK instance, you get complete observability of your LLM calls without writing any manual instrumentation code.
+Wrap the [Vercel AI SDK](https://ai-sdk.dev) module once, and every call through the wrapper is traced, including streaming and tool calls.
 
-## Getting Started
+## Set up
 
 <Steps>
   <Step title="Install the Scorecard SDK">
-    Install the Scorecard SDK in your project:
-
     ```bash
     npm install scorecard-ai
     ```
   </Step>
-
-  <Step title="Get your API key">
-    Sign in to [Scorecard](https://app.scorecard.io) and get your API key from the Settings page.
-
-    <Note>
-      You can pass the API key directly in code or set the `SCORECARD_API_KEY` environment variable.
-    </Note>
-  </Step>
-
-  <Step title="Wrap your AI SDK instance">
-    Import the `wrapAISDK` function and wrap your AI SDK module:
-
-    ```typescript highlight={3,5-6}
-    import { openai } from '@ai-sdk/openai';
-    import * as ai from 'ai';
-    import { wrapAISDK } from 'scorecard-ai';
-
-    // Wrap the AI SDK
-    const aiSDK = wrapAISDK(ai);
-
-    // Use it like normal - traces are sent automatically
-    const { text } = await aiSDK.generateText({
-      model: openai('gpt-4o-mini'),
-      prompt: 'What is the capital of France?',
-    });
+  <Step title="Set your API key and project ID">
+    ```bash
+    export SCORECARD_API_KEY="ak_..."
+    export SCORECARD_PROJECT_ID="314"
     ```
   </Step>
+  <Step title="Wrap the ai module">
+    Create the wrapper in one module and use it wherever you call the model:
 
-  <Step title="View records in Scorecard">
-    Run your application and view your records by navigating to the **Records** page inside your project in Scorecard.
+    ```typescript lib/ai.ts
+    import * as ai from "ai";
+    import { wrapAISDK } from "scorecard-ai";
+
+    export const aiSDK = wrapAISDK(ai, { serviceName: "my-app" });
+    ```
+
+    ```typescript app/route.ts
+    import { openai } from "@ai-sdk/openai";
+    import { aiSDK } from "./lib/ai";
+
+    const { text } = await aiSDK.generateText({
+      model: openai("gpt-4o-mini"),
+      prompt: "What is the capital of France?",
+    });
+    ```
+
+    Replace imports such as `import { generateText } from "ai"` with calls on the wrapper. Type imports from `ai` can stay as they are.
+  </Step>
+  <Step title="View your traces">
+    Run your app and open the project's **Records** page. Each call appears as a record within a minute. To group one request's calls into one record, open a parent span around it, as in [Group calls into one trace](/integrations/openai-anthropic#group-calls-into-one-trace).
   </Step>
 </Steps>
 
-## Core benefits of using the AI SDK Wrapper
+## What's traced
 
-**Zero-configuration tracing**: Wrap your AI SDK instance once and automatically capture traces for all supported operations (generateText, generateObject, streamText, streamObject, embed, embedMany).
+The wrapper adds tracing to `generateText`, `streamText`, `generateObject`, `streamObject`, `embed`, and `embedMany`. Every other export passes through unchanged, so the wrapper works as a drop-in replacement for the `ai` module.
 
-**Automatic monitoring**: Optionally configure metrics to automatically score every trace in real-time, enabling production monitoring without additional code.
+## Configuration
 
-**Built on standards**: Uses OpenTelemetry under the hood, ensuring compatibility with the broader observability ecosystem while providing a simpler developer experience.
+| Option | Default | Description |
+| --- | --- | --- |
+| `projectId` | `SCORECARD_PROJECT_ID` | The numeric project ID traces go to |
+| `apiKey` | `SCORECARD_API_KEY` | Your Scorecard API key |
+| `serviceName` | `ai-sdk-app` | The OpenTelemetry service name, for example one per environment |
+| `serviceVersion` | none | Your app's version, to compare releases |
+| `maxExportBatchSize` | `1` | Spans per export. Raise it for high-throughput servers. |
+| `metrics` | `[]` | Metric IDs or plain-language descriptions. Descriptions become new metrics in the project. It doesn't score traces: use [Score Records](/features/records#score-records). |
 
-## Advanced Usage
+`SCORECARD_TRACING_URL` overrides the OTLP endpoint.
 
-### Automatic Monitoring with Metrics
+## Use an existing OpenTelemetry setup
 
-You can configure the wrapper to automatically score traces against metrics. This enables real-time monitoring of your AI applications in production:
-
-```typescript highlight={3,5-12}
-import { openai } from '@ai-sdk/openai';
-import * as ai from 'ai';
-import { wrapAISDK } from 'scorecard-ai';
-import { z } from 'zod';
-
-const aiSDK = wrapAISDK(ai, {
-  projectId: 'your-project-id',
-  metrics: [
-    'metric-id-123',  // Use existing metric by ID
-    'Check if the response object contains the key "capital"',  // Or describe what you want to measure
-  ],
-});
-
-// Every call is automatically scored against your metrics
-const { object } = await aiSDK.generateObject({
-  model: openai('gpt-4o-mini'),
-  prompt: 'What is the capital of France?',
-  schema: z.object({
-    capital: z.string(),
-    country: z.string(),
-  }),
-});
-```
-
-<Info>
-  When you provide metric descriptions, Scorecard automatically creates the metrics if they don't exist. Learn more about [metrics](/features/metrics).
-</Info>
-
-## Configuration Reference
-
-The `wrapAISDK` function accepts an optional configuration object with the following properties:
-
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `projectId` | `string` | `SCORECARD_PROJECT_ID` env var | ID of the Scorecard project to associate traces with. Required if using metrics. |
-| `metrics` | `string[]` | `[]` | Array of metric IDs or descriptions. Can mix both types. Metrics are created automatically if they don't exist. |
-| `apiKey` | `string` | `SCORECARD_API_KEY` env var | Scorecard API key for authentication. |
-| `serviceName` | `string` | `"ai-sdk-app"` | Service name for telemetry. Use different names for different environments or services. |
-| `serviceVersion` | `string` | `undefined` | Service version for telemetry. Useful for tracking performance across releases. |
-| `maxExportBatchSize` | `number` | `1` | Maximum number of traces to batch before exporting. Increase for better performance in high-throughput applications. |
-
-<Note>
-  Environment variables take precedence over default values but are overridden by explicitly provided configuration.
-</Note>
-
-## Supported AI SDK Functions
-
-The wrapper automatically adds tracing to the following AI SDK functions:
-
-- **`generateText`**: Generate text completions with streaming or non-streaming
-- **`generateObject`**: Generate structured outputs using Zod schemas
-- **`streamText`**: Stream text completions token-by-token
-- **`streamObject`**: Stream structured outputs incrementally
-- **`embed`**: Generate embeddings for a single input
-- **`embedMany`**: Generate embeddings for multiple inputs in batch
-
-All other AI SDK functions are passed through unchanged, so you can use the wrapped instance as a complete replacement for the original AI SDK.
+`wrapAISDK` uses its own tracer provider. If your app already registers one, for example with `@vercel/otel` in `instrumentation.ts`, skip the wrapper: add a Scorecard exporter to your provider, as in [OpenTelemetry](/integrations/opentelemetry#add-scorecard-to-an-existing-setup), and pass `experimental_telemetry: { isEnabled: true }` to each AI SDK call.
 
 ## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="SCORECARD_API_KEY is missing">
-    The wrapper requires a valid API key to send traces to Scorecard.
-
-    **Solution**: Either set the `SCORECARD_API_KEY` environment variable or pass it explicitly:
-
-    ```typescript
-    const aiSDK = wrapAISDK(ai, {
-      apiKey: 'your-api-key-here',
-    });
-    ```
+    Set the environment variable, or pass `apiKey` to `wrapAISDK`.
   </Accordion>
-
-  <Accordion title="SCORECARD_PROJECT_ID is missing">
-    If you specify metrics, you must provide a project ID to associate the monitor with.
-
-    **Solution**: Set the `SCORECARD_PROJECT_ID` environment variable or pass it in configuration:
-
-    ```typescript
-    const aiSDK = wrapAISDK(ai, {
-      projectId: 'your-project-id',
-      metrics: ['your-metrics'],
-    });
-    ```
-  </Accordion>
-
-  <Accordion title="Traces not appearing in Scorecard">
-    If you don't see traces in the Scorecard UI, check the following:
-
-    - Verify your API key is correct
-    - Check that your application is actually making AI SDK calls
-    - Look for error messages in your application logs
-    - Ensure you're looking at the correct project in Scorecard
-    - Check that traces are being exported (default batch size is 1, so they export immediately)
-  </Accordion>
-
-  <Accordion title="Monitor creation failed">
-    When using metrics, the wrapper automatically creates a monitor. If this fails:
-
-    - Verify the project ID is correct
-    - Ensure your API key has permission to create monitors in the project
-    - Check application logs for specific error messages
-
-    Note: Monitor creation happens asynchronously and won't block your application if it fails.
+  <Accordion title="Traces don't appear">
+    - Check that calls go through the wrapper, not functions imported directly from `ai`.
+    - If your app already registers an OpenTelemetry provider, see [Use an existing OpenTelemetry setup](#use-an-existing-opentelemetry-setup).
+    - In Next.js, create the wrapper in server code only.
   </Accordion>
 </AccordionGroup>
 
-## Learn More
+## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Tracing" href="/features/tracing">
-    Learn about Scorecard's tracing capabilities
+  <Card title="Tracing" icon="activity" href="/features/tracing">
+    Sessions, tags, and metadata.
   </Card>
-
-  <Card title="Metrics" href="/features/metrics">
-    Understand how metrics evaluate your traces
-  </Card>
-
-  <Card title="Vercel AI SDK Docs" href="https://sdk.vercel.ai/docs">
-    Official documentation for the Vercel AI SDK
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Score your traced calls.
   </Card>
 </CardGroup>
