@@ -1,193 +1,145 @@
 ---
-title: "MCP Server Integration"
-sidebarTitle: "MCP Server"
-description: "Use AI assistants as your evaluation companion with Scorecard's Model Context Protocol server"
+title: "MCP server"
+description: "Connect Claude, Cursor, Codex, or another MCP client to Scorecard to create testsets and metrics, run evaluations, and analyze results in natural language."
 ---
 
-import { DarkLightImage } from "/snippets/dark-light-image.jsx";
+Scorecard's [Model Context Protocol](https://modelcontextprotocol.io) server lets an AI assistant work with your Scorecard data: create projects, testsets, and metrics, look up runs and records, and summarize results. Ask in plain language, and the assistant writes and runs the API calls for you.
 
-## Overview
+## Connect
 
-Scorecard's MCP (Model Context Protocol) server lets you manage projects, create testsets, configure metrics, run evaluations, and analyze results through natural language in any MCP-compatible client.
+The hosted server is at `https://mcp.scorecard.io/mcp` and uses the Streamable HTTP transport. Sign-in happens in your browser through OAuth, so you don't need an API key.
 
-## How it works
+<Tabs>
+  <Tab title="Claude Code">
+    ```bash
+    claude mcp add --transport http scorecard https://mcp.scorecard.io/mcp
+    ```
 
-The server uses **Code Mode**: instead of one tool per API endpoint, it exposes two tools and lets your assistant write code against the [Scorecard TypeScript SDK](https://github.com/scorecard-ai/scorecard-node).
+    Run `/mcp` in Claude Code to sign in. The [Scorecard plugin](/intro/ai-assisted-setup) also adds the server.
+  </Tab>
+  <Tab title="Claude Desktop and claude.ai">
+    Open **Settings → Connectors**, click **Add custom connector**, paste `https://mcp.scorecard.io/mcp`, then click **Add** and **Connect** to sign in.
+  </Tab>
+  <Tab title="Cursor">
+    Add the server to `.cursor/mcp.json`:
 
-| Tool | What it does |
-| ---- | ------------ |
-| `search_docs` | Searches the SDK documentation for the right method and parameters. |
-| `execute` | Runs TypeScript your assistant writes against a pre-authenticated SDK client in a sandbox, and returns only what the code returns or logs. |
+    ```json .cursor/mcp.json
+    {
+      "mcpServers": {
+        "scorecard": { "url": "https://mcp.scorecard.io/mcp" }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Codex">
+    ```bash
+    codex mcp add scorecard --url https://mcp.scorecard.io/mcp
+    ```
+  </Tab>
+  <Tab title="Gemini CLI">
+    ```bash
+    gemini mcp add --transport http scorecard https://mcp.scorecard.io/mcp
+    ```
+  </Tab>
+</Tabs>
 
-A typical `execute` call looks like this:
-
-```typescript
-async function run(client) {
-  const results = [];
-  for await (const project of client.projects.list()) {
-    const runs = await client.runs.list(project.id, { limit: 1 });
-    results.push({ project: project.name, latestRun: runs.data[0]?.id ?? null });
-  }
-  return results;
-}
-```
-
-Because filtering and aggregation happen inside the sandbox, only the final result comes back to the conversation. A question that spans many projects, runs, or large records completes in a single call instead of paging multi-megabyte responses through your assistant's context.
-
-<Note>
-  Each `execute` call is independent: variables do not persist between calls. Individual API requests time out after 30 seconds and a whole `execute` call after about 5 minutes. The sandbox can only reach the Scorecard API, with no filesystem or other network access.
-</Note>
-
-## Setting Up the MCP Server
-
-### Claude Code
-
-Add the Scorecard remote MCP server with a single command:
-
-```bash
-claude mcp add --transport http scorecard https://mcp.scorecard.io/mcp
-```
-
-Complete the OAuth authentication flow in your browser when prompted. Verify the connection:
-
-```bash
-claude mcp list
-```
-
-You should see `scorecard: https://mcp.scorecard.io/mcp (HTTP) - ✓ Connected`.
-
-### Claude Desktop
-
-Go to Claude Desktop settings and click the "Connectors" tab. Click "Add custom connector" and paste the URL: `https://mcp.scorecard.io/mcp`. Click "Add", then "Connect" to login to Scorecard.
-
-<DarkLightImage
-  lightSrc="/images/claude-desktop-mcp-light.png"
-  caption="Adding the Scorecard MCP connector in Claude Desktop."
-/>
-
-### Other clients
-
-Any client that supports remote MCP servers over Streamable HTTP can use `https://mcp.scorecard.io/mcp`. If your client cannot complete an OAuth flow, pass a [Scorecard API key](https://app.scorecard.io/settings) as a bearer token instead:
+Any other client that supports remote MCP servers over Streamable HTTP can use the same URL. For CI or a client that can't complete OAuth, send an API key instead:
 
 ```json
 {
   "mcpServers": {
     "scorecard": {
       "url": "https://mcp.scorecard.io/mcp",
-      "headers": {
-        "Authorization": "Bearer ak_MyAPIKey"
-      }
+      "headers": { "Authorization": "Bearer ak_..." }
     }
   }
 }
 ```
 
-### Local configuration
+An API key acts with organization-level permissions. Signing in with OAuth acts as you, with your role.
 
-You can also run the same server locally via npx:
+## Try it
 
-```sh
-export SCORECARD_API_KEY="your_api_key"
-npx -y scorecard-ai-mcp@latest
-```
+Once connected, ask for what you need. For example:
 
-For clients with a configuration JSON:
+<Prompt description="Create a project and a testset.">
+Create a project called "Support Bot Eval". Add a testset called "Support Scenarios" with inputs `customerMessage` and `category`, expected output `idealResponse`, and 10 testcases covering billing, technical, and product questions.
+</Prompt>
+
+<Prompt description="Create metrics.">
+Create two AI metrics in that project: "Response Accuracy" (integer 1-5), how well the response answers the question compared to the ideal response, and "Tone" (boolean), whether the response is professional and empathetic.
+</Prompt>
+
+<Prompt description="Analyze a run.">
+For the latest run in "Support Bot Eval", which testcases scored lowest on Response Accuracy, and what do they have in common?
+</Prompt>
+
+<Prompt description="Compare projects.">
+For every project in my organization, find the most recent run and report the pass rate on each Boolean metric.
+</Prompt>
+
+Name your fields and say which are inputs and which are expected outputs; the assistant guesses otherwise. The assistant sometimes gets a call wrong, looks up the SDK docs, and retries. That's expected.
+
+## How it works
+
+The server uses **Code Mode**. Instead of one tool per endpoint, it exposes two tools, and your assistant writes code against the [Scorecard TypeScript SDK](https://github.com/scorecard-ai/scorecard-node):
+
+| Tool | What it does |
+| --- | --- |
+| `search_docs` | Searches the SDK documentation for the right method and parameters. |
+| `execute` | Runs the TypeScript your assistant writes against a signed-in SDK client in a sandbox, and returns only what the code returns or logs. |
+
+Filtering and aggregation happen inside the sandbox, so only the final result comes back to the conversation. A question that spans many projects or large records completes in one call. Each call is independent, and the sandbox can reach only the Scorecard API.
+
+Metric group methods aren't available inside `execute`.
+
+## Run the server locally
+
+You can also run the same server on your machine with an API key:
 
 ```json
 {
   "mcpServers": {
-    "scorecard_ai": {
+    "scorecard": {
       "command": "npx",
-      "args": ["-y", "scorecard-ai-mcp"],
-      "env": {
-        "SCORECARD_API_KEY": "ak_MyAPIKey"
-      }
+      "args": ["-y", "scorecard-ai-mcp@latest"],
+      "env": { "SCORECARD_API_KEY": "ak_..." }
     }
   }
 }
 ```
 
+In Claude Code: `claude mcp add scorecard --env SCORECARD_API_KEY="$SCORECARD_API_KEY" -- npx -y scorecard-ai-mcp@latest`.
+
 <Warning>
-  The local server runs `execute` code in a Deno sandbox on your machine, so [Deno](https://deno.land) must be installed and on your `PATH`. Documentation search works offline from an index bundled with the package.
+  The local server runs `execute` code in a [Deno](https://deno.land) sandbox, so Deno must be installed and on your `PATH`. Use Deno 2.8 or earlier.
 </Warning>
 
-To restrict what the assistant can do, limit the `execute` tool with flags. For example, a read-only server:
+To limit what the assistant can do, add flags to `args`:
 
-```json
-"args": ["-y", "scorecard-ai-mcp", "--code-allow-http-gets"]
-```
+- `--code-allow-http-gets` allows only read requests.
+- `--code-allowed-methods` and `--code-blocked-methods` take regular expressions matched against SDK method names such as `records.delete`.
 
-You can also allow or block specific SDK methods with `--code-allowed-methods` and `--code-blocked-methods`, which take regular expressions matched against method names such as `records.delete`.
+## Troubleshooting
 
-## Examples
-
-### Create a project and testset
-
-```
-Create a new Scorecard project called "Support Bot Eval". Then create a testset
-called "Support Scenarios" with 10 testcases. Each testcase should have:
-- inputs: "customerMessage" and "category" (billing, technical, or product)
-- expected: "idealResponse"
-```
-
-### Create metrics
-
-```
-Create two metrics in the "Support Bot Eval" project:
-1. "Response Accuracy" (integer 1-5) - How well does the response answer the question?
-2. "Tone" (boolean) - Is the response professional and empathetic?
-```
-
-### Analyze results
-
-```
-Show me the latest run results for the "Support Bot Eval" project.
-Which testcases scored lowest on Response Accuracy?
-```
-
-### Compare across projects
-
-```
-For every project in my organization, find the most recent run and report the
-pass rate on each boolean metric. Rank the projects from best to worst.
-```
-
-### Review human feedback
-
-```
-For the latest run in the "Support Bot Eval" project, list the annotations on
-each record and summarize the thumbs-down ratings. What do reviewers complain
-about most?
-```
-
-### Generate testcases from a codebase
-
-In Claude Code, you can combine file access with the MCP server:
-
-```
-Read the API routes in src/api/ and generate 20 testcases covering
-the edge cases for each endpoint. Add them to the "API Tests" testset
-in project 1234.
-```
-
-### Iterate on metrics
-
-```
-The "Response Accuracy" metric is too lenient — update the prompt template
-to penalize responses that miss key details from the ideal response.
-```
-
-## Technical Details
-
-- Built on the [Model Context Protocol](https://modelcontextprotocol.io/) standard using the Streamable HTTP transport
-- Compatible with any MCP client (Claude Code, Claude Desktop, Cursor, and more)
-- Secured with OAuth authentication, or a Scorecard API key passed as a bearer token
-- The hosted server runs the [`scorecard-ai-mcp`](https://www.npmjs.com/package/scorecard-ai-mcp) package (3.4.0), whose source lives in the [scorecard-node](https://github.com/scorecard-ai/scorecard-node/tree/main/packages/mcp-server) repository
-- Anything the SDK can do is available: see the [API reference](/api-reference/overview) for the full surface
+<AccordionGroup>
+  <Accordion title="Only two tools show up">
+    That's expected. The assistant reaches every API operation by writing code for `execute`.
+  </Accordion>
+  <Accordion title="The assistant gets an authentication error">
+    OAuth sessions can expire. Disconnect and reconnect the server in your client's settings to sign in again.
+  </Accordion>
+  <Accordion title="The server doesn't appear in my client">
+    Check the URL, `https://mcp.scorecard.io/mcp`, finish the sign-in flow, and restart the client.
+  </Accordion>
+  <Accordion title="The local server says Deno is required">
+    Install Deno 2.8 or earlier and make sure it's on your `PATH`, then restart your client.
+  </Accordion>
+</AccordionGroup>
 
 ## Migrating from the per-endpoint tools
 
-Earlier versions of the server exposed one tool per API operation, such as `list_projects` or `create_testsets`. Those tools no longer exist. Prompts written in natural language keep working unchanged, because the assistant now reaches the same operations through `execute`. If you referenced tool names directly, the table below shows where each one went.
+Earlier versions of the server exposed one tool per API operation, such as `list_projects` or `create_testsets`. Those tools no longer exist. Prompts written in natural language keep working, because the assistant now reaches the same operations through `execute`. If you referenced tool names directly, the table below shows where each one went.
 
 <Accordion title="Old tool → SDK call mapping">
 
@@ -208,3 +160,14 @@ Earlier versions of the server exposed one tool per API operation, such as `list
 Record tags, record assignees, and session attachments were never exposed as tools but are available through `client.records.tags`, `client.records.assignees`, and `client.attachments`.
 
 </Accordion>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Set up with a coding agent" icon="bot" href="/intro/ai-assisted-setup">
+    Let your coding agent add tracing, metrics, and evals to your repo.
+  </Card>
+  <Card title="API reference" icon="code" href="/api-reference/overview">
+    Everything the server can do.
+  </Card>
+</CardGroup>

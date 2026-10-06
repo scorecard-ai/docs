@@ -1,152 +1,144 @@
 ---
-title: "A/B Comparison"
-description: "Compare different AI agent runs side-by-side to make data-driven decisions about model improvements, prompt optimizations, and configuration changes."
+title: "Compare and blind review"
+description: "Judge two agent outputs side by side, run blind A/B reviews where reviewers don't know which system produced which output, and compare runs."
 ---
 
-import { DarkLightImage } from "/snippets/dark-light-image.jsx";
-
-## Overview
-
-During AI agent development, you'll frequently iterate on your agent to achieve optimal performance. Whether you're tweaking model parameters, testing different model versions, or refining prompts, each change affects your agent's output quality.
-
-However, with multiple iterations, it becomes challenging to accurately quantify and compare the effectiveness of your changes. **Scorecard's A/B Comparison feature** solves this by providing side-by-side run comparisons, giving you clear, data-driven insights into your improvements.
-
-<Note>
-**Requirements:** Only runs using the same Testset can be compared with each other.
-</Note>
-
-## Why Use A/B Comparisons?
+Scorecard has two ways to compare versions of your agent:
 
 <CardGroup cols={2}>
-  <Card title="Data-Driven Decisions" icon="chart-line">
-    Move beyond gut feelings with quantitative metrics that show exactly how changes impact performance.
+  <Card title="Compare page" icon="columns-2" href="#the-compare-page">
+    Put two records side by side and have people judge which output is better, without seeing which system made it.
   </Card>
-  <Card title="Experiment Tracking" icon="flask-conical">
-    Easily compare different agent configurations to identify the best-performing setup.
-  </Card>
-  <Card title="Continuous Improvement" icon="arrow-up-right">
-    Validate that iterative changes actually improve your agent's capabilities.
-  </Card>
-  <Card title="Production Confidence" icon="shield-check">
-    Ensure changes to production agents, models, and prompts deliver better results.
+  <Card title="Compare runs" icon="chart-column" href="#compare-runs">
+    Set two runs on the same testset side by side by pass rate and score.
   </Card>
 </CardGroup>
 
-## How to Compare Runs
+Use the Compare page when quality is a judgment call and you need human preferences. Compare runs when your metrics already capture what matters and you want the totals.
 
-There are two ways to set up A/B comparisons in Scorecard:
+## The Compare page
 
-<Tabs>
-  <Tab title="From Run Details">
-    Start a comparison directly from a specific run's results page.
-    
-    <Steps>
-      <Step title="Navigate to Run Results">
-        Go to the results page of the run you want to use as your baseline comparison.
-        
-        <DarkLightImage 
-          lightSrc="/images/run-details-light.png" 
-          darkSrc="/images/run-details-dark.png" 
-          caption="Run results page showing performance metrics" 
-          alt="Screenshot showing the detailed results view of a run with metrics and performance data" 
-        />
-      </Step>
-      
-      <Step title="Add Comparison">
-        Click the **"Add Comparison"** button to open the comparison selector modal.
-        
-        <DarkLightImage 
-          lightSrc="/images/a-b/ab-compare-modal-light.png" 
-          darkSrc="/images/a-b/ab-compare-modal-dark.png" 
-          caption="Modal for selecting a run to compare against" 
-          alt="Screenshot of the comparison modal showing available runs to select for A/B testing" 
-        />
-      </Step>
-      
-      <Step title="Select Comparison Run">
-        Choose the run you want to compare against from the available options. Only runs using the same testset will be available for selection.
-      </Step>
-    </Steps>
-  </Tab>
-  
-  <Tab title="From Runs List">
-    Compare multiple runs directly from the runs overview page.
-    
-    <Steps>
-      <Step title="Navigate to Runs List">
-        Go to your project's runs list page where you can see all available runs.
-      </Step>
-      
-      <Step title="Select Runs to Compare">
-        Use the checkboxes to select two runs that you want to compare side-by-side.
-        
-        <DarkLightImage 
-          lightSrc="/images/a-b/ab-list-light.png" 
-          darkSrc="/images/a-b/ab-list-dark.png" 
-          caption="Runs list with selection checkboxes for A/B comparison" 
-          alt="Screenshot of the runs list page showing multiple runs with selection checkboxes for comparison" 
-        />
-      </Step>
-      
-      <Step title="Start Comparison">
-        Click the comparison button to view the selected runs side-by-side.
-      </Step>
-    </Steps>
-  </Tab>
-</Tabs>
+Open **Compare** in the project sidebar. The page shows two records next to each other, with the expected output between them and a scoring panel below.
 
-## Analyzing Comparison Results
+### Pick two records
 
-Once you've set up your A/B comparison, Scorecard displays the results in an intuitive side-by-side format:
+Each empty slot shows a table of records. Click a row to fill the next slot.
 
-<DarkLightImage 
-  lightSrc="/images/a-b/ab-light.png" 
-  darkSrc="/images/a-b/ab-dark.png" 
-  caption="Side-by-side comparison showing metric performance differences" 
-  alt="Screenshot of A/B comparison results showing two runs with their respective metrics displayed side-by-side" 
-/>
-
-### What You'll See
-
-- **Aggregated Metrics**: View performance scores for both runs across all your configured metrics
-- **Side-by-Side Charts**: Visual representations make it easy to spot performance differences
-- **Statistical Significance**: Understand whether observed differences are meaningful
-- **Detailed Breakdowns**: Drill down into specific test cases to understand where improvements occurred
+- **Search** uses the [Records](/features/records#search-and-filter) syntax, for example `testcase.id:`, `run.id:`, `system:`, `tag:`, and `assigned.to:`. If a search matches exactly two records, both slots fill in automatically.
+- **Assigned to Me** limits the table to records assigned to you.
+- If the first record you pick has tags other than `model:` tags (tags such as `model:gpt-4o` that name the model behind a record), the second slot lists only records that share one of them, so pairs stay comparable.
+- Choose which columns to show. Your search and columns are saved per project, and the URL keeps the pair so you can share it.
 
 <Tip>
-Look for consistent patterns across multiple metrics. A truly better system should show improvements across most or all of your evaluation criteria.
+  To review the same testcase from two runs, search for `testcase.id:<id>`. Both records match and fill in on their own.
 </Tip>
 
-## Best Practices
+### Read the outputs
 
-<AccordionGroup>
-  <Accordion title="Use Comprehensive Metrics">
-    Include multiple metrics that cover different aspects of your system (accuracy, relevance, safety, etc.) to get a complete picture of performance changes.
-  </Accordion>
-  
-  <Accordion title="Test with Sufficient Data">
-    Ensure your testset has enough examples to make statistically significant comparisons. Small testsets may lead to misleading conclusions.
-  </Accordion>
-  
-  <Accordion title="Document Your Changes">
-    Keep track of what specific changes you made between runs so you can understand which modifications led to improvements.
-  </Accordion>
-</AccordionGroup>
+Each record card has an **Output** tab, an **Inputs** tab, and an **Attachments** tab when the session has files. Existing scores aren't shown, so they can't sway the reviewer.
 
-## Common Use Cases
+- **Expected** sits between the cards. If the two records expect different things, both values are shown.
+- **Highlight text** in an output or the expected value to annotate that passage.
+- **Drag the dividers** to resize the panes. Double-click a divider to reset the layout.
+- **Chat** answers questions about both records' traces at once.
 
-### Model Version Testing
-Compare performance between different model versions (e.g., GPT-4 vs GPT-4 Turbo) to understand trade-offs between cost, speed, and quality.
+### Score the pair
 
-### Prompt Engineering
-Test different prompt formulations to find the most effective way to communicate instructions to your model.
+The scoring panel lists the human metrics the two records share, plus any human metric that only one of them has. The control depends on the metric:
 
-### Parameter Tuning
-Evaluate the impact of temperature, top-p, and other model parameters on output quality and consistency.
+| Metric | Control | What gets saved |
+| --- | --- | --- |
+| Boolean, on both records | Pick the better side | **Pass** on your pick, **Fail** on the other |
+| Float, on both records | **Strong A**, **Slight A**, **Equal**, **Slight B**, **Strong B** | **Strong A** saves 1 on A and 0 on B, **Slight A** 0.75 and 0.25, **Equal** 0.5 on both. The B options mirror these. |
+| On one record only | **Pass** and **Fail**, or a value | A score on that record |
 
-### System Architecture Changes
-Compare different approaches to your LLM pipeline, such as RAG implementations, context window usage, or post-processing steps.
+Your first pick on a row saves right away and opens a reasoning box, which is optional here, unlike on the record page. Changing a pick asks you to confirm. Click a metric's name to read its guidelines. The panel shows your own grading status, and each cell shows only your own scores.
+
+Shared Integer human metrics don't appear in the panel; grade them from the record itself. AI and heuristic metrics are scored automatically.
+
+<Tip>
+  To grade each output on its own as well, give each run its own Boolean human metric and put the two in a [metric group](/features/metrics#metric-groups). The group shows as a single row with a Pass and Fail control for each side.
+</Tip>
+
+### Comment
+
+- The comparison comment box saves your note on both records, labeled `[comparison]`.
+- **Comment on a single record** adds a note to one side only.
+- Highlights in the expected value are saved with an `[expected]` label.
+
+Unsent comments are kept as drafts in your browser. To start over, click the **X** on either card or clear the search, then confirm with **End comparison**.
+
+## Blind review
+
+The Compare page hides which system produced which output, so preferences reflect the output rather than the name behind it.
+
+| | Members | Admins |
+| --- | --- | --- |
+| Side names | **Model A**, **Model B**, or the alias an admin set | The system version name, such as `Support Agent · v3` |
+| `model:` record tags | Hidden | Shown |
+| Other reviewers' picks | Hidden | Shown, with each grader's avatar and reasoning |
+| Comments | Their own and admins' | Everyone's |
+| Reviewer progress | Hidden | **Reviewers** column, and marks for assigned reviewers who haven't graded yet |
+
+The **System** column and `system:` filter on the Records page use the same names, so members see the aliases there too.
 
 <Warning>
-Remember that A/B comparisons are only as good as your metrics and testset. Ensure your evaluation criteria accurately reflect real-world performance requirements.
+  System names and `model:` tags are hidden only in the web app. Other members' scores and annotations are hidden from members in the app and the API, but an organization API key can read them all.
 </Warning>
+
+### How the names are assigned
+
+Each run in a project gets a letter in the order the runs were created: the first is **Model A**, the second **Model B**, and so on. The letter belongs to the run, so every record in a run shows the same name. Archived runs keep their letters, so a project with older test runs can show a pair as, say, **Model H** and **Model I**.
+
+Admins can rename what reviewers see: click **Aliases** on the Compare page, or open the **⋯** menu on the Records page and choose **Blind Review → Reviewer aliases…**. Aliases can be up to 40 characters.
+
+### Set up a blind review
+
+<Steps>
+  <Step title="Create one run per system">
+    Run each version you're comparing on the same testset, each with its own [system version](/features/runs#systems-and-versions). Admins see the version name as the side's name.
+  </Step>
+  <Step title="Add human metrics">
+    Add a Boolean human metric for "which is better", or a Float human metric for the five-point preference scale, to both runs. Every record gets a pending score for reviewers to fill in.
+  </Step>
+  <Step title="Set aliases (optional)">
+    Rename **Model A** and **Model B** under **Aliases** if you want reviewers to see different names.
+  </Step>
+  <Step title="Assign reviewers">
+    On the Records page, assign records to reviewers. They find their work with **Assigned to Me** on the Compare page.
+  </Step>
+  <Step title="Track progress">
+    Add the **Reviewers** column to the record picker to see who has graded what, and open a pair to read each grader's pick and reasoning.
+  </Step>
+</Steps>
+
+<Tip>
+  For a clean **Model A** versus **Model B** round, use a new project that holds only the two runs under review.
+</Tip>
+
+## Compare runs
+
+Run comparison sets two runs on the same testset next to each other, using the scores your metrics already produced. It's in beta: if you don't see **Compare (Beta)** on the runs list, contact [support@scorecard.io](mailto:support@scorecard.io).
+
+- On the runs list, select two runs and click **Compare (Beta)**, or open a run and click **Add Comparison** to pick a second run on the same testset.
+- The run page then shows each run's pass rate, mean and median scores, and the comparison run's results next to each testcase.
+- **Analyze (Beta)** on the runs list lays out several runs against each metric.
+
+To stop comparing, click **Remove** on the comparison run's card.
+
+## Best practices
+
+- **Write guidelines before the review starts.** Clear criteria, such as "prefer the answer that cites the governing clause", make preferences comparable across reviewers.
+- **Ask for reasoning.** A pick with one sentence of reasoning tells you what to fix. A bare preference doesn't.
+- **Change one thing at a time.** When two runs differ by a single model, prompt, or parameter, you know what caused the difference.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Human review" icon="users" href="/features/human-review">
+    Assign records and grade them from the Records page.
+  </Card>
+  <Card title="Runs" icon="play" href="/features/runs">
+    Create the runs you compare.
+  </Card>
+</CardGroup>
