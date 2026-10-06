@@ -1,0 +1,69 @@
+---
+title: "Set up with a coding agent"
+description: "Install Scorecard's agent skills so Claude Code, Codex, Cursor, or another coding agent can add tracing, metrics, testsets, and a first evaluation to your repo."
+---
+
+Scorecard publishes [agent skills](https://github.com/scorecard-ai/scorecard-skills) that teach a coding agent how to connect your project to Scorecard. The agent reads your code, picks the right tracing method, writes metrics and a testset, and runs a first evaluation. Every change lands as ordinary code in your repo, so you can review it.
+
+The skills work in any agent that reads `SKILL.md` files, including Claude Code, Codex, Gemini CLI, Cursor, OpenCode, and Goose.
+
+## Install
+
+<Tabs>
+  <Tab title="Claude Code">
+    Install the plugin. It adds the skills and the [Scorecard MCP server](/features/mcp).
+
+    ```text
+    /plugin marketplace add scorecard-ai/scorecard-skills
+    /plugin install scorecard@scorecard
+    ```
+  </Tab>
+  <Tab title="Any agent">
+    ```bash
+    npx skills add scorecard-ai/scorecard-skills
+    ```
+
+    The installer asks which agents to install for. Add `-a <agent>` to choose up front, for example `-a codex`.
+  </Tab>
+</Tabs>
+
+## Onboard your agent
+
+Create an API key under **Settings → Scorecard API Keys** in the [Scorecard app](https://app.scorecard.io/settings). Then open your agent's repo and ask your coding agent the prompt below. It asks for the key and saves it to a git-ignored env file, or you can set `SCORECARD_API_KEY` yourself first.
+
+<Prompt description="Run the full onboarding: connect, trace, write metrics and a testset, and run a first evaluation.">
+Onboard this agent to Scorecard.
+</Prompt>
+
+The agent works through these steps and tells you what changed after each one. You can also ask for any step on its own:
+
+| Ask for | What the agent does |
+| --- | --- |
+| "Connect this repo to Scorecard" | Checks your API key, picks or creates a project, and writes `SCORECARD_API_KEY` and `SCORECARD_PROJECT_ID` to a git-ignored env file |
+| "Add Scorecard tracing" | Detects your framework and instruments it, or configures your coding agent itself to send traces |
+| "Write Scorecard metrics for this agent" | Proposes metrics for what good looks like and creates them from a script in your repo |
+| "Build a Scorecard testset" | Creates a testset from your examples or imports CSV, JSON, or JSONL |
+| "Run a Scorecard evaluation" | Writes an eval script, runs it, and summarizes the worst records |
+| "Run Scorecard evals in CI" | Adds a GitHub Actions workflow |
+
+When it finishes, your project's **Records** page shows a trace from your agent, and the agent prints a link to the scored run from its first evaluation.
+
+The skills keep your API key out of code, ask before running anything that costs money or sends prompts and tool output to Scorecard, and ask before changing or deleting existing metrics.
+
+## Use these docs from an AI tool
+
+These docs are available as Markdown for AI tools:
+
+- Append `.md` to any page URL for its Markdown, or use **Copy page** in the page menu.
+- [`/llms.txt`](https://docs.scorecard.io/llms.txt) indexes every page, and [`/llms-full.txt`](https://docs.scorecard.io/llms-full.txt) has the full text.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="MCP server" icon="plug" href="/features/mcp">
+    Query and update your Scorecard data from your assistant.
+  </Card>
+  <Card title="Tracing quickstart" icon="activity" href="/intro/tracing-quickstart">
+    Set up tracing by hand instead.
+  </Card>
+</CardGroup>
