@@ -1,41 +1,58 @@
 ---
-title: "Overview"
-description: "The simulation platform for building frontier AI agents"
-mode: "center"
+title: "Scorecard documentation"
+sidebarTitle: "Overview"
+description: "Trace your AI agent, score it with AI judges, code, and human reviewers, and compare versions before you ship."
 ---
 
-<a href="https://scorecard.io" target="_blank" rel="noopener noreferrer">Scorecard</a> is the simulation platform for AI agent self-improvement. Run your agents through thousands of realistic scenarios in minutes and ship frontier capabilities with confidence.
+[Scorecard](https://www.scorecard.io) records what your AI agent does, scores it with metrics you define, and compares each new version with the last.
 
-## Platform Demo
+- **Trace** every model call, tool call, and conversation with OpenTelemetry, from Claude Code, LangChain, the Vercel AI SDK, or any language.
+- **Score** records with AI judges, code checks, and human reviewers, using metrics you define or ready-made templates.
+- **Evaluate** each version of your agent on a testset from code or CI, and compare results run over run.
+- **Review** outputs as a team: assign records to reviewers and compare two outputs in a blind A/B review.
 
-Watch CEO Darius demonstrate the complete Scorecard workflow, from creating test cases to comparing model performance:
+## Get started
 
-<iframe
-  className="w-full aspect-video rounded-xl border-0"
-  src="https://www.youtube.com/embed/6NdOeGCLJ-c"
-  title="Scorecard Platform Demo"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowFullScreen
-/>
+Start with tracing if your agent already handles requests, or with evaluation if you want to test it on fixed inputs first.
 
 <CardGroup cols={2}>
-  <Card title="What is Scorecard?" icon="rocket" href="/intro/what-is-scorecard">
-    Learn how simulation drives agent self-improvement
+  <Card title="Tracing quickstart" icon="activity" href="/intro/tracing-quickstart">
+    See your agent's first trace in Scorecard and score it. About 5 minutes.
   </Card>
-  <Card title="Tracing quickstart" icon="play" href="/intro/tracing-quickstart">
-    Start sending traces in minutes
+  <Card title="Evaluation quickstart" icon="flask-conical" href="/intro/sdk-quickstart">
+    Run your agent on a testset and score the results with the SDK. About 10 minutes.
   </Card>
-  <Card title="UI quickstart" icon="beaker" href="/intro/ui-quickstart">
-    Explore your first trace in the UI
+  <Card title="Set up with a coding agent" icon="bot" href="/intro/ai-assisted-setup">
+    Ask Claude Code, Codex, or Cursor to add tracing, metrics, and a first eval for you.
   </Card>
-  <Card title="API Reference" icon="code" href="/api-reference/overview">
-    Complete documentation and examples
+  <Card title="Core concepts" icon="book-open" href="/intro/concepts">
+    Learn how projects, records, metrics, testsets, and runs fit together.
   </Card>
-  <Card title="Security & Privacy" icon="shield" href="https://trust.scorecard.io/">
-    Our security measures and compliance
+</CardGroup>
+
+## Explore
+
+<CardGroup cols={3}>
+  <Card title="Integrations" icon="plug" href="/integrations/overview">
+    Claude Agent SDK, OpenAI, Anthropic, LangChain, OpenTelemetry, and more.
+  </Card>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    AI, human, and code-based scoring.
+  </Card>
+  <Card title="Human review" icon="users" href="/features/human-review">
+    Assign records and collect grades from your team.
+  </Card>
+  <Card title="Compare and blind review" icon="columns-2" href="/features/a-b-comparison">
+    Judge two outputs side by side.
+  </Card>
+  <Card title="CI with GitHub Actions" icon="git-pull-request" href="/features/github-actions">
+    Evaluate every pull request.
+  </Card>
+  <Card title="API reference" icon="code" href="/api-reference/overview">
+    The REST API, plus the Python and TypeScript SDKs.
   </Card>
 </CardGroup>
 
 ## Get help
 
-Email support@scorecard.io for assistance with your AI agent setup.
+Email [support@scorecard.io](mailto:support@scorecard.io), check [status.scorecard.io](https://status.scorecard.io) for incidents, or read about security in the [Trust Center](https://trust.scorecard.io).

@@ -1,377 +1,86 @@
 ---
-title: "Frequently Asked Questions"
+title: "Frequently asked questions"
 sidebarTitle: "FAQ"
-description: "Common questions about Scorecard's AI evaluation platform"
+description: "Answers to common questions about evaluating, tracing, limits, data, and billing in Scorecard."
 ---
 
-import { Accordion, AccordionGroup, Card } from "@mintlify/components";
-
-## Getting Started
+## Evaluating
 
 <AccordionGroup>
-  <Accordion title="What is an eval/evaluation?">
-    An **evaluation** (or "eval") is the systematic process of testing and measuring your AI system's performance against defined criteria. In Scorecard, an evaluation consists of:
-
-    - **Testset**: A collection of test cases with inputs and expected outputs
-    - **System**: The AI agent, prompt, API endpoint, or workflow being evaluated
-    - **Metrics**: Scoring criteria (accuracy, safety, tone, etc.) with AI, Human, or Code-based evaluation
-    - **Record**: A single evaluation result capturing inputs, outputs, and scores
-
-    Evaluations help you quantitatively measure AI quality, track improvements over time, and catch regressions before production. Think of it like continuous integration for AI—defining what good looks like and measuring against it systematically.
+  <Accordion title="What's the difference between a run and a record?">
+    A **record** is one execution of your agent: its inputs, outputs, and scores. A **run** is a batch of records, usually your agent's outputs on one testset, scored with the same metrics. Ten testcases scored with three metrics make one run, ten records, and thirty scores. See [Core concepts](/intro/concepts).
   </Accordion>
-
-  <Accordion title="How does Scorecard differ from other AI evaluation tools?">
-    Scorecard is **the simulation platform for agent self-improvement**. While most eval tools focus on observing and testing after deployment, Scorecard helps you proactively simulate thousands of realistic scenarios and apply expert judgment at scale — so you can ship frontier agent capabilities in days, not weeks.
-
-    Scorecard also brings together AI researchers, engineers, and subject-matter experts into a single workflow. SMEs encode their knowledge into metrics and reward models instead of manually labeling production logs, while AI researchers build improvement flywheels instead of running QA cycles.
+  <Accordion title="Does Scorecard score my production traces automatically?">
+    Not by default. Traced records are stored as they arrive without scores. Select them on the [Records](/features/records) page and click **Score Records**, or give traces a shared `scorecard.tracing_group_id` so new ones are [scored automatically](/features/tracing#score-traces). To score new runs of your agent with their traces attached, use [`run_and_evaluate` with linked traces](/features/sdk-tracing).
   </Accordion>
-
-  <Accordion title="What is simulation and how is it different from traditional evals?">
-    **Simulation** is the process of running your AI agent through **thousands of realistic scenarios** to test and improve its capabilities — without relying on production traffic or manual review.
-
-    Traditional eval approaches treat quality as a **QA problem**: wait for production logs, manually review cases, and fix issues one at a time. This breaks down as agents get more complex because:
-
-    - **Coverage gaps**: You miss edge cases until real users hit them
-    - **Slow feedback**: Collecting enough production data takes **days or weeks**
-    - **Expert bottleneck**: SMEs spend time labeling individual cases instead of teaching the system what "good" looks like
-    - **Ceiling on improvement**: You're limited to scenarios that happen to occur in production
-
-    **Simulation flips this.** Instead of reacting to problems in production, you proactively generate the messy, realistic interactions your agent will encounter and get feedback in **minutes, not weeks**.
+  <Accordion title="How do I evaluate an agent that runs behind an HTTP API?">
+    Call your API from the `system` function you pass to `run_and_evaluate`, and return the fields you want scored. See [Runs](/features/runs#run-from-code).
   </Accordion>
-
-  <Accordion title="How does Scorecard help agents self-improve?">
-    Scorecard enables a **self-improvement loop** by combining realistic scenario simulation with **scalable expert judgment**:
-
-    - **Expert judgment at scale**: Instead of waiting for SMEs to manually label production cases, encode their knowledge into [Critic Agent Metrics](/features/metrics) that act as **reward models** — applying expert judgment consistently across every scenario automatically.
-    - **Fast feedback loops**: Evaluate your agent through **10,000+ scenarios in minutes**. Identify weaknesses, iterate, and validate improvements — all in the same day.
-    - **Broad scenario coverage**: Test against **tool-calling workflows**, **edge cases and adversarial inputs**, and **enterprise environments** *(coming soon)*.
-
-    The result: your team's bottleneck moves from **feedback** (slow, getting slower) to **building** (fast, getting faster). Scorecard's evaluation data also serves as high-quality training data for **RLHF and reinforcement learning** pipelines.
+  <Accordion title="How do I evaluate multi-turn conversations?">
+    Trace each turn with the same [session ID](/features/tracing#group-traces-into-sessions) to review a whole conversation as one record, or simulate conversations against your agent from code. See [Evaluate multi-turn conversations](/guides/multi-turn-conversations).
   </Accordion>
-
-  <Accordion title="What programming languages does Scorecard support?">
-    Scorecard provides SDKs for:
-    - **Python**: Full-featured SDK with all capabilities
-    - **JavaScript/TypeScript**: Complete Node.js and browser support
-    - **REST API**: Universal HTTP access for any language
-    - **Framework integrations**: Claude Agent SDK, LangChain, LlamaIndex, OpenAI, and more
+  <Accordion title="Can I use my own model as the judge?">
+    Yes. Add a key for OpenAI, Anthropic, Google, Google Vertex AI, AWS Bedrock, or Groq, or an Azure OpenAI deployment, and pick the model on each AI metric. See [Model providers](/features/custom-provider).
   </Accordion>
-
-  <Accordion title="Can Scorecard be used for agent improvement and continuous learning?">
-    Yes! Scorecard provides multiple pathways for improving AI agents:
-
-    **Evaluation-Driven Improvement**:
-    - Identify failure patterns across test cases to focus improvement efforts
-    - Track performance metrics over time to measure agent improvements
-    - Use A/B comparison to validate that changes actually improve performance
-    - Regression testing ensures new versions don't break existing capabilities
-
-    **Training Data Generation**:
-    - Evaluation results serve as high-quality feedback for RLHF workflows
-    - Human-scored examples create preference pairs for fine-tuning
-    - Score explanations provide detailed reasoning for model training
-    - Export scored data for custom training pipelines
-
-    **Continuous Feedback Loops**:
-    - Monitor production performance through tracing and observability
-    - Create test cases from production failures for regression testing
-    - Iterate on prompts, tools, and configurations with quantitative feedback
-
-    See our [A/B Comparison](/features/a-b-comparison) docs for specific improvement workflows.
+  <Accordion title="Can I turn traces into testcases?">
+    There's no button for it in the app. Export the records with **Export → Records**, or read them through the API, and create testcases from the inputs you want to keep with [the SDK](/features/testsets#manage-testsets-from-code). To mine a long agent session for test ideas, use [Import from transcript](/features/testsets#import-from-a-transcript).
+  </Accordion>
+  <Accordion title="What happened to the Playground, Custom Endpoints, and Sim Agents?">
+    They were removed in September 2026. Test a prompt on a testset with a [Kickoff Run](/features/prompts#test-a-prompt-on-a-testset), evaluate an HTTP API by calling it from your [eval script](/features/runs#run-from-code), and simulate conversations [from code](/guides/multi-turn-conversations). Records those features created are still on the Records page.
   </Accordion>
 </AccordionGroup>
 
-## Limits and Constraints
+## Integrations
 
 <AccordionGroup>
-  <Accordion title="What are the text limits in Scorecard?">
-    Scorecard uses PostgreSQL which supports up to 1GB per text field - essentially unlimited for evaluation use cases. Practical limits are more likely to come from your AI model's context window than database constraints.
-    
-    For bulk imports and large datasets, file uploads support CSV, JSON, and JSONL formats. If you encounter limitations with particularly large datasets or need custom configurations, contact support@scorecard.io for assistance.
+  <Accordion title="Which languages and frameworks does Scorecard support?">
+    Scorecard has Python and TypeScript SDKs and a REST API for everything else. Tracing accepts OpenTelemetry from any language, with guides for the Claude Agent SDK, Claude Code, the OpenAI and Anthropic SDKs, the Vercel AI SDK, LangChain, LlamaIndex, CrewAI, and more. See [Integrations](/integrations/overview).
   </Accordion>
-
-  <Accordion title="Are there rate limits for API usage?">
-    Scorecard implements rate limiting to ensure platform stability and fair usage across all customers. Rate limits vary by plan tier, with enterprise customers receiving custom limits based on their specific requirements.
-    
-    Rate limit information is included in API response headers for monitoring usage. If you need higher limits for your use case, contact support to discuss your requirements.
-  </Accordion>
-
-  <Accordion title="How do I create test cases?">
-    Scorecard offers multiple ways to create test cases:
-
-    **UI Creation**:
-    - Manually create test cases one at a time in the Testset editor
-    - Define custom schemas with inputs, outputs, and metadata fields
-    - Use the visual editor for quick iteration
-
-    **Bulk Import**:
-    - Upload CSV, JSON, or JSONL files with test data
-    - Automatic schema detection from imported data
-    - Support for large datasets (thousands of test cases)
-
-    **Programmatic Creation**:
-    - Use Python or Node.js SDK to create test cases via API
-    - Generate synthetic test cases with LLMs
-    - Import from production logs or existing datasets
-
-    **From Production Data**:
-    - Convert traces from production into test cases
-    - Create regression tests from production failures
-    - Sample real user interactions for evaluation
-
-    See our [Testsets documentation](/features/testsets) for detailed guides.
-  </Accordion>
-
-  <Accordion title="Can I use custom AI models for evaluation?">
-    Yes! Scorecard supports using custom models for AI-based metric evaluation:
-
-    **Model Options**:
-    - **Scorecard-hosted models**: GPT-4o, Claude 3.5 Sonnet, and other leading models
-    - **Custom endpoints**: Point to your own model API for evaluation
-    - **Fine-tuned models**: Use domain-specific evaluator models
-    - **Multiple models**: Different metrics can use different evaluation models
-
-    **Configuration**:
-    - Set model parameters (temperature, max tokens) per metric
-    - Configure custom prompt templates in advanced mode
-    - Control evaluation costs by selecting appropriate models
-
-    For enterprise customers, we can integrate with your on-premise models or private deployments.
-  </Accordion>
-
-  <Accordion title="What's the difference between a Run and a Record?">
-    **Run**:
-    - A collection of test executions against a testset
-    - Contains multiple records (one per test case)
-    - Has aggregated metrics and statistics
-    - Represents a snapshot of your system's performance
-
-    **Record**:
-    - A single test case execution with its results
-    - Contains inputs, outputs, and scores from all metrics
-    - Can have multiple scores (one per metric applied)
-    - Represents one test case within a run
-
-    **Example**:
-    - Run #42: Testing customer support agent v3.1
-      - Record 1: Test case "refund request" → scored with 3 metrics = 3 scores
-      - Record 2: Test case "product inquiry" → scored with 3 metrics = 3 scores
-      - Record 3: Test case "complaint" → scored with 3 metrics = 3 scores
-    - Total: 1 run, 3 records, 9 scores
-
-    See [Runs & Results](/features/runs) and [Records](/features/records) for more details.
+  <Accordion title="Can my coding agent set Scorecard up for me?">
+    Yes. Install [Scorecard's agent skills](/intro/ai-assisted-setup) and ask your agent to "Onboard this agent to Scorecard."
   </Accordion>
 </AccordionGroup>
 
-## Features and Capabilities
+## Limits and data
 
 <AccordionGroup>
-  <Accordion title="How does metadata work in Scorecard?">
-    **Metadata** in Scorecard allows you to store additional context without affecting evaluations:
-    
-    **Testcase Metadata**:
-    - Mark fields as "metadata" in testset schemas
-    - Stored with test cases but excluded from evaluation logic
-    - Useful for tracking source, difficulty, categories, etc.
-    
-    **Trace Metadata**:
-    - Custom attributes on spans (user_id, session_id, etc.)
-    - Model parameters and configuration data
-    - Performance metrics and timing information
-    
-    **Run Metadata**:
-    - Git commit SHA, branch information
-    - Environment details (staging, production)
-    - Custom tags and labels for organization
-    
-    Example usage:
-    ```json
-    {
-      "input": "What's the weather?",
-      "expected_output": "I'll help you check the weather",
-      "source": "customer_support_logs",  // metadata
-      "difficulty": "easy",              // metadata
-      "created_by": "data_team"          // metadata
-    }
-    ```
+  <Accordion title="What are the size limits?">
+    Request bodies can be up to 5 MB, or 15 MB when creating records, and you can create up to 100 testcases per request. Attachments can be up to 100 MB each. See [API limits](/api-reference/overview#limits) and [tracing limits](/features/tracing#limits-and-privacy).
   </Accordion>
-
-  <Accordion title="How is latency measured and reported?">
-    Scorecard automatically captures **latency metrics** across your AI pipeline:
-    
-    **Measurement Points**:
-    - **End-to-end latency**: Total request time from input to output
-    - **Model inference time**: Time spent in model API calls
-    - **Processing time**: Custom logic execution time
-    - **Network latency**: Time spent in HTTP requests
-    
-    **Reporting**:
-    - **Real-time dashboards**: Live latency monitoring
-    - **Percentile analysis**: P50, P90, P95, P99 latency breakdown
-    - **Trend analysis**: Latency over time with alerting
-    - **Trace-level detail**: Individual request timing breakdowns
+  <Accordion title="Are there rate limits?">
+    Scorecard doesn't apply per-key rate limits. The SDKs retry throttled and failed requests automatically. Contact [support@scorecard.io](mailto:support@scorecard.io) before sending sustained high volumes.
   </Accordion>
-
-  <Accordion title="Can Scorecard test agentic workflows and multi-step AI agents?">
-    Yes! Scorecard is designed to test complex AI agents, not just simple prompts. Our platform supports:
-
-    **Agentic Capabilities**:
-    - **Tool-calling agents**: Evaluate agents that use function calling and API integrations
-    - **Multi-step workflows**: Version complete agent configurations including prompts, tools, and routing logic
-    - **Agent APIs**: Evaluate deployed agents by calling them from your own code with the SDK
-
-    **How It Works**:
-    - Use **Systems** to version your complete agent configuration (prompts + tools + settings)
-    - Use the **SDK** to run your agent against a testset and record every response
-    - Apply metrics to agent outputs just like any other evaluation
-    - Use **Tracing** to observe and debug multi-step agent executions
-
-    See our [Tracing](/features/tracing) documentation for agent-specific features.
+  <Accordion title="Does Scorecard redact personal data?">
+    No. Scorecard stores what you send. Redact personal data in your app before you export traces or create records, and turn off content capture in your instrumentation where you don't need it.
   </Accordion>
-
-  <Accordion title="What types of AI systems can Scorecard evaluate?">
-    Scorecard supports evaluation of any AI agent or system accessible via API:
-
-    **Model Types**:
-    - **Large Language Models**: GPT, Claude, Llama, Gemini, etc.
-    - **Embedding Models**: OpenAI, Cohere, custom embeddings
-    - **Multimodal Models**: Vision, audio, and text processing
-    - **Fine-tuned Models**: Custom models hosted anywhere
-
-    **Agent & System Types**:
-    - **Conversational Agents**: Multi-turn chatbots and virtual assistants
-    - **Tool-calling Agents**: Function calling and API integrations
-    - **RAG Agents**: Retrieval-augmented generation pipelines
-    - **Agentic Workflows**: Multi-step reasoning and planning agents
-    - **Custom APIs**: Any HTTP endpoint returning AI-generated content
-
-    **Deployment Options**:
-    - **Cloud APIs**: OpenAI, Anthropic, Google, AWS Bedrock
-    - **Self-hosted**: Models and agents running on your infrastructure
-    - **Hybrid**: Combination of cloud and on-premise systems
+  <Accordion title="Is my data secure? Can Scorecard be self-hosted?">
+    Scorecard is SOC 2 compliant and encrypts data in transit and at rest. For data-plane self-hosting or other specialized requirements, contact [team@scorecard.io](mailto:team@scorecard.io). See [Security and privacy](/features/security-and-privacy) and the [Trust Center](https://trust.scorecard.io).
   </Accordion>
 </AccordionGroup>
 
-## Technical Details
+## Billing
 
 <AccordionGroup>
-  <Accordion title="How does Scorecard handle sensitive data and privacy?">
-    Scorecard is built with **privacy by design** principles:
-    
-    **Data Security**:
-    - **Encryption**: All data encrypted in transit (TLS 1.3) and at rest (AES-256)
-    - **Access Controls**: Role-based permissions and organization isolation
-    - **Audit Logging**: Complete audit trail of all data access
-    - **Compliance**: SOC 2 Type II, GDPR, and enterprise compliance
-    
-    **Privacy Controls**:
-    - **Data Redaction**: Automatic PII detection and masking
-    - **Data Retention**: Configurable retention policies
-    - **Right to Delete**: Complete data deletion capabilities
-    - **Data Residency**: Control where your data is stored
-    
-    See our [Security and Privacy](/features/security-and-privacy) documentation for complete details.
+  <Accordion title="How does pricing work?">
+    Plans are priced by the number of scores per month, with unlimited users. See [scorecard.io/pricing](https://www.scorecard.io/pricing) for current plans.
   </Accordion>
-
-  <Accordion title="Can I run Scorecard evaluations offline or on-premise?">
-    Scorecard offers flexible deployment options:
-    
-    **Cloud Service** (Recommended):
-    - Fully managed service at app.scorecard.io
-    - Automatic updates and maintenance
-    - Global CDN and high availability
-    
-    **Enterprise On-Premise**:
-    - Self-hosted deployment in your infrastructure
-    - Complete data sovereignty and control
-    - Custom integrations with internal systems
-    - Available for Enterprise customers
-    
-    **Hybrid Approach**:
-    - Evaluation logic runs on-premise
-    - Results optionally synced to cloud dashboard
-    - Best of both worlds for security-sensitive organizations
-    
-    Contact enterprise@scorecard.io for on-premise deployment options.
-  </Accordion>
-
-  <Accordion title="How do I migrate from other evaluation tools?">
-    Scorecard provides migration support for common evaluation platforms:
-    
-    **Data Migration**:
-    - Import existing test datasets (CSV, JSON, JSONL)
-    - Convert evaluation metrics to Scorecard format
-    - Migrate historical evaluation results
-    
-    **Common Migrations**:
-    - **From custom scripts**: Convert to Scorecard SDK calls
-    - **From academic benchmarks**: Import MMLU, HellaSwag, etc.
-    - **From other platforms**: Bulk export/import workflows
-    
-    **Migration Assistance**:
-    - Free migration consultation for Enterprise customers
-    - Custom scripts for complex data transformations
-    - Parallel running during transition period
-    
-    Contact our support team at support@scorecard.io for personalized migration assistance.
-  </Accordion>
-</AccordionGroup>
-
-## Billing and Plans
-
-<AccordionGroup>
-  <Accordion title="How does Scorecard pricing work?">
-    Scorecard offers flexible pricing based on usage:
-    
-    **Starter** (Free):
-    - Unlimited users
-    - 100,000 scores per month
-    - Essential evaluation features for early-stage AI projects
-    
-    **Growth** ($299/month):
-    - Unlimited users
-    - Includes 1M scores per month, then $1 per 5K additional
-    - Test set management
-    - Prompt management and versioning
-    - Priority support
-    
-    **Enterprise** (Custom pricing):
-    - Custom solutions for large-scale AI deployments
-    - SAML SSO and enterprise authentication
-    - Dedicated support and customer success
-    - Custom compliance and security features
-    
-    Visit scorecard.io/pricing for the most current pricing information.
-  </Accordion>
-
   <Accordion title="What counts as a score?">
-    A **score** is counted each time Scorecard evaluates a single test case with a metric:
-    
-    **Examples**:
-    - 1 test case × 1 metric = 1 score
-    - 1 test case × 3 metrics = 3 scores  
-    - 100 test cases × 2 metrics = 200 scores
-    
-    **Not Counted**:
-    - Viewing existing results
-    - Creating/editing test cases
-    - Monitoring and tracing (separate feature)
-    - API calls for data retrieval
-    
-    **Bulk Discounts**: Enterprise customers get volume discounts for large-scale evaluations.
+    One metric's result on one record. Scoring 100 records with 2 metrics produces 200 scores.
   </Accordion>
 </AccordionGroup>
 
-## Related Resources
+## Troubleshooting
 
-<Card title="Getting Started" href="/intro/sdk-quickstart">
-  Quick start guide for new users
-</Card>
+<AccordionGroup>
+  <Accordion title="My traces don't show up">
+    Check the API key, the project ID, and that short scripts flush before they exit. See [Tracing troubleshooting](/features/tracing#troubleshooting).
+  </Accordion>
+  <Accordion title="Scores are stuck as pending">
+    Human metrics stay pending until a reviewer grades them. Members also see other reviewers' grades as pending, so a review can be further along than it looks. For AI metrics, open the record: if a score failed, its error explains why, for example a record too long for the judge model's context window. Fix the cause and re-score.
+  </Accordion>
+  <Accordion title="I can't create an API key">
+    Only organization admins can create API keys. Ask an admin to create one for you.
+  </Accordion>
+</AccordionGroup>
 
-<Card title="Contact Support" href="https://www.scorecard.io/book-a-demo">
-  Get help with setup and migration
-</Card>
-
-<Card title="Status Page" href="https://status.scorecard.io">
-  Real-time platform status and uptime
-</Card>
+Still stuck? Email [support@scorecard.io](mailto:support@scorecard.io) or check [status.scorecard.io](https://status.scorecard.io).

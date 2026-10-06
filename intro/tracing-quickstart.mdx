@@ -1,174 +1,250 @@
 ---
-title: "Tracing Quickstart"
-description: "Trace your LLM applications by pointing your client to Scorecard."
-mode: "center"
+title: "Tracing quickstart"
+description: "Send your first trace to Scorecard, find it on the Records page, and score it with a metric in about five minutes."
 ---
 
-import { DarkLightImage } from '/snippets/dark-light-image.jsx';
+import { DarkLightImage } from "/snippets/dark-light-image.jsx";
+import ClaudeCodeEnv from "/snippets/claude-code-env.mdx";
+import ScorecardCredentials from "/snippets/scorecard-credentials.mdx";
 
-This quickstart shows how to trace your LLM applications with Scorecard. Change your `baseURL` to `llm.scorecard.io` - no SDKs, no dependency management, works with your existing code. Supports OpenAI, Anthropic, and streaming responses.
+If you don't have an app to trace yet, use one of the sample scripts in step 2.
 
-<Info>
-  **Using Vercel AI SDK?** Check out our [AI SDK Wrapper](/features/ai-sdk-wrapper) for automatic tracing with zero manual instrumentation.
-</Info>
-
-<Info>
-  **Need more control?** See the SDK wrappers section below for custom spans and deeper integration, or use OpenTelemetry directly.
-</Info>
-
-## Steps
+<Tip>
+  Working in Claude Code, Codex, or Cursor? Install [Scorecard's agent skills](/intro/ai-assisted-setup) and ask your agent to "Add Scorecard tracing". It picks the right method for your stack.
+</Tip>
 
 <Steps>
-  <Step title="Get your Scorecard API key">
-    Create a [Scorecard account](https://app.scorecard.io) and grab your API key from [Settings](https://app.scorecard.io/settings).
+  <Step title="Get your API key and project ID">
+    <ScorecardCredentials />
 
-    ```bash
-    export SCORECARD_API_KEY="ak_..."
-    export OPENAI_API_KEY="sk_..."  # or ANTHROPIC_API_KEY
-    ```
+    Also set the key for the model provider your app calls, such as `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`. Use the numeric project ID, not the project name.
   </Step>
-  <Step title="Point your client to Scorecard">
-    Change the `baseURL` to `https://llm.scorecard.io`. Everything else in your code stays the same - your LLM calls will be automatically traced.
 
-    <CodeGroup>
-    ```py Python highlight={7-11}
-    # Works with OpenAI and Anthropic - see examples below for more patterns
-    
-    from openai import OpenAI
-    
-    client = OpenAI(
-        api_key=os.environ["OPENAI_API_KEY"],
-        base_url="https://llm.scorecard.io",
-        default_headers={
-            "x-scorecard-api-key": os.environ["SCORECARD_API_KEY"],
-            "x-scorecard-project-id": "my-chatbot"  # Optional: organize traces by project
-        }
-    )
-    
-    # Use OpenAI normally - everything is automatically traced!
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": "Hello!"}]
-    )
-    ```
+  <Step title="Instrument your app">
+    <a id="sdk-wrappers-for-deeper-integration" />
 
-    ```js JavaScript highlight={7-11}
-    // Works with OpenAI and Anthropic - see examples below for more patterns
-    
-    import OpenAI from 'openai';
-    
-    const client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-      baseURL: 'https://llm.scorecard.io',
-      defaultHeaders: {
-        'x-scorecard-api-key': process.env.SCORECARD_API_KEY,
-        'x-scorecard-project-id': 'my-chatbot'  // Optional: organize traces by project
-      }
-    });
-    
-    // Use OpenAI normally - everything is automatically traced!
-    const response = await client.chat.completions.create({
-      model: 'gpt-4',
-      messages: [{ role: 'user', content: 'Hello!' }]
-    });
-    ```
-    </CodeGroup>
+    Pick your stack. Each option sends standard OpenTelemetry traces to Scorecard.
+
+    <Tabs>
+      <Tab title="OpenAI">
+        Wrap your client once, and its chat completion calls are traced. Save this as `app.py` or `app.mjs`:
+
+        <CodeGroup>
+        ```bash Python
+        pip install "scorecard-ai[otel]" openai
+        ```
+
+        ```bash JavaScript
+        npm install scorecard-ai openai
+        ```
+        </CodeGroup>
+
+        <CodeGroup>
+        ```python Python
+        from openai import OpenAI
+        from scorecard_ai import wrap
+
+        # Reads SCORECARD_API_KEY and SCORECARD_PROJECT_ID from the environment.
+        client = wrap(OpenAI())
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": "Write a haiku about tracing."}],
+        )
+        print(response.choices[0].message.content)
+        ```
+
+        ```javascript JavaScript
+        import OpenAI from "openai";
+        import { wrap } from "scorecard-ai";
+
+        // Reads SCORECARD_API_KEY and SCORECARD_PROJECT_ID from the environment.
+        const client = wrap(new OpenAI());
+
+        const response = await client.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [{ role: "user", content: "Write a haiku about tracing." }],
+        });
+        console.log(response.choices[0].message.content);
+        ```
+        </CodeGroup>
+      </Tab>
+
+      <Tab title="Anthropic">
+        Wrap your client once, and its message calls are traced. Save this as `app.py` or `app.mjs`:
+
+        <CodeGroup>
+        ```bash Python
+        pip install "scorecard-ai[otel]" anthropic
+        ```
+
+        ```bash JavaScript
+        npm install scorecard-ai @anthropic-ai/sdk
+        ```
+        </CodeGroup>
+
+        <CodeGroup>
+        ```python Python
+        from anthropic import Anthropic
+        from scorecard_ai import wrap
+
+        # Reads SCORECARD_API_KEY and SCORECARD_PROJECT_ID from the environment.
+        client = wrap(Anthropic())
+
+        message = client.messages.create(
+            model="claude-opus-5-5",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": "Write a haiku about tracing."}],
+        )
+        print("".join(block.text for block in message.content if block.type == "text"))
+        ```
+
+        ```javascript JavaScript
+        import Anthropic from "@anthropic-ai/sdk";
+        import { wrap } from "scorecard-ai";
+
+        // Reads SCORECARD_API_KEY and SCORECARD_PROJECT_ID from the environment.
+        const client = wrap(new Anthropic());
+
+        const message = await client.messages.create({
+          model: "claude-opus-5-5",
+          max_tokens: 1024,
+          messages: [{ role: "user", content: "Write a haiku about tracing." }],
+        });
+        console.log(message.content.filter((b) => b.type === "text").map((b) => b.text).join(""));
+        ```
+        </CodeGroup>
+      </Tab>
+
+      <Tab title="Vercel AI SDK">
+        Save this as `app.mjs`:
+
+        ```bash
+        npm install scorecard-ai ai @ai-sdk/openai
+        ```
+
+        ```javascript JavaScript
+        import { openai } from "@ai-sdk/openai";
+        import * as ai from "ai";
+        import { wrapAISDK } from "scorecard-ai";
+
+        // Reads SCORECARD_API_KEY and SCORECARD_PROJECT_ID from the environment.
+        const aiSDK = wrapAISDK(ai);
+
+        const { text } = await aiSDK.generateText({
+          model: openai("gpt-4o-mini"),
+          prompt: "Write a haiku about tracing.",
+        });
+        console.log(text);
+        ```
+      </Tab>
+
+      <Tab title="LangChain">
+        OpenLLMetry, from the `traceloop-sdk` package, instruments LangChain and the model SDKs it calls. Call `Traceloop.init` before you import LangChain. Save this as `app.py`:
+
+        ```bash
+        pip install traceloop-sdk langchain-openai
+        ```
+
+        ```python Python
+        import os
+
+        from traceloop.sdk import Traceloop
+
+        os.environ.setdefault("TRACELOOP_METRICS_ENABLED", "false")  # Scorecard stores traces only
+
+        Traceloop.init(
+            app_name="my-agent",
+            api_endpoint="https://tracing.scorecard.io/otel",
+            headers={"Authorization": f"Bearer {os.environ['SCORECARD_API_KEY']}"},
+            resource_attributes={"scorecard.project_id": os.environ["SCORECARD_PROJECT_ID"]},
+            disable_batch=True,
+            telemetry_enabled=False,
+        )
+
+        from langchain_openai import ChatOpenAI  # import after Traceloop.init
+
+        llm = ChatOpenAI(model="gpt-4o-mini")
+        print(llm.invoke("Write a haiku about tracing.").content)
+        ```
+      </Tab>
+
+      <Tab title="Claude Agent SDK">
+        The Claude Agent SDK and Claude Code export traces themselves. Set these variables in the environment that runs your agent:
+
+        <ClaudeCodeEnv />
+
+        Then run your agent as usual. Each conversation becomes one record. See [Claude Agent SDK and Claude Code](/intro/claude-agent-sdk-tracing) for passing the variables in code.
+      </Tab>
+    </Tabs>
+
+    Using another framework, language, or an existing OpenTelemetry setup? See [Integrations](/integrations/overview). If you can't add a dependency, point an OpenAI-compatible client at the [LLM proxy](/integrations/openai-anthropic#llm-proxy) instead.
   </Step>
-  <Step title="View traces in Scorecard">
-    Run your application, then visit [app.scorecard.io](https://app.scorecard.io) and navigate to **Records**.
 
-    You'll see full request/response data, token usage, latency, and errors for all your LLM calls. Streaming responses are captured too.
+  <Step title="Run your app and find the trace">
+    Run your app once with `python app.py` or `node app.mjs`, then open your project's **Records** page. Within a minute, a new record appears, marked **Trace**.
 
-    <DarkLightImage lightSrc="/images/records-traces-light.png" darkSrc="/images/records-traces-dark.png" caption="Viewing traces in Records." alt="Screenshot of viewing traces in Records." />
+    Click the record to see its duration, cost, tokens, and conversation. **View Full Details** opens the full trace.
+
+    <DarkLightImage
+      lightSrc="/images/records-table-claude-sdk-light.png"
+      darkSrc="/images/records-table-claude-sdk-dark.png"
+      caption="A traced record on the Records page, with its details panel open."
+      alt="Records page with a record selected and its details panel showing duration, cost, tokens, scores, and the conversation"
+    />
+  </Step>
+
+  <Step title="Score the trace">
+    1. Open **Metrics**, scroll past your metrics to the templates, and click **Add Metric** on **User Intent Fulfillment**.
+    2. Go back to **Records**, check the box next to your record, and click **Score Records**.
+    3. Choose the metric and click **Score**.
+
+    <DarkLightImage
+      lightSrc="/images/metrics/metrics-score-records-modal-light.png"
+      darkSrc="/images/metrics/metrics-score-records-modal-dark.png"
+      caption="Choose the metrics to apply to the selected records."
+      alt="Score Records dialog with metrics selected"
+      width="480"
+    />
+
+    <Check>
+      After a few seconds the record shows a score from 1 to 5, with the judge's reasoning in its **Scores** section.
+    </Check>
   </Step>
 </Steps>
 
-## How It Works
+New traces aren't scored by default. To score traces as they arrive, see [Score traces](/features/tracing#score-traces). To test on fixed inputs, continue to the [Evaluation quickstart](/intro/sdk-quickstart).
 
-Scorecard forwards your requests to the LLM provider while capturing telemetry:
+## Troubleshooting
 
-```
-Your App → llm.scorecard.io → OpenAI/Anthropic
-              ↓
-         Scorecard (traces, metrics, costs)
-```
+<AccordionGroup>
+  <Accordion title="No record appears">
+    - Check your app's output for exporter errors. A `401` means the API key is wrong or wasn't loaded in that process.
+    - Short scripts can exit before spans are sent. In Python, end the script with `trace.get_tracer_provider().force_flush()` (`from opentelemetry import trace`).
+    - With OpenLLMetry, call `Traceloop.init` before importing your framework, or nothing is instrumented.
+    - Clear the search box and any filter pills on the Records page.
+  </Accordion>
+  <Accordion title="The record is in a different project">
+    Traces with a missing or non-numeric `scorecard.project_id` go to your organization's oldest project, and traces with a numeric ID that doesn't match an active project are dropped. Copy the ID from the project URL. See [Route traces to a project](/features/tracing#route-traces-to-a-project).
+  </Accordion>
+  <Accordion title="Each model call is a separate record">
+    Open a parent span around each request so the calls nest under it, or give related traces the same session ID. See [Sessions](/features/tracing#group-traces-into-sessions).
+  </Accordion>
+</AccordionGroup>
 
-Your LLM calls work the same way - Scorecard forwards requests and captures telemetry.
+## Next steps
 
-## SDK Wrappers for Deeper Integration
-
-For more control than `llm.scorecard.io`, the Scorecard SDK wrappers provide automatic tracing with native OpenTelemetry integration. Wrap your OpenAI or Anthropic client once and all calls are automatically traced - including streaming responses.
-
-The real power comes from custom spans and nested traces. You can create parent spans for your workflows and business logic, and LLM calls will automatically nest as children. This gives you complete visibility into complex multi-step processes.
-
-### Basic Usage
-
-<Note>
-  The Python SDK wrappers require the optional `otel` extra, which installs OpenTelemetry. Without it, `wrap()` raises an `ImportError`:
-
-  ```bash
-  pip install 'scorecard-ai[otel]'
-  ```
-
-  The TypeScript SDK bundles OpenTelemetry, so `npm install scorecard-ai` is all you need.
-</Note>
-
-<CodeGroup>
-```py Python highlight={4,7,9-13}
-# Works with OpenAI and Anthropic - see examples below for more patterns
-
-from openai import OpenAI
-from scorecard_ai import wrap
-
-# Wrap your OpenAI client
-openai = wrap(
-    OpenAI(api_key=os.environ["OPENAI_API_KEY"]),
-    {
-        "api_key": os.environ["SCORECARD_API_KEY"],
-        "project_id": "my-chatbot"  # Optional: organize traces by project
-    }
-)
-
-# Use normally - all calls are automatically traced
-response = openai.chat.completions.create(
-    model="gpt-4",
-    messages=[{"role": "user", "content": "Hello!"}]
-)
-```
-
-```js JavaScript highlight={3,7,11-15}
-// Works with OpenAI and Anthropic - see examples below for more patterns
-
-import { wrap } from 'scorecard-ai';
-import OpenAI from 'openai';
-
-// Wrap your OpenAI client
-const openai = wrap(
-  new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-  }),
-  {
-    apiKey: process.env.SCORECARD_API_KEY,
-    projectId: 'my-chatbot'  // Optional: organize traces by project
-  }
-);
-
-// Use normally - all calls are automatically traced
-const response = await openai.chat.completions.create({
-  model: 'gpt-4',
-  messages: [{ role: 'user', content: 'Hello!' }]
-});
-```
-
-</CodeGroup>
-
-## Examples
-
-- [Node.js Examples](https://github.com/scorecard-ai/scorecard-node/tree/main/examples) - OpenAI, Anthropic, Vercel AI SDK, nested traces, streaming
-- [Python Examples](https://github.com/scorecard-ai/scorecard-python/tree/main/examples) - OpenAI, Anthropic, nested traces, streaming
-- [More Examples](https://github.com/scorecard-ai/scorecard-examples) - Additional integration examples
-
-## Where to go next
-
-- [Tracing Features](/features/tracing) - Advanced tracing patterns
-- [SDK + Tracing](/features/sdk-tracing) - Combine evaluation data with trace observability in a single record
+<CardGroup cols={2}>
+  <Card title="Evaluation quickstart" icon="flask-conical" href="/intro/sdk-quickstart">
+    Run your agent on a testset and score every result.
+  </Card>
+  <Card title="Tracing" icon="activity" href="/features/tracing">
+    Sessions, tags, metadata, and how Scorecard reads spans.
+  </Card>
+  <Card title="Records" icon="table" href="/features/records">
+    Search, filter, and export records.
+  </Card>
+  <Card title="Metrics" icon="gauge" href="/features/metrics">
+    Write metrics for your own definition of good.
+  </Card>
+</CardGroup>
