@@ -317,6 +317,10 @@
               "api-reference/delete-attachment",
               "api-reference/list-session-attachments"
             ]
+          },
+          {
+            "group": "Organizations",
+            "pages": ["api-reference/whoami"]
           }
         ]
       },

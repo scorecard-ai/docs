@@ -5680,6 +5680,55 @@ paths:
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
           $ref: "#/components/responses/ServiceError"
+  /whoami:
+    get:
+      operationId: whoami
+      summary: Who am I
+      description: >-
+        Returns the caller's user, organization, and the organizations the
+        credential can act in.
+
+
+        A request acts in one organization. For an OAuth token or a personal API
+        key, choose it with the `X-Scorecard-Org-Id` header; the caller must be
+        a member, or the API returns 403. Without the header, the API uses the
+        user's most recently updated organization. A JWT or an org API key
+        always acts in its own organization, and a different
+        `X-Scorecard-Org-Id` returns 403.
+      responses:
+        "200":
+          description: The caller's identity and organization.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Whoami"
+              examples:
+                OAuth token in one of two organizations:
+                  value:
+                    orgId: org_2xHz8vQkP1mN3rT5
+                    userId: user_2wK9cLpR4sT7uV1x
+                    authType: oauth-key
+                    org:
+                      id: org_2xHz8vQkP1mN3rT5
+                      name: Acme
+                      slug: acme
+                    memberships:
+                      - id: org_2xHz8vQkP1mN3rT5
+                        name: Acme
+                        role: org:admin
+                      - id: org_2yJa4bNcQ6dE8fG0
+                        name: Acme Labs
+                        role: org:member
+                  summary: OAuth token in one of two organizations
+                  description: "A user in two organizations. The request acts in Acme; send
+                    X-Scorecard-Org-Id: org_2yJa4bNcQ6dE8fG0 to act in Acme
+                    Labs."
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -6775,6 +6824,78 @@ components:
         - metadata
       description: A file attached to a session. Bytes live in object storage; this
         describes the last committed content.
+    Whoami:
+      type: object
+      properties:
+        orgId:
+          type: string
+          description: The ID of the organization this request acts in. Set it with the
+            `X-Scorecard-Org-Id` header.
+          example: org_2xHz8vQkP1mN3rT5
+        userId:
+          type: string
+          description: The ID of the user. For an org API key, the user who created the key.
+        authType:
+          type: string
+          enum:
+            - jwt
+            - personal-api-key
+            - org-api-key
+            - oauth-key
+          description: "How the request authenticated: `jwt` (Scorecard web session),
+            `personal-api-key`, `org-api-key`, or `oauth-key` (OAuth token, for
+            example from the MCP server)."
+        org:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the organization.
+              example: org_2xHz8vQkP1mN3rT5
+            name:
+              type: string
+              description: The name of the organization.
+            slug:
+              type: string
+              description: The URL slug of the organization.
+          required:
+            - id
+            - name
+            - slug
+          description: The organization this request acts in.
+        memberships:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The ID of the organization.
+                example: org_2xHz8vQkP1mN3rT5
+              name:
+                type: string
+                description: The name of the organization.
+              role:
+                type:
+                  - string
+                  - "null"
+                description: The user's role in the organization, for example `org:admin`. Null
+                  for a JWT or an org API key, which list only their own
+                  organization.
+            required:
+              - id
+              - name
+              - role
+          description: The organizations this credential can act in. Pass one of these IDs
+            in the `X-Scorecard-Org-Id` header to switch organization. A JWT or
+            an org API key lists only its own organization.
+      required:
+        - orgId
+        - userId
+        - authType
+        - org
+        - memberships
+      description: The identity and organization of the caller.
   responses:
     UnauthenticatedError:
       description: Error indicating that the request is not authenticated.
@@ -6792,6 +6913,22 @@ components:
               description: >-
                 Error returned when authentication credentials are invalid or
                 missing.
+    ForbiddenError:
+      description: Error indicating that the caller is authenticated but not allowed
+        to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+          examples:
+            Permission denied:
+              value:
+                code: UNAUTHORIZED
+                message: Only organization admins can change record assignees.
+                details: {}
+              summary: Permission denied
+              description: Error returned when the authenticated caller lacks the role this
+                operation requires.
     ServiceError:
       description: >-
         An internal service error indicating an issue with the Scorecard
