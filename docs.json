@@ -209,7 +209,9 @@
             "group": "Projects",
             "pages": [
               "api-reference/create-project",
-              "api-reference/list-projects"
+              "api-reference/list-projects",
+              "api-reference/get-project",
+              "api-reference/update-project"
             ]
           },
           {

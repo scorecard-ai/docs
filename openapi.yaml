@@ -48,6 +48,8 @@ paths:
                     id: "314"
                     name: My Project
                     description: This is a test project
+                    status: null
+                    statusUpdatedAt: null
                   summary: Created project response
                   description: Response after successfully creating a project.
         "401":
@@ -148,9 +150,13 @@ paths:
                       - id: "123"
                         name: Q&A Chatbot
                         description: Chatbot for answering questions about the company.
+                        status: completed
+                        statusUpdatedAt: 2025-01-20T16:45:00.000Z
                       - id: "124"
                         name: Summarizer (Europe)
                         description: Summarizer for documents in the Europe region.
+                        status: null
+                        statusUpdatedAt: null
                     nextCursor: "125"
                     hasMore: true
                   summary: Project list with pagination
@@ -189,6 +195,127 @@ paths:
           source: |-
             curl https://api2.scorecard.io/api/v2/projects \
                 -H "Authorization: Bearer $SCORECARD_API_KEY"
+  /projects/{projectId}:
+    get:
+      operationId: getProject
+      summary: Get Project
+      description: Retrieve a specific Project by ID.
+      parameters:
+        - in: path
+          name: projectId
+          description: The ID of the Project.
+          schema:
+            type: string
+            example: "314"
+          required: true
+      responses:
+        "200":
+          description: Successfully retrieved the Project.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+              examples:
+                Completed project:
+                  value:
+                    id: "314"
+                    name: My Project
+                    description: This is a test project
+                    status: completed
+                    statusUpdatedAt: 2025-01-20T16:45:00.000Z
+                  summary: Completed project
+                  description: A Project an admin has marked as completed.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/ServiceError"
+    patch:
+      operationId: updateProject
+      summary: Update Project
+      description: >-
+        Update a Project's name, description, or review status. Changing
+        `status` requires an organization admin: an organization API key, or a
+        token belonging to an admin. Keys and tokens scoped to an individual
+        member receive a 403. `statusUpdatedAt` moves only when the status
+        actually changes.
+      parameters:
+        - in: path
+          name: projectId
+          description: The ID of the Project to update.
+          schema:
+            type: string
+            example: "314"
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  description: The new name of the Project.
+                description:
+                  type: string
+                  description: The new description of the Project.
+                status:
+                  type:
+                    - string
+                    - "null"
+                  enum:
+                    - in_progress
+                    - in_review
+                    - completed
+                    - null
+                  description: >-
+                    The new review status of the Project. Only organization
+                    admins can change it. Pass `null` to stop tracking a status.
+            examples:
+              Mark a project completed:
+                value:
+                  status: completed
+                summary: Mark a project completed
+                description: Mark the Project's review round as completed.
+      responses:
+        "200":
+          description: Project updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+              examples:
+                Updated project:
+                  value:
+                    id: "314"
+                    name: My Project
+                    description: This is a test project
+                    status: completed
+                    statusUpdatedAt: 2025-01-20T16:45:00.000Z
+                  summary: Updated project
+                  description: Response after marking the Project as completed.
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "403":
+          description: >-
+            Error indicating that the caller is authenticated but not allowed
+            to perform this operation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+              examples:
+                Permission denied:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Only organization admins can change a project's status.
+                    details: {}
+                  summary: Permission denied
+                  description: >-
+                    Error returned when a caller who isn't an organization admin
+                    tries to change `status`.
+        "500":
+          $ref: "#/components/responses/ServiceError"
   /projects/{projectId}/testsets:
     get:
       operationId: listTestsets
@@ -5703,10 +5830,31 @@ components:
             - string
             - "null"
           description: The description of the Project.
+        status:
+          type:
+            - string
+            - "null"
+          enum:
+            - in_progress
+            - in_review
+            - completed
+            - null
+          description: >-
+            The review status of the Project, set by an organization admin.
+            `null` if the Project doesn't track a status.
+        statusUpdatedAt:
+          type:
+            - string
+            - "null"
+          description: >-
+            The ISO 8601 timestamp when `status` last changed. `null` if a
+            status has never been set.
       required:
         - id
         - name
         - description
+        - status
+        - statusUpdatedAt
       description: A Project in the Scorecard system.
     ApiError:
       type: object
