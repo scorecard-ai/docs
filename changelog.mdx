@@ -7,6 +7,20 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="October 30, 2026">
+  ### Project status
+
+  Org admins can now mark a [project](/features/projects) as **In progress**, **In review**, or **Completed**. The status shows on the project page and the **Records** page. API clients can read it too, so a pipeline can wait until a project's annotations are final before pulling them. Members see the status but can't change it.
+
+  {/* TODO(screenshot): /images/changelog-project-status-{light,dark}.png — Records page as an admin with the project status menu open next to the "Records (N)" count */}
+
+  Each project in the API now includes `status` and `statusUpdatedAt`, and there are two new endpoints: [Get Project](/api-reference/get-project) and [Update Project](/api-reference/update-project). `statusUpdatedAt` changes only when the status value does.
+
+  ### Bug Fixes and Improvements
+
+  - **[Truffle]** Truffle can assign and unassign records for org members, and answer questions like "what's assigned to me?". Assigning is limited to admins and needs approval in chat, the same as Truffle's other edits.
+</Update>
+
 <Update label="September 21, 2026">
   ### Bug Fixes and Improvements
 
