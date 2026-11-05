@@ -1819,8 +1819,9 @@ paths:
                       type: number
                       minimum: 0
                       maximum: 2
-                      default: 0
-                      description: The temperature for AI evaluation (0-2).
+                      description: >-
+                        The temperature for AI evaluation (0-2). Omit to use the
+                        model provider's default.
                     outputType:
                       type: string
                       const: int
@@ -1943,8 +1944,9 @@ paths:
                       type: number
                       minimum: 0
                       maximum: 2
-                      default: 0
-                      description: The temperature for AI evaluation (0-2).
+                      description: >-
+                        The temperature for AI evaluation (0-2). Omit to use the
+                        model provider's default.
                     outputType:
                       type: string
                       const: float
@@ -2067,8 +2069,9 @@ paths:
                       type: number
                       minimum: 0
                       maximum: 2
-                      default: 0
-                      description: The temperature for AI evaluation (0-2).
+                      description: >-
+                        The temperature for AI evaluation (0-2). Omit to use the
+                        model provider's default.
                     outputType:
                       type: string
                       const: boolean
@@ -2393,8 +2396,9 @@ paths:
                       type: number
                       minimum: 0
                       maximum: 2
-                      default: 0
-                      description: The temperature for AI evaluation (0-2).
+                      description: >-
+                        The temperature for AI evaluation (0-2). Omit to use the
+                        model provider's default.
                     outputType:
                       type: string
                       const: int
@@ -2513,8 +2517,9 @@ paths:
                       type: number
                       minimum: 0
                       maximum: 2
-                      default: 0
-                      description: The temperature for AI evaluation (0-2).
+                      description: >-
+                        The temperature for AI evaluation (0-2). Omit to use the
+                        model provider's default.
                     outputType:
                       type: string
                       const: float
@@ -2633,8 +2638,9 @@ paths:
                       type: number
                       minimum: 0
                       maximum: 2
-                      default: 0
-                      description: The temperature for AI evaluation (0-2).
+                      description: >-
+                        The temperature for AI evaluation (0-2). Omit to use the
+                        model provider's default.
                     outputType:
                       type: string
                       const: boolean
@@ -3675,7 +3681,10 @@ paths:
     post:
       operationId: createRecord
       summary: Create Record
-      description: Create a new Record in a Run.
+      description: >-
+        Create a new Record in a Run. Creating a Record starts scoring it with
+        every AI and Heuristic metric on the Run. The request body may be up to
+        15 MB; larger requests are rejected with a 413.
       parameters:
         - in: path
           name: runId
@@ -5251,7 +5260,9 @@ paths:
         should conform to the schema defined by the MetricConfig; otherwise,
         validation errors will be reported. Omit `score` to leave the Score in a
         pending (ungraded) state, which queues the Record for manual grading;
-        this is supported only for human metrics.
+        this is supported only for human metrics. Scorecard scores AI and
+        Heuristic metrics itself when a Record is created, which can replace a
+        score you push, so push scores from your own code to human metrics.
       parameters:
         - in: path
           name: recordId
@@ -6058,8 +6069,9 @@ components:
               type: number
               minimum: 0
               maximum: 2
-              default: 0
-              description: The temperature for AI evaluation (0-2).
+              description: >-
+                The temperature for AI evaluation (0-2). Omitted when the model
+                provider's default is used.
             outputType:
               type: string
               const: int
@@ -6080,7 +6092,6 @@ components:
             - guidelines
             - promptTemplate
             - evalModelName
-            - temperature
             - outputType
             - passingThreshold
           description: A Metric with AI evaluation and integer output.
@@ -6205,8 +6216,9 @@ components:
               type: number
               minimum: 0
               maximum: 2
-              default: 0
-              description: The temperature for AI evaluation (0-2).
+              description: >-
+                The temperature for AI evaluation (0-2). Omitted when the model
+                provider's default is used.
             outputType:
               type: string
               const: float
@@ -6225,7 +6237,6 @@ components:
             - guidelines
             - promptTemplate
             - evalModelName
-            - temperature
             - outputType
             - passingThreshold
           description: A Metric with AI evaluation and float output.
@@ -6346,8 +6357,9 @@ components:
               type: number
               minimum: 0
               maximum: 2
-              default: 0
-              description: The temperature for AI evaluation (0-2).
+              description: >-
+                The temperature for AI evaluation (0-2). Omitted when the model
+                provider's default is used.
             outputType:
               type: string
               const: boolean
@@ -6360,7 +6372,6 @@ components:
             - guidelines
             - promptTemplate
             - evalModelName
-            - temperature
             - outputType
           description: A Metric with AI evaluation and boolean output.
           title: AI boolean metric
@@ -6933,7 +6944,7 @@ components:
           examples:
             Authentication failure:
               value:
-                code: UNAUTHORIZED
+                code: UNAUTHENTICATED
                 message: Invalid or missing authentication token
                 details: {}
               summary: Authentication failure
@@ -6951,7 +6962,7 @@ components:
           examples:
             Internal error:
               value:
-                code: INTERNAL_ERROR
+                code: SERVICE_ERROR
                 message: An unexpected error occurred while processing your request.
                 details: {}
               summary: Internal error
