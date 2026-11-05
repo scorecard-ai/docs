@@ -8,6 +8,22 @@ mode: "center"
 
 [Create a Scorecard account](https://accounts.scorecard.io/sign-up?redirect_url=https%3A%2F%2Fapp.scorecard.io%2F) and find your organization's `SCORECARD_API_KEY` in [settings](https://app.scorecard.io/settings).
 
+## Choose an organization
+
+Each request acts in one organization. If you use an OAuth token or a personal API key and belong to more than one organization, send the `X-Scorecard-Org-Id` header to choose one:
+
+```bash
+curl https://api2.scorecard.io/api/v2/whoami \
+  -H "Authorization: Bearer $SCORECARD_API_KEY" \
+  -H "X-Scorecard-Org-Id: org_..."
+```
+
+- Without the header, the API uses your most recently updated organization.
+- If you are not a member of that organization, the API returns 403.
+- An organization API key always acts in its own organization. A header that names a different organization returns 403.
+
+Call [Who am I](/api-reference/whoami) to see the current organization and the organizations you can choose.
+
 ## Use Scorecard's SDKs
 
 <CardGroup cols={3}>

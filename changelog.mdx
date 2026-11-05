@@ -7,6 +7,13 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="October 12, 2026">
+  ### Bug Fixes and Improvements
+
+  - **[API]** OAuth tokens and personal API keys can choose which organization a request acts in with the `X-Scorecard-Org-Id` header. See [Choose an organization](/api-reference/overview#choose-an-organization).
+  - **[API]** New [`GET /whoami`](/api-reference/whoami) endpoint returns the current user, the organization the request acts in, and the organizations the credential can act in.
+</Update>
+
 <Update label="September 21, 2026">
   ### Bug Fixes and Improvements
 
