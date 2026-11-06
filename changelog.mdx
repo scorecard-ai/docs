@@ -7,6 +7,17 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="November 6, 2026">
+  ### Bug Fixes and Improvements
+
+  - **[API]** [Upsert Score](/api-reference/upsert-score) only lets org admins and organization API keys set `userId` to another member. Other callers get a `403`. If you leave out `userId`, the score is saved under your own user instead of `background-job`.
+  - **[Truffle]** When the AI provider is overloaded, Truffle shows a "provider is busy" status after 8 seconds. After 60 seconds it stops and shows **Try again**, and your message is kept.
+  - **[Truffle]** Truffle can read tool results too large to return inline, such as long trace spans, within the same reply.
+  - **[Truffle]** The write approval card no longer jumps around when new calls arrive, and a repeated identical write joins the pending approval so it runs only once.
+  - **[Records]** On a record's **Output** tab, the output and expected values appear in matching panels, and a value that only names a file shows the document itself.
+  - **[Prompts]** The prompt editor header shows **Unsaved changes** after you edit a prompt.
+</Update>
+
 <Update label="September 21, 2026">
   ### Bug Fixes and Improvements
 
