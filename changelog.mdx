@@ -7,6 +7,24 @@ mode: "center"
 
 import { DarkLightImage } from "/snippets/dark-light-image.jsx";
 
+<Update label="November 13, 2026">
+  ### Drop files into Truffle
+
+  You can now drop text files into the **Truffle** chat and send them with or without a message, so Truffle can work from your data instead of only what you type. Supported types are CSV, TSV, JSON, JSONL, TXT, MD and YAML, up to 10 MB each and 10 files per message.
+
+  {/* TODO(screenshot): /images/changelog-truffle-attachments-{light,dark}.png — Truffle chat with two file chips (e.g. a CSV and a JSONL) attached above a typed message, before pressing Send */}
+
+  ### Bug Fixes and Improvements
+
+  - **[Truffle]** Truffle now keeps track of the pages and records you open between messages.
+  - **[Truffle]** Answers appear a paragraph at a time instead of token by token.
+  - **[Truffle]** Truffle can read trace spans and record fields of any size. Long fields were previously cut short.
+  - **[Truffle]** Grading a record through Truffle no longer fails with a 400 error.
+  - **[Records]** The record page header now shows the record's tags, and you can add or remove them there.
+  - **[Metrics]** A failed metric create, duplicate or update no longer leaves a half-saved metric behind.
+  - **[API]** Requests with a body that isn't valid JSON now get a `400 VALIDATION_ERROR` instead of a `500`.
+</Update>
+
 <Update label="September 21, 2026">
   ### Bug Fixes and Improvements
 
